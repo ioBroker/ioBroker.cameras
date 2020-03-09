@@ -28,7 +28,7 @@ class App extends GenericApp {
     constructor(props) {
         const extendedProps = {};
         extendedProps.encryptedFields = ['password'];
-        extendedProps.adapterName = 'opcua';
+        extendedProps.adapterName = 'cameras';
         extendedProps.doNotLoadAllObjects = true;
         extendedProps.translations = {
             'en': require('./i18n/en'),
@@ -88,6 +88,7 @@ class App extends GenericApp {
                         onError={text => this.setState({errorText: text})}
                         onLoad={native => this.onLoadConfig(native)}
                         instance={this.instance}
+                        getIpAddresses={() => this.getIpAddresses()}
                         onConfigError={configError => this.setConfigurationError(configError)}
                         adapterName={this.adapterName}
                         onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}

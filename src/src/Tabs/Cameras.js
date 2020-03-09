@@ -2,22 +2,22 @@ import React, {Component} from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import MessageDialog from '@iobroker/adapter-react/Dialogs/Message';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Fab from '@material-ui/core/Fab';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
 import IconDelete from '@material-ui/icons/Delete';
 import IconEdit from '@material-ui/icons/Edit';
+import IconAdd from '@material-ui/icons/Add';
+import IconUp from '@material-ui/icons/ArrowUpward';
+import IconDown from '@material-ui/icons/ArrowDownward';
 
 import I18n from '@iobroker/adapter-react/i18n';
 
@@ -33,61 +33,69 @@ const styles = theme => ({
         width: '100%',
         height: '100%'
     },
-    column: {
-        display: 'inline-block',
-        verticalAlign: 'top',
-        marginRight: 20,
-        height: '100%',
-        overflow: 'hidden',
-        width: 'calc(50% - 20px)',
-        minWidth: 300,
-        maxWidth: 450
-    },
-    columnDiv: {
-        height: 'calc(100% - 60px)',
-        overflow: 'auto',
-        minWidth: 300
-    },
-    enumLineEnabled: {
-        position: 'absolute',
-        right: 0,
-        top: 0,
-    },
-    enumLineEdit: {
-        //float: 'right'
-        position: 'absolute',
-        top: 5,
-        right: 50
-    },
-    enumLineName: {
-
-    },
-    enumLineSubName:{
-        fontStyle: 'italic',
-    },
-    enumLine: {
-        height: 48,
+    lineDiv: {
         width: '100%',
-        position: 'relative'
+        paddingBottom: 5,
+        borderBottom: '1px dashed gray'
     },
-    enumLineId: {
-        display: 'block',
-        fontStyle: 'italic',
-        fontSize: 12
+    lineText: {
+        display: 'inline-block',
+        width: 200,
     },
-    columnHeader: {
-        background: theme.palette.primary.light,
-        padding: 10,
-        color: theme.palette.primary.contrastText
-    }
-});
+    lineDesc: {
+        display: 'inline-block',
+        width: 'calc(100% - 550px)',
+    },
+    lineType: {
+        display: 'inline-block',
+        width: 150,
+    },
+    lineEdit: {
+        display: 'inline-block',
+        marginLeft: 10,
+        marginTop: 10,
+    },
+    lineUp: {
+        display: 'inline-block',
+        marginLeft: 10,
+        marginTop: 10,
+    },
+    lineDown: {
+        display: 'inline-block',
+        marginLeft: 10,
+        marginTop: 10,
+    },
+    lineDelete: {
+        display: 'inline-block',
+        marginLeft: 10,
+        marginTop: 10,
+    },
+    type: {
+        width: '100%'
+    },
+    name:  {
+        width: 'calc(100% - 10px)',
+    },
+    desc:  {
+        width: 'calc(100% - 10px)',
+    },
+    lineNoButtonUp:  {
+        display: 'inline-block',
+        width: 40,
+        marginLeft: 10,
+    },
+    lineNoButtonDown:  {
+        display: 'inline-block',
+        width: 40,
+        marginLeft: 10,
+    },});
 
 class Server extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            loading: true,
+            editCam: false,
         };
     }
 
@@ -100,26 +108,27 @@ class Server extends Component {
     }
 
     renderConfigDialog() {
-        if (this.state.editCam !== null) {
+        if (this.state.editCam !== false) {
             const cam = this.props.native.cameras[this.state.editCam];
             let Config = (TYPES[cam.type] || TYPES.url).Config;
 
             return (<Dialog
                 maxWidth="lg"
+                fullWidth={true}
                 open={true}
-                onClose={() => this.state.editCam !== null && this.setState({editCam: null})}
+                onClose={() => this.state.editCam !== null && this.setState({editCam: false})}
             >
-                <DialogTitle >Edit camera</DialogTitle>
-                <DialogContent>(<Config settings={cam} onChange={settings => this.editedSettings = JSON.stringify(settings)}/>)</DialogContent>
+                <DialogTitle>{I18n.t('Edit camera %s [%s]', cam.name, cam.type)}</DialogTitle>
+                <DialogContent><Config settings={cam} onChange={settings => this.editedSettings = JSON.stringify(settings)}/></DialogContent>
                 <DialogActions>
-                    <Button onClick={this.setState({editCam: null})}>{I18n.t('Cancel')}</Button>
+                    <Button onClick={() => this.setState({editCam: false})}>{I18n.t('Cancel')}</Button>
                     <Button onClick={() => {
                         const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
                         if (this.editedSettings) {
                             cameras[this.state.editCam] = JSON.parse(this.editedSettings);
-                            this.props.onChange('cameras', cameras, () => this.setState({editCam: null}));
+                            this.props.onChange('cameras', cameras, () => this.setState({editCam: false}));
                         } else {
-                            this.setState({editCam: null});
+                            this.setState({editCam: false});
                         }
                     }} color="primary">{I18n.t('Apply')}</Button>
                 </DialogActions>
@@ -130,33 +139,65 @@ class Server extends Component {
     }
 
     renderCamera(cam, i) {
-        return (<div>
-            <div><TextField
-                key="name"
-                className={this.props.classes.name}
-                label={I18n.t('Name')}
-                value={cam.name}
-                onChange={e => {
-                    const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
-                    cameras[i].name = e.target.value;
-                    this.props.onChange('cameras', cameras);
-                }}
-            /></div>
-            <div><FormControl className={this.props.classes.type}>
-                <InputLabel>{I18n.t('Type')}</InputLabel>
-                <Select
-                    value={cam.type}
+        const error = this.props.native.cameras.find((c, ii) => c.name === cam.name && ii !== i);
+        return (<div key={'cam' + i} className={this.props.classes.lineDiv}>
+            <div className={this.props.classes.lineText}>
+                <TextField
+                    className={this.props.classes.name}
+                    label={I18n.t('Name')}
+                    error={error}
+                    value={cam.name}
+                    helperText={error ? I18n.t('Duplicate name') : ''}
                     onChange={e => {
                         const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
-                        cameras[i].type = e.target.value;
+                        cameras[i].name = e.target.value.replace(/[^-_\da-zA-Z]/g, '_');
                         this.props.onChange('cameras', cameras);
                     }}
-                >
-                    {Object.keys(TYPES).map(type => (<MenuItem value={type}>{TYPES[type].name || type}</MenuItem>))}
-                </Select>
-            </FormControl></div>
-            <Fab onClick={() => this.onEdit(i, cam)}><IconEdit /></Fab>
-            <Fab onClick={() => {
+                />
+            </div>
+            <div className={this.props.classes.lineDesc}>
+                <TextField
+                    className={this.props.classes.desc}
+                    label={I18n.t('Description')}
+                    value={cam.desc}
+                    onChange={e => {
+                        const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                        cameras[i].desc = e.target.value;
+                        this.props.onChange('cameras', cameras);
+                    }}
+                />
+            </div>
+            <div className={this.props.classes.lineType}>
+                <FormControl className={this.props.classes.type}>
+                    <InputLabel>{I18n.t('Type')}</InputLabel>
+                    <Select
+                        value={cam.type}
+                        onChange={e => {
+                            const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                            cameras[i].type = e.target.value;
+                            this.props.onChange('cameras', cameras);
+                        }}
+                    >
+                        {Object.keys(TYPES).map(type => (<MenuItem value={type}>{TYPES[type].name || type}</MenuItem>))}
+                    </Select>
+                </FormControl>
+            </div>
+            {i ? (<Fab size="small" className={this.props.classes.lineUp} onClick={() => {
+                const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                const cam = cameras[i];
+                cameras.splice(i, 1);
+                cameras.splice(i - 1, 0, cam);
+                this.props.onChange('cameras', cameras);
+            }}><IconUp /></Fab>) : (<div className={this.props.classes.lineNoButtonUp}>&nbsp;</div>)}
+            {i !== this.props.native.cameras.length - 1 ? (<Fab size="small" className={this.props.classes.lineDown} onClick={() => {
+                const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                const cam = cameras[i];
+                cameras.splice(i, 1);
+                cameras.splice(i + 1, 0, cam);
+                this.props.onChange('cameras', cameras);
+            }}><IconDown /></Fab>) : (<div className={this.props.classes.lineNoButtonDown}>&nbsp;</div>)}
+            <Fab size="small" className={this.props.classes.lineEdit} onClick={() => this.setState({editCam: i})}><IconEdit /></Fab>
+            <Fab size="small" className={this.props.classes.lineDelete} onClick={() => {
                 const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
                 cameras.splice(i, 1);
                 this.props.onChange('cameras', cameras);
@@ -165,12 +206,16 @@ class Server extends Component {
     }
 
     render() {
-        if (this.state.loading) {
-            return (<CircularProgress />);
-        }
         return (
             <div className={this.props.classes.tab}>
-                {this.props.native.cameras.map((cam, i) => this.renderCamera(cam, i))}
+                <Fab size="small" onClick={() => {
+                    const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                    let i = 1;
+                    while(cameras.find(cam => cam.name === 'cam' + i)) i++;
+                    cameras.push({name: 'cam' + i, type: 'url'});
+                    this.props.onChange('cameras', cameras);
+                }}><IconAdd /></Fab>
+                {this.props.native.cameras ? this.props.native.cameras.map((cam, i) => this.renderCamera(cam, i)) : null}
                 {this.renderConfigDialog()}
                 {this.renderMessage()}
             </div>

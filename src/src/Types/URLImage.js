@@ -9,7 +9,7 @@ const styles = theme => ({
 
     },
     url: {
-
+        width: '100%'
     }
 });
 
@@ -29,7 +29,7 @@ class Config extends Component {
                     key="url"
                     className={this.props.classes.url}
                     label={I18n.t('Camera URL')}
-                    value={this.props.native.url}
+                    value={this.state.url}
                     onChange={e => {
                         this.setState({url: e.target.value}, () =>
                             this.props.onChange({

@@ -5,71 +5,34 @@ import TextField from '@material-ui/core/TextField';
 import DialogMessage from '@iobroker/adapter-react/Dialogs/Message';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
+import FormControl from '@material-ui/core/FormControl';
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import InputLabel from "@material-ui/core/InputLabel";
 
 import {MdClose as IconClose} from 'react-icons/md';
 
 import I18n from '@iobroker/adapter-react/i18n';
-import Logo from './Logo';
+import Logo from '@iobroker/adapter-react/Components/Logo';
 import Message from '@iobroker/adapter-react/Dialogs/Message';
 import DialogError from "@iobroker/adapter-react/Dialogs/Error";
+
 
 const styles = theme => ({
     tab: {
         width: '100%',
         minHeight: '100%'
     },
-    input: {
-        minWidth: 300
+    bind: {
+        marginRight: 10,
+        marginBottom: 20,
+        minWidth: 200,
     },
-    button: {
-        marginRight: 20,
+    port: {
+        width: 100
     },
-    card: {
-        maxWidth: 345,
-        textAlign: 'center'
-    },
-    media: {
-        height: 180,
-    },
-    column: {
-        display: 'inline-block',
-        verticalAlign: 'top',
-        marginRight: 20
-    },
-    columnLogo: {
-        width: 350,
-        marginRight: 0
-    },
-    columnSettings: {
-        width: 'calc(100% - 370px)',
-    },
-    typeSelector: {
-        marginBottom: 20
-    },
-    serverURL: {
-        width: '30%',
-        minWidth: 300,
-        marginRight: 20,
-    },
-    certSelector: {
-        width: 200,
-        marginRight: 20,
-        marginBottom: 24,
-    },
-    certSecurityMode: {
-        width: 200,
-        marginRight: 20,
-        marginBottom: 24,
-    },
-    certSecurityPolicy: {
-        width: 200,
-        marginRight: 20,
-        marginBottom: 24,
-    },
-    basic: {
-        width: 200,
-        marginRight: 20,
-        marginBottom: 24,
+    defaultTimeout: {
+        width: 150
     }
 });
 
@@ -80,22 +43,12 @@ class Options extends Component {
         this.state = {
             showHint: false,
             toast: '',
-            isInstanceAlive: false,
-            certificates: null,
-            requesting: false,
-            passwordRepeat: this.props.native.basicUserPassword
+            ips: [],
+            requesting: true,
         };
 
-        this.textPasswordMismatch = I18n.t('Password repeat mismatch');
-
-        this.props.socket.getObject(`system.adapter.${this.props.adapterName}.${this.props.instance}`)
-            .then(obj =>
-                this.props.socket.getState(`system.adapter.${this.props.adapterName}.${this.props.instance}.alive`)
-                    .then(state =>
-                        this.props.socket.getCertificates()
-                            .then(certificates =>
-                                this.setState({certificates, isInstanceAlive: obj && obj.common && obj.common.enabled && state && state.val}))));
-
+        this.props.getIpAddresses()
+            .then(ips => this.setState({requesting: false, ips}));
     }
 
     showError(text) {
@@ -148,17 +101,25 @@ class Options extends Component {
 
     renderSettings() {
         return [
+            this.state.ips && this.state.ips.length ?
+                (<FormControl key="bindSelect"  className={this.props.classes.bind}>
+                    <InputLabel id="demo-simple-select-label">Age</InputLabel>
+                    <Select
+                         disabled={this.state.requesting}
+                         value={this.props.native.bind}
+                         onChange={e => this.props.onChange('bind', e.target.value)}
+                    >{this.state.ips.map(ip => (<MenuItem value={ip.address}>{ip.name}</MenuItem>))}</Select></FormControl>) :
+                (<TextField
+                    disabled={this.state.requesting}
+                    key="bind"
+                    className={this.props.classes.bind}
+                    label={I18n.t('Local IP address')}
+                    value={this.props.native.bind}
+                    onChange={e => this.props.onChange('bind', e.target.value)}
+                />),
             (<TextField
                 disabled={this.state.requesting}
-                key="bind"
-                className={this.props.classes.bind}
-                label={I18n.t('Local IP address')}
-                value={this.props.native.bind}
-                onChange={e => this.props.onChange('bind', e.target.value)}
-            />),
-            (<TextField
-                disabled={this.state.requesting}
-                key="bind"
+                key="port"
                 type="number"
                 min={1}
                 max={0xFFFF}
@@ -167,6 +128,7 @@ class Options extends Component {
                 value={this.props.native.port}
                 onChange={e => this.props.onChange('port', e.target.value)}
             />),
+            (<br key="br1"/>),
             (<TextField
                 disabled={this.state.requesting}
                 key="defaultTimeout"
@@ -174,7 +136,7 @@ class Options extends Component {
                 min={0}
                 max={10000}
                 className={this.props.classes.defaultTimeout}
-                label={I18n.t('Default timeout')}
+                label={I18n.t('Default timeout (ms)')}
                 value={this.props.native.defaultTimeout}
                 onChange={e => this.props.onChange('defaultTimeout', e.target.value)}
             />),
@@ -228,6 +190,7 @@ Options.propTypes = {
     onConfigError: PropTypes.func,
     onLoad: PropTypes.func,
     onChange: PropTypes.func,
+    getIpAddresses: PropTypes.func,
     socket: PropTypes.object.isRequired,
 };
 
