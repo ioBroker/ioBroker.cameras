@@ -1,0 +1,64 @@
+{
+  "name": "iobroker.cameras",
+  "version": "0.0.1",
+  "description": "Connect IP-cameras to iobroker",
+  "author": {
+    "name": "bluefox",
+    "email": "dogafox@gmail.com"
+  },
+  "homepage": "https://github.com/ioBroker/ioBroker.cameras",
+  "license": "MIT",
+  "keywords": [
+    "ip-cam",
+    "web-cam",
+    "video"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ioBroker/ioBroker.cameras"
+  },
+  "dependencies": {
+    "@iobroker/adapter-core": "^2.2.1",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "@iobroker/testing": "^2.1.0",
+    "@types/chai": "^4.2.10",
+    "@types/chai-as-promised": "^7.1.2",
+    "@types/gulp": "^4.0.6",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^10.17.17",
+    "@types/proxyquire": "^1.3.28",
+    "@types/sinon": "^7.5.2",
+    "@types/sinon-chai": "^3.2.3",
+    "axios": "^0.19.2",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^6.8.0",
+    "gulp": "^4.0.2",
+    "gulp-exec": "^4.0.0",
+    "gulp-connect": "^5.7.0",
+    "gulp-watch": "^5.0.1",
+    "gulp-replace": "^1.0.0",
+    "del": "^5.1.0",
+    "mocha": "^7.1.0",
+    "proxyquire": "^2.1.3",
+    "sinon": "^9.0.0",
+    "sinon-chai": "^3.5.0"
+  },
+  "main": "main.js",
+  "scripts": {
+    "test:js": "mocha --opts test/mocha.custom.opts",
+    "test:package": "mocha test/package --exit",
+    "test:unit": "mocha test/unit --exit",
+    "test:integration": "mocha test/integration --exit",
+    "test": "npm run test:js && npm run test:package",
+    "lint": "eslint",
+    "prepublishOnly": "node node_modules/gulp/bin/gulp --gulpfile gulpfile.js default",
+    "build": "node node_modules/gulp/bin/gulp.js"
+  },
+  "bugs": {
+    "url": "https://github.com/ioBroker/ioBroker.cameras/issues"
+  },
+  "readmeFilename": "README.md"
+}

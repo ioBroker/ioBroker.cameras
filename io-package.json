@@ -1,0 +1,86 @@
+{
+    "common": {
+        "name": "cameras",
+        "version": "0.0.1",
+        "news": {
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "zh-cn": "首次出版"
+            }
+        },
+        "title": "IP-Cameras",
+        "titleLang": {
+            "en": "IP-Cameras",
+            "de": "IP-Kameras",
+            "ru": "IP-камера",
+            "pt": "Câmeras IP",
+            "nl": "IP-camera's",
+            "fr": "Caméras IP",
+            "it": "Telecamere IP",
+            "es": "Cámaras IP",
+            "pl": "Kamery IP",
+            "zh-cn": "IP摄像机"
+        },
+        "desc": {
+            "en": "Connect IP-cameras to iobroker",
+            "de": "Schließen Sie IP-Kameras an iobroker an",
+            "ru": "Подключите IP-камеры к iobroker",
+            "pt": "Conecte câmeras IP ao iobroker",
+            "nl": "Verbind IP-camera's met iobroker",
+            "fr": "Connectez des caméras IP à iobroker",
+            "it": "Collegare le telecamere IP a iobroker",
+            "es": "Conecte cámaras IP a iobroker",
+            "pl": "Podłącz kamery IP do iobroker",
+            "zh-cn": "将IP摄像机连接到iobroker"
+        },
+        "authors": [
+            "bluefox <dogafox@gmail.com>"
+        ],
+        "keywords": [
+            "ip-cam",
+            "web-cam",
+            "video"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "cameras.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.cameras/master/admin/cameras.png",
+        "readme": "https://github.com/ioBroker/ioBroker.cameras/blob/master/README.md",
+        "loglevel": "info",
+        "webExtension": "lib/web.js",
+        "mode": "daemon",
+        "type": "multimedia",
+        "compact": true,
+        "materialize": true,
+        "dependencies": [
+            {
+                "js-controller": ">=1.4.2"
+            }
+        ]
+    },
+    "native": {
+        "bind": "127.0.0.1",
+        "port": 7989,
+        "enc_key": "",
+        "defaultTimeout": 2000,
+        "cameras": [
+            {
+                "name": "cam1",
+                "type": "url",
+                "url":  "https://raw.githubusercontent.com/ioBroker/ioBroker.admin/master/admin/admin.png"
+            }
+        ]
+    },
+    "objects": [],
+    "instanceObjects": []
+}

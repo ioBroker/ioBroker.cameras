@@ -1,0 +1,28 @@
+Êtes-vous sûr?
+Annuler
+Impossible de vérifier la licence: %s
+Vérifier la licence en ligne
+Client
+Fermer
+Erreur
+Licence invalide
+Licence
+Charger la configuration à partir du fichier
+URL du serveur OPC UA
+D'accord
+Les options
+Placez votre licence ioBroker OPC-UA ici
+sauvegarder
+Sauver et fermer
+Enregistrer la configuration dans un fichier
+Serveur
+Succès
+Tester la connexion
+Type
+Variables
+Nom de licence incorrect %s
+Ici, vous pouvez obtenir une licence:
+La licence n'est pas OK
+La licence est OK
+pas connecté
+Temps libre

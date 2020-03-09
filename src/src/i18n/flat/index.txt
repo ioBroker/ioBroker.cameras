@@ -1,0 +1,28 @@
+Are you sure?
+Cancel
+Cannot check license: %s
+Check license online
+Client
+Close
+Error
+Invalid license
+License
+Load configuration from file
+OPC UA Server URL
+Ok
+Options
+Place your ioBroker OPC-UA license here
+Save
+Save and close
+Save configuration to file
+Server
+Success
+Test connection
+Type
+Variables
+Wrong license name %s
+license_hint
+license_not_ok
+license_ok
+not connected
+timeout

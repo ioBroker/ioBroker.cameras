@@ -1,0 +1,28 @@
+Weet je het zeker?
+annuleren
+Kan licentie niet controleren: %s
+Controleer licentie online
+Cliënt
+Dichtbij
+Fout
+Ongeldige licentie
+Licentie
+Laad de configuratie uit het bestand
+OPC UA-server-URL
+OK
+opties
+Plaats hier uw ioBroker OPC-UA licentie
+Opslaan
+Opslaan en afsluiten
+Configuratie opslaan in bestand
+Server
+Succes
+Test verbinding
+Type
+Variabelen
+Verkeerde licentienaam %s
+Hier kunt u een licentie krijgen:
+Licentie is niet OK
+Licentie is OK
+niet verbonden
+Time-out

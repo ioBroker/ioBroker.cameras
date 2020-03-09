@@ -1,0 +1,28 @@
+Bist du sicher?
+Stornieren
+Lizenz kann nicht überprüft werden: %s
+Lizenz online prüfen
+Klient
+Schließen
+Fehler
+Ungültige Lizenz
+Lizenz
+Konfiguration aus Datei laden
+OPC UA Server URL
+Ok
+Optionen
+Platzieren Sie hier Ihre ioBroker OPC-UA-Lizenz
+speichern
+Speichern und schließen
+Konfiguration in Datei speichernn
+Server
+Erfolgreich
+Testverbindung
+Typ
+Variablen
+Falscher Lizenzname %s
+Hier kann man eine Lizenz erhalten:
+Lizenz ist nicht OK
+Lizenz ist OK
+nicht verbunden
+Timeout
