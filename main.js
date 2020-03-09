@@ -27,20 +27,11 @@ function startAdapter(options) {
         adapter.tools = {decrypt};
     }
 
-    adapter.on('ready', () => {
-        // automatic migration of token
-        if (!adapter.supportsFeature || !adapter.supportsFeature('ADAPTER_AUTO_DECRYPT')) {
-            adapter.getEncryptedConfig('enc_key')
-                .then(value => {
-                    adapter.config.enc_key = value;
-                    main(adapter);
-                });
-        } else {
-            main(adapter);
-        }
-    });
+    adapter.on('ready', () => main(adapter));
 
     adapter.on('unload', cb => {
+        adapter.__bforceInterval && clearInterval(adapter.__bforceInterval);
+        adapter.__bforceInterval = null;
         try {
             if (adapter.__server) {
                 adapter.__server.close(() => unloadCameras(adapter, cb));
@@ -53,50 +44,6 @@ function startAdapter(options) {
     });
 
     return adapter;
-}
-
-function getEncryptedConfig(attribute, callback) {
-    if (adapter.config.hasOwnProperty(attribute)) {
-        if (typeof callback !== 'function') {
-            return new Promise((resolve, reject) => {
-                getEncryptedConfig(attribute, (err, encrypted) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(encrypted);
-                    }
-                });
-            });
-        } else {
-            adapter.getForeignObject('system.config', null, (err, data) => {
-                let systemSecret;
-                if (data && data.native) {
-                    systemSecret = data.native.secret;
-                }
-                callback(null, adapter.tools.decrypt(systemSecret, adapter.config[attribute]));
-            });
-        }
-    } else {
-        if (typeof callback === 'function') {
-            callback('Attribute not found');
-        } else {
-            return Promise.reject('Attribute not found');
-        }
-    }
-}
-
-/**
- * Decrypt the password/value with given key
- * @param {string} key - Secret key
- * @param {string} value - value to decript
- * @returns {string}
- */
-function decrypt(key, value) {
-    let result = '';
-    for(let i = 0; i < value.length; i++) {
-        result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
-    }
-    return result;
 }
 
 function unloadCameras(adapter, cb) {
@@ -116,27 +63,70 @@ function unloadCameras(adapter, cb) {
 
 function startWebServer(adapter) {
     adapter.__server = http.createServer((req, res) => {
-        const url = req.url.split('?')[0];
+        const clientIp = req.connection.remoteAddress;
+        const now = Date.now();
+        if (adapter.__bforce[clientIp] && now - adapter.__bforce[clientIp] < 5000)  {
+            adapter.__bforce[clientIp] = now;
+            res.statusCode = 429;
+            res.write('Blocked for 5 seconds');
+            return res.end();
+        }
+
+        const parts = req.url.split('?');
+        const url = parts[0];
+        const query = [];
+        (parts[1] || '').split('&').forEach(p => {
+            const pp = p.split('=');
+            query[pp[0]] = decodeURIComponent(pp[1] || '');
+        });
+
+        if (query.key !== adapter.config.key) {
+            adapter.__bforce[clientIp] = Date.now();
+            res.statusCode = 401;
+            res.write('Invalid key');
+            return res.end();
+        }
+
+        if (clientIp !== '127.0.0.1' &&
+            clientIp !== '::1/128' &&
+            adapter.config.allowIPs !== true &&
+            !adapter.config.allowIPs.includes(clientIp)) {
+            res.statusCode = 401;
+            res.write('Invalid key');
+            res.end();
+        }
 
         const cam = adapter.config.cameras.find(cam => cam.name === url);
 
         if (cam) {
             if (adapter.__CAM_TYPES[cam.type]) {
+                adapter.log.debug('Request ' + JSON.stringify(cam));
                 adapter.__CAM_TYPES[cam.type].process(adapter, cam, req, res)
                     .then(data => {
                         if (data && !data.done) {
                             res.setHeader('Content-type', data.contentType);
-                            res.status(200).send(data.body || '');
+                            res.write(data.body || '');
+                            res.end();
                         } else if (!data) {
-                            res.status(500).send('No answer');
+                            res.statusCode = 500;
+                            res.write('No answer');
+                            res.end();
                         }
                     })
-                    .catch(e => res.status(500).send('Unknown error: ' + e));
+                    .catch(e => {
+                        res.statusCode = 500;
+                        res.write('Unknown error: ' + e);
+                        res.end();
+                    });
             } else {
-                res.status(501).send('Unknown camera type: ' + cam.type);
+                res.statusCode = 501;
+                res.write('Unknown camera type: ' + cam.type);
+                res.end();
             }
         } else {
-            res.status(404).send('not found');
+            res.statusCode = 404;
+            res.write('not found');
+            res.end();
         }
     });
     adapter.__server.on('clientError', (err, socket) => {
@@ -168,6 +158,25 @@ function main(adapter) {
                 }
             }
         });
+
+        if (typeof adapter.config.allowIPs === 'string') {
+            adapter.config.allowIPs = adapter.config.allowIPs.split(/,;/).map(i => i.trim()).filter(i => i);
+            if (adapter.config.allowIPs.find(i => i === '*')) {
+                adapter.config.allowIPs = true;
+            }
+        }
+
+        adapter.__bforce = {};
+
+        // garage collector
+        adapter.__bforceInterval = setInterval(() => {
+            const now = Date.now();
+            Object.keys(adapter.__bforce).forEach(ip => {
+                if (now - adapter.__bforce[ip] > 5000) {
+                    delete adapter.__bforce[ip];
+                }
+            })
+        }, 30000);
 
         Promise.all(promises)
             .then(() => startWebServer(adapter));

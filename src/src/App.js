@@ -49,8 +49,8 @@ class App extends GenericApp {
     // called when connected with admin and loaded instance object
     onConnectionReady() {
         // generate random key
-        if (!this.state.native.enc_key) {
-            setTimeout(() => this.updateNativeValue('enc_key', (Math.round(Math.random() * 100000000000) / 100000).toFixed(6)));
+        if (!this.state.native.key) {
+            setTimeout(() => this.updateNativeValue('key', (Math.round(Math.random() * 100000000000) / 100000).toFixed(6)));
         }
     }
 

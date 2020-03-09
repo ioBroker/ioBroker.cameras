@@ -71,8 +71,10 @@
     "native": {
         "bind": "127.0.0.1",
         "port": 7989,
-        "enc_key": "",
+        "key": "",
+        "webInstance": "*",
         "defaultTimeout": 2000,
+        "allowIPs": "",
         "cameras": [
             {
                 "name": "cam1",
