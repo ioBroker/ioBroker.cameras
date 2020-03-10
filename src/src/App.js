@@ -85,6 +85,8 @@ class App extends GenericApp {
                         common={this.common}
                         socket={this.socket}
                         native={this.state.native}
+                        encrypt={(value, cb) => cb(this.encrypt(value))}
+                        decrypt={(value, cb) => cb(this.decrypt(value))}
                         onError={text => this.setState({errorText: text})}
                         onLoad={native => this.onLoadConfig(native)}
                         instance={this.instance}
@@ -95,6 +97,8 @@ class App extends GenericApp {
                     />)}
                     {this.state.selectedTab === 'cameras' && (<TabCameras
                         key="cameras"
+                        encrypt={(value, cb) => cb(this.encrypt(value))}
+                        decrypt={(value, cb) => cb(this.decrypt(value))}
                         native={this.state.native}
                         onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}
                     />)}

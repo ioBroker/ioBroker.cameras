@@ -13,6 +13,7 @@ const connect    = require('gulp-connect');
 const watch      = require('gulp-watch');
 const replace    = require('gulp-replace');
 const del        = require('del');
+const rename     = require('gulp-rename');
 
 const pkg        = require('./package.json');
 const ioPackage  = require('./io-package.json');
@@ -198,6 +199,7 @@ function copyFiles() {
                 .pipe(replace('href="/', 'href="'))
                 .pipe(replace('src="/', 'src="'))
                 .pipe(replace('<script type="text/javascript" src="./vendor/socket.io.js"></script>', '<script type="text/javascript" src="./../../socket.io/socket.io.js"></script>'))
+                .pipe(rename('index_m.html'))
                 .pipe(gulp.dest('admin/')),
 
             gulp.src([
