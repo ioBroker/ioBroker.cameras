@@ -1,11 +1,27 @@
 const request = require('request');
 
 function init(adapter, cam) {
-    // do nothing
+
+    adapter.__urlCameras = adapter.__urlCameras || {};
+    adapter.__urlCameras[cam.name] = true;
+
+    // check parameters
+    if (!cam.url || typeof cam.url !== 'string' || (!cam.url.startsWith('http://') && !cam.url.startsWith('https://'))) {
+        return Promise.reject('Invalid URL: "' + cam.url + '"');
+    }
+
     return Promise.resolve();
 }
 
 function unload(adapter, cam) {
+    if (adapter.__urlCameras[cam.name]) {
+        delete adapter.__urlCameras[cam.name];
+    }
+    // after last unload all the resources must be cleared too
+    if (Object.keys(adapter.__urlCameras)) {
+        // unload
+    }
+
     // do nothing
     return Promise.resolve();
 }
@@ -21,7 +37,8 @@ function process(adapter, cam, req, res) {
             } else {
                 resolve({body, contentType: status.headers['Content-type'] || status.headers['content-type']});
             }
-        });
+        })
+            .on('error', error => reject(error));
     });
 }
 

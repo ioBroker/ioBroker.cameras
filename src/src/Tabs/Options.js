@@ -45,10 +45,14 @@ class Options extends Component {
             toast: '',
             ips: [],
             requesting: true,
+            webInstances: []
         };
 
+        let ips;
         this.props.getIpAddresses()
-            .then(ips => this.setState({requesting: false, ips}));
+            .then(_ips => ips = _ips)
+            .then(() => this.props.getExtendableInstances())
+            .then(webInstances => this.setState({requesting: false, ips, webInstances: webInstances.map(item => item._id.replace('system.adapter.', ''))}));
     }
 
     showError(text) {
@@ -103,7 +107,7 @@ class Options extends Component {
         return [
             this.state.ips && this.state.ips.length ?
                 (<FormControl key="bindSelect"  className={this.props.classes.bind}>
-                    <InputLabel id="demo-simple-select-label">Age</InputLabel>
+                    <InputLabel>{I18n.t('Local IP address')}</InputLabel>
                     <Select
                          disabled={this.state.requesting}
                          value={this.props.native.bind}
@@ -140,6 +144,17 @@ class Options extends Component {
                 value={this.props.native.defaultTimeout}
                 onChange={e => this.props.onChange('defaultTimeout', e.target.value)}
             />),
+            (<br key="br2"/>),
+            (<FormControl key="webInstanceSelect"  className={this.props.classes.bind}>
+                <InputLabel>{I18n.t('WEB Instance')}</InputLabel>
+                <Select
+                    disabled={this.state.requesting}
+                    value={this.props.native.bind}
+                    onChange={e => this.props.onChange('bind', e.target.value)}
+                >
+                    <MenuItem value="*">{I18n.t('All')}</MenuItem>
+                    {this.state.webInstances ? this.state.webInstances.map(instance => (<MenuItem value={instance}>{instance}</MenuItem>)) : null}
+                </Select></FormControl>)
         ];
     }
 
@@ -191,6 +206,7 @@ Options.propTypes = {
     onLoad: PropTypes.func,
     onChange: PropTypes.func,
     getIpAddresses: PropTypes.func,
+    getExtendableInstances: PropTypes.func,
     socket: PropTypes.object.isRequired,
 };
 

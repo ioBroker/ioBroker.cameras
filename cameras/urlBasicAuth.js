@@ -1,7 +1,17 @@
 const request = require('request');
 
 function init(adapter, cam) {
-    // calculate basic authentication
+    // check parameters
+    if (!cam.url || typeof cam.url !== 'string' || (!cam.url.startsWith('http://') && !cam.url.startsWith('https://'))) {
+        return Promise.reject('Invalid URL: "' + cam.url + '"');
+    }
+    if (!cam.username || typeof cam.username !== 'string') {
+        return Promise.reject('Invalid Username: "' + cam.username + '"');
+    }
+
+    cam.password = cam.password || '';
+
+    // calculate basic authentication. Passward was encrypted and must be decrypted
     cam.basicAuth = 'Basic ' + Buffer.from(cam.username + ':' + adapter.tools.decrypt(adapter.__systemSecret, cam.password)).toString('base64');
     return Promise.resolve();
 }
@@ -23,7 +33,8 @@ function process(adapter, cam, req, res) {
             } else {
                 resolve({body, contentType: status.headers['Content-type'] || status.headers['content-type']});
             }
-        });
+        })
+            .on('error', error => reject(error));
     });
 }
 

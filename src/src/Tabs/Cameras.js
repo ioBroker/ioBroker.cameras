@@ -19,6 +19,7 @@ import IconEdit from '@material-ui/icons/Edit';
 import IconAdd from '@material-ui/icons/Add';
 import IconUp from '@material-ui/icons/ArrowUpward';
 import IconDown from '@material-ui/icons/ArrowDownward';
+import IconTest from '@material-ui/icons/Camera';
 
 import I18n from '@iobroker/adapter-react/i18n';
 
@@ -77,22 +78,38 @@ const styles = theme => ({
     type: {
         width: '100%'
     },
-    name:  {
+    name: {
         width: 'calc(100% - 10px)',
     },
-    desc:  {
+    desc: {
         width: 'calc(100% - 10px)',
     },
-    lineNoButtonUp:  {
+    lineNoButtonUp: {
         display: 'inline-block',
         width: 40,
         marginLeft: 10,
     },
-    lineNoButtonDown:  {
+    lineNoButtonDown: {
         display: 'inline-block',
         width: 40,
         marginLeft: 10,
-    },});
+    },
+    divConfig: {
+        verticalAlign: 'top',
+        width: 'calc(100% - 300px)',
+        display: 'inline-block'
+    },
+    divTestCam: {
+        width: 300,
+        display: 'inline-block',
+        verticalAlign: 'top',
+    },
+    buttonTest: {},
+    imgTest: {
+        width: '100%',
+        height: 'auto'
+    }
+});
 
 class Server extends Component {
     constructor(props) {
@@ -101,6 +118,8 @@ class Server extends Component {
         this.state = {
             editCam: false,
             editChanged: false,
+            requesting: false,
+            instanceAlive: this.props.instanceAlive
         };
 
         // translate all names once
@@ -120,12 +139,35 @@ class Server extends Component {
         }
     }
 
-    encode(value) {
-        return value;
+    static getDerivedStateFromProps(props, state) {
+        if (state.instanceAlive !== props.instanceAlive) {
+            return {instanceAlive: props.instanceAlive};
+        }
     }
 
-    decode(value) {
-        return value;
+    onTest() {
+        const settings = JSON.parse(this.editedSettings || this.editedSettingsOld);
+        COMMON_ATTRS.forEach(attr => settings[attr] = this.props.native.cameras[this.state.editCam][attr]);
+
+        let timeout = setTimeout(() => {
+            timeout = null;
+            this.setState({message: 'Timeout', requesting: false});
+        }, settings.timeout || this.props.native.defaultTimeout);
+
+        this.setState({requesting: true}, () => {
+            this.props.socket.sendTo('cameras.' + this.props.instance, 'test', settings, result => {
+                timeout && clearTimeout(timeout);
+                if (!result || !result.body || result.error) {
+                    let error = (result && result.error) ? result.error : I18n.t('No answer');
+                    if (typeof error !== 'string') {
+                        error = JSON.stringify(error);
+                    }
+                    this.setState({message: error, requesting: false});
+                } else {
+                    this.setState({testImg: result.body, requesting: false});
+                }
+            });
+        });
     }
 
     renderConfigDialog() {
@@ -140,7 +182,7 @@ class Server extends Component {
                 onClose={() => this.state.editCam !== null && this.setState({editCam: false, editChanged: false})}
             >
                 <DialogTitle>{I18n.t('Edit camera %s [%s]', cam.name, cam.type)}</DialogTitle>
-                <DialogContent><Config
+                <DialogContent><div className={this.props.classes.divConfig}><Config
                     settings={cam}
                     onChange={settings => {
                         this.editedSettings = JSON.stringify(settings);
@@ -154,7 +196,20 @@ class Server extends Component {
                         this.props.encrypt(value, cb)}
                     decrypt={(value, cb) =>
                         this.props.decrypt(value, cb)}
-                /></DialogContent>
+                /></div>
+                <div className={this.props.classes.divTestCam}>
+                    <Button
+                        disabled={this.state.requesting || !this.state.instanceAlive}
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        className={this.props.classes.buttonTest}
+                        onClick={() => this.onTest()}
+                        startIcon={<IconTest />}
+                    >{I18n.t('Test')}</Button>
+                    {this.state.testImg ? (<img alt="test" className={this.props.classes.imgTest} src={this.state.testImg} />) : null}
+                </div>
+                </DialogContent>
                 <DialogActions>
                     <Button
                         disabled={!this.state.editChanged}

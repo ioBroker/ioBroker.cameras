@@ -61,16 +61,18 @@
         "mode": "daemon",
         "type": "multimedia",
         "compact": true,
+        "messagebox": true,
         "materialize": true,
         "dependencies": [
             {
-                "js-controller": ">=1.4.2"
+                "js-controller": ">=1.4.2",
+                "web": ">=2.0.0"
             }
         ]
     },
     "native": {
         "bind": "127.0.0.1",
-        "port": 7989,
+        "port": 8200,
         "key": "",
         "webInstance": "*",
         "defaultTimeout": 2000,

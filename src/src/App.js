@@ -44,14 +44,29 @@ class App extends GenericApp {
         };
 
         super(props, extendedProps);
+
+        this.socket.subscribeState(this.instanceId + '.alive', (id, state) => {
+            if (id) {
+                if (this.state.alive !== (state ? state.val : false)) {
+                    this.setState({alive: state ? state.val : false});
+                }
+            }
+        });
     }
 
     // called when connected with admin and loaded instance object
     onConnectionReady() {
-        // generate random key
-        if (!this.state.native.key) {
-            setTimeout(() => this.updateNativeValue('key', (Math.round(Math.random() * 100000000000) / 100000).toFixed(6)));
-        }
+        this.socket.getState(this.instanceId + '.alive')
+            .then(state => {
+                if (this.state.alive !== (state ? state.val : false)) {
+                    this.setState({alive: state ? state.val : false});
+                }
+
+                // generate random key
+                if (!this.state.native.key) {
+                    setTimeout(() => this.updateNativeValue('key', (Math.round(Math.random() * 100000000000) / 100000).toFixed(6)));
+                }
+            });
     }
 
     getSelectedTab() {
@@ -91,14 +106,18 @@ class App extends GenericApp {
                         onLoad={native => this.onLoadConfig(native)}
                         instance={this.instance}
                         getIpAddresses={() => this.getIpAddresses()}
+                        getExtendableInstances={() => this.getExtendableInstances()}
                         onConfigError={configError => this.setConfigurationError(configError)}
                         adapterName={this.adapterName}
                         onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}
                     />)}
                     {this.state.selectedTab === 'cameras' && (<TabCameras
                         key="cameras"
+                        socket={this.socket}
+                        instance={this.instance}
                         encrypt={(value, cb) => cb(this.encrypt(value))}
                         decrypt={(value, cb) => cb(this.decrypt(value))}
+                        instanceAlive={this.state.alive}
                         native={this.state.native}
                         onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}
                     />)}

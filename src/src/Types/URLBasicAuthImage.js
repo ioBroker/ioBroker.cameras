@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 
 const styles = theme => ({
     page: {
-
+        width: '100%'
     },
     url: {
         width: '100%'
@@ -18,8 +18,12 @@ class Config extends Component {
         super(props);
 
         const state = JSON.parse(JSON.stringify(this.props.settings));
+
+        // set default values
+        state.url      = state.url || '';
         state.password = state.password || '';
         state.username = state.username || '';
+        state.timeout  = state.timeout  || 1000;
 
         this.state = state;
     }
@@ -75,6 +79,7 @@ class Config extends Component {
 
 Config.propTypes = {
     onChange: PropTypes.func,
+    defaultTimeout: PropTypes.number,
     decode: PropTypes.func,
     encode: PropTypes.func,
 };
