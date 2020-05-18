@@ -178,19 +178,19 @@ class Options extends Component {
 
     render() {
         return (
-            <form className={this.props.classes.tab}>
+            <form className={ this.props.classes.tab }>
                 <Logo
-                    instance={this.props.instance}
-                    common={this.props.common}
-                    native={this.props.native}
-                    onError={text => this.setState({errorText: text})}
-                    onLoad={this.props.onLoad}
+                    instance={ this.props.instance }
+                    common={ this.props.common }
+                    native={ this.props.native }
+                    onError={text => this.setState({errorText: text}) }
+                    onLoad={ this.props.onLoad }
                 />
-                {this.renderSettings()}<br/>
-                {this.renderHint()}
-                {this.renderToast()}
-                {this.renderMessage()}
-                {this.renderError()}
+                { this.renderSettings() }<br/>
+                { this.renderHint() }
+                { this.renderToast() }
+                { this.renderMessage() }
+                { this.renderError() }
             </form>
         );
     }
