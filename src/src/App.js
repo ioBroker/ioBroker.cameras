@@ -114,6 +114,7 @@ class App extends GenericApp {
                     {this.state.selectedTab === 'cameras' && (<TabCameras
                         key="cameras"
                         socket={this.socket}
+                        adapterName={ this.adapterName }
                         instance={this.instance}
                         encrypt={(value, cb) => cb(this.encrypt(value))}
                         decrypt={(value, cb) => cb(this.decrypt(value))}

@@ -12,5 +12,12 @@
   "Success": "成功",
   "Test connection": "测试连接",
   "Type": "类型",
-  "not connected": "未连接"
+  "not connected": "未连接",
+  "Description": "描述",
+  "Name": "名称",
+  "Test": "测试",
+  "Apply": "应用",
+  "Username": "用户名",
+  "Password": "密码",
+  "Edit camera %s [%s]": "编辑相机%s [%s]"
 }

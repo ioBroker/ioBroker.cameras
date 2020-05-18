@@ -12,7 +12,8 @@
 
 ## IP-Cameras adapter for ioBroker
 You can integrate you web/ip cameras into vis and other visualisations.
-If you configure a camera with name `cam1` it will be available on web server under `http(s)://iobroker-IP:8082/cameras.0/cam1`.
+If you configure a camera with name `cam1` it will be available on 
+web server under `http(s)://iobroker-IP:8082/cameras.0/cam1`.
 
 Supported cameras:
 ### URL image
@@ -22,6 +23,8 @@ This is normal URL request, where all parameters are in URL. Like `http://mycam/
 This is URL request for image, where all parameters are in URL, but you can provide the credentials for basic authentication. Like `http://mycam/snapshot.jpg`  
 
 ## Changelog
+### 0.1.0
+* (bluefox) URL and URL with basic authentication were implemented
 
 ### 0.0.1
 * (bluefox) initial release

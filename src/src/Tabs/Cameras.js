@@ -75,6 +75,12 @@ const styles = theme => ({
         marginLeft: 10,
         marginTop: 10,
     },
+    lineUrl: {
+        marginLeft: 200,
+        opacity: 0.5,
+        fontSize: 'small',
+        fontStyle: 'italic',
+    },
     type: {
         width: '100%'
     },
@@ -104,10 +110,17 @@ const styles = theme => ({
         display: 'inline-block',
         verticalAlign: 'top',
     },
+    buttonIcon: {
+        marginTop: 6,
+    },
     buttonTest: {},
     imgTest: {
         width: '100%',
         height: 'auto'
+    },
+    sampleUrl: {
+        display: 'block',
+        marginTop: theme.spacing(1),
     }
 });
 
@@ -119,7 +132,8 @@ class Server extends Component {
             editCam: false,
             editChanged: false,
             requesting: false,
-            instanceAlive: this.props.instanceAlive
+            instanceAlive: this.props.instanceAlive,
+            webInstanceHost: ''
         };
 
         // translate all names once
@@ -129,6 +143,34 @@ class Server extends Component {
                 TYPES[type].name = I18n.t(TYPES[type].name);
             }
         });
+    }
+
+    componentDidMount() {
+        this.getWebInstances();
+    }
+
+    getWebInstances() {
+        this.props.socket.getAdapterInstances('web')
+            .then(list => {
+                let webInstance = null;
+                if (this.props.native.webInstance === '*') {
+                    webInstance = list[Object.keys(list)[0]];
+                } else {
+                    const id = Object.keys(list).find(id => id.endsWith(this.props.native.webInstance));
+                    webInstance = list[id];
+                }
+                if (webInstance) {
+                    webInstance.native = webInstance.native || {};
+                }
+                if (!webInstance.native.bind || webInstance.native.bind === '0.0.0.0') {
+                    // get current host
+                    // get ips on this host
+                    // but for now
+                    webInstance.native.bind = window.location.hostname;
+                }
+
+                webInstance && this.setState({ webInstanceHost: webInstance.native.bind  + ':' + (webInstance.native.port || 8082)});
+            });
     }
 
     renderMessage() {
@@ -142,6 +184,8 @@ class Server extends Component {
     static getDerivedStateFromProps(props, state) {
         if (state.instanceAlive !== props.instanceAlive) {
             return {instanceAlive: props.instanceAlive};
+        } else {
+            return null;
         }
     }
 
@@ -155,7 +199,7 @@ class Server extends Component {
         }, settings.timeout || this.props.native.defaultTimeout);
 
         this.setState({requesting: true}, () => {
-            this.props.socket.sendTo('cameras.' + this.props.instance, 'test', settings, result => {
+            this.props.socket.sendTo(this.props.adapterName + '.' + this.props.instance, 'test', settings, result => {
                 timeout && clearTimeout(timeout);
                 if (!result || !result.body || result.error) {
                     let error = (result && result.error) ? result.error : I18n.t('No answer');
@@ -182,21 +226,26 @@ class Server extends Component {
                 onClose={() => this.state.editCam !== null && this.setState({editCam: false, editChanged: false})}
             >
                 <DialogTitle>{I18n.t('Edit camera %s [%s]', cam.name, cam.type)}</DialogTitle>
-                <DialogContent><div className={this.props.classes.divConfig}><Config
-                    settings={cam}
-                    onChange={settings => {
-                        this.editedSettings = JSON.stringify(settings);
-                        if (this.editedSettingsOld === this.editedSettings && this.state.editChanged) {
-                            this.setState({editChanged: false});
-                        } else if (this.editedSettingsOld !== this.editedSettings && !this.state.editChanged) {
-                            this.setState({editChanged: true});
-                        }
-                    }}
-                    encrypt={(value, cb) =>
-                        this.props.encrypt(value, cb)}
-                    decrypt={(value, cb) =>
-                        this.props.decrypt(value, cb)}
-                /></div>
+                <DialogContent>
+                    <div className={this.props.classes.divConfig}>
+                        <Config
+                            settings={cam}
+                            onChange={settings => {
+                                this.editedSettings = JSON.stringify(settings);
+                                if (this.editedSettingsOld === this.editedSettings && this.state.editChanged) {
+                                    this.setState({editChanged: false});
+                                } else if (this.editedSettingsOld !== this.editedSettings && !this.state.editChanged) {
+                                    this.setState({editChanged: true});
+                                }
+                            }}
+                            encrypt={(value, cb) =>
+                                this.props.encrypt(value, cb)}
+                            decrypt={(value, cb) =>
+                                this.props.decrypt(value, cb)}
+                        />
+                        <div className={ this.props.classes.sampleUrl } >{ I18n.t('Local URL') }: <a href={ `http://${this.props.native.bind}:${this.props.native.port}/${cam.name}?key=${ this.props.native.key }` } target="_blank" rel="noopener noreferrer">URL: http://{ this.props.native.bind }:{this.props.native.port }/{ cam.name }?key={ this.props.native.key }</a></div>
+                        <div className={ this.props.classes.sampleUrl } >{ I18n.t('Web URL') }: <a href={ `http://${this.state.webInstanceHost}/${this.props.adapterName}.${this.props.instance}/${cam.name}` } target="_blank" rel="noopener noreferrer">URL: http://{ this.state.webInstanceHost }/{ this.props.adapterName }.{ this.props.instance }/{ cam.name }</a></div>
+                    </div>
                 <div className={this.props.classes.divTestCam}>
                     <Button
                         disabled={this.state.requesting || !this.state.instanceAlive}
@@ -232,24 +281,105 @@ class Server extends Component {
         }
     }
 
+    renderCameraButtons(cam, i) {
+        return [
+            <Fab
+                size="small"
+                key="edit"
+                className={this.props.classes.lineEdit}
+                onClick={() => {
+                    this.editedSettingsOld = JSON.parse(JSON.stringify(this.props.native.cameras[i]));
+                    COMMON_ATTRS.forEach(attr => {
+                        console.log('delete ' + attr);
+                        delete this.editedSettingsOld[attr];
+                    });
+                    this.editedSettingsOld = JSON.stringify(this.editedSettingsOld);
+                    this.setState({editCam: i});
+                }}>
+                    <IconEdit className={ this.props.classes.buttonIcon }/>
+            </Fab>,
+
+            i ?
+                <Fab
+                    size="small"
+                    key="up"
+                    className={this.props.classes.lineUp}
+                    onClick={() => {
+                        const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                        const cam = cameras[i];
+                        cameras.splice(i, 1);
+                        cameras.splice(i - 1, 0, cam);
+                        this.props.onChange('cameras', cameras);
+                    }}>
+                    <IconUp className={ this.props.classes.buttonIcon }/>
+                </Fab>
+                :
+                <div key="upEmpty" className={this.props.classes.lineNoButtonUp}>&nbsp;</div>,
+
+            i !== this.props.native.cameras.length - 1 ?
+                <Fab
+                    size="small"
+                    key="down"
+                    className={this.props.classes.lineDown}
+                    onClick={() => {
+                        const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                        const cam = cameras[i];
+                        cameras.splice(i, 1);
+                        cameras.splice(i + 1, 0, cam);
+                        this.props.onChange('cameras', cameras);
+                    }}>
+                    <IconDown  className={ this.props.classes.buttonIcon }/>
+                </Fab>
+                :
+                <div key="downEmpty" className={this.props.classes.lineNoButtonDown}>&nbsp;</div>,
+
+            <Fab
+                size="small"
+                key="delete"
+                className={this.props.classes.lineDelete}
+                onClick={() => {
+                    const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                    cameras.splice(i, 1);
+                    this.props.onChange('cameras', cameras);
+                }}>
+                    <IconDelete className={ this.props.classes.buttonIcon }/>
+            </Fab>
+        ];
+    }
+
     renderCamera(cam, i) {
         const error = this.props.native.cameras.find((c, ii) => c.name === cam.name && ii !== i);
-        return (<div key={'cam' + i} className={this.props.classes.lineDiv}>
-            <div className={this.props.classes.lineText}>
+        this.props.native.cameras.forEach((cam, i) => {
+            if (!cam.id) {
+                cam.id = Date.now() + i;
+            }
+        });
+
+        let description = cam.url || '';
+        if (description) {
+            // remove password
+            const m = description.match(/^https?:\/\/([^@]+)@/);
+            if (m && m[1]) {
+                description = description.replace(m[1] + '@', '');
+            }
+        }
+
+        return (<div key={ 'cam' + cam.id } className={ this.props.classes.lineDiv }>
+            <div className={ this.props.classes.lineText }>
                 <TextField
-                    className={this.props.classes.name}
-                    label={I18n.t('Name')}
-                    error={error}
-                    value={cam.name}
-                    helperText={error ? I18n.t('Duplicate name') : ''}
-                    onChange={e => {
+                    className={ this.props.classes.name }
+                    label={ I18n.t('Name') }
+                    error={ error }
+                    value={ cam.name }
+                    helperText={ error ? I18n.t('Duplicate name') : '' }
+                    onChange={ e => {
                         const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
                         cameras[i].name = e.target.value.replace(/[^-_\da-zA-Z]/g, '_');
                         this.props.onChange('cameras', cameras);
                     }}
                 />
             </div>
-            <div className={this.props.classes.lineDesc}>
+            <div className={ this.props.classes.lineDesc }>
                 <TextField
                     className={this.props.classes.desc}
                     label={I18n.t('Description')}
@@ -272,61 +402,35 @@ class Server extends Component {
                             this.props.onChange('cameras', cameras);
                         }}
                     >
-                        {Object.keys(TYPES).map(type => (<MenuItem value={type}>{TYPES[type].name || type}</MenuItem>))}
+                        {Object.keys(TYPES).map(type => (<MenuItem key={ type } value={ type }>{TYPES[type].name || type}</MenuItem>))}
                     </Select>
                 </FormControl>
             </div>
-            {i ? (<Fab size="small" className={this.props.classes.lineUp} onClick={() => {
-                const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
-                const cam = cameras[i];
-                cameras.splice(i, 1);
-                cameras.splice(i - 1, 0, cam);
-                this.props.onChange('cameras', cameras);
-            }}><IconUp /></Fab>) : (<div className={this.props.classes.lineNoButtonUp}>&nbsp;</div>)}
-            {i !== this.props.native.cameras.length - 1 ? (<Fab size="small" className={this.props.classes.lineDown} onClick={() => {
-                const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
-                const cam = cameras[i];
-                cameras.splice(i, 1);
-                cameras.splice(i + 1, 0, cam);
-                this.props.onChange('cameras', cameras);
-            }}><IconDown /></Fab>) : (<div className={this.props.classes.lineNoButtonDown}>&nbsp;</div>)}
-            <Fab size="small" className={this.props.classes.lineEdit} onClick={() => {
-                this.editedSettingsOld = JSON.parse(JSON.stringify(this.props.native.cameras[i]));
-                COMMON_ATTRS.forEach(attr => {
-                    console.log('delete ' + attr);
-                    delete this.editedSettingsOld[attr];
-                });
-                this.editedSettingsOld = JSON.stringify(this.editedSettingsOld);
-                this.setState({editCam: i});
-            }}><IconEdit /></Fab>
-            <Fab size="small" className={this.props.classes.lineDelete} onClick={() => {
-                const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
-                cameras.splice(i, 1);
-                this.props.onChange('cameras', cameras);
-            }}><IconDelete /></Fab>
+            { this.renderCameraButtons(cam, i) }
+            {description ? <div className={ this.props.classes.lineUrl }>{ description }</div> : null }
         </div>);
     }
 
     render() {
-        return (
-            <div className={this.props.classes.tab}>
-                <Fab size="small" onClick={() => {
-                    const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
-                    let i = 1;
-                    while(cameras.find(cam => cam.name === 'cam' + i)) i++;
-                    cameras.push({name: 'cam' + i, type: 'url'});
-                    this.props.onChange('cameras', cameras);
-                }}><IconAdd /></Fab>
-                {this.props.native.cameras ? this.props.native.cameras.map((cam, i) => this.renderCamera(cam, i)) : null}
-                {this.renderConfigDialog()}
-                {this.renderMessage()}
-            </div>
-        );
+        return <div className={this.props.classes.tab}>
+            <Fab size="small" onClick={() => {
+                const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                let i = 1;
+                // eslint-disable-next-line
+                while(cameras.find(cam => cam.name === 'cam' + i)) {
+                    i++;
+                }
+                cameras.push({name: 'cam' + i, type: 'url', id: Date.now()});
+                this.props.onChange('cameras', cameras);
+            }}><IconAdd /></Fab>
+            { this.props.native.cameras ? this.props.native.cameras.map((cam, i) => this.renderCamera(cam, i)) : null }
+            { this.renderConfigDialog() }
+            { this.renderMessage() }
+        </div>;
     }
 }
 
 Server.propTypes = {
-    common: PropTypes.object.isRequired,
     decrypt: PropTypes.func.isRequired,
     encrypt: PropTypes.func.isRequired,
     native: PropTypes.object.isRequired,

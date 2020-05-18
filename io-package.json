@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "cameras",
-        "version": "0.0.1",
+        "version": "0.1.0",
         "news": {
+            "0.1.0": {
+                "en": "URL and URL with basic authentication were implemented",
+                "de": "URL und URL mit Basisauthentifizierung wurden implementiert",
+                "ru": "URL и URL с базовой аутентификацией были реализованы",
+                "pt": "URL e URL com autenticação básica foram implementados",
+                "nl": "URL en URL met basisverificatie zijn geïmplementeerd",
+                "fr": "URL et URL avec authentification de base ont été implémentées",
+                "it": "Sono stati implementati URL e URL con autenticazione di base",
+                "es": "Se implementaron URL y URL con autenticación básica",
+                "pl": "Zaimplementowano adres URL i adres URL z podstawowym uwierzytelnianiem",
+                "zh-cn": "已实现URL和具有基本身份验证的URL"
+            },
             "0.0.1": {
                 "en": "initial release",
                 "de": "Erstveröffentlichung",

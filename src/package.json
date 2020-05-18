@@ -1,17 +1,17 @@
 {
   "name": "cameras-admin",
-  "version": "0.1.1",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@iobroker/adapter-react": "^0.3.1",
-    "@material-ui/core": "^4.9.5",
-    "react": "^16.13.0",
-    "react-dom": "^16.13.0",
-    "react-icons": "^3.9.0",
-    "react-scripts": "^3.4.0",
+    "@iobroker/adapter-react": "^0.4.5",
+    "@material-ui/core": "^4.9.14",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-icons": "^3.10.0",
+    "react-scripts": "^3.4.1",
     "@material-ui/icons": "^4.9.1",
-    "eslint": "^6.8.0",
-    "eslint-plugin-import": "^2.20.1"
+    "eslint": "^6.6.0",
+    "eslint-plugin-import": "^2.20.2"
   },
   "scripts": {
     "start": "react-scripts start",

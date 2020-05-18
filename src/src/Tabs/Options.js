@@ -107,12 +107,12 @@ class Options extends Component {
         return [
             this.state.ips && this.state.ips.length ?
                 (<FormControl key="bindSelect"  className={this.props.classes.bind}>
-                    <InputLabel>{I18n.t('Local IP address')}</InputLabel>
+                    <InputLabel>{ I18n.t('Local IP address') }</InputLabel>
                     <Select
-                         disabled={this.state.requesting}
-                         value={this.props.native.bind}
-                         onChange={e => this.props.onChange('bind', e.target.value)}
-                    >{this.state.ips.map(ip => (<MenuItem value={ip.address}>{ip.name}</MenuItem>))}</Select></FormControl>) :
+                         disabled={ this.state.requesting }
+                         value={ this.props.native.bind }
+                         onChange={ e => this.props.onChange('bind', e.target.value) }
+                    >{ this.state.ips.map(ip => (<MenuItem value={ ip.address }>{ ip.name }</MenuItem>)) }</Select></FormControl>) :
                 (<TextField
                     disabled={this.state.requesting}
                     key="bind"

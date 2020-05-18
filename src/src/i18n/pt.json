@@ -12,5 +12,12 @@
   "Success": "Sucesso",
   "Test connection": "Conexão de teste",
   "Type": "Tipo",
-  "not connected": "não conectado"
+  "not connected": "não conectado",
+  "Description": "Descrição",
+  "Name": "Nome",
+  "Test": "Teste",
+  "Apply": "Aplique",
+  "Username": "Nome do usuário",
+  "Password": "Senha",
+  "Edit camera %s [%s]": "Editar câmera %s [%s]"
 }

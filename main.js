@@ -19,12 +19,10 @@ function startAdapter(options) {
     Object.assign(options, {name: adapterName});
     adapter = new utils.Adapter(options);
 
-    adapter.getEncryptedConfig = adapter.getEncryptedConfig || getEncryptedConfig;
-
     try {
         adapter.tools = adapter.tools || require(utils.controllerDir + '/lib/tools');
     } catch (e) {
-        adapter.tools = {decrypt};
+        adapter.tools = { decrypt };
     }
 
     adapter.on('message', msg => processMessage(adapter, msg));
@@ -106,7 +104,7 @@ function testCamera(adapter, item, cb) {
             })
             .catch(e => {
                 adapter.log.warn('Cannot get image: ' + (e && e.toString()));
-                cb && cb({error: e && e.toString()})
+                cb && cb({error: e && e.toString()});
             })
             .then(() => adapter.__CAM_TYPES[item.type].unload(adapter, item));
     } else {
@@ -285,7 +283,7 @@ function main(adapter) {
                 if (now - adapter.__bforce[ip] > 5000) {
                     delete adapter.__bforce[ip];
                 }
-            })
+            });
         }, 30000);
 
         Promise.all(promises)

@@ -12,5 +12,12 @@
   "Success": "Succes",
   "Test connection": "Test verbinding",
   "Type": "Type",
-  "not connected": "niet verbonden"
+  "not connected": "niet verbonden",
+  "Description": "Omschrijving",
+  "Name": "Naam",
+  "Test": "Test",
+  "Apply": "Van toepassing zijn",
+  "Username": "Gebruikersnaam",
+  "Password": "Wachtwoord",
+  "Edit camera %s [%s]": "Camera %s [%s] bewerken"
 }

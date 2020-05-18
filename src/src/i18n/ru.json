@@ -12,5 +12,12 @@
   "Success": "Успешно",
   "Test connection": "Тестовое соединение",
   "Type": "Тип",
-  "not connected": "Не подключен"
+  "not connected": "Не подключен",
+  "Description": "Описание",
+  "Name": "имя",
+  "Test": "Тестовое задание",
+  "Apply": "Сохранить",
+  "Username": "Имя пользователя",
+  "Password": "пароль",
+  "Edit camera %s [%s]": "Редактировать камеру %s [%s]"
 }

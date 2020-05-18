@@ -12,5 +12,12 @@
   "Success": "Success",
   "Test connection": "Test connection",
   "Type": "Type",
-  "not connected": "not connected"
+  "not connected": "not connected",
+  "Description": "Description",
+  "Name": "Name",
+  "Test": "Test",
+  "Apply": "Apply",
+  "Username": "User name",
+  "Password": "Password",
+  "Edit camera %s [%s]": "Edit camera %s [%s]"
 }
