@@ -113,7 +113,9 @@ const styles = theme => ({
     buttonIcon: {
         marginTop: 6,
     },
-    buttonTest: {},
+    buttonTest: {
+        marginBottom: theme.spacing(1),
+    },
     imgTest: {
         width: '100%',
         height: 'auto'

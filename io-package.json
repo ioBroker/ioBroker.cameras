@@ -3,6 +3,18 @@
         "name": "cameras",
         "version": "0.1.0",
         "news": {
+            "0.1.1": {
+                "en": "implemented get image by message",
+                "de": "implementiert Bild für Nachricht erhalten",
+                "ru": "реализовано получение изображения по сообщению",
+                "pt": "implementado obter imagem por mensagem",
+                "nl": "geïmplementeerd krijg afbeelding per bericht",
+                "fr": "image obtenue par message",
+                "it": "implementato ottenere immagine per messaggio",
+                "es": "implementado obtener imagen por mensaje",
+                "pl": "zaimplementowano pobranie obrazu przez wiadomość",
+                "zh-cn": "实现通过消息获取图像"
+            },
             "0.1.0": {
                 "en": "URL and URL with basic authentication were implemented",
                 "de": "URL und URL mit Basisauthentifizierung wurden implementiert",
@@ -75,6 +87,7 @@
         "compact": true,
         "messagebox": true,
         "materialize": true,
+        "subscribable": true,
         "dependencies": [
             {
                 "js-controller": ">=1.4.2",
@@ -98,5 +111,14 @@
         ]
     },
     "objects": [],
-    "instanceObjects": []
+    "instanceObjects": [
+        {
+            "_id":  "cameras",
+            "type": "channel",
+            "common": {
+                "name": "Cameras"
+            },
+            "native": {}
+        }
+    ]
 }

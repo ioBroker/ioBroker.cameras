@@ -10,13 +10,15 @@ const sharp       = require('sharp');
  */
 let adapter;
 
+let pollings = {};
+
 /**
  * Starts the adapter instance
  * @param {Partial<ioBroker.AdapterOptions>} [options]
  */
 function startAdapter(options) {
     options = options || {};
-    Object.assign(options, {name: adapterName});
+    Object.assign(options, {name: adapterName, subscribable: true});
     adapter = new utils.Adapter(options);
 
     try {
@@ -27,6 +29,11 @@ function startAdapter(options) {
 
     adapter.on('message', msg => processMessage(adapter, msg));
     adapter.on('ready', () => main(adapter));
+
+    adapter.on('subscribesChange', subscriptions => {
+        // Go through subscribes
+        console.log('Subscribe on ' + JSON.stringify(subscriptions));
+    });
 
     adapter.on('unload', cb => {
         adapter.__bforceInterval && clearInterval(adapter.__bforceInterval);
@@ -47,16 +54,14 @@ function startAdapter(options) {
 
 function testCamera(adapter, item, cb) {
     if (item && item.type) {
-        item.name = '/' + item.name + '_test';
+        const url = '/' + item.name + '_test';
         try {
             adapter.__CAM_TYPES[item.type] = adapter.__CAM_TYPES[item.type] || require(__dirname + '/cameras/' + item.type);
         } catch (e) {
             adapter.log.error('Cannot load "' + item.type + '": ' + e);
             return cb({error: 'Cannot load "' + item.type + '"'});
         }
-        const req = {
-            url: item.name
-        };
+        const req = { url };
         let body;
         let status;
         let contentType;
@@ -112,6 +117,31 @@ function testCamera(adapter, item, cb) {
     }
 }
 
+function getCameraImage(cam, width, height, angle) {
+    if (adapter.__CAM_TYPES[cam.type]) {
+        adapter.log.debug('Request ' + JSON.stringify(cam));
+
+        return adapter.__CAM_TYPES[cam.type].process(adapter, cam)
+            .then(data => {
+                if (data) {
+                    let imageData;
+                    return resizeImage(data, width || cam.width, height || cam.height)
+                        .then(data => rotateImage(data, angle || cam.angle))
+                        .then(_imageData => {
+                            imageData = _imageData;
+                            return adapter.setBinaryStateAsync(adapter.namespace + '.cameras.' + cam.name, Buffer.from(_imageData.body));
+                        })
+                        .then(() => imageData.body);
+                } else if (!data) {
+                    adapter.log.error('No data from camera '  + cam.name);
+                }
+            })
+            .catch(e => adapter.log.error('Cannot get camera image of '  + cam.name + ': ' + e));
+    } else {
+        return Promise.reject('Unsupported camera type');
+    }
+}
+
 function processMessage(adapter, obj) {
     if (!obj || !obj.command) {
         return;
@@ -121,6 +151,27 @@ function processMessage(adapter, obj) {
         case 'test': {
             testCamera(adapter, obj.message, result =>
                 obj.callback && adapter.sendTo(obj.from, obj.command, result, obj.callback));
+            break;
+        }
+
+        case 'image': {
+            const cam = adapter.config.cameras.find(cam => cam.name === obj.message.name);
+            if (cam && obj.callback) {
+                getCameraImage(cam, obj.message.width, obj.message.height, obj.message.angle)
+                    .then(data =>
+                        adapter.sendTo(obj.from, obj.command, { data: Buffer.from(data).toString('base64') }, obj.callback))
+                    .catch(e => adapter.sendTo(obj.from, obj.command, { error: e }, obj.callback));
+            } else {
+                obj.callback && adapter.sendTo(obj.from, obj.command, { error: 'Name not found' }, obj.callback);
+            }
+            break;
+        }
+
+        case 'list': {
+            obj.callback && adapter.sendTo(obj.from, obj.command, {
+                list: adapter.config.cameras.map(cam =>
+                    ({name: cam.name, desc: cam.desc, id: adapter.namespace + '.cameras.' + cam.name}))}, obj.callback);
+
             break;
         }
     }
@@ -143,7 +194,10 @@ function unloadCameras(adapter, cb) {
 
 function resizeImage(data, width, height) {
     if (!width && !height)  {
-        return Promise.resolve(data);
+        return sharp(data.body)
+            .jpeg()
+            .toBuffer()
+            .then(body =>({body, contentType: 'image/jpeg'}));
     }  else {
         return sharp(data.body)
             .resize(width || null, height || null)
@@ -155,7 +209,10 @@ function resizeImage(data, width, height) {
 
 function rotateImage(data, angle) {
     if (!angle)  {
-        return Promise.resolve(data);
+        return sharp(data.body)
+            .jpeg()
+            .toBuffer()
+            .then(body =>({body, contentType: 'image/jpeg'}));
     }  else {
         return sharp(data.body)
             .rotate(angle)
@@ -200,7 +257,7 @@ function startWebServer(adapter) {
             res.end();
         }
 
-        const cam = adapter.config.cameras.find(cam => cam.name === url);
+        const cam = adapter.config.cameras.find(cam => cam.path === url);
 
         if (cam) {
             if (adapter.__CAM_TYPES[cam.type]) {
@@ -245,6 +302,68 @@ function startWebServer(adapter) {
         adapter.log.debug(`Server started on ${adapter.config.bind}:${adapter.config.port}`));
 }
 
+function processTasks(tasks, cb) {
+    if (!tasks || !tasks.length) {
+        cb && cb();
+    } else {
+        const task = tasks.shift();
+        if (task.name === 'delete') {
+            adapter.delForeignObject(task.id, () =>
+                setImmediate(processTasks, tasks, cb));
+        } else if (task.name === 'set') {
+            adapter.setForeignObject(task.obj._id, task.obj, () =>
+                setImmediate(processTasks, tasks, cb));
+        }
+    }
+}
+
+function syncConfig() {
+    return new Promise(resolve =>
+        adapter.getStatesOf('', 'cameras', (err, states) => {
+            const tasks = [];
+
+            states.forEach(obj => {
+                const name = obj._id.split('.').pop();
+                if (!adapter.config.cameras.find(item => item.name === name)) {
+                    // state does not exists anymore
+                    tasks.push({name: 'delete', id: obj._id});
+                }
+            });
+            adapter.config.cameras.forEach(item => {
+                const obj = states.find(obj => obj._id.split('.').pop() === item.name);
+                if (!obj) {
+                    tasks.push({name: 'set', obj: {
+                        _id: adapter.namespace + '.cameras.' + item.name,
+                        common: {
+                            name: item.desc || item.name,
+                            type: 'file',
+                        },
+                        binary: true,
+                        type: 'state',
+                        native: {}
+                    }});
+                } else if (obj && obj.common.name !== (item.desc || item.name)) {
+                    obj.common.name = item.desc || item.name;
+                    tasks.push({name: 'set', obj});
+                }
+            });
+
+        processTasks(tasks, () => resolve());
+    }));
+}
+
+function fillStates() {
+    // write all states with actual images one time at start
+    return new Promise(resolve => {
+        const promises = adapter.config.cameras.map(cam =>
+            getCameraImage(cam)
+                .catch(e => adapter.log.error('Cannot get image: ' + e)));
+
+        Promise.all(promises)
+            .then(() => resolve());
+    });
+}
+
 function main(adapter) {
     // read secret key
     adapter.getForeignObject('system.config', null, (err, data) => {
@@ -257,7 +376,7 @@ function main(adapter) {
         // init all required camera providers
         adapter.config.cameras.forEach(item => {
             if (item && item.type) {
-                item.name = '/' + item.name;
+                item.path = '/' + item.name;
                 try {
                     adapter.__CAM_TYPES[item.type] = adapter.__CAM_TYPES[item.type] || require(__dirname + '/cameras/' + item.type);
                     promises.push(adapter.__CAM_TYPES[item.type].init(adapter, item).catch(e => adapter.log.error(`Cannot init camera ${item.name}: ${e && e.toString()}`)));
@@ -287,6 +406,8 @@ function main(adapter) {
         }, 30000);
 
         Promise.all(promises)
+            .then(() => syncConfig())
+            .then(() => fillStates())
             .then(() => startWebServer(adapter));
     });
 }

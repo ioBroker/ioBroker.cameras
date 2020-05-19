@@ -15,6 +15,21 @@ You can integrate you web/ip cameras into vis and other visualisations.
 If you configure a camera with name `cam1` it will be available on 
 web server under `http(s)://iobroker-IP:8082/cameras.0/cam1`.
 
+Additionally you the image could be requested via message:
+```
+sendTo('cameras.0', 'image', {
+    name: 'cam1', 
+    width: 100, // optional 
+    height: 50, // optional
+    angle: 90   // optional
+}, result => {
+    const img = 'data:image/jpeg;base64,' + result;
+    console.log('Show image: ' + img);    
+}); 
+```
+
+The result is always in `jpg` format.
+
 Supported cameras:
 ### URL image
 This is normal URL request, where all parameters are in URL. Like `http://mycam/snapshot.jpg`  
@@ -23,6 +38,9 @@ This is normal URL request, where all parameters are in URL. Like `http://mycam/
 This is URL request for image, where all parameters are in URL, but you can provide the credentials for basic authentication. Like `http://mycam/snapshot.jpg`  
 
 ## Changelog
+### 0.1.1
+* (bluefox) implemented get image by message
+
 ### 0.1.0
 * (bluefox) URL and URL with basic authentication were implemented
 
