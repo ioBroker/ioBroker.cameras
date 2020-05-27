@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "cameras",
-        "version": "0.1.0",
+        "version": "0.1.1",
         "news": {
             "0.1.1": {
                 "en": "implemented get image by message",
