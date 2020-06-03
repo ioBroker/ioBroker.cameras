@@ -159,7 +159,7 @@ function processMessage(adapter, obj) {
             if (cam && obj.callback) {
                 getCameraImage(cam, obj.message.width, obj.message.height, obj.message.angle)
                     .then(data =>
-                        adapter.sendTo(obj.from, obj.command, { data: Buffer.from(data).toString('base64') }, obj.callback))
+                        adapter.sendTo(obj.from, obj.command, { data: Buffer.from(data).toString('base64'), contentType: 'image/jpeg' }, obj.callback))
                     .catch(e => adapter.sendTo(obj.from, obj.command, { error: e }, obj.callback));
             } else {
                 obj.callback && adapter.sendTo(obj.from, obj.command, { error: 'Name not found' }, obj.callback);

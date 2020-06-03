@@ -90,7 +90,7 @@
         "subscribable": true,
         "dependencies": [
             {
-                "js-controller": ">=1.4.2",
+                "js-controller": ">=3.1.4",
                 "web": ">=2.0.0"
             }
         ]
