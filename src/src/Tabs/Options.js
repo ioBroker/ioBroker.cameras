@@ -149,8 +149,8 @@ class Options extends Component {
                 <InputLabel>{I18n.t('WEB Instance')}</InputLabel>
                 <Select
                     disabled={this.state.requesting}
-                    value={this.props.native.bind}
-                    onChange={e => this.props.onChange('bind', e.target.value)}
+                    value={this.props.native.webInstance}
+                    onChange={e => this.props.onChange('webInstance', e.target.value)}
                 >
                     <MenuItem value="*">{I18n.t('All')}</MenuItem>
                     {this.state.webInstances ? this.state.webInstances.map(instance => (<MenuItem value={instance}>{instance}</MenuItem>)) : null}

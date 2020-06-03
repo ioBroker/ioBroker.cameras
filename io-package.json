@@ -1,9 +1,9 @@
 {
     "common": {
         "name": "cameras",
-        "version": "0.1.1",
+        "version": "0.1.2",
         "news": {
-            "0.1.1": {
+            "0.1.2": {
                 "en": "implemented get image by message",
                 "de": "implementiert Bild für Nachricht erhalten",
                 "ru": "реализовано получение изображения по сообщению",
