@@ -235,7 +235,7 @@ function startWebServer(adapter) {
 
         const parts = req.url.split('?');
         const url = parts[0];
-        const query = [];
+        const query = {};
         (parts[1] || '').split('&').forEach(p => {
             const pp = p.split('=');
             query[pp[0]] = decodeURIComponent(pp[1] || '');
@@ -265,8 +265,8 @@ function startWebServer(adapter) {
                 adapter.__CAM_TYPES[cam.type].process(adapter, cam, req, res)
                     .then(data => {
                         if (data && !data.done) {
-                            resizeImage(data, query.w, query.h)
-                                .then(data => rotateImage(data, query.angle))
+                            resizeImage(data, parseInt(query.w), parseInt(query.h))
+                                .then(data => rotateImage(data, parseInt(query.angle)))
                                 .then(data => {
                                     res.setHeader('Content-type', data.contentType);
                                     res.write(data.body || '');
