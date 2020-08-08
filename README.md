@@ -43,7 +43,7 @@ This is URL request for image, where all parameters are in URL, but you can prov
 -->
 
 ## Changelog
-### __WORK IN PROGRESS__
+### 0.1.3 (2020-08-08)
 * (Hirsch-DE) Parameters were applied
 
 ### 0.1.2 (2020-06-03)

@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "cameras",
-        "version": "0.1.2",
+        "version": "0.1.3",
         "news": {
+            "0.1.3": {
+                "en": "Parameters were applied",
+                "de": "Parameter wurden angewendet",
+                "ru": "Параметры были применены",
+                "pt": "Os parâmetros foram aplicados",
+                "nl": "Parameters werden toegepast",
+                "fr": "Les paramètres ont été appliqués",
+                "it": "I parametri sono stati applicati",
+                "es": "Se aplicaron parámetros",
+                "pl": "Zastosowano parametry",
+                "zh-cn": "应用参数"
+            },
             "0.1.2": {
                 "en": "implemented get image by message",
                 "de": "implementiert Bild für Nachricht erhalten",
@@ -106,14 +118,14 @@
             {
                 "name": "cam1",
                 "type": "url",
-                "url":  "https://raw.githubusercontent.com/ioBroker/ioBroker.admin/master/admin/admin.png"
+                "url": "https://raw.githubusercontent.com/ioBroker/ioBroker.admin/master/admin/admin.png"
             }
         ]
     },
     "objects": [],
     "instanceObjects": [
         {
-            "_id":  "cameras",
+            "_id": "cameras",
             "type": "channel",
             "common": {
                 "name": "Cameras"
