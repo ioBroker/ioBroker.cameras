@@ -23,6 +23,7 @@
     "sharp": "^0.25.3"
   },
   "devDependencies": {
+    "@alcalzone/release-script": "^1.6.0",
     "@iobroker/testing": "^2.2.0",
     "@types/chai": "^4.2.11",
     "@types/chai-as-promised": "^7.1.2",
@@ -54,7 +55,8 @@
     "test": "npm run test:js && npm run test:package",
     "lint": "eslint",
     "prepublishOnly": "node node_modules/gulp/bin/gulp --gulpfile gulpfile.js default",
-    "build": "node node_modules/gulp/bin/gulp.js"
+    "build": "node node_modules/gulp/bin/gulp.js",
+    "release": "release-script"
   },
   "bugs": {
     "url": "https://github.com/ioBroker/ioBroker.cameras/issues"
