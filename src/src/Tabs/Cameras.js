@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import MessageDialog from '@iobroker/adapter-react/Dialogs/Message';
+
 import Fab from '@material-ui/core/Fab';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -21,6 +21,7 @@ import IconUp from '@material-ui/icons/ArrowUpward';
 import IconDown from '@material-ui/icons/ArrowDownward';
 import IconTest from '@material-ui/icons/Camera';
 
+import MessageDialog from '@iobroker/adapter-react/Dialogs/Message';
 import I18n from '@iobroker/adapter-react/i18n';
 
 import URLImage from '../Types/URLImage';
@@ -177,7 +178,7 @@ class Server extends Component {
 
     renderMessage() {
         if (this.state.message) {
-            return (<MessageDialog text={this.state.message} onClose={() => this.setState({message: ''})}/>);
+            return <MessageDialog text={this.state.message} onClose={() => this.setState({message: ''})}/>;
         } else {
             return null;
         }
@@ -221,7 +222,7 @@ class Server extends Component {
             const cam = this.props.native.cameras[this.state.editCam];
             let Config = (TYPES[cam.type] || TYPES.url).Config;
 
-            return (<Dialog
+            return <Dialog
                 maxWidth="lg"
                 fullWidth={true}
                 open={true}
@@ -277,7 +278,7 @@ class Server extends Component {
                     }} color="primary" >{I18n.t('Apply')}</Button>
                     <Button onClick={() => this.setState({editCam: false, editChanged: false})}>{I18n.t('Cancel')}</Button>
                 </DialogActions>
-            </Dialog>);
+            </Dialog>;
         } else {
             return null;
         }

@@ -10,8 +10,6 @@ const sharp       = require('sharp');
  */
 let adapter;
 
-let pollings = {};
-
 /**
  * Starts the adapter instance
  * @param {Partial<ioBroker.AdapterOptions>} [options]
@@ -58,8 +56,8 @@ function testCamera(adapter, item, cb) {
         try {
             adapter.__CAM_TYPES[item.type] = adapter.__CAM_TYPES[item.type] || require('./cameras/' + item.type);
         } catch (e) {
-            adapter.log.error('Cannot load "' + item.type + '": ' + e);
-            return cb({error: 'Cannot load "' + item.type + '"'});
+            adapter.log.error(`Cannot load "${item.type}": ${e}`);
+            return cb({error: `Cannot load "${item.type}"`});
         }
         const req = { url };
         let body;
@@ -337,10 +335,13 @@ function syncConfig() {
                         common: {
                             name: item.desc || item.name,
                             type: 'file',
+                            role: 'camera'
                         },
                         binary: true,
                         type: 'state',
-                        native: {}
+                        native: {
+                            url: `/${adapter.namespace}/${item.name}`
+                        }
                     }});
                 } else if (obj && obj.common.name !== (item.desc || item.name)) {
                     obj.common.name = item.desc || item.name;

@@ -1,39 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { MuiThemeProvider} from '@material-ui/core/styles';
-import './index.css';
-import App from './App';
+import { version } from '../package.json';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 import * as serviceWorker from './serviceWorker';
 
-import createTheme from '@iobroker/adapter-react/createTheme';
+import '@iobroker/adapter-react/index.css';
+import theme from '@iobroker/adapter-react/Theme';
+import Utils from '@iobroker/adapter-react/Components/Utils';
+import App from './App';
 
-let theme = 'light';
+window.adapterName = 'cameras';
 
-function printPrompt() {
-    const prompt = `
-██╗ ██████╗ ██████╗ ██████╗  ██████╗ ██╗  ██╗███████╗██████╗ 
-██║██╔═══██╗██╔══██╗██╔══██╗██╔═══██╗██║ ██╔╝██╔════╝██╔══██╗
-██║██║   ██║██████╔╝██████╔╝██║   ██║█████╔╝ █████╗  ██████╔╝
-██║██║   ██║██╔══██╗██╔══██╗██║   ██║██╔═██╗ ██╔══╝  ██╔══██╗
-██║╚██████╔╝██████╔╝██║  ██║╚██████╔╝██║  ██╗███████╗██║  ██║
-╚═╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
-`;
-    console.log(prompt);
-    console.log('Nice to see you here! :) Join our dev community here https://github.com/ioBroker/ioBroker or here https://github.com/iobroker-community-adapters');
-    console.log('Help us to create open source project with reactJS!');
-    console.log('See you :)');
-}
+console.log('iobroker.' + window.adapterName + '@' + version);
+let themeName = Utils.getThemeName();
 
 function build() {
-    printPrompt();
-    return ReactDOM.render(<MuiThemeProvider theme={createTheme(theme)}>
-        <App onThemeChange={_theme => {
-            theme = _theme;
+    return ReactDOM.render(<MuiThemeProvider theme={theme(themeName)}>
+        <App onThemeChange={_themeName => {
+            themeName = _themeName;
             build();
-        }}/>
+        }} />
     </MuiThemeProvider>, document.getElementById('root'));
 }
-
 
 build();
 

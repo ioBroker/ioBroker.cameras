@@ -25,22 +25,20 @@ class Config extends Component {
     }
 
     render() {
-        return (
-            <div className={this.props.classes.page}>
-                <TextField
-                    key="url"
-                    className={this.props.classes.url}
-                    label={I18n.t('Camera URL')}
-                    value={this.state.url}
-                    onChange={e => {
-                        this.setState({url: e.target.value}, () =>
-                            this.props.onChange({
-                                url: this.state.url
-                            }));
-                    }}
-                />
-            </div>
-        );
+        return <div className={this.props.classes.page}>
+            <TextField
+                key="url"
+                className={this.props.classes.url}
+                label={I18n.t('Camera URL')}
+                value={this.state.url}
+                onChange={e => {
+                    this.setState({url: e.target.value}, () =>
+                        this.props.onChange({
+                            url: this.state.url
+                        }));
+                }}
+            />
+        </div>;
     }
 }
 

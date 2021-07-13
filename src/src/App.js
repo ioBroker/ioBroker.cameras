@@ -1,5 +1,6 @@
 import React from 'react';
-import {withStyles} from '@material-ui/core/styles';
+import { MuiThemeProvider, withStyles} from '@material-ui/core/styles';
+
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -7,6 +8,7 @@ import GenericApp from '@iobroker/adapter-react/GenericApp';
 import Loader from '@iobroker/adapter-react/Components/Loader'
 
 import I18n from '@iobroker/adapter-react/i18n';
+
 import TabOptions from './Tabs/Options';
 import TabCameras from './Tabs/Cameras';
 
@@ -44,14 +46,23 @@ class App extends GenericApp {
         };
 
         super(props, extendedProps);
+    }
 
-        this.socket.subscribeState(this.instanceId + '.alive', (id, state) => {
-            if (id) {
-                if (this.state.alive !== (state ? state.val : false)) {
-                    this.setState({alive: state ? state.val : false});
-                }
+    onAliveChanged = (id, state) => {
+        if (id) {
+            if (this.state.alive !== (state ? state.val : false)) {
+                this.setState({alive: state ? state.val : false});
             }
-        });
+        }
+    }
+
+    componentDidMount() {
+        super.componentDidMount();
+        this.socket.unsubscribeState(this.instanceId + '.alive', this.onAliveChanged);
+    }
+    componentWillUnmount() {
+        this.socket.unsubscribeState(this.instanceId + '.alive', this.onAliveChanged);
+        super.componentWillUnmount();
     }
 
     // called when connected with admin and loaded instance object
@@ -82,51 +93,51 @@ class App extends GenericApp {
 
     render() {
         if (!this.state.loaded) {
-            return (<Loader theme={this.state.themeType}/>);
+            return <Loader theme={this.state.themeType}/>;
         }
 
-        return (
-            <div className="App">
-                <AppBar position="static">
-                    <Tabs value={this.getSelectedTab()} onChange={(e, index) => this.selectTab(e.target.parentNode.dataset.name, index)}>
-                        <Tab selected={this.state.selectedTab === 'options'} label={I18n.t('Options')} data-name="options" />
-                        <Tab selected={this.state.selectedTab === 'cameras'} label={I18n.t('Cameras')} data-name="cameras" />
-                    </Tabs>
-                </AppBar>
+        return <div className="App" style={{background: this.state.themeType === 'dark' ? 'black' : 'white'}}>
+            <AppBar position="static">
+                <Tabs value={this.getSelectedTab()} onChange={(e, index) => this.selectTab(e.target.parentNode.dataset.name, index)}>
+                    <Tab selected={this.state.selectedTab === 'options'} label={I18n.t('Options')} data-name="options" />
+                    <Tab selected={this.state.selectedTab === 'cameras'} label={I18n.t('Cameras')} data-name="cameras" />
+                </Tabs>
+            </AppBar>
 
-                <div className={this.isIFrame ? this.props.classes.tabContentIFrame : this.props.classes.tabContent}>
-                    {(this.state.selectedTab === 'options' || !this.state.selectedTab) && (<TabOptions
-                        key="options"
-                        common={this.common}
-                        socket={this.socket}
-                        native={this.state.native}
-                        encrypt={(value, cb) => cb(this.encrypt(value))}
-                        decrypt={(value, cb) => cb(this.decrypt(value))}
-                        onError={text => this.setState({errorText: text})}
-                        onLoad={native => this.onLoadConfig(native)}
-                        instance={this.instance}
-                        getIpAddresses={() => this.getIpAddresses()}
-                        getExtendableInstances={() => this.getExtendableInstances()}
-                        onConfigError={configError => this.setConfigurationError(configError)}
-                        adapterName={this.adapterName}
-                        onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}
-                    />)}
-                    {this.state.selectedTab === 'cameras' && (<TabCameras
-                        key="cameras"
-                        socket={this.socket}
-                        adapterName={ this.adapterName }
-                        instance={this.instance}
-                        encrypt={(value, cb) => cb(this.encrypt(value))}
-                        decrypt={(value, cb) => cb(this.decrypt(value))}
-                        instanceAlive={this.state.alive}
-                        native={this.state.native}
-                        onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}
-                    />)}
-                </div>
-                {this.renderError()}
-                {this.renderSaveCloseButtons()}
+            <div className={this.isIFrame ? this.props.classes.tabContentIFrame : this.props.classes.tabContent}>
+                {(this.state.selectedTab === 'options' || !this.state.selectedTab) && <TabOptions
+                    key="options"
+                    common={this.common}
+                    socket={this.socket}
+                    native={this.state.native}
+                    encrypt={(value, cb) => cb(this.encrypt(value))}
+                    decrypt={(value, cb) => cb(this.decrypt(value))}
+                    onError={text => this.setState({errorText: text})}
+                    onLoad={native => this.onLoadConfig(native)}
+                    instance={this.instance}
+                    theme={this.state.theme}
+                    getIpAddresses={() => this.socket.getIpAddresses(this.common.host)}
+                    getExtendableInstances={() => this.getExtendableInstances()}
+                    onConfigError={configError => this.setConfigurationError(configError)}
+                    adapterName={this.adapterName}
+                    onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}
+                />}
+                {this.state.selectedTab === 'cameras' && <TabCameras
+                    key="cameras"
+                    theme={this.state.theme}
+                    socket={this.socket}
+                    adapterName={ this.adapterName }
+                    instance={this.instance}
+                    encrypt={(value, cb) => cb(this.encrypt(value))}
+                    decrypt={(value, cb) => cb(this.decrypt(value))}
+                    instanceAlive={this.state.alive}
+                    native={this.state.native}
+                    onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}
+                />}
             </div>
-        );
+            {this.renderError()}
+            {this.renderSaveCloseButtons()}
+        </div>;
     }
 }
 

@@ -44,36 +44,34 @@ class Config extends Component {
     }
 
     render() {
-        return (
-            <div className={this.props.classes.page}>
-                <TextField
-                    key="url"
-                    className={this.props.classes.url}
-                    label={I18n.t('Camera URL')}
-                    value={this.state.url}
-                    onChange={e => this.setState({url: e.target.value}, () => this.reportSettings())}
-                />
-                <br/>
-                <TextField
-                    key="username"
-                    autoComplete="off"
-                    className={this.props.classes.username}
-                    label={I18n.t('Username')}
-                    value={this.state.username}
-                    onChange={e => this.setState({username: e.target.value}, () => this.reportSettings())}
-                />
-                <br/>
-                <TextField
-                    key="password"
-                    type="password"
-                    autoComplete="off"
-                    className={this.props.classes.password}
-                    label={I18n.t('Password')}
-                    value={this.state.password}
-                    onChange={e => this.setState({password: e.target.value}, () => this.reportSettings())}
-                />
-            </div>
-        );
+        return <div className={this.props.classes.page}>
+            <TextField
+                key="url"
+                className={this.props.classes.url}
+                label={I18n.t('Camera URL')}
+                value={this.state.url}
+                onChange={e => this.setState({url: e.target.value}, () => this.reportSettings())}
+            />
+            <br/>
+            <TextField
+                key="username"
+                autoComplete="off"
+                className={this.props.classes.username}
+                label={I18n.t('Username')}
+                value={this.state.username}
+                onChange={e => this.setState({username: e.target.value}, () => this.reportSettings())}
+            />
+            <br/>
+            <TextField
+                key="password"
+                type="password"
+                autoComplete="off"
+                className={this.props.classes.password}
+                label={I18n.t('Password')}
+                value={this.state.password}
+                onChange={e => this.setState({password: e.target.value}, () => this.reportSettings())}
+            />
+        </div>;
     }
 }
 

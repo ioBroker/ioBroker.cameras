@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import DialogMessage from '@iobroker/adapter-react/Dialogs/Message';
@@ -16,7 +16,6 @@ import I18n from '@iobroker/adapter-react/i18n';
 import Logo from '@iobroker/adapter-react/Components/Logo';
 import Message from '@iobroker/adapter-react/Dialogs/Message';
 import DialogError from "@iobroker/adapter-react/Dialogs/Error";
-
 
 const styles = theme => ({
     tab: {
@@ -48,11 +47,16 @@ class Options extends Component {
             webInstances: []
         };
 
+    }
+
+    componentDidMount() {
         let ips;
         this.props.getIpAddresses()
             .then(_ips => ips = _ips)
             .then(() => this.props.getExtendableInstances())
-            .then(webInstances => this.setState({requesting: false, ips, webInstances: webInstances.map(item => item._id.replace('system.adapter.', ''))}));
+            .then(webInstances =>
+                this.setState({requesting: false, ips, webInstances: webInstances.map(item =>
+                        item._id.replace('system.adapter.', ''))}));
     }
 
     showError(text) {
@@ -63,41 +67,42 @@ class Options extends Component {
         if (!this.state.errorText) {
             return null;
         }
-        return (<DialogError text={this.state.errorText} title={I18n.t('Error')} onClose={() => this.setState({errorText: ''})}/>);
+        return <DialogError text={this.state.errorText} title={I18n.t('Error')} onClose={() => this.setState({errorText: ''})}/>;
     }
 
     renderToast() {
-        if (!this.state.toast) return null;
-        return (
-            <Snackbar
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                open={true}
-                autoHideDuration={6000}
-                onClose={() => this.setState({toast: ''})}
-                ContentProps={{
-                    'aria-describedby': 'message-id',
-                }}
-                message={<span id="message-id">{this.state.toast}</span>}
-                action={[
-                    <IconButton
-                        key="close"
-                        aria-label="Close"
-                        color="inherit"
-                        className={this.props.classes.close}
-                        onClick={() => this.setState({toast: ''})}
-                    >
-                        <IconClose />
-                    </IconButton>,
-                ]}
-            />);
+        if (!this.state.toast) {
+            return null;
+        }
+        return <Snackbar
+            anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+            }}
+            open={true}
+            autoHideDuration={6000}
+            onClose={() => this.setState({toast: ''})}
+            ContentProps={{
+                'aria-describedby': 'message-id',
+            }}
+            message={<span id="message-id">{this.state.toast}</span>}
+            action={[
+                <IconButton
+                    key="close"
+                    aria-label="Close"
+                    color="inherit"
+                    className={this.props.classes.close}
+                    onClick={() => this.setState({toast: ''})}
+                >
+                    <IconClose />
+                </IconButton>,
+            ]}
+        />;
     }
 
     renderHint() {
         if (this.state.showHint) {
-            return (<Message text={I18n.t('Click now Get new connection certificates to request new temporary password')} onClose={() => this.setState({showHint: false})}/>);
+            return <Message text={I18n.t('Click now Get new connection certificates to request new temporary password')} onClose={() => this.setState({showHint: false})}/>;
         } else {
             return null;
         }
@@ -106,22 +111,25 @@ class Options extends Component {
     renderSettings() {
         return [
             this.state.ips && this.state.ips.length ?
-                (<FormControl key="bindSelect"  className={this.props.classes.bind}>
+                <FormControl key="bindSelect"  className={this.props.classes.bind}>
                     <InputLabel>{ I18n.t('Local IP address') }</InputLabel>
                     <Select
                          disabled={ this.state.requesting }
-                         value={ this.props.native.bind }
+                         value={ this.props.native.bind || '' }
                          onChange={ e => this.props.onChange('bind', e.target.value) }
-                    >{ this.state.ips.map(ip => (<MenuItem value={ ip.address }>{ ip.name }</MenuItem>)) }</Select></FormControl>) :
-                (<TextField
+                    >
+                        <MenuItem value="127.0.0.1">127.0.0.1</MenuItem>
+                        { this.state.ips.map(ip => <MenuItem key={ip} value={ ip }>{ ip }</MenuItem>) }
+                    </Select></FormControl> :
+                <TextField
                     disabled={this.state.requesting}
                     key="bind"
                     className={this.props.classes.bind}
                     label={I18n.t('Local IP address')}
                     value={this.props.native.bind}
                     onChange={e => this.props.onChange('bind', e.target.value)}
-                />),
-            (<TextField
+                />,
+            <TextField
                 disabled={this.state.requesting}
                 key="port"
                 type="number"
@@ -131,9 +139,9 @@ class Options extends Component {
                 label={I18n.t('Local port')}
                 value={this.props.native.port}
                 onChange={e => this.props.onChange('port', e.target.value)}
-            />),
-            (<br key="br1"/>),
-            (<TextField
+            />,
+            <br key="br1"/>,
+            <TextField
                 disabled={this.state.requesting}
                 key="defaultTimeout"
                 type="number"
@@ -143,9 +151,9 @@ class Options extends Component {
                 label={I18n.t('Default timeout (ms)')}
                 value={this.props.native.defaultTimeout}
                 onChange={e => this.props.onChange('defaultTimeout', e.target.value)}
-            />),
-            (<br key="br2"/>),
-            (<FormControl key="webInstanceSelect"  className={this.props.classes.bind}>
+            />,
+            <br key="br2"/>,
+            <FormControl key="webInstanceSelect"  className={this.props.classes.bind}>
                 <InputLabel>{I18n.t('WEB Instance')}</InputLabel>
                 <Select
                     disabled={this.state.requesting}
@@ -153,8 +161,8 @@ class Options extends Component {
                     onChange={e => this.props.onChange('webInstance', e.target.value)}
                 >
                     <MenuItem value="*">{I18n.t('All')}</MenuItem>
-                    {this.state.webInstances ? this.state.webInstances.map(instance => (<MenuItem value={instance}>{instance}</MenuItem>)) : null}
-                </Select></FormControl>)
+                    {this.state.webInstances ? this.state.webInstances.map(instance => <MenuItem key={instance} value={instance}>{instance}</MenuItem>) : null}
+                </Select></FormControl>
         ];
     }
 
@@ -162,7 +170,7 @@ class Options extends Component {
         if (!this.state.messageText) {
             return null;
         }
-        return (<DialogMessage title={I18n.t('Success')} onClose={() => this.setState({messageText: ''})}>{this.state.messageText}</DialogMessage>)
+        return <DialogMessage title={I18n.t('Success')} onClose={() => this.setState({messageText: ''})}>{this.state.messageText}</DialogMessage>
     }
 
     checkConnection() {
@@ -177,22 +185,21 @@ class Options extends Component {
     }
 
     render() {
-        return (
-            <form className={ this.props.classes.tab }>
-                <Logo
-                    instance={ this.props.instance }
-                    common={ this.props.common }
-                    native={ this.props.native }
-                    onError={text => this.setState({errorText: text}) }
-                    onLoad={ this.props.onLoad }
-                />
-                { this.renderSettings() }<br/>
-                { this.renderHint() }
-                { this.renderToast() }
-                { this.renderMessage() }
-                { this.renderError() }
-            </form>
-        );
+        return <form key="option" className={ this.props.classes.tab }>
+            <Logo
+                instance={ this.props.instance }
+                common={ this.props.common }
+                native={ this.props.native }
+                onError={text => this.setState({errorText: text}) }
+                onLoad={ this.props.onLoad }
+            />
+            { this.renderSettings() }
+            <br/>
+            { this.renderHint() }
+            { this.renderToast() }
+            { this.renderMessage() }
+            { this.renderError() }
+        </form>;
     }
 }
 
@@ -208,6 +215,7 @@ Options.propTypes = {
     getIpAddresses: PropTypes.func,
     getExtendableInstances: PropTypes.func,
     socket: PropTypes.object.isRequired,
+    theme: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(Options);

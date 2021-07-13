@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "cameras",
-        "version": "0.1.3",
+        "version": "0.1.4",
         "news": {
+            "0.1.4": {
+                "en": "Add role for states",
+                "de": "Rolle für Staaten hinzufügen",
+                "ru": "Добавить роль для состояний",
+                "pt": "Adicionar função para estados",
+                "nl": "Rol toevoegen voor staten",
+                "fr": "Ajouter un rôle pour les états",
+                "it": "Aggiungi ruolo per gli stati",
+                "es": "Agregar rol para los estados",
+                "pl": "Dodaj rolę dla stanów",
+                "zh-cn": "为状态添加角色"
+            },
             "0.1.3": {
                 "en": "Parameters were applied",
                 "de": "Parameter wurden angewendet",
@@ -87,7 +99,6 @@
         ],
         "license": "MIT",
         "platform": "Javascript/Node.js",
-        "main": "main.js",
         "icon": "cameras.png",
         "enabled": true,
         "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.cameras/master/admin/cameras.png",
