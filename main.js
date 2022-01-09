@@ -19,12 +19,6 @@ function startAdapter(options) {
     Object.assign(options, {name: adapterName, subscribable: true});
     adapter = new utils.Adapter(options);
 
-    try {
-        adapter.tools = adapter.tools || require(utils.controllerDir + '/lib/tools');
-    } catch (e) {
-        adapter.tools = { decrypt };
-    }
-
     adapter.on('message', msg => processMessage(adapter, msg));
     adapter.on('ready', () => main(adapter));
 
