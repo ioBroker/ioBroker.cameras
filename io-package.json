@@ -116,7 +116,9 @@
                 "js-controller": ">=3.1.4",
                 "web": ">=2.0.0"
             }
-        ]
+        ],
+        "connectionType": "local",
+        "dataSource": "poll"
     },
     "native": {
         "bind": "127.0.0.1",

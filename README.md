@@ -43,6 +43,9 @@ This is URL request for image, where all parameters are in URL, but you can prov
 -->
 
 ## Changelog
+### __WORK IN PROGRESS__
+* (bluefox) Preparations for js-controller@4.x are made
+
 ### 0.1.4 (2021-07-13)
 * (bluefox) Add role for states
 
@@ -61,7 +64,7 @@ This is URL request for image, where all parameters are in URL, but you can prov
 ## License
 MIT License
 
-Copyright (c) 2020-2021 bluefox <dogafox@gmail.com>
+Copyright (c) 2020-2022 bluefox <dogafox@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

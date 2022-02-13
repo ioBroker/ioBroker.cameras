@@ -134,7 +134,7 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release v${{ env.VERSION }}
           draft: false
-          # Prerelease versions create prereleases on Github
+          # Prerelease versions create pre-releases on GitHub
           prerelease: ${{ contains(env.VERSION, '-') }}
           body: ${{ env.BODY }}
 

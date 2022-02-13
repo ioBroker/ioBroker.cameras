@@ -83,14 +83,14 @@ function testCamera(adapter, item, cb) {
                 if (result && cb) {
                     if (result.done) {
                         if (status >= 200 && status < 400) {
-                            result = {body: 'data:' + contentType + ';base64,' + body.toString('base64'), contentType};
+                            result = {body: `data:${contentType};base64,${body.toString('base64')}`, contentType};
                         } else {
                             return cb && cb(result);
                         }
                     }
                     if (result.body) {
                         return resizeImage(result, 300)
-                            .then(data => cb && cb({body: 'data:' + data.contentType + ';base64,' + data.body.toString('base64'), contentType}));
+                            .then(data => cb && cb({body: `data:${data.contentType};base64,${data.body.toString('base64')}`, contentType}));
                     } else {
                         result.error = result.error || 'No answer';
                         return cb && cb(result);
@@ -121,14 +121,18 @@ function getCameraImage(cam, width, height, angle) {
                         .then(data => rotateImage(data, angle || cam.angle))
                         .then(_imageData => {
                             imageData = _imageData;
-                            return adapter.setBinaryStateAsync(adapter.namespace + '.cameras.' + cam.name, Buffer.from(_imageData.body));
+                            if (adapter.setForeignBinaryStateAsync) {
+                                return adapter.setForeignBinaryStateAsync(`${adapter.namespace}.cameras.${cam.name}`, Buffer.from(_imageData.body));
+                            } else {
+                                return adapter.setBinaryStateAsync(`${adapter.namespace}.cameras.${cam.name}`, Buffer.from(_imageData.body));
+                            }
                         })
                         .then(() => imageData.body);
                 } else if (!data) {
-                    adapter.log.error('No data from camera '  + cam.name);
+                    adapter.log.error('No data from camera ' + cam.name);
                 }
             })
-            .catch(e => adapter.log.error('Cannot get camera image of '  + cam.name + ': ' + e));
+            .catch(e => adapter.log.error(`Cannot get camera image of ${cam.name}: ${e}`));
     } else {
         return Promise.reject('Unsupported camera type');
     }
@@ -176,7 +180,7 @@ function unloadCameras(adapter, cb) {
             try {
                 adapter.__CAM_TYPES[item.type].unload(adapter, item);
             } catch (e) {
-                adapter.log.error('Cannot unload "' + item.type + '": ' + e);
+                adapter.log.error(`Cannot unload "${item.type}": ${e}`);
             }
         }
     });
@@ -343,8 +347,8 @@ function syncConfig() {
                 }
             });
 
-        processTasks(tasks, () => resolve());
-    }));
+            processTasks(tasks, () => resolve());
+        }));
 }
 
 function fillStates() {
@@ -376,7 +380,7 @@ function main(adapter) {
                     adapter.__CAM_TYPES[item.type] = adapter.__CAM_TYPES[item.type] || require(__dirname + '/cameras/' + item.type);
                     promises.push(adapter.__CAM_TYPES[item.type].init(adapter, item).catch(e => adapter.log.error(`Cannot init camera ${item.name}: ${e && e.toString()}`)));
                 } catch (e) {
-                    adapter.log.error('Cannot load "' + item.type + '": ' + e);
+                    adapter.log.error(`Cannot load "${item.type}": ${e}`);
                 }
             }
         });
