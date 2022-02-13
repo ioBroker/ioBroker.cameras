@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@iobroker/adapter-core": "^2.5.1",
-    "request": "^2.88.2",
+    "axios": "^0.26.0",
     "sharp": "^0.30.1"
   },
   "devDependencies": {
@@ -58,11 +58,7 @@
     "main.js"
   ],
   "scripts": {
-    "test:js": "mocha --opts test/mocha.custom.opts",
-    "test:package": "mocha test/package --exit",
-    "test:unit": "mocha test/unit --exit",
-    "test:integration": "mocha test/integration --exit",
-    "test": "npm run test:js && npm run test:package",
+    "test": "mocha --exit",
     "lint": "eslint",
     "prepublishOnly": "node node_modules/gulp/bin/gulp --gulpfile gulpfile.js default",
     "build": "node node_modules/gulp/bin/gulp.js",

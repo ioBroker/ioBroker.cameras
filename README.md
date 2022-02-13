@@ -43,6 +43,9 @@ This is URL request for image, where all parameters are in URL, but you can prov
 -->
 
 ## Changelog
+### __WORK IN PROGRESS__
+* (bluefox) replaced the deprecated package `request` with `axios`
+
 ### 0.1.5 (2022-02-13)
 * (bluefox) Preparations for js-controller@4.x are made
 

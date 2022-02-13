@@ -1,13 +1,12 @@
-const request = require('request');
+const axios = require('axios');
 
 function init(adapter, cam) {
-
     adapter.__urlCameras = adapter.__urlCameras || {};
     adapter.__urlCameras[cam.name] = true;
 
     // check parameters
     if (!cam.url || typeof cam.url !== 'string' || (!cam.url.startsWith('http://') && !cam.url.startsWith('https://'))) {
-        return Promise.reject('Invalid URL: "' + cam.url + '"');
+        return Promise.reject(`Invalid URL: "${cam.url}"`);
     }
 
     return Promise.resolve();
@@ -27,19 +26,22 @@ function unload(adapter, cam) {
 }
 
 function process(adapter, cam, req, res) {
-    return new Promise((resolve, reject) => {
-        request(cam.url, {
-            encoding: null,
-            timeout: parseInt(cam.timeout || adapter.config.defaultTimeout, 10) || 2000,
-        }, (error, status, body) => {
-            if (error || !body || status.statusCode >= 400) {
-                reject(error || body || status.statusCode);
+    return axios.get(cam.url, {
+        responseType: 'arraybuffer',
+        validateStatus: status => status < 400,
+        timeout: parseInt(cam.timeout || adapter.config.defaultTimeout, 10) || 2000,
+    })
+        .then(response => ({
+            body: response.data,
+            contentType: response.headers['Content-type'] || response.headers['content-type']
+        }))
+        .catch(error => {
+            if (error.response) {
+                throw new Error(error.response.data || error.response.status);
             } else {
-                resolve({body, contentType: status.headers['Content-type'] || status.headers['content-type']});
+                throw new Error(error.code);
             }
-        })
-            .on('error', error => reject(error));
-    });
+        });
 }
 
 module.exports = {
