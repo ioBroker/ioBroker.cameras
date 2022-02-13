@@ -1,149 +1,161 @@
 {
-    "common": {
-        "name": "cameras",
-        "version": "0.1.4",
-        "news": {
-            "0.1.4": {
-                "en": "Add role for states",
-                "de": "Rolle für Staaten hinzufügen",
-                "ru": "Добавить роль для состояний",
-                "pt": "Adicionar função para estados",
-                "nl": "Rol toevoegen voor staten",
-                "fr": "Ajouter un rôle pour les états",
-                "it": "Aggiungi ruolo per gli stati",
-                "es": "Agregar rol para los estados",
-                "pl": "Dodaj rolę dla stanów",
-                "zh-cn": "为状态添加角色"
-            },
-            "0.1.3": {
-                "en": "Parameters were applied",
-                "de": "Parameter wurden angewendet",
-                "ru": "Параметры были применены",
-                "pt": "Os parâmetros foram aplicados",
-                "nl": "Parameters werden toegepast",
-                "fr": "Les paramètres ont été appliqués",
-                "it": "I parametri sono stati applicati",
-                "es": "Se aplicaron parámetros",
-                "pl": "Zastosowano parametry",
-                "zh-cn": "应用参数"
-            },
-            "0.1.2": {
-                "en": "implemented get image by message",
-                "de": "implementiert Bild für Nachricht erhalten",
-                "ru": "реализовано получение изображения по сообщению",
-                "pt": "implementado obter imagem por mensagem",
-                "nl": "geïmplementeerd krijg afbeelding per bericht",
-                "fr": "image obtenue par message",
-                "it": "implementato ottenere immagine per messaggio",
-                "es": "implementado obtener imagen por mensaje",
-                "pl": "zaimplementowano pobranie obrazu przez wiadomość",
-                "zh-cn": "实现通过消息获取图像"
-            },
-            "0.1.0": {
-                "en": "URL and URL with basic authentication were implemented",
-                "de": "URL und URL mit Basisauthentifizierung wurden implementiert",
-                "ru": "URL и URL с базовой аутентификацией были реализованы",
-                "pt": "URL e URL com autenticação básica foram implementados",
-                "nl": "URL en URL met basisverificatie zijn geïmplementeerd",
-                "fr": "URL et URL avec authentification de base ont été implémentées",
-                "it": "Sono stati implementati URL e URL con autenticazione di base",
-                "es": "Se implementaron URL y URL con autenticación básica",
-                "pl": "Zaimplementowano adres URL i adres URL z podstawowym uwierzytelnianiem",
-                "zh-cn": "已实现URL和具有基本身份验证的URL"
-            },
-            "0.0.1": {
-                "en": "initial release",
-                "de": "Erstveröffentlichung",
-                "ru": "Начальная версия",
-                "pt": "lançamento inicial",
-                "nl": "Eerste uitgave",
-                "fr": "Première version",
-                "it": "Versione iniziale",
-                "es": "Versión inicial",
-                "pl": "Pierwsze wydanie",
-                "zh-cn": "首次出版"
-            }
-        },
-        "title": "IP-Cameras",
-        "titleLang": {
-            "en": "IP-Cameras",
-            "de": "IP-Kameras",
-            "ru": "IP-камера",
-            "pt": "Câmeras IP",
-            "nl": "IP-camera's",
-            "fr": "Caméras IP",
-            "it": "Telecamere IP",
-            "es": "Cámaras IP",
-            "pl": "Kamery IP",
-            "zh-cn": "IP摄像机"
-        },
-        "desc": {
-            "en": "Connect IP-cameras to iobroker",
-            "de": "Schließen Sie IP-Kameras an iobroker an",
-            "ru": "Подключите IP-камеры к iobroker",
-            "pt": "Conecte câmeras IP ao iobroker",
-            "nl": "Verbind IP-camera's met iobroker",
-            "fr": "Connectez des caméras IP à iobroker",
-            "it": "Collegare le telecamere IP a iobroker",
-            "es": "Conecte cámaras IP a iobroker",
-            "pl": "Podłącz kamery IP do iobroker",
-            "zh-cn": "将IP摄像机连接到iobroker"
-        },
-        "authors": [
-            "bluefox <dogafox@gmail.com>"
-        ],
-        "keywords": [
-            "ip-cam",
-            "web-cam",
-            "video"
-        ],
-        "license": "MIT",
-        "platform": "Javascript/Node.js",
-        "icon": "cameras.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.cameras/master/admin/cameras.png",
-        "readme": "https://github.com/ioBroker/ioBroker.cameras/blob/master/README.md",
-        "loglevel": "info",
-        "webExtension": "lib/web.js",
-        "mode": "daemon",
-        "type": "multimedia",
-        "compact": true,
-        "messagebox": true,
-        "materialize": true,
-        "subscribable": true,
-        "dependencies": [
-            {
-                "js-controller": ">=3.1.4",
-                "web": ">=2.0.0"
-            }
-        ],
-        "connectionType": "local",
-        "dataSource": "poll"
+  "common": {
+    "name": "cameras",
+    "version": "0.1.5",
+    "news": {
+      "0.1.5": {
+        "en": "Preparations for js-controller@4.x are made",
+        "de": "Vorbereitungen für js-controller@4.x sind getroffen",
+        "ru": "Подготовка к js-controller@4.x сделана",
+        "pt": "Os preparativos para js-controller@4.x são feitos",
+        "nl": "Voorbereidingen voor js-controller@4.x zijn getroffen",
+        "fr": "Les préparations pour js-controller@4.x sont faites",
+        "it": "Vengono effettuati i preparativi per js-controller@4.x",
+        "es": "Se realizan los preparativos para js-controller@4.x",
+        "pl": "Trwają przygotowania do js-controller@4.x",
+        "zh-cn": "js-controller@4.x的准备工作做好了"
+      },
+      "0.1.4": {
+        "en": "Add role for states",
+        "de": "Rolle für Staaten hinzufügen",
+        "ru": "Добавить роль для состояний",
+        "pt": "Adicionar função para estados",
+        "nl": "Rol toevoegen voor staten",
+        "fr": "Ajouter un rôle pour les états",
+        "it": "Aggiungi ruolo per gli stati",
+        "es": "Agregar rol para los estados",
+        "pl": "Dodaj rolę dla stanów",
+        "zh-cn": "为状态添加角色"
+      },
+      "0.1.3": {
+        "en": "Parameters were applied",
+        "de": "Parameter wurden angewendet",
+        "ru": "Параметры были применены",
+        "pt": "Os parâmetros foram aplicados",
+        "nl": "Parameters werden toegepast",
+        "fr": "Les paramètres ont été appliqués",
+        "it": "I parametri sono stati applicati",
+        "es": "Se aplicaron parámetros",
+        "pl": "Zastosowano parametry",
+        "zh-cn": "应用参数"
+      },
+      "0.1.2": {
+        "en": "implemented get image by message",
+        "de": "implementiert Bild für Nachricht erhalten",
+        "ru": "реализовано получение изображения по сообщению",
+        "pt": "implementado obter imagem por mensagem",
+        "nl": "geïmplementeerd krijg afbeelding per bericht",
+        "fr": "image obtenue par message",
+        "it": "implementato ottenere immagine per messaggio",
+        "es": "implementado obtener imagen por mensaje",
+        "pl": "zaimplementowano pobranie obrazu przez wiadomość",
+        "zh-cn": "实现通过消息获取图像"
+      },
+      "0.1.0": {
+        "en": "URL and URL with basic authentication were implemented",
+        "de": "URL und URL mit Basisauthentifizierung wurden implementiert",
+        "ru": "URL и URL с базовой аутентификацией были реализованы",
+        "pt": "URL e URL com autenticação básica foram implementados",
+        "nl": "URL en URL met basisverificatie zijn geïmplementeerd",
+        "fr": "URL et URL avec authentification de base ont été implémentées",
+        "it": "Sono stati implementati URL e URL con autenticazione di base",
+        "es": "Se implementaron URL y URL con autenticación básica",
+        "pl": "Zaimplementowano adres URL i adres URL z podstawowym uwierzytelnianiem",
+        "zh-cn": "已实现URL和具有基本身份验证的URL"
+      },
+      "0.0.1": {
+        "en": "initial release",
+        "de": "Erstveröffentlichung",
+        "ru": "Начальная версия",
+        "pt": "lançamento inicial",
+        "nl": "Eerste uitgave",
+        "fr": "Première version",
+        "it": "Versione iniziale",
+        "es": "Versión inicial",
+        "pl": "Pierwsze wydanie",
+        "zh-cn": "首次出版"
+      }
     },
-    "native": {
-        "bind": "127.0.0.1",
-        "port": 8200,
-        "key": "",
-        "webInstance": "*",
-        "defaultTimeout": 2000,
-        "allowIPs": "",
-        "cameras": [
-            {
-                "name": "cam1",
-                "type": "url",
-                "url": "https://raw.githubusercontent.com/ioBroker/ioBroker.admin/master/admin/admin.png"
-            }
-        ]
+    "title": "IP-Cameras",
+    "titleLang": {
+      "en": "IP-Cameras",
+      "de": "IP-Kameras",
+      "ru": "IP-камера",
+      "pt": "Câmeras IP",
+      "nl": "IP-camera's",
+      "fr": "Caméras IP",
+      "it": "Telecamere IP",
+      "es": "Cámaras IP",
+      "pl": "Kamery IP",
+      "zh-cn": "IP摄像机"
     },
-    "objects": [],
-    "instanceObjects": [
-        {
-            "_id": "cameras",
-            "type": "channel",
-            "common": {
-                "name": "Cameras"
-            },
-            "native": {}
-        }
+    "desc": {
+      "en": "Connect IP-cameras to iobroker",
+      "de": "Schließen Sie IP-Kameras an iobroker an",
+      "ru": "Подключите IP-камеры к iobroker",
+      "pt": "Conecte câmeras IP ao iobroker",
+      "nl": "Verbind IP-camera's met iobroker",
+      "fr": "Connectez des caméras IP à iobroker",
+      "it": "Collegare le telecamere IP a iobroker",
+      "es": "Conecte cámaras IP a iobroker",
+      "pl": "Podłącz kamery IP do iobroker",
+      "zh-cn": "将IP摄像机连接到iobroker"
+    },
+    "authors": [
+      "bluefox <dogafox@gmail.com>"
+    ],
+    "keywords": [
+      "ip-cam",
+      "web-cam",
+      "video"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "icon": "cameras.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.cameras/master/admin/cameras.png",
+    "readme": "https://github.com/ioBroker/ioBroker.cameras/blob/master/README.md",
+    "loglevel": "info",
+    "webExtension": "lib/web.js",
+    "mode": "daemon",
+    "type": "multimedia",
+    "compact": true,
+    "messagebox": true,
+    "materialize": true,
+    "subscribable": true,
+    "dependencies": [
+      {
+        "js-controller": ">=3.1.4",
+        "web": ">=2.0.0"
+      }
+    ],
+    "connectionType": "local",
+    "dataSource": "poll"
+  },
+  "native": {
+    "bind": "127.0.0.1",
+    "port": 8200,
+    "key": "",
+    "webInstance": "*",
+    "defaultTimeout": 2000,
+    "allowIPs": "",
+    "cameras": [
+      {
+        "name": "cam1",
+        "type": "url",
+        "url": "https://raw.githubusercontent.com/ioBroker/ioBroker.admin/master/admin/admin.png"
+      }
     ]
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "cameras",
+      "type": "channel",
+      "common": {
+        "name": "Cameras"
+      },
+      "native": {}
+    }
+  ]
 }
