@@ -43,7 +43,7 @@ This is URL request for image, where all parameters are in URL, but you can prov
 -->
 
 ## Changelog
-### __WORK IN PROGRESS__
+### 0.1.6 (2022-02-13)
 * (bluefox) replaced the deprecated package `request` with `axios`
 
 ### 0.1.5 (2022-02-13)

@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "cameras",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "news": {
+      "0.1.6": {
+        "en": "replaced the deprecated package `request` with `axios`",
+        "de": "das veraltete Paket „request“ durch „axios“ ersetzt",
+        "ru": "заменил устаревший пакет `request` на `axios`",
+        "pt": "substituiu o pacote obsoleto `request` por `axios`",
+        "nl": "het verouderde pakket `request` vervangen door `axios`",
+        "fr": "remplacé le paquet obsolète `request` par `axios`",
+        "it": "sostituito il deprecato pacchetto `request` con `axios`",
+        "es": "reemplazó el paquete obsoleto `request` con `axios`",
+        "pl": "zastąpiono przestarzały pakiet `request` na `axios`",
+        "zh-cn": "用 `axios` 替换了已弃用的包 `request`"
+      },
       "0.1.5": {
         "en": "Preparations for js-controller@4.x are made",
         "de": "Vorbereitungen für js-controller@4.x sind getroffen",
