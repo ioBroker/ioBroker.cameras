@@ -15,7 +15,7 @@ You can integrate you web/ip cameras into vis and other visualisations.
 If you configure a camera with name `cam1` it will be available on 
 web server under `http(s)://iobroker-IP:8082/cameras.0/cam1`.
 
-Additionally, you the image could be requested via message:
+Additionally, the image could be requested via message:
 ```
 sendTo('cameras.0', 'image', {
     name: 'cam1', 
