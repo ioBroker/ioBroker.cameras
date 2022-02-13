@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "cameras",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "news": {
+      "0.1.8": {
+        "en": "replaced the deprecated package `request` with `axios`",
+        "de": "das veraltete Paket „request“ durch „axios“ ersetzt",
+        "ru": "заменил устаревший пакет `request` на `axios`",
+        "pt": "substituiu o pacote obsoleto `request` por `axios`",
+        "nl": "het verouderde pakket `request` vervangen door `axios`",
+        "fr": "remplacé le paquet obsolète `request` par `axios`",
+        "it": "sostituito il deprecato pacchetto `request` con `axios`",
+        "es": "reemplazó el paquete obsoleto `request` con `axios`",
+        "pl": "zastąpiono przestarzały pakiet `request` na `axios`",
+        "zh-cn": "用 `axios` 替换了已弃用的包 `request`"
+      },
       "0.1.7": {
         "en": "replaced the deprecated package `request` with `axios`",
         "de": "das veraltete Paket „request“ durch „axios“ ersetzt",
@@ -74,18 +86,6 @@
         "es": "implementado obtener imagen por mensaje",
         "pl": "zaimplementowano pobranie obrazu przez wiadomość",
         "zh-cn": "实现通过消息获取图像"
-      },
-      "0.1.0": {
-        "en": "URL and URL with basic authentication were implemented",
-        "de": "URL und URL mit Basisauthentifizierung wurden implementiert",
-        "ru": "URL и URL с базовой аутентификацией были реализованы",
-        "pt": "URL e URL com autenticação básica foram implementados",
-        "nl": "URL en URL met basisverificatie zijn geïmplementeerd",
-        "fr": "URL et URL avec authentification de base ont été implémentées",
-        "it": "Sono stati implementati URL e URL con autenticazione di base",
-        "es": "Se implementaron URL y URL con autenticación básica",
-        "pl": "Zaimplementowano adres URL i adres URL z podstawowym uwierzytelnianiem",
-        "zh-cn": "已实现URL和具有基本身份验证的URL"
       }
     },
     "title": "IP-Cameras",
