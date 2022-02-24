@@ -135,6 +135,7 @@
     "messagebox": true,
     "materialize": true,
     "subscribable": true,
+    "eraseOnUpload": true,
     "dependencies": [
       {
         "js-controller": ">=3.1.4",
