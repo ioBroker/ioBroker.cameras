@@ -1,28 +1,28 @@
 import React, {Component} from 'react';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
 
-import Fab from '@material-ui/core/Fab';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
+import Fab from '@mui/material/Fab';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
 
-import IconDelete from '@material-ui/icons/Delete';
-import IconEdit from '@material-ui/icons/Edit';
-import IconAdd from '@material-ui/icons/Add';
-import IconUp from '@material-ui/icons/ArrowUpward';
-import IconDown from '@material-ui/icons/ArrowDownward';
-import IconTest from '@material-ui/icons/Camera';
+import IconDelete from '@mui/icons-material/Delete';
+import IconEdit from '@mui/icons-material/Edit';
+import IconAdd from '@mui/icons-material/Add';
+import IconUp from '@mui/icons-material/ArrowUpward';
+import IconDown from '@mui/icons-material/ArrowDownward';
+import IconTest from '@mui/icons-material/Camera';
 
-import MessageDialog from '@iobroker/adapter-react/Dialogs/Message';
-import I18n from '@iobroker/adapter-react/i18n';
+import MessageDialog from '@iobroker/adapter-react-v5/Dialogs/Message';
+import I18n from '@iobroker/adapter-react-v5/i18n';
 
 import URLImage from '../Types/URLImage';
 import URLBasicAuthImage from '../Types/URLBasicAuthImage';
@@ -276,7 +276,7 @@ class Server extends Component {
                             this.setState({editCam: false, editChanged: false});
                         }
                     }} color="primary" >{I18n.t('Apply')}</Button>
-                    <Button onClick={() => this.setState({editCam: false, editChanged: false})}>{I18n.t('Cancel')}</Button>
+                    <Button color="grey" onClick={() => this.setState({editCam: false, editChanged: false})}>{I18n.t('Cancel')}</Button>
                 </DialogActions>
             </Dialog>;
         } else {
@@ -370,6 +370,7 @@ class Server extends Component {
         return (<div key={ 'cam' + cam.id } className={ this.props.classes.lineDiv }>
             <div className={ this.props.classes.lineText }>
                 <TextField
+                    variant="standard"
                     className={ this.props.classes.name }
                     label={ I18n.t('Name') }
                     error={ error }
@@ -384,6 +385,7 @@ class Server extends Component {
             </div>
             <div className={ this.props.classes.lineDesc }>
                 <TextField
+                    variant="standard"
                     className={this.props.classes.desc}
                     label={I18n.t('Description')}
                     value={cam.desc}
@@ -395,9 +397,10 @@ class Server extends Component {
                 />
             </div>
             <div className={this.props.classes.lineType}>
-                <FormControl className={this.props.classes.type}>
+                <FormControl className={this.props.classes.type} variant="standard">
                     <InputLabel>{I18n.t('Type')}</InputLabel>
                     <Select
+                        variant="standard"
                         value={cam.type}
                         onChange={e => {
                             const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));

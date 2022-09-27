@@ -39,10 +39,13 @@ This is URL request for image, where all parameters are in URL, but you can prov
 
 <!--
 	Placeholder for the next version (at the beginning of the line):
-	### __WORK IN PROGRESS__
+	### **WORK IN PROGRESS**
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) GUI updated to MUIv5
+
 ### 0.1.8 (2022-02-13)
 * (bluefox) replaced the deprecated package `request` with `axios`
 

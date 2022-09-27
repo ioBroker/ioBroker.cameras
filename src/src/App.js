@@ -1,13 +1,13 @@
 import React from 'react';
-import { withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import GenericApp from '@iobroker/adapter-react/GenericApp';
-import Loader from '@iobroker/adapter-react/Components/Loader'
+import AppBar from '@mui/material/AppBar';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
-import I18n from '@iobroker/adapter-react/i18n';
+import GenericApp from '@iobroker/adapter-react-v5/GenericApp';
+import Loader from '@iobroker/adapter-react-v5/Components/Loader'
+import I18n from '@iobroker/adapter-react-v5/i18n';
 
 import TabOptions from './Tabs/Options';
 import TabCameras from './Tabs/Cameras';
@@ -98,7 +98,7 @@ class App extends GenericApp {
 
         return <div className="App" style={{background: this.state.themeType === 'dark' ? 'black' : 'white'}}>
             <AppBar position="static">
-                <Tabs value={this.getSelectedTab()} onChange={(e, index) => this.selectTab(e.target.parentNode.dataset.name, index)}>
+                <Tabs value={this.getSelectedTab()} onChange={(e, index) => this.selectTab(e.target.dataset.name, index)}>
                     <Tab selected={this.state.selectedTab === 'options'} label={I18n.t('Options')} data-name="options" />
                     <Tab selected={this.state.selectedTab === 'cameras'} label={I18n.t('Cameras')} data-name="cameras" />
                 </Tabs>

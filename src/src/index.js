@@ -1,26 +1,37 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { version } from '../package.json';
-import { MuiThemeProvider } from '@material-ui/core/styles';
+import { createRoot } from 'react-dom/client';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
+import { StylesProvider, createGenerateClassName } from '@mui/styles';
+import pack from '../package.json';
 import * as serviceWorker from './serviceWorker';
 
-import '@iobroker/adapter-react/index.css';
-import theme from '@iobroker/adapter-react/Theme';
-import Utils from '@iobroker/adapter-react/Components/Utils';
+import '@iobroker/adapter-react-v5/index.css';
+import theme from '@iobroker/adapter-react-v5/Theme';
+import Utils from '@iobroker/adapter-react-v5/Components/Utils';
 import App from './App';
 
 window.adapterName = 'cameras';
 
-console.log('iobroker.' + window.adapterName + '@' + version);
+console.log(`iobroker.${window.adapterName}@${pack.version}`);
 let themeName = Utils.getThemeName();
 
+const generateClassName = createGenerateClassName({
+    productionPrefix: 'iob',
+});
+
 function build() {
-    return ReactDOM.render(<MuiThemeProvider theme={theme(themeName)}>
-        <App onThemeChange={_themeName => {
-            themeName = _themeName;
-            build();
-        }} />
-    </MuiThemeProvider>, document.getElementById('root'));
+    const container = document.getElementById('root');
+    const root = createRoot(container);
+    return root.render(<StylesProvider generateClassName={generateClassName}>
+        <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={theme(themeName)}>
+                <App onThemeChange={_themeName => {
+                    themeName = _themeName;
+                    build();
+                }} />
+            </ThemeProvider>
+        </StyledEngineProvider>
+    </StylesProvider>);
 }
 
 build();

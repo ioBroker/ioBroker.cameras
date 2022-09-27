@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
-import I18n from '@iobroker/adapter-react/i18n';
-import TextField from '@material-ui/core/TextField';
+import { withStyles } from '@mui/styles';
+import I18n from '@iobroker/adapter-react-v5/i18n';
+import TextField from '@mui/material/TextField';
 
 const styles = theme => ({
     page: {
@@ -46,6 +46,7 @@ class Config extends Component {
     render() {
         return <div className={this.props.classes.page}>
             <TextField
+                variant="standard"
                 key="url"
                 className={this.props.classes.url}
                 label={I18n.t('Camera URL')}
@@ -54,6 +55,7 @@ class Config extends Component {
             />
             <br/>
             <TextField
+                variant="standard"
                 key="username"
                 autoComplete="off"
                 className={this.props.classes.username}
@@ -63,6 +65,7 @@ class Config extends Component {
             />
             <br/>
             <TextField
+                variant="standard"
                 key="password"
                 type="password"
                 autoComplete="off"

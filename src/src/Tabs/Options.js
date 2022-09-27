@@ -1,21 +1,22 @@
 import React, {Component} from 'react';
-import { withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
-import TextField from '@material-ui/core/TextField';
-import DialogMessage from '@iobroker/adapter-react/Dialogs/Message';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import FormControl from '@material-ui/core/FormControl';
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import InputLabel from "@material-ui/core/InputLabel";
+
+import TextField from '@mui/material/TextField';
+import DialogMessage from '@iobroker/adapter-react-v5/Dialogs/Message';
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import FormControl from '@mui/material/FormControl';
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
 
 import {MdClose as IconClose} from 'react-icons/md';
 
-import I18n from '@iobroker/adapter-react/i18n';
-import Logo from '@iobroker/adapter-react/Components/Logo';
-import Message from '@iobroker/adapter-react/Dialogs/Message';
-import DialogError from "@iobroker/adapter-react/Dialogs/Error";
+import I18n from '@iobroker/adapter-react-v5/i18n';
+import Logo from '@iobroker/adapter-react-v5/Components/Logo';
+import Message from '@iobroker/adapter-react-v5/Dialogs/Message';
+import DialogError from "@iobroker/adapter-react-v5/Dialogs/Error";
 
 const styles = theme => ({
     tab: {
@@ -111,9 +112,10 @@ class Options extends Component {
     renderSettings() {
         return [
             this.state.ips && this.state.ips.length ?
-                <FormControl key="bindSelect"  className={this.props.classes.bind}>
+                <FormControl key="bindSelect"  className={this.props.classes.bind} variant="standard">
                     <InputLabel>{ I18n.t('Local IP address') }</InputLabel>
                     <Select
+                        variant="standard"
                          disabled={ this.state.requesting }
                          value={ this.props.native.bind || '' }
                          onChange={ e => this.props.onChange('bind', e.target.value) }
@@ -122,6 +124,7 @@ class Options extends Component {
                         { this.state.ips.map(ip => <MenuItem key={ip} value={ ip }>{ ip }</MenuItem>) }
                     </Select></FormControl> :
                 <TextField
+                    variant="standard"
                     disabled={this.state.requesting}
                     key="bind"
                     className={this.props.classes.bind}
@@ -130,6 +133,7 @@ class Options extends Component {
                     onChange={e => this.props.onChange('bind', e.target.value)}
                 />,
             <TextField
+                variant="standard"
                 disabled={this.state.requesting}
                 key="port"
                 type="number"
@@ -142,6 +146,7 @@ class Options extends Component {
             />,
             <br key="br1"/>,
             <TextField
+                variant="standard"
                 disabled={this.state.requesting}
                 key="defaultTimeout"
                 type="number"
@@ -153,16 +158,18 @@ class Options extends Component {
                 onChange={e => this.props.onChange('defaultTimeout', e.target.value)}
             />,
             <br key="br2"/>,
-            <FormControl key="webInstanceSelect"  className={this.props.classes.bind}>
+            <FormControl key="webInstanceSelect"  className={this.props.classes.bind} variant="standard">
                 <InputLabel>{I18n.t('WEB Instance')}</InputLabel>
                 <Select
+                    variant="standard"
                     disabled={this.state.requesting}
                     value={this.props.native.webInstance}
                     onChange={e => this.props.onChange('webInstance', e.target.value)}
                 >
                     <MenuItem value="*">{I18n.t('All')}</MenuItem>
                     {this.state.webInstances ? this.state.webInstances.map(instance => <MenuItem key={instance} value={instance}>{instance}</MenuItem>) : null}
-                </Select></FormControl>
+                </Select>
+            </FormControl>
         ];
     }
 
