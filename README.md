@@ -43,7 +43,7 @@ This is URL request for image, where all parameters are in URL, but you can prov
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 0.2.0 (2022-09-27)
 * (bluefox) GUI updated to MUIv5
 
 ### 0.1.8 (2022-02-13)

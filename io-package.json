@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "cameras",
-    "version": "0.1.8",
+    "version": "0.2.0",
     "news": {
+      "0.2.0": {
+        "en": "GUI updated to MUIv5",
+        "de": "GUI aktualisiert auf MUIv5",
+        "ru": "GUI обновлено до MUIv5",
+        "pt": "GUI atualizado para MUIv5",
+        "nl": "GUI heeft MUIV5",
+        "fr": "GUI mise à jour de MUIv5",
+        "it": "GUI aggiornata a MUIv5",
+        "es": "GUI actualizado a MUIv5",
+        "pl": "GUI zaktualizuje MUIv5",
+        "zh-cn": "古伊向MUIv5更新"
+      },
       "0.1.8": {
         "en": "replaced the deprecated package `request` with `axios`",
         "de": "das veraltete Paket „request“ durch „axios“ ersetzt",
@@ -74,18 +86,6 @@
         "es": "Se aplicaron parámetros",
         "pl": "Zastosowano parametry",
         "zh-cn": "应用参数"
-      },
-      "0.1.2": {
-        "en": "implemented get image by message",
-        "de": "implementiert Bild für Nachricht erhalten",
-        "ru": "реализовано получение изображения по сообщению",
-        "pt": "implementado obter imagem por mensagem",
-        "nl": "geïmplementeerd krijg afbeelding per bericht",
-        "fr": "image obtenue par message",
-        "it": "implementato ottenere immagine per messaggio",
-        "es": "implementado obtener imagen por mensaje",
-        "pl": "zaimplementowano pobranie obrazu przez wiadomość",
-        "zh-cn": "实现通过消息获取图像"
       }
     },
     "title": "IP-Cameras",
