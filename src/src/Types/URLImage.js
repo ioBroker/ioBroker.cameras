@@ -21,7 +21,7 @@ class Config extends Component {
 
         const state = JSON.parse(JSON.stringify(this.props.settings));
         // set default values
-        state.url      = state.url || '';
+        state.url  = state.url || '';
 
         this.state = state;
     }

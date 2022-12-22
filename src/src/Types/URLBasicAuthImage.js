@@ -38,7 +38,8 @@ class Config extends Component {
             this.props.onChange({
                 url:      this.state.url,
                 username: this.state.username,
-                password: password
+                password,
+                timeout:  this.state.timeout,
             });
         });
     }

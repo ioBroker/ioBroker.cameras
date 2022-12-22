@@ -136,12 +136,18 @@
     "materialize": true,
     "subscribable": true,
     "eraseOnUpload": true,
+    "stopBeforeUpdate": true,
     "dependencies": [
       {
         "js-controller": ">=3.1.4",
         "web": ">=2.0.0"
       }
     ],
+    "osDependencies": {
+      "linux": [
+        "ffmpeg"
+      ]
+    },
     "connectionType": "local",
     "dataSource": "poll"
   },
@@ -152,6 +158,8 @@
     "webInstance": "*",
     "defaultTimeout": 2000,
     "allowIPs": "",
+    "ffmpegPath": "/usr/bin/ffmpeg",
+    "tempPath": "",
     "cameras": [
       {
         "name": "cam1",

@@ -26,10 +26,12 @@ import I18n from '@iobroker/adapter-react-v5/i18n';
 
 import URLImage from '../Types/URLImage';
 import URLBasicAuthImage from '../Types/URLBasicAuthImage';
+import RTSPImageConfig from '../Types/RTSPImage';
 
 const TYPES = {
-    url:          {Config: URLImage, name: 'URL'},
-    urlBasicAuth: {Config: URLBasicAuthImage, name: 'URL with basic auth'},
+    url:          { Config: URLImage, name: 'URL' },
+    urlBasicAuth: { Config: URLBasicAuthImage, name: 'URL with basic auth' },
+    rtsp:         { Config: RTSPImageConfig, name: 'RTSP Snapshot' },
 };
 
 const COMMON_ATTRS = ['name', 'desc', 'type'];
@@ -172,13 +174,13 @@ class Server extends Component {
                     webInstance.native.bind = window.location.hostname;
                 }
 
-                webInstance && this.setState({ webInstanceHost: webInstance.native.bind  + ':' + (webInstance.native.port || 8082)});
+                webInstance && this.setState({ webInstanceHost: `${webInstance.native.bind}:${webInstance.native.port || 8082}`});
             });
     }
 
     renderMessage() {
         if (this.state.message) {
-            return <MessageDialog text={this.state.message} onClose={() => this.setState({message: ''})}/>;
+            return <MessageDialog text={this.state.message} onClose={() => this.setState({message: ''})} />;
         } else {
             return null;
         }
@@ -186,7 +188,7 @@ class Server extends Component {
 
     static getDerivedStateFromProps(props, state) {
         if (state.instanceAlive !== props.instanceAlive) {
-            return {instanceAlive: props.instanceAlive};
+            return { instanceAlive: props.instanceAlive };
         } else {
             return null;
         }
@@ -202,18 +204,19 @@ class Server extends Component {
         }, settings.timeout || this.props.native.defaultTimeout);
 
         this.setState({requesting: true}, () => {
-            this.props.socket.sendTo(this.props.adapterName + '.' + this.props.instance, 'test', settings, result => {
-                timeout && clearTimeout(timeout);
-                if (!result || !result.body || result.error) {
-                    let error = (result && result.error) ? result.error : I18n.t('No answer');
-                    if (typeof error !== 'string') {
-                        error = JSON.stringify(error);
+            this.props.socket.sendTo(`${this.props.adapterName}.${this.props.instance}`, 'test', settings)
+                .then(result => {
+                    timeout && clearTimeout(timeout);
+                    if (!result || !result.body || result.error) {
+                        let error = (result && result.error) ? result.error : I18n.t('No answer');
+                        if (typeof error !== 'string') {
+                            error = JSON.stringify(error);
+                        }
+                        this.setState({message: error, requesting: false});
+                    } else {
+                        this.setState({testImg: result.body, requesting: false});
                     }
-                    this.setState({message: error, requesting: false});
-                } else {
-                    this.setState({testImg: result.body, requesting: false});
-                }
-            });
+                });
         });
     }
 
@@ -224,8 +227,8 @@ class Server extends Component {
 
             return <Dialog
                 maxWidth="lg"
-                fullWidth={true}
-                open={true}
+                fullWidth
+                open={!0}
                 onClose={() => this.state.editCam !== null && this.setState({editCam: false, editChanged: false})}
             >
                 <DialogTitle>{I18n.t('Edit camera %s [%s]', cam.name, cam.type)}</DialogTitle>
@@ -259,12 +262,13 @@ class Server extends Component {
                         onClick={() => this.onTest()}
                         startIcon={<IconTest />}
                     >{I18n.t('Test')}</Button>
-                    {this.state.testImg ? (<img alt="test" className={this.props.classes.imgTest} src={this.state.testImg} />) : null}
+                    {this.state.testImg ? <img alt="test" className={this.props.classes.imgTest} src={this.state.testImg} /> : null}
                 </div>
                 </DialogContent>
                 <DialogActions>
                     <Button
                         disabled={!this.state.editChanged}
+                        variant="contained"
                         onClick={() => {
                         const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
                         if (this.editedSettings) {
@@ -276,7 +280,7 @@ class Server extends Component {
                             this.setState({editCam: false, editChanged: false});
                         }
                     }} color="primary" >{I18n.t('Apply')}</Button>
-                    <Button color="grey" onClick={() => this.setState({editCam: false, editChanged: false})}>{I18n.t('Cancel')}</Button>
+                    <Button color="grey" variant="contained" onClick={() => this.setState({editCam: false, editChanged: false})}>{I18n.t('Cancel')}</Button>
                 </DialogActions>
             </Dialog>;
         } else {

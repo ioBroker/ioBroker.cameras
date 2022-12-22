@@ -37,12 +37,20 @@ This is normal URL request, where all parameters are in URL. Like `http://mycam/
 ### URL image with basic authentication
 This is URL request for image, where all parameters are in URL, but you can provide the credentials for basic authentication. Like `http://mycam/snapshot.jpg`  
 
+### FFmpeg
+If you want to access snapshots on RTSP cameras, you can use ffmpeg. You need to install ffmpeg on your system:
+- Windows has precompiled ffmpeg and there is no need to download anything. (Windows version is taken from here: https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z) 
+- Linux: `sudo apt-get install ffmpeg -y`
+
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) added RTSP camera
+
 ### 0.2.0 (2022-09-27)
 * (bluefox) GUI updated to MUIv5
 

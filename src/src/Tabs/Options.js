@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { withStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
 
@@ -7,11 +7,13 @@ import DialogMessage from '@iobroker/adapter-react-v5/Dialogs/Message';
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import FormControl from '@mui/material/FormControl';
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
+import Select from '@mui/material/Select';
+import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
 
-import {MdClose as IconClose} from 'react-icons/md';
+import { MdClose as IconClose } from 'react-icons/md';
+import { MdCheck as IconTest } from 'react-icons/md';
 
 import I18n from '@iobroker/adapter-react-v5/i18n';
 import Logo from '@iobroker/adapter-react-v5/Components/Logo';
@@ -33,6 +35,9 @@ const styles = theme => ({
     },
     defaultTimeout: {
         width: 150
+    },
+    ffmpegPath: {
+        width: 450
     }
 });
 
@@ -109,6 +114,29 @@ class Options extends Component {
         }
     }
 
+    onTestFfmpeg() {
+        let timeout = setTimeout(() => {
+            timeout = null;
+            this.setState({ toast: 'Timeout', requesting: false });
+        },  30000);
+
+        this.setState({ requesting: true }, () => {
+            this.props.socket.sendTo(`${this.props.adapterName}.${this.props.instance}`, 'ffmpeg', {path: this.props.native.ffmpegPath})
+                .then(result => {
+                    timeout && clearTimeout(timeout);
+                    if (!result || !result.version || result.error) {
+                        let error = (result && result.error) ? result.error : I18n.t('No answer');
+                        if (typeof error !== 'string') {
+                            error = JSON.stringify(error);
+                        }
+                        this.setState({ toast: error, requesting: false });
+                    } else {
+                        this.setState({ toast: `${I18n.t('Success:')} ${result.version}`, requesting: false });
+                    }
+                });
+        });
+    }
+
     renderSettings() {
         return [
             this.state.ips && this.state.ips.length ?
@@ -169,7 +197,36 @@ class Options extends Component {
                     <MenuItem value="*">{I18n.t('All')}</MenuItem>
                     {this.state.webInstances ? this.state.webInstances.map(instance => <MenuItem key={instance} value={instance}>{instance}</MenuItem>) : null}
                 </Select>
-            </FormControl>
+            </FormControl>,
+            <br key="br3"/>,
+            <TextField
+                variant="standard"
+                disabled={this.state.requesting}
+                key="ffmpegPath"
+                className={this.props.classes.ffmpegPath}
+                label={I18n.t('Path to ffpmeg executable')}
+                value={this.props.native.ffmpegPath || ''}
+                onChange={e => this.props.onChange('ffmpegPath', e.target.value)}
+                helperText={I18n.t('Like /usr/bin/ffmpeg')}
+            />,
+            <Button
+                color="grey"
+                variant="outlined"
+                onClick={() => this.onTestFfmpeg()}
+                disabled={!this.props.instanceAlive || this.state.requesting}
+                startIcon={<IconTest />}
+            >Test path</Button>,
+            <br key="br4"/>,
+            <TextField
+                variant="standard"
+                disabled={this.state.requesting}
+                key="tempPath"
+                className={this.props.classes.ffmpegPath}
+                label={I18n.t('Path to store temporary images')}
+                value={this.props.native.tempPath || ''}
+                onChange={e => this.props.onChange('tempPath', e.target.value)}
+                helperText={I18n.t('If empty then in adapter folder')}
+            />,
         ];
     }
 
@@ -182,13 +239,14 @@ class Options extends Component {
 
     checkConnection() {
         this.setState({requesting: true}, () =>
-            this.props.socket.sendTo(this.props.adapterName + '.' + this.props.instance, 'test', this.props.native, data => {
-                if (data.error) {
-                    this.setState({requesting: false}, () => this.showError(I18n.t(data.error)));
-                } else {
-                    this.setState({messageText: data.result, requesting: false});
-                }
-            }));
+            this.props.socket.sendTo(`${this.props.adapterName}.${this.props.instance}`, 'test', this.props.native)
+                .then(data => {
+                    if (data.error) {
+                        this.setState({ requesting: false }, () => this.showError(I18n.t(data.error)));
+                    } else {
+                        this.setState({ messageText: data.result, requesting: false });
+                    }
+                }));
     }
 
     render() {
@@ -213,6 +271,7 @@ class Options extends Component {
 Options.propTypes = {
     common: PropTypes.object.isRequired,
     native: PropTypes.object.isRequired,
+    instanceAlive: PropTypes.bool,
     instance: PropTypes.number.isRequired,
     adapterName: PropTypes.string.isRequired,
     onError: PropTypes.func,

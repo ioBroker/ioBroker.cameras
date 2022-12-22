@@ -12,7 +12,7 @@ function init(adapter, cam) {
     cam.password = cam.password || '';
 
     // calculate basic authentication. Password was encrypted and must be decrypted
-    cam.basicAuth = 'Basic ' + Buffer.from(cam.username + ':' + adapter.tools.decrypt(adapter.__systemSecret, cam.password)).toString('base64');
+    cam.basicAuth = 'Basic ' + Buffer.from(`${cam.username}:${adapter.decrypt(cam.password)}`).toString('base64');
     return Promise.resolve();
 }
 

@@ -2,7 +2,15 @@
 const utils       = require('@iobroker/adapter-core');
 const adapterName = require('./package.json').name.split('.').pop();
 const http        = require('http');
-const sharp       = require('sharp');
+const rtsp        = require('./cameras/rtsp');
+const fs = require('fs');
+const path = require('path');
+let sharp;
+try {
+    sharp = require('sharp');
+} catch (e) {
+    console.error(`Cannot load sharp: ${e}`);
+}
 
 /**
  * The adapter instance
@@ -46,9 +54,9 @@ function startAdapter(options) {
 
 function testCamera(adapter, item, cb) {
     if (item && item.type) {
-        const url = '/' + item.name + '_test';
+        const url = `/${item.name}_test`;
         try {
-            adapter.__CAM_TYPES[item.type] = adapter.__CAM_TYPES[item.type] || require('./cameras/' + item.type);
+            adapter.__CAM_TYPES[item.type] = adapter.__CAM_TYPES[item.type] || require(`./cameras/${item.type}`);
         } catch (e) {
             adapter.log.error(`Cannot load "${item.type}": ${e}`);
             return cb({error: `Cannot load "${item.type}"`});
@@ -170,6 +178,27 @@ function processMessage(adapter, obj) {
 
             break;
         }
+
+        case 'ffmpeg': {
+            if (obj.callback && obj.message) {
+                rtsp.executeFFmpeg('-version', obj.message.path)
+                    .then(data => {
+                        if (data) {
+                            const result = data.split('\n')[0];
+                            const version = result.match(/version\s+([-\w.]+)/i);
+                            if (version) {
+                                adapter.sendTo(obj.from, obj.command, {version: version[1]}, obj.callback);
+                            } else {
+                                adapter.sendTo(obj.from, obj.command, {version: result}, obj.callback);
+                            }
+                        } else {
+                            adapter.sendTo(obj.from, obj.command, {error: 'No answer'}, obj.callback);
+                        }
+                    })
+                    .catch(error => adapter.sendTo(obj.from, obj.command, {error}, obj.callback));
+            }
+            break;
+        }
     }
 }
 
@@ -189,11 +218,15 @@ function unloadCameras(adapter, cb) {
 }
 
 function resizeImage(data, width, height) {
+    if (!sharp) {
+        adapter.log.warn('Module sharp is not installed. Please install it to resize images');
+        return Promise.resolve(({body: data.body, contentType: 'image/jpeg'}));
+    }
     if (!width && !height)  {
         return sharp(data.body)
             .jpeg()
             .toBuffer()
-            .then(body =>({body, contentType: 'image/jpeg'}));
+            .then(body => ({body, contentType: 'image/jpeg'}));
     }  else {
         return sharp(data.body)
             .resize(width || null, height || null)
@@ -359,7 +392,7 @@ function fillStates() {
                 .catch(e => adapter.log.error('Cannot get image: ' + e)));
 
         Promise.all(promises)
-            .then(() => resolve());
+            .then(() => resolve(null));
     });
 }
 
@@ -372,12 +405,31 @@ function main(adapter) {
         adapter.__CAM_TYPES = {};
         const promises = [];
 
+        adapter.config.tempPath = adapter.config.tempPath || (__dirname + '/snapshots');
+
+        if (!fs.existsSync(adapter.config.ffmpegPath) && !fs.existsSync(adapter.config.ffmpegPath + '.exe')) {
+            if (process.platform === 'win32') {
+                adapter.config.ffmpegPath = __dirname + '/win-ffmpeg.exe';
+            } else {
+                adapter.log.error(`Cannot find ffmpeg in "${adapter.config.ffmpegPath}"`);
+            }
+        }
+
+        try {
+            if (!fs.existsSync(adapter.config.tempPath)) {
+                fs.mkdirSync(adapter.config.tempPath);
+                adapter.log.debug('Create snapshots directory: ' + path.normalize(adapter.config.tempPath));
+            }
+        } catch (e) {
+            adapter.log.error('Cannot create snapshots directory: ' + e);
+        }
+
         // init all required camera providers
         adapter.config.cameras.forEach(item => {
             if (item && item.type) {
                 item.path = '/' + item.name;
                 try {
-                    adapter.__CAM_TYPES[item.type] = adapter.__CAM_TYPES[item.type] || require(__dirname + '/cameras/' + item.type);
+                    adapter.__CAM_TYPES[item.type] = adapter.__CAM_TYPES[item.type] || require(`./cameras/${item.type}`);
                     promises.push(adapter.__CAM_TYPES[item.type].init(adapter, item).catch(e => adapter.log.error(`Cannot init camera ${item.name}: ${e && e.toString()}`)));
                 } catch (e) {
                     adapter.log.error(`Cannot load "${item.type}": ${e}`);

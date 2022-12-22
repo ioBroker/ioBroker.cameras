@@ -42,6 +42,7 @@ class App extends GenericApp {
             'it': require('./i18n/it'),
             'es': require('./i18n/es'),
             'pl': require('./i18n/pl'),
+            'uk': require('./i18n/uk'),
             'zh-cn': require('./i18n/zh-cn'),
         };
 
@@ -121,6 +122,7 @@ class App extends GenericApp {
                     onConfigError={configError => this.setConfigurationError(configError)}
                     adapterName={this.adapterName}
                     onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}
+                    instanceAlive={this.state.alive}
                 />}
                 {this.state.selectedTab === 'cameras' && <TabCameras
                     key="cameras"
