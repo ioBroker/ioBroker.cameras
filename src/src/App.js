@@ -59,16 +59,16 @@ class App extends GenericApp {
 
     componentDidMount() {
         super.componentDidMount();
-        this.socket.unsubscribeState(this.instanceId + '.alive', this.onAliveChanged);
+        this.socket.unsubscribeState(`${this.instanceId}.alive`, this.onAliveChanged);
     }
     componentWillUnmount() {
-        this.socket.unsubscribeState(this.instanceId + '.alive', this.onAliveChanged);
+        this.socket.unsubscribeState(`${this.instanceId}.alive`, this.onAliveChanged);
         super.componentWillUnmount();
     }
 
     // called when connected with admin and loaded instance object
     onConnectionReady() {
-        this.socket.getState(this.instanceId + '.alive')
+        this.socket.getState(`${this.instanceId}.alive`)
             .then(state => {
                 if (this.state.alive !== (state ? state.val : false)) {
                     this.setState({alive: state ? state.val : false});
@@ -99,9 +99,23 @@ class App extends GenericApp {
 
         return <div className="App" style={{background: this.state.themeType === 'dark' ? 'black' : 'white'}}>
             <AppBar position="static">
-                <Tabs value={this.getSelectedTab()} onChange={(e, index) => this.selectTab(e.target.dataset.name, index)}>
-                    <Tab selected={this.state.selectedTab === 'options'} label={I18n.t('Options')} data-name="options" />
-                    <Tab selected={this.state.selectedTab === 'cameras'} label={I18n.t('Cameras')} data-name="cameras" />
+                <Tabs
+                    value={this.getSelectedTab()}
+                    onChange={(e, index) => this.selectTab(e.target.dataset.name, index)}
+                    classes={{ indicator: this.props.classes.indicator }}
+                >
+                    <Tab
+                        classes={{ selected: this.props.classes.selected }}
+                        selected={this.state.selectedTab === 'options'}
+                        label={I18n.t('Options')}
+                        data-name="options"
+                    />
+                    <Tab
+                        classes={{ selected: this.props.classes.selected }}
+                        selected={this.state.selectedTab === 'cameras'}
+                        label={I18n.t('Cameras')}
+                        data-name="cameras"
+                    />
                 </Tabs>
             </AppBar>
 
