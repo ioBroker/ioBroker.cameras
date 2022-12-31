@@ -1,6 +1,6 @@
 {
     "name": "cameras-admin",
-    "version": "0.2.0",
+    "version": "1.0.0",
     "private": true,
     "dependencies": {
         "@iobroker/adapter-react-v5": "^4.0.8",

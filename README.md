@@ -48,7 +48,7 @@ If you want to access snapshots on RTSP cameras, you can use ffmpeg. You need to
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.0.0 (2022-12-31)
 * (bluefox) added RTSP camera
 * (bluefox) added cache of snapshots
 

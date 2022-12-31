@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "cameras",
-    "version": "0.2.0",
+    "version": "1.0.0",
     "news": {
+      "1.0.0": {
+        "en": "added RTSP camera\nadded cache of snapshots",
+        "de": "rTSP Kamera\nhinzugefügt cache von snapshots",
+        "ru": "добавлена RTSP камера\nдобавлен кэш снимков",
+        "pt": "adicionado RTSP câmera\nadicionado cache de instantâneos",
+        "nl": "voegde RTSP camera toe\nvoegde kache van foto's toe",
+        "fr": "appareil photo RTSP\ncache ajouté de snapshots",
+        "it": "rTSP fotocamera\ncache aggiunta di snapshot",
+        "es": "cámara RTSP\nañadido caché de instantáneas",
+        "pl": "rTSP camera\ndodać podręcznik",
+        "uk": "додана камера RTSP\nдодано кеш знімків",
+        "zh-cn": "添加了RTSP摄像机\nd. 绑架事件的增量"
+      },
       "0.2.0": {
         "en": "GUI updated to MUIv5",
         "de": "GUI aktualisiert auf MUIv5",
@@ -74,18 +87,6 @@
         "es": "Agregar rol para los estados",
         "pl": "Dodaj rolę dla stanów",
         "zh-cn": "为状态添加角色"
-      },
-      "0.1.3": {
-        "en": "Parameters were applied",
-        "de": "Parameter wurden angewendet",
-        "ru": "Параметры были применены",
-        "pt": "Os parâmetros foram aplicados",
-        "nl": "Parameters werden toegepast",
-        "fr": "Les paramètres ont été appliqués",
-        "it": "I parametri sono stati applicati",
-        "es": "Se aplicaron parámetros",
-        "pl": "Zastosowano parametry",
-        "zh-cn": "应用参数"
       }
     },
     "title": "IP-Cameras",
