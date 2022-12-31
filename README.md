@@ -42,6 +42,10 @@ If you want to access snapshots on RTSP cameras, you can use ffmpeg. You need to
 - Windows has precompiled ffmpeg and there is no need to download anything. (Windows version is taken from here: https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z) 
 - Linux: `sudo apt-get install ffmpeg -y`
 
+Here is an example how to add Reolink E1:
+
+![rtsp](img/rtsp.png)
+
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
