@@ -3,8 +3,9 @@ const utils       = require('@iobroker/adapter-core');
 const adapterName = require('./package.json').name.split('.').pop();
 const http        = require('http');
 const rtsp        = require('./cameras/rtsp');
-const fs = require('fs');
-const path = require('path');
+const fs          = require('fs');
+const path        = require('path');
+const moment      = require('moment');
 let sharp;
 try {
     sharp = require('sharp');
@@ -17,6 +18,8 @@ try {
  * @type {ioBroker.Adapter}
  */
 let adapter;
+
+let lang = 'en';
 
 /**
  * Starts the adapter instance
@@ -34,6 +37,9 @@ function startAdapter(options) {
         // Go through subscribes
         console.log('Subscribe on ' + JSON.stringify(subscriptions));
     });
+
+
+    moment.locale('de');
 
     adapter.on('unload', cb => {
         adapter.__bforceInterval && clearInterval(adapter.__bforceInterval);
@@ -80,8 +86,8 @@ function testCamera(adapter, item, cb) {
                 try {
                     return adapter.__CAM_TYPES[item.type].process(adapter, item, req, res);
                 } catch (e) {
-                    console.log('Cannot get image: ' + e);
-                    cb && cb({error: 'Cannot get image: ' + e});
+                    console.log(`Cannot get image: ${e}`);
+                    cb && cb({error: `Cannot get image: ${e}`});
                     cb = null;
                     return null;
                 }
@@ -108,7 +114,7 @@ function testCamera(adapter, item, cb) {
                 }
             })
             .catch(e => {
-                adapter.log.warn('Cannot get image: ' + (e && e.toString()));
+                adapter.log.warn(`Cannot get image: ${e && e.toString()}`);
                 cb && cb({error: e && e.toString()});
             })
             .then(() => adapter.__CAM_TYPES[item.type].unload(adapter, item));
@@ -117,27 +123,24 @@ function testCamera(adapter, item, cb) {
     }
 }
 
-function getCameraImage(cam, width, height, angle) {
+function getCameraImage(cam) {
     if (adapter.__CAM_TYPES[cam.type]) {
-        adapter.log.debug('Request ' + JSON.stringify(cam));
+        adapter.log.debug(`Request ${cam.type} ${cam.ip || cam.url} ${cam.name}`);
 
         return adapter.__CAM_TYPES[cam.type].process(adapter, cam)
             .then(data => {
                 if (data) {
                     let imageData;
-                    return resizeImage(data, width || cam.width, height || cam.height)
-                        .then(data => rotateImage(data, angle || cam.angle))
+                    return resizeImage(data, cam.width, cam.height)
+                        .then(data => rotateImage(data, cam.angle))
+                        .then(data => addTextToImage(data, cam.addTime ? adapter.config.dateFormat || 'LTS' : null, cam.title))
                         .then(_imageData => {
                             imageData = _imageData;
-                            if (adapter.setForeignBinaryStateAsync) {
-                                return adapter.setForeignBinaryStateAsync(`${adapter.namespace}.cameras.${cam.name}`, Buffer.from(_imageData.body));
-                            } else {
-                                return adapter.setBinaryStateAsync(`${adapter.namespace}.cameras.${cam.name}`, Buffer.from(_imageData.body));
-                            }
+                            return adapter.writeFileAsync(adapter.namespace, `/${cam.name}.jpg`, Buffer.from(_imageData.body));
                         })
                         .then(() => imageData.body);
                 } else if (!data) {
-                    adapter.log.error('No data from camera ' + cam.name);
+                    adapter.log.error(`No data from camera ${cam.name}`);
                 }
             })
             .catch(e => adapter.log.error(`Cannot get camera image of ${cam.name}: ${e}`));
@@ -159,9 +162,11 @@ function processMessage(adapter, obj) {
         }
 
         case 'image': {
-            const cam = adapter.config.cameras.find(cam => cam.name === obj.message.name);
+            let cam = adapter.config.cameras.find(cam => cam.name === obj.message.name);
             if (cam && obj.callback) {
-                getCameraImage(cam, obj.message.width, obj.message.height, obj.message.angle)
+                cam = Object.assign(JSON.parse(JSON.stringify(cam), obj.message));
+
+                getCameraImage(cam)
                     .then(data =>
                         adapter.sendTo(obj.from, obj.command, { data: Buffer.from(data).toString('base64'), contentType: 'image/jpeg' }, obj.callback))
                     .catch(e => adapter.sendTo(obj.from, obj.command, { error: e }, obj.callback));
@@ -251,16 +256,58 @@ function rotateImage(data, angle) {
     }
 }
 
+async function addTextToImage(data, dateFormat, title) {
+    if (!dateFormat && !title) {
+        return data;
+    } else {
+        const date = dateFormat ? moment().locale(lang).format(dateFormat) : '';
+
+        if (!data.metadata) {
+            data.metadata = await sharp(data.body).metadata();
+        }
+
+        const layers = [];
+
+        if (title) {
+            layers.push({
+                input: {
+                    text: {
+                        text: title,
+                        dpi: data.metadata.height * 0.2
+                    },
+                },
+                top: Math.round(data.metadata.height * 0.95),
+                left: Math.round(data.metadata.width * 0.01),
+                blend: 'add'
+            });
+        }
+
+        if (date) {
+            layers.push({
+                input: {
+                    text: {
+                        text: date,
+                        dpi: data.metadata.height * 0.2
+                    },
+                },
+                top: Math.round(data.metadata.height * 0.02),
+                left: Math.round(data.metadata.width * 0.01),
+                blend: 'add'
+            });
+        }
+
+
+        return sharp(data.body)
+            .composite(layers)
+            .jpeg()
+            .toBuffer()
+            .then(body => ({body, contentType: 'image/jpeg'}));
+    }
+}
+
 function startWebServer(adapter) {
     adapter.__server = http.createServer((req, res) => {
         const clientIp = req.connection.remoteAddress;
-        const now = Date.now();
-        if (adapter.__bforce[clientIp] && now - adapter.__bforce[clientIp] < 5000)  {
-            adapter.__bforce[clientIp] = now;
-            res.statusCode = 429;
-            res.write('Blocked for 5 seconds');
-            return res.end();
-        }
 
         const parts = req.url.split('?');
         const url = parts[0];
@@ -269,6 +316,14 @@ function startWebServer(adapter) {
             const pp = p.split('=');
             query[pp[0]] = decodeURIComponent(pp[1] || '');
         });
+
+        const now = Date.now();
+        if (adapter.__bforce[clientIp] && now - adapter.__bforce[clientIp] < 5000 && query.key !== adapter.config.key)  {
+            adapter.__bforce[clientIp] = now;
+            res.statusCode = 429;
+            res.write('Blocked for 5 seconds');
+            return res.end();
+        }
 
         if (query.key !== adapter.config.key) {
             adapter.__bforce[clientIp] = Date.now();
@@ -280,7 +335,8 @@ function startWebServer(adapter) {
         if (clientIp !== '127.0.0.1' &&
             clientIp !== '::1/128' &&
             adapter.config.allowIPs !== true &&
-            !adapter.config.allowIPs.includes(clientIp)) {
+            !adapter.config.allowIPs.includes(clientIp)
+        ) {
             res.statusCode = 401;
             res.write('Invalid key');
             res.end();
@@ -290,12 +346,13 @@ function startWebServer(adapter) {
 
         if (cam) {
             if (adapter.__CAM_TYPES[cam.type]) {
-                adapter.log.debug('Request ' + JSON.stringify(cam));
+                adapter.log.debug(`Request ${cam.name} ${cam.type} ${cam.ip || cam.url}`);
                 adapter.__CAM_TYPES[cam.type].process(adapter, cam, req, res)
                     .then(data => {
                         if (data && !data.done) {
                             resizeImage(data, parseInt(query.w, 10), parseInt(query.h, 10))
                                 .then(data => rotateImage(data, parseInt(query.angle, 10)))
+                                .then(data => addTextToImage(data, cam.addTime ? adapter.config.dateFormat || 'LTS' : null, cam.title))
                                 .then(data => {
                                     res.setHeader('Content-type', data.contentType);
                                     res.write(data.body || '');
@@ -309,12 +366,12 @@ function startWebServer(adapter) {
                     })
                     .catch(e => {
                         res.statusCode = 500;
-                        res.write('Unknown error: ' + e);
+                        res.write(`Unknown error: ${e}`);
                         res.end();
                     });
             } else {
                 res.statusCode = 501;
-                res.write('Unknown camera type: ' + cam.type);
+                res.write(`Unknown camera type: ${cam.type}`);
                 res.end();
             }
         } else {
@@ -323,73 +380,37 @@ function startWebServer(adapter) {
             res.end();
         }
     });
-    adapter.__server.on('clientError', (err, socket) => {
-        socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
-    });
+    adapter.__server.on('clientError', (err, socket) =>
+        socket.end('HTTP/1.1 400 Bad Request\r\n\r\n'));
 
     adapter.__server.listen({port: adapter.config.port || '127', host: adapter.config.bind}, () =>
         adapter.log.debug(`Server started on ${adapter.config.bind}:${adapter.config.port}`));
 }
 
-function processTasks(tasks, cb) {
-    if (!tasks || !tasks.length) {
-        cb && cb();
-    } else {
-        const task = tasks.shift();
-        if (task.name === 'delete') {
-            adapter.delForeignObject(task.id, () =>
-                setImmediate(processTasks, tasks, cb));
-        } else if (task.name === 'set') {
-            adapter.setForeignObject(task.obj._id, task.obj, () =>
-                setImmediate(processTasks, tasks, cb));
+async function syncConfig() {
+    try {
+        const files = await adapter.readDirAsync(adapter.namespace, '/');
+        for (let f = 0; f < files.length; f++) {
+            const file = files[f];
+            if (!adapter.config.cameras.find(item => `${item.name}.jpg` === file.file)) {
+                try {
+                    await adapter.delFileAsync(adapter.namespace, file.file);
+                } catch (e) {
+                    adapter.log.error(`Cannot delete file ${file}: ${e}`);
+                }
+            }
         }
+    } catch (e) {
+        // ignore
     }
 }
 
-function syncConfig() {
-    return new Promise(resolve =>
-        adapter.getStatesOf('', 'cameras', (err, states) => {
-            const tasks = [];
-
-            states.forEach(obj => {
-                const name = obj._id.split('.').pop();
-                if (!adapter.config.cameras.find(item => item.name === name)) {
-                    // state does not exists anymore
-                    tasks.push({name: 'delete', id: obj._id});
-                }
-            });
-            adapter.config.cameras.forEach(item => {
-                const obj = states.find(obj => obj._id.split('.').pop() === item.name);
-                if (!obj) {
-                    tasks.push({name: 'set', obj: {
-                        _id: adapter.namespace + '.cameras.' + item.name,
-                        common: {
-                            name: item.desc || item.name,
-                            type: 'file',
-                            role: 'camera'
-                        },
-                        binary: true,
-                        type: 'state',
-                        native: {
-                            url: `/${adapter.namespace}/${item.name}`
-                        }
-                    }});
-                } else if (obj && obj.common.name !== (item.desc || item.name)) {
-                    obj.common.name = item.desc || item.name;
-                    tasks.push({name: 'set', obj});
-                }
-            });
-
-            processTasks(tasks, () => resolve());
-        }));
-}
-
-function fillStates() {
+function fillFiles() {
     // write all states with actual images one time at start
     return new Promise(resolve => {
         const promises = adapter.config.cameras.map(cam =>
             getCameraImage(cam)
-                .catch(e => adapter.log.error('Cannot get image: ' + e)));
+                .catch(e => adapter.log.error(`Cannot get image: ${e}`)));
 
         Promise.all(promises)
             .then(() => resolve(null));
@@ -401,15 +422,17 @@ function main(adapter) {
     adapter.getForeignObject('system.config', null, (err, data) => {
         // store system secret
         adapter.__systemSecret = data.native.secret;
+        lang = adapter.config.language || data.common.language;
 
         adapter.__CAM_TYPES = {};
         const promises = [];
 
-        adapter.config.tempPath = adapter.config.tempPath || (__dirname + '/snapshots');
+        adapter.config.tempPath = adapter.config.tempPath || (`${__dirname}/snapshots`);
+        adapter.config.defaultCacheTimeout = parseInt(adapter.config.defaultCacheTimeout, 10) || 0;
 
-        if (!fs.existsSync(adapter.config.ffmpegPath) && !fs.existsSync(adapter.config.ffmpegPath + '.exe')) {
+        if (!fs.existsSync(adapter.config.ffmpegPath) && !fs.existsSync(`${adapter.config.ffmpegPath}.exe`)) {
             if (process.platform === 'win32') {
-                adapter.config.ffmpegPath = __dirname + '/win-ffmpeg.exe';
+                adapter.config.ffmpegPath = `${__dirname}/win-ffmpeg.exe`;
             } else {
                 adapter.log.error(`Cannot find ffmpeg in "${adapter.config.ffmpegPath}"`);
             }
@@ -418,16 +441,16 @@ function main(adapter) {
         try {
             if (!fs.existsSync(adapter.config.tempPath)) {
                 fs.mkdirSync(adapter.config.tempPath);
-                adapter.log.debug('Create snapshots directory: ' + path.normalize(adapter.config.tempPath));
+                adapter.log.debug(`Create snapshots directory: ${path.normalize(adapter.config.tempPath)}`);
             }
         } catch (e) {
-            adapter.log.error('Cannot create snapshots directory: ' + e);
+            adapter.log.error(`Cannot create snapshots directory: ${e}`);
         }
 
         // init all required camera providers
         adapter.config.cameras.forEach(item => {
             if (item && item.type) {
-                item.path = '/' + item.name;
+                item.path = `/${item.name}`;
                 try {
                     adapter.__CAM_TYPES[item.type] = adapter.__CAM_TYPES[item.type] || require(`./cameras/${item.type}`);
                     promises.push(adapter.__CAM_TYPES[item.type].init(adapter, item).catch(e => adapter.log.error(`Cannot init camera ${item.name}: ${e && e.toString()}`)));
@@ -458,7 +481,7 @@ function main(adapter) {
 
         Promise.all(promises)
             .then(() => syncConfig())
-            .then(() => fillStates())
+            .then(() => fillFiles())
             .then(() => startWebServer(adapter));
     });
 }

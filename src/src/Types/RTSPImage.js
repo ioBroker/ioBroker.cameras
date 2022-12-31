@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
 import I18n from '@iobroker/adapter-react-v5/i18n';
 import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 const styles = theme => ({
     page: {
-        width: '100%'
+        width: '100%',
     },
     ip: {
         marginRight: theme.spacing(1),
@@ -28,7 +30,7 @@ const styles = theme => ({
         marginTop: theme.spacing(2),
         marginBotton: `${theme.spacing(3)} !important`,
         width: 408,
-    }
+    },
 });
 
 class RTSPImageConfig extends Component {
@@ -46,7 +48,7 @@ class RTSPImageConfig extends Component {
         state.timeout  = state.timeout  || 5000;
         state.url      = `rtsp://${state.username}:***@${state.ip}:${state.port}${state.urlPath ? (state.urlPath.startsWith('/') ? state.urlPath : `/${state.urlPath}`) : ''}`;
 
-        this.state = state;
+        this.state     = state;
     }
 
     componentDidMount() {
@@ -69,49 +71,51 @@ class RTSPImageConfig extends Component {
 
     render() {
         return <div className={this.props.classes.page}>
-            <TextField
-                variant="standard"
-                className={this.props.classes.ip}
-                label={I18n.t('Camera IP')}
-                value={this.state.ip}
-                onChange={e => this.setState({ ip: e.target.value }, () => this.reportSettings())}
-            />
-            <TextField
-                variant="standard"
-                className={this.props.classes.port}
-                type="number"
-                label={I18n.t('Port')}
-                value={this.state.port}
-                onChange={e => this.setState({ port: e.target.value }, () => this.reportSettings())}
-            />
-            <br/>
-            <TextField
-                variant="standard"
-                className={this.props.classes.urlPath}
-                label={I18n.t('Path')}
-                value={this.state.urlPath}
-                onChange={e => this.setState({ urlPath: e.target.value }, () => this.reportSettings())}
-                helperText={this.state.url}
-            />
-            <br/>
-            <TextField
-                variant="standard"
-                autoComplete="new-password"
-                className={this.props.classes.username}
-                label={I18n.t('Username')}
-                value={this.state.username}
-                onChange={e => this.setState({ username: e.target.value }, () => this.reportSettings())}
-            />
-            <TextField
-                variant="standard"
-                key="password"
-                type="password"
-                autoComplete="new-password"
-                className={this.props.classes.password}
-                label={I18n.t('Password')}
-                value={this.state.password}
-                onChange={e => this.setState({ password: e.target.value }, () => this.reportSettings())}
-            />
+            <form>
+                <TextField
+                    variant="standard"
+                    className={this.props.classes.ip}
+                    label={I18n.t('Camera IP')}
+                    value={this.state.ip}
+                    onChange={e => this.setState({ ip: e.target.value }, () => this.reportSettings())}
+                />
+                <TextField
+                    variant="standard"
+                    className={this.props.classes.port}
+                    type="number"
+                    label={I18n.t('Port')}
+                    value={this.state.port}
+                    onChange={e => this.setState({ port: e.target.value }, () => this.reportSettings())}
+                />
+                <br />
+                <TextField
+                    variant="standard"
+                    className={this.props.classes.urlPath}
+                    label={I18n.t('Path')}
+                    value={this.state.urlPath}
+                    onChange={e => this.setState({ urlPath: e.target.value }, () => this.reportSettings())}
+                    helperText={this.state.url}
+                />
+                <br />
+                <TextField
+                    variant="standard"
+                    autoComplete="new-password"
+                    className={this.props.classes.username}
+                    label={I18n.t('Username')}
+                    value={this.state.username}
+                    onChange={e => this.setState({ username: e.target.value }, () => this.reportSettings())}
+                />
+                <TextField
+                    variant="standard"
+                    key="password"
+                    type="password"
+                    autoComplete="new-password"
+                    className={this.props.classes.password}
+                    label={I18n.t('Password')}
+                    value={this.state.password}
+                    onChange={e => this.setState({ password: e.target.value }, () => this.reportSettings())}
+                />
+            </form>
         </div>;
     }
 }

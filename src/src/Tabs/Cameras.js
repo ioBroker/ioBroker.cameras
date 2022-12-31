@@ -27,6 +27,8 @@ import I18n from '@iobroker/adapter-react-v5/i18n';
 import URLImage from '../Types/URLImage';
 import URLBasicAuthImage from '../Types/URLBasicAuthImage';
 import RTSPImageConfig from '../Types/RTSPImage';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 const TYPES = {
     url:          { Config: URLImage, name: 'URL' },
@@ -34,17 +36,15 @@ const TYPES = {
     rtsp:         { Config: RTSPImageConfig, name: 'RTSP Snapshot' },
 };
 
-const COMMON_ATTRS = ['name', 'desc', 'type'];
-
 const styles = theme => ({
     tab: {
         width: '100%',
-        height: '100%'
+        height: '100%',
     },
     lineDiv: {
         width: '100%',
         paddingBottom: 5,
-        borderBottom: '1px dashed gray'
+        borderBottom: '1px dashed gray',
     },
     lineText: {
         display: 'inline-block',
@@ -85,7 +85,7 @@ const styles = theme => ({
         fontStyle: 'italic',
     },
     type: {
-        width: '100%'
+        width: '100%',
     },
     name: {
         width: 'calc(100% - 10px)',
@@ -106,7 +106,7 @@ const styles = theme => ({
     divConfig: {
         verticalAlign: 'top',
         width: 'calc(100% - 300px)',
-        display: 'inline-block'
+        display: 'inline-block',
     },
     divTestCam: {
         width: 300,
@@ -121,12 +121,16 @@ const styles = theme => ({
     },
     imgTest: {
         width: '100%',
-        height: 'auto'
+        height: 'auto',
     },
     sampleUrl: {
         display: 'block',
         marginTop: theme.spacing(1),
-    }
+    },
+    link: {
+        color: 'inherit',
+        textDecoration: 'underline',
+    },
 });
 
 class Server extends Component {
@@ -138,7 +142,7 @@ class Server extends Component {
             editChanged: false,
             requesting: false,
             instanceAlive: this.props.instanceAlive,
-            webInstanceHost: ''
+            webInstanceHost: '',
         };
 
         // translate all names once
@@ -180,7 +184,7 @@ class Server extends Component {
 
     renderMessage() {
         if (this.state.message) {
-            return <MessageDialog text={this.state.message} onClose={() => this.setState({message: ''})} />;
+            return <MessageDialog text={this.state.message} onClose={() => this.setState({ message: '' })} />;
         } else {
             return null;
         }
@@ -195,15 +199,14 @@ class Server extends Component {
     }
 
     onTest() {
-        const settings = JSON.parse(this.editedSettings || this.editedSettingsOld);
-        COMMON_ATTRS.forEach(attr => settings[attr] = this.props.native.cameras[this.state.editCam][attr]);
+        const settings = JSON.parse(this.state.editedSettings || this.state.editedSettingsOld);
 
         let timeout = setTimeout(() => {
             timeout = null;
-            this.setState({message: 'Timeout', requesting: false});
+            this.setState({ message: 'Timeout', requesting: false });
         }, settings.timeout || this.props.native.defaultTimeout);
 
-        this.setState({requesting: true}, () => {
+        this.setState({ requesting: true }, () => {
             this.props.socket.sendTo(`${this.props.adapterName}.${this.props.instance}`, 'test', settings)
                 .then(result => {
                     timeout && clearTimeout(timeout);
@@ -212,45 +215,86 @@ class Server extends Component {
                         if (typeof error !== 'string') {
                             error = JSON.stringify(error);
                         }
-                        this.setState({message: error, requesting: false});
+                        this.setState({ message: error, requesting: false });
                     } else {
-                        this.setState({testImg: result.body, requesting: false});
+                        this.setState({ testImg: result.body, requesting: false });
                     }
                 });
         });
     }
 
+    onCameraSettingsChanged(settings) {
+        const editedSettings = JSON.stringify(settings);
+        if (this.state.editedSettingsOld === editedSettings) {
+            this.setState({ editChanged: false, editedSettings: null });
+        } else if (this.state.editedSettingsOld !== editedSettings) {
+            this.setState({ editChanged: true, editedSettings });
+        }
+    }
+
     renderConfigDialog() {
         if (this.state.editCam !== false) {
-            const cam = this.props.native.cameras[this.state.editCam];
+            const cam = JSON.parse(this.state.editedSettings || this.state.editedSettingsOld);
             let Config = (TYPES[cam.type] || TYPES.url).Config;
 
             return <Dialog
                 maxWidth="lg"
                 fullWidth
                 open={!0}
-                onClose={() => this.state.editCam !== null && this.setState({editCam: false, editChanged: false})}
+                onClose={() => this.state.editCam !== null && this.setState({ editCam: false, editChanged: false })}
             >
                 <DialogTitle>{I18n.t('Edit camera %s [%s]', cam.name, cam.type)}</DialogTitle>
                 <DialogContent>
                     <div className={this.props.classes.divConfig}>
                         <Config
                             settings={cam}
-                            onChange={settings => {
-                                this.editedSettings = JSON.stringify(settings);
-                                if (this.editedSettingsOld === this.editedSettings && this.state.editChanged) {
-                                    this.setState({editChanged: false});
-                                } else if (this.editedSettingsOld !== this.editedSettings && !this.state.editChanged) {
-                                    this.setState({editChanged: true});
-                                }
-                            }}
+                            onChange={settings => this.onCameraSettingsChanged(settings)}
                             encrypt={(value, cb) =>
                                 this.props.encrypt(value, cb)}
                             decrypt={(value, cb) =>
                                 this.props.decrypt(value, cb)}
                         />
-                        <div className={ this.props.classes.sampleUrl } >{ I18n.t('Local URL') }: <a href={ `http://${this.props.native.bind}:${this.props.native.port}/${cam.name}?key=${ this.props.native.key }` } target="_blank" rel="noopener noreferrer">URL: http://{ this.props.native.bind }:{this.props.native.port }/{ cam.name }?key={ this.props.native.key }</a></div>
-                        <div className={ this.props.classes.sampleUrl } >{ I18n.t('Web URL') }: <a href={ `http://${this.state.webInstanceHost}/${this.props.adapterName}.${this.props.instance}/${cam.name}` } target="_blank" rel="noopener noreferrer">URL: http://{ this.state.webInstanceHost }/{ this.props.adapterName }.{ this.props.instance }/{ cam.name }</a></div>
+                        <br />
+                        <TextField
+                            variant="standard"
+                            className={this.props.classes.username}
+                            label={I18n.t('Cache timeout (ms)')}
+                            value={cam.cacheTimeout === undefined ? '' : cam.cacheTimeout}
+                            helperText={I18n.t('If empty, use default settings. If 0, cache disabled')}
+                            onChange={e => {
+                                const settings = JSON.parse(JSON.stringify(cam));
+                                settings.cacheTimeout = e.target.value;
+                                this.onCameraSettingsChanged(settings);
+                            }}
+                        />
+                        <br />
+                        <FormControlLabel
+                            label={I18n.t('Add time to screenshot')}
+                            control={
+                                <Checkbox
+                                    checked={cam.addTime || false}
+                                    onChange={e => {
+                                        const settings = JSON.parse(JSON.stringify(cam));
+                                        settings.addTime = e.target.checked;
+                                        this.onCameraSettingsChanged(settings);
+                                    }}
+                                />
+                            }
+                        />
+                        <br />
+                        <TextField
+                            variant="standard"
+                            className={this.props.classes.username}
+                            label={I18n.t('Add title')}
+                            value={cam.title === undefined ? '' : cam.title}
+                            onChange={e => {
+                                const settings = JSON.parse(JSON.stringify(cam));
+                                settings.title = e.target.value;
+                                this.onCameraSettingsChanged(settings);
+                            }}
+                        />
+                        <div className={this.props.classes.sampleUrl}>{I18n.t('Local URL')}: <a className={this.props.classes.link} href={`http://${this.props.native.bind}:${this.props.native.port}/${cam.name}?key=${this.props.native.key}`} target="_blank" rel="noopener noreferrer">URL: http://{this.props.native.bind}:{this.props.native.port}/{cam.name}?key={this.props.native.key}</a></div>
+                        <div className={this.props.classes.sampleUrl}>{I18n.t('Web URL')}:   <a className={this.props.classes.link} href={`http://${this.state.webInstanceHost}/${this.props.adapterName}.${this.props.instance}/${cam.name}`}   target="_blank" rel="noopener noreferrer">URL: http://{this.state.webInstanceHost}/{this.props.adapterName}.{this.props.instance }/{cam.name}</a></div>
                     </div>
                 <div className={this.props.classes.divTestCam}>
                     <Button
@@ -270,17 +314,17 @@ class Server extends Component {
                         disabled={!this.state.editChanged}
                         variant="contained"
                         onClick={() => {
-                        const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
-                        if (this.editedSettings) {
-                            const oldValue = cameras[this.state.editCam];
-                            cameras[this.state.editCam] = JSON.parse(this.editedSettings);
-                            COMMON_ATTRS.forEach(attr => cameras[this.state.editCam][attr] = oldValue[attr]);
-                            this.props.onChange('cameras', cameras, () => this.setState({editCam: false, editChanged: false}));
-                        } else {
-                            this.setState({editCam: false, editChanged: false});
-                        }
-                    }} color="primary" >{I18n.t('Apply')}</Button>
-                    <Button color="grey" variant="contained" onClick={() => this.setState({editCam: false, editChanged: false})}>{I18n.t('Cancel')}</Button>
+                            const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                            if (this.state.editedSettings) {
+                                cameras[this.state.editCam] = JSON.parse(this.state.editedSettings);
+                                this.props.onChange('cameras', cameras, () => this.setState({ editCam: false, editChanged: false }));
+                            } else {
+                                this.setState({ editCam: false, editChanged: false });
+                            }
+                        }}
+                        color="primary"
+                    >{I18n.t('Apply')}</Button>
+                    <Button color="grey" variant="contained" onClick={() => this.setState({ editCam: false, editChanged: false })}>{I18n.t('Cancel')}</Button>
                 </DialogActions>
             </Dialog>;
         } else {
@@ -295,15 +339,11 @@ class Server extends Component {
                 key="edit"
                 className={this.props.classes.lineEdit}
                 onClick={() => {
-                    this.editedSettingsOld = JSON.parse(JSON.stringify(this.props.native.cameras[i]));
-                    COMMON_ATTRS.forEach(attr => {
-                        console.log('delete ' + attr);
-                        delete this.editedSettingsOld[attr];
-                    });
-                    this.editedSettingsOld = JSON.stringify(this.editedSettingsOld);
-                    this.setState({editCam: i});
+                    let editedSettingsOld = JSON.parse(JSON.stringify(this.props.native.cameras[i]));
+                    editedSettingsOld = JSON.stringify(editedSettingsOld);
+                    this.setState({ editCam: i, editedSettingsOld, editedSettings: null });
                 }}>
-                    <IconEdit className={ this.props.classes.buttonIcon }/>
+                    <IconEdit className={this.props.classes.buttonIcon} />
             </Fab>,
 
             i ?
@@ -318,7 +358,7 @@ class Server extends Component {
                         cameras.splice(i - 1, 0, cam);
                         this.props.onChange('cameras', cameras);
                     }}>
-                    <IconUp className={ this.props.classes.buttonIcon }/>
+                    <IconUp className={this.props.classes.buttonIcon}/>
                 </Fab>
                 :
                 <div key="upEmpty" className={this.props.classes.lineNoButtonUp}>&nbsp;</div>,
@@ -335,7 +375,7 @@ class Server extends Component {
                         cameras.splice(i + 1, 0, cam);
                         this.props.onChange('cameras', cameras);
                     }}>
-                    <IconDown  className={ this.props.classes.buttonIcon }/>
+                    <IconDown className={this.props.classes.buttonIcon}/>
                 </Fab>
                 :
                 <div key="downEmpty" className={this.props.classes.lineNoButtonDown}>&nbsp;</div>,
@@ -349,7 +389,7 @@ class Server extends Component {
                     cameras.splice(i, 1);
                     this.props.onChange('cameras', cameras);
                 }}>
-                    <IconDelete className={ this.props.classes.buttonIcon }/>
+                    <IconDelete className={this.props.classes.buttonIcon}/>
             </Fab>
         ];
     }
@@ -367,32 +407,32 @@ class Server extends Component {
             // remove password
             const m = description.match(/^https?:\/\/([^@]+)@/);
             if (m && m[1]) {
-                description = description.replace(m[1] + '@', '');
+                description = description.replace(`${m[1]}@`, '');
             }
         }
 
-        return (<div key={ 'cam' + cam.id } className={ this.props.classes.lineDiv }>
-            <div className={ this.props.classes.lineText }>
+        return <div key={`cam${cam.id}`} className={this.props.classes.lineDiv}>
+            <div className={this.props.classes.lineText}>
                 <TextField
                     variant="standard"
-                    className={ this.props.classes.name }
-                    label={ I18n.t('Name') }
-                    error={ error }
-                    value={ cam.name }
-                    helperText={ error ? I18n.t('Duplicate name') : '' }
-                    onChange={ e => {
+                    className={this.props.classes.name}
+                    label={I18n.t('Name')}
+                    error={error}
+                    value={cam.name || ''}
+                    helperText={error ? I18n.t('Duplicate name') : ''}
+                    onChange={e => {
                         const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
                         cameras[i].name = e.target.value.replace(/[^-_\da-zA-Z]/g, '_');
                         this.props.onChange('cameras', cameras);
                     }}
                 />
             </div>
-            <div className={ this.props.classes.lineDesc }>
+            <div className={this.props.classes.lineDesc}>
                 <TextField
                     variant="standard"
                     className={this.props.classes.desc}
                     label={I18n.t('Description')}
-                    value={cam.desc}
+                    value={cam.desc || ''}
                     onChange={e => {
                         const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
                         cameras[i].desc = e.target.value;
@@ -405,37 +445,41 @@ class Server extends Component {
                     <InputLabel>{I18n.t('Type')}</InputLabel>
                     <Select
                         variant="standard"
-                        value={cam.type}
+                        value={cam.type || ''}
                         onChange={e => {
                             const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
                             cameras[i].type = e.target.value;
                             this.props.onChange('cameras', cameras);
                         }}
                     >
-                        {Object.keys(TYPES).map(type => (<MenuItem key={ type } value={ type }>{TYPES[type].name || type}</MenuItem>))}
+                        {Object.keys(TYPES).map(type => <MenuItem key={type} value={type}>{TYPES[type].name || type}</MenuItem>)}
                     </Select>
                 </FormControl>
             </div>
-            { this.renderCameraButtons(cam, i) }
-            {description ? <div className={ this.props.classes.lineUrl }>{ description }</div> : null }
-        </div>);
+            {this.renderCameraButtons(cam, i)}
+            {description ? <div className={this.props.classes.lineUrl }>{description}</div> : null}
+        </div>;
     }
 
     render() {
         return <div className={this.props.classes.tab}>
-            <Fab size="small" onClick={() => {
-                const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
-                let i = 1;
-                // eslint-disable-next-line
-                while(cameras.find(cam => cam.name === 'cam' + i)) {
-                    i++;
-                }
-                cameras.push({name: 'cam' + i, type: 'url', id: Date.now()});
-                this.props.onChange('cameras', cameras);
-            }}><IconAdd /></Fab>
-            { this.props.native.cameras ? this.props.native.cameras.map((cam, i) => this.renderCamera(cam, i)) : null }
-            { this.renderConfigDialog() }
-            { this.renderMessage() }
+            <Fab
+                size="small"
+                title={I18n.t('Add new camera')}
+                onClick={() => {
+                    const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                    let i = 1;
+                    // eslint-disable-next-line
+                    while(cameras.find(cam => cam.name === `cam${i}`)) {
+                        i++;
+                    }
+                    cameras.push({ name: `cam${i}`, type: 'url', id: Date.now() });
+                    this.props.onChange('cameras', cameras);
+                }}
+            ><IconAdd /></Fab>
+            {this.props.native.cameras ? this.props.native.cameras.map((cam, i) => this.renderCamera(cam, i)) : null}
+            {this.renderConfigDialog()}
+            {this.renderMessage()}
         </div>;
     }
 }

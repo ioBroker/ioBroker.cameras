@@ -52,7 +52,7 @@ class App extends GenericApp {
     onAliveChanged = (id, state) => {
         if (id) {
             if (this.state.alive !== (state ? state.val : false)) {
-                this.setState({alive: state ? state.val : false});
+                this.setState({ alive: state ? state.val : false });
             }
         }
     }
@@ -71,7 +71,7 @@ class App extends GenericApp {
         this.socket.getState(`${this.instanceId}.alive`)
             .then(state => {
                 if (this.state.alive !== (state ? state.val : false)) {
-                    this.setState({alive: state ? state.val : false});
+                    this.setState({ alive: state ? state.val : false });
                 }
 
                 // generate random key
@@ -97,7 +97,7 @@ class App extends GenericApp {
             return <Loader theme={this.state.themeType}/>;
         }
 
-        return <div className="App" style={{background: this.state.themeType === 'dark' ? 'black' : 'white'}}>
+        return <div className="App" style={{ background: this.state.themeType === 'dark' ? 'black' : 'white' }}>
             <AppBar position="static">
                 <Tabs
                     value={this.getSelectedTab()}
@@ -127,7 +127,7 @@ class App extends GenericApp {
                     native={this.state.native}
                     encrypt={(value, cb) => cb(this.encrypt(value))}
                     decrypt={(value, cb) => cb(this.decrypt(value))}
-                    onError={text => this.setState({errorText: text})}
+                    onError={text => this.setState({ errorText: text })}
                     onLoad={native => this.onLoadConfig(native)}
                     instance={this.instance}
                     theme={this.state.theme}

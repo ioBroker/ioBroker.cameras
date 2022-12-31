@@ -15,15 +15,12 @@ import InputLabel from '@mui/material/InputLabel';
 import { MdClose as IconClose } from 'react-icons/md';
 import { MdCheck as IconTest } from 'react-icons/md';
 
-import I18n from '@iobroker/adapter-react-v5/i18n';
-import Logo from '@iobroker/adapter-react-v5/Components/Logo';
-import Message from '@iobroker/adapter-react-v5/Dialogs/Message';
-import DialogError from "@iobroker/adapter-react-v5/Dialogs/Error";
+import { I18n, Logo, Message, Error as DialogError } from '@iobroker/adapter-react-v5';
 
-const styles = theme => ({
+const styles = () => ({
     tab: {
         width: '100%',
-        minHeight: '100%'
+        minHeight: '100%',
     },
     bind: {
         marginRight: 10,
@@ -31,13 +28,16 @@ const styles = theme => ({
         minWidth: 200,
     },
     port: {
-        width: 100
+        width: 100,
     },
     defaultTimeout: {
-        width: 150
+        width: 150,
     },
     ffmpegPath: {
-        width: 450
+        width: 450,
+    },
+    link: {
+        color: 'inherit',
     }
 });
 
@@ -50,9 +50,8 @@ class Options extends Component {
             toast: '',
             ips: [],
             requesting: true,
-            webInstances: []
+            webInstances: [],
         };
-
     }
 
     componentDidMount() {
@@ -61,19 +60,19 @@ class Options extends Component {
             .then(_ips => ips = _ips)
             .then(() => this.props.getExtendableInstances())
             .then(webInstances =>
-                this.setState({requesting: false, ips, webInstances: webInstances.map(item =>
-                        item._id.replace('system.adapter.', ''))}));
+                this.setState({ requesting: false, ips, webInstances: webInstances.map(item =>
+                        item._id.replace('system.adapter.', '')) }));
     }
 
     showError(text) {
-        this.setState({errorText: text});
+        this.setState({ errorText: text });
     }
 
     renderError() {
         if (!this.state.errorText) {
             return null;
         }
-        return <DialogError text={this.state.errorText} title={I18n.t('Error')} onClose={() => this.setState({errorText: ''})}/>;
+        return <DialogError text={this.state.errorText} title={I18n.t('Error')} onClose={() => this.setState({ errorText: '' })}/>;
     }
 
     renderToast() {
@@ -87,7 +86,7 @@ class Options extends Component {
             }}
             open={true}
             autoHideDuration={6000}
-            onClose={() => this.setState({toast: ''})}
+            onClose={() => this.setState({ toast: '' })}
             ContentProps={{
                 'aria-describedby': 'message-id',
             }}
@@ -98,7 +97,7 @@ class Options extends Component {
                     aria-label="Close"
                     color="inherit"
                     className={this.props.classes.close}
-                    onClick={() => this.setState({toast: ''})}
+                    onClick={() => this.setState({ toast: '' })}
                 >
                     <IconClose />
                 </IconButton>,
@@ -108,7 +107,7 @@ class Options extends Component {
 
     renderHint() {
         if (this.state.showHint) {
-            return <Message text={I18n.t('Click now Get new connection certificates to request new temporary password')} onClose={() => this.setState({showHint: false})}/>;
+            return <Message text={I18n.t('Click now Get new connection certificates to request new temporary password')} onClose={() => this.setState({ showHint: false })}/>;
         } else {
             return null;
         }
@@ -121,11 +120,11 @@ class Options extends Component {
         },  30000);
 
         this.setState({ requesting: true }, () => {
-            this.props.socket.sendTo(`${this.props.adapterName}.${this.props.instance}`, 'ffmpeg', {path: this.props.native.ffmpegPath})
+            this.props.socket.sendTo(`${this.props.adapterName}.${this.props.instance}`, 'ffmpeg', { path: this.props.native.ffmpegPath })
                 .then(result => {
                     timeout && clearTimeout(timeout);
-                    if (!result || !result.version || result.error) {
-                        let error = (result && result.error) ? result.error : I18n.t('No answer');
+                    if (!result?.version || result.error) {
+                        let error = result?.error ? result.error : I18n.t('No answer');
                         if (typeof error !== 'string') {
                             error = JSON.stringify(error);
                         }
@@ -140,16 +139,16 @@ class Options extends Component {
     renderSettings() {
         return [
             this.state.ips && this.state.ips.length ?
-                <FormControl key="bindSelect"  className={this.props.classes.bind} variant="standard">
-                    <InputLabel>{ I18n.t('Local IP address') }</InputLabel>
+                <FormControl key="bindSelect" className={this.props.classes.bind} variant="standard">
+                    <InputLabel>{I18n.t('Local IP address')}</InputLabel>
                     <Select
                         variant="standard"
-                         disabled={ this.state.requesting }
-                         value={ this.props.native.bind || '' }
-                         onChange={ e => this.props.onChange('bind', e.target.value) }
+                         disabled={this.state.requesting }
+                         value={this.props.native.bind || ''}
+                         onChange={e => this.props.onChange('bind', e.target.value)}
                     >
                         <MenuItem value="127.0.0.1">127.0.0.1</MenuItem>
-                        { this.state.ips.map(ip => <MenuItem key={ip} value={ ip }>{ ip }</MenuItem>) }
+                        { this.state.ips.map(ip => <MenuItem key={ip} value={ip}>{ip}</MenuItem>) }
                     </Select></FormControl> :
                 <TextField
                     variant="standard"
@@ -172,7 +171,7 @@ class Options extends Component {
                 value={this.props.native.port}
                 onChange={e => this.props.onChange('port', e.target.value)}
             />,
-            <br key="br1"/>,
+            <br key="br1" />,
             <TextField
                 variant="standard"
                 disabled={this.state.requesting}
@@ -185,7 +184,7 @@ class Options extends Component {
                 value={this.props.native.defaultTimeout}
                 onChange={e => this.props.onChange('defaultTimeout', e.target.value)}
             />,
-            <br key="br2"/>,
+            <br key="br2" />,
             <FormControl key="webInstanceSelect"  className={this.props.classes.bind} variant="standard">
                 <InputLabel>{I18n.t('WEB Instance')}</InputLabel>
                 <Select
@@ -198,7 +197,7 @@ class Options extends Component {
                     {this.state.webInstances ? this.state.webInstances.map(instance => <MenuItem key={instance} value={instance}>{instance}</MenuItem>) : null}
                 </Select>
             </FormControl>,
-            <br key="br3"/>,
+            <br key="br3" />,
             <TextField
                 variant="standard"
                 disabled={this.state.requesting}
@@ -210,13 +209,14 @@ class Options extends Component {
                 helperText={I18n.t('Like /usr/bin/ffmpeg')}
             />,
             <Button
+                key="ffmpegPathButton"
                 color="grey"
                 variant="outlined"
                 onClick={() => this.onTestFfmpeg()}
                 disabled={!this.props.instanceAlive || this.state.requesting}
                 startIcon={<IconTest />}
-            >Test path</Button>,
-            <br key="br4"/>,
+            >{I18n.t('Test path')}</Button>,
+            <br key="br4" />,
             <TextField
                 variant="standard"
                 disabled={this.state.requesting}
@@ -227,6 +227,31 @@ class Options extends Component {
                 onChange={e => this.props.onChange('tempPath', e.target.value)}
                 helperText={I18n.t('If empty then in adapter folder')}
             />,
+            <br key="br5" />,
+            <TextField
+                variant="standard"
+                disabled={this.state.requesting}
+                key="defaultCacheTimeout"
+                className={this.props.classes.ffmpegPath}
+                label={I18n.t('Default cache timeout (ms)')}
+                min={0}
+                max={60000}
+                type="number"
+                value={this.props.native.defaultCacheTimeout || ''}
+                onChange={e => this.props.onChange('defaultCacheTimeout', e.target.value)}
+                helperText={I18n.t('How often the cameras will be ascked for new snapshot. If 0, then by every request')}
+            />,
+            <br key="br6" />,
+            <TextField
+                variant="standard"
+                disabled={this.state.requesting}
+                key="dateFormat"
+                className={this.props.classes.ffmpegPath}
+                label={I18n.t('Time format')}
+                value={this.props.native.dateFormat || ''}
+                onChange={e => this.props.onChange('dateFormat', e.target.value)}
+                helperText={<span>{I18n.t('See here:')} <a href="https://momentjs.com/docs/#/displaying/" target="_blank" className={this.props.classes.link}>https://momentjs.com/</a></span>}
+            />,
         ];
     }
 
@@ -234,11 +259,11 @@ class Options extends Component {
         if (!this.state.messageText) {
             return null;
         }
-        return <DialogMessage title={I18n.t('Success')} onClose={() => this.setState({messageText: ''})}>{this.state.messageText}</DialogMessage>
+        return <DialogMessage title={I18n.t('Success')} onClose={() => this.setState({ messageText: '' })}>{this.state.messageText}</DialogMessage>
     }
 
     checkConnection() {
-        this.setState({requesting: true}, () =>
+        this.setState({ requesting: true }, () =>
             this.props.socket.sendTo(`${this.props.adapterName}.${this.props.instance}`, 'test', this.props.native)
                 .then(data => {
                     if (data.error) {
@@ -250,20 +275,20 @@ class Options extends Component {
     }
 
     render() {
-        return <form key="option" className={ this.props.classes.tab }>
+        return <form key="option" className={this.props.classes.tab}>
             <Logo
-                instance={ this.props.instance }
-                common={ this.props.common }
-                native={ this.props.native }
-                onError={text => this.setState({errorText: text}) }
-                onLoad={ this.props.onLoad }
+                instance={this.props.instance}
+                common={this.props.common}
+                native={this.props.native}
+                onError={text => this.setState({ errorText: text })}
+                onLoad={this.props.onLoad}
             />
-            { this.renderSettings() }
-            <br/>
-            { this.renderHint() }
-            { this.renderToast() }
-            { this.renderMessage() }
-            { this.renderError() }
+            {this.renderSettings()}
+            <br />
+            {this.renderHint()}
+            {this.renderToast()}
+            {this.renderMessage()}
+            {this.renderError()}
         </form>;
     }
 }

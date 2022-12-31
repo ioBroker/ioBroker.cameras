@@ -46,6 +46,11 @@ function init(adapter, cam) {
     }
 
     cam.decodedPassword = adapter.decrypt(cam.password);
+    if (cam.cacheTimeout === undefined || cam.cacheTimeout === null || cam.cacheTimeout === '') {
+        cam.cacheTimeout = adapter.config.defaultCacheTimeout;
+    } else {
+        cam.cacheTimeout = parseInt(cam.cacheTimeout, 10) || 0;
+    }
 
     return Promise.resolve();
 }
@@ -64,12 +69,33 @@ function unload(adapter, cam) {
 }
 
 function process(adapter, cam) {
+    if (cam.cache && cam.cacheTime > Date.now()) {
+        return Promise.resolve(cam.cache);
+    }
+
+    if (cam.runningRequest) {
+        return cam.runningRequest;
+    }
+
     const outputFileName = path.normalize(`${adapter.config.tempPath}/${cam.ip.replace(/[.:]/g, '_')}.jpg`);
-    return getRtspSnapshot(adapter.config.ffmpegPath, cam.ip, cam.username, cam.decodedPassword, cam.port, cam.urlPath, outputFileName)
-        .then(data => ({
-            body: data,
-            contentType: 'image/jpeg'
-        }));
+    cam.runningRequest = getRtspSnapshot(adapter.config.ffmpegPath, cam.ip, cam.username, cam.decodedPassword, cam.port, cam.urlPath, outputFileName)
+        .then(body => {
+            cam.runningRequest = null;
+
+            const result = {
+                body,
+                contentType: 'image/jpeg',
+            };
+
+            if (cam.cacheTimeout) {
+                cam.cache = result;
+                cam.cacheTime = Date.now() + cam.cacheTimeout;
+            }
+
+            return result;
+        });
+
+    return cam.runningRequest;
 }
 
 module.exports = {

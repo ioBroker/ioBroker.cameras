@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
 import I18n from '@iobroker/adapter-react-v5/i18n';
 import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 const styles = theme => ({
     page: {
@@ -30,7 +32,7 @@ class Config extends Component {
 
     componentDidMount() {
         this.props.decrypt(this.state.password,
-            password => this.setState({password}));
+            password => this.setState({ password }));
     }
 
     reportSettings() {
@@ -52,9 +54,9 @@ class Config extends Component {
                 className={this.props.classes.url}
                 label={I18n.t('Camera URL')}
                 value={this.state.url}
-                onChange={e => this.setState({url: e.target.value}, () => this.reportSettings())}
+                onChange={e => this.setState({ url: e.target.value }, () => this.reportSettings())}
             />
-            <br/>
+            <br />
             <TextField
                 variant="standard"
                 key="username"
@@ -62,9 +64,9 @@ class Config extends Component {
                 className={this.props.classes.username}
                 label={I18n.t('Username')}
                 value={this.state.username}
-                onChange={e => this.setState({username: e.target.value}, () => this.reportSettings())}
+                onChange={e => this.setState({ username: e.target.value }, () => this.reportSettings())}
             />
-            <br/>
+            <br />
             <TextField
                 variant="standard"
                 key="password"
@@ -73,7 +75,7 @@ class Config extends Component {
                 className={this.props.classes.password}
                 label={I18n.t('Password')}
                 value={this.state.password}
-                onChange={e => this.setState({password: e.target.value}, () => this.reportSettings())}
+                onChange={e => this.setState({ password: e.target.value }, () => this.reportSettings())}
             />
         </div>;
     }
