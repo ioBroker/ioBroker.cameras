@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "cameras",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "news": {
+      "1.0.1": {
+        "en": "added RTSP camera\nadded cache of snapshots",
+        "de": "rTSP Kamera\nhinzugefügt cache von snapshots",
+        "ru": "добавлена RTSP камера\nдобавлен кэш снимков",
+        "pt": "adicionado RTSP câmera\nadicionado cache de instantâneos",
+        "nl": "voegde RTSP camera toe\nvoegde kache van foto's toe",
+        "fr": "appareil photo RTSP\ncache ajouté de snapshots",
+        "it": "rTSP fotocamera\ncache aggiunta di snapshot",
+        "es": "cámara RTSP\nañadido caché de instantáneas",
+        "pl": "rTSP camera\ndodać podręcznik",
+        "uk": "додана камера RTSP\nдодано кеш знімків",
+        "zh-cn": "添加了RTSP摄像机\nd. 绑架事件的增量"
+      },
       "0.2.0": {
         "en": "GUI updated to MUIv5",
         "de": "GUI aktualisiert auf MUIv5",
