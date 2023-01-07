@@ -52,7 +52,7 @@ Here is an example how to add Reolink E1:
 -->
 
 ## Changelog
-### 1.0.1 (2023-01-07)
+### **WORK IN PROGRESS**
 * (bluefox) added RTSP camera
 * (bluefox) added cache of snapshots
 

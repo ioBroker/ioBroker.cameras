@@ -250,7 +250,7 @@ class Options extends Component {
                 label={I18n.t('Time format')}
                 value={this.props.native.dateFormat || ''}
                 onChange={e => this.props.onChange('dateFormat', e.target.value)}
-                helperText={<span>{I18n.t('See here:')} <a href="https://momentjs.com/docs/#/displaying/" target="_blank" className={this.props.classes.link}>https://momentjs.com/</a></span>}
+                helperText={<span>{I18n.t('See here:')} <a href="https://momentjs.com/docs/#/displaying/" rel="noreferrer" target="_blank" className={this.props.classes.link}>https://momentjs.com/</a></span>}
             />,
         ];
     }
