@@ -150,7 +150,12 @@
       ]
     },
     "connectionType": "local",
-    "dataSource": "poll"
+    "dataSource": "poll",
+    "plugins": {
+      "sentry": {
+        "dsn": "https://4559263b70ec40af801ccd777f5a79e6@sentry.iobroker.net/231"
+      }
+    }
   },
   "native": {
     "bind": "127.0.0.1",
