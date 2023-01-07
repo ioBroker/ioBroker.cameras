@@ -52,7 +52,7 @@ Here is an example how to add Reolink E1:
 -->
 
 ## Changelog
-### 1.0.0 (2022-12-31)
+### **WORK IN PROGRESS**
 * (bluefox) added RTSP camera
 * (bluefox) added cache of snapshots
 
@@ -83,7 +83,7 @@ Here is an example how to add Reolink E1:
 ## License
 MIT License
 
-Copyright (c) 2020-2022 bluefox <dogafox@gmail.com>
+Copyright (c) 2020-2023 bluefox <dogafox@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

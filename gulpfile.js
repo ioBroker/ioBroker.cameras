@@ -1,5 +1,5 @@
 /**
- * Copyright 2018-2021 bluefox <dogafox@gmail.com>
+ * Copyright 2018-2023 bluefox <dogafox@gmail.com>
  *
  * MIT License
  *
@@ -13,105 +13,27 @@ const rename     = require('gulp-rename');
 const del        = require('del');
 const cp         = require('child_process');
 
-const pkg        = require('./package.json');
-const ioPackage  = require('./io-package.json');
-const version    = (pkg && pkg.version) ? pkg.version : ioPackage.common.version;
-/*const appName   = getAppName();
-
-function getAppName() {
-    const parts = __dirname.replace(/\\/g, '/').split('/');
-    return parts[parts.length - 1].split('.')[0].toLowerCase();
-}
-*/
-
-const dir = __dirname + '/src/src/i18n/';
-gulp.task('i18n=>flat', done => {
-    const files = fs.readdirSync(dir).filter(name => name.match(/\.json$/));
-    const index = {};
-    const langs = [];
-    files.forEach(file => {
-        const lang = file.replace(/\.json$/, '');
-        langs.push(lang);
-        const text = require(dir + file);
-
-        for (const id in text) {
-            if (text.hasOwnProperty(id)) {
-                index[id] = index[id] || {};
-                index[id][lang] = text[id] === undefined ? id : text[id];
-            }
-        }
-    });
-
-    const keys = Object.keys(index);
-    keys.sort();
-
-    if (!fs.existsSync(dir + '/flat/')) {
-        fs.mkdirSync(dir + '/flat/');
-    }
-
-    langs.forEach(lang => {
-        const words = [];
-        keys.forEach(key => {
-            words.push(index[key][lang]);
-        });
-        fs.writeFileSync(dir + '/flat/' + lang + '.txt', words.join('\n'));
-    });
-    fs.writeFileSync(dir + '/flat/index.txt', keys.join('\n'));
-    done();
-});
-
-gulp.task('flat=>i18n', done => {
-    if (!fs.existsSync(dir + '/flat/')) {
-        console.error(dir + '/flat/ directory not found');
-        return done();
-    }
-    const keys = fs.readFileSync(dir + '/flat/index.txt').toString().split(/[\r\n]/);
-    while (!keys[keys.length - 1]) keys.splice(keys.length - 1, 1);
-
-    const files = fs.readdirSync(dir + '/flat/').filter(name => name.match(/\.txt$/) && name !== 'index.txt');
-    const index = {};
-    const langs = [];
-    files.forEach(file => {
-        const lang = file.replace(/\.txt$/, '');
-        langs.push(lang);
-        const lines = fs.readFileSync(dir + '/flat/' + file).toString().split(/[\r\n]/);
-        lines.forEach((word, i) => {
-            index[keys[i]] = index[keys[i]] || {};
-            index[keys[i]][lang] = word;
-        });
-    });
-    langs.forEach(lang => {
-        const words = {};
-        keys.forEach((key, line) => {
-            if (!index[key]) {
-                console.log('No word ' + key + ', ' + lang + ', line: ' + line);
-            }
-            words[key] = index[key][lang];
-        });
-        fs.writeFileSync(dir + '/' + lang + '.json', JSON.stringify(words, null, 4));
-    });
-    done();
-});
-
 gulp.task('clean', () => {
     return del([
         // 'src/node_modules/**/*',
         'admin/**/*',
         'admin/*',
         'src/build/**/*'
-    ]).then(del([
-        // 'src/node_modules',
-        'src/build',
-        'admin/'
-    ]));
+    ])
+        // @ts-ignore
+        .then(del([
+            // 'src/node_modules',
+            'src/build',
+            'admin/'
+        ]));
 });
 
 function npmInstall() {
     return new Promise((resolve, reject) => {
         // Install node modules
-        const cwd = __dirname.replace(/\\/g, '/') + '/src/';
+        const cwd = `${__dirname.replace(/\\/g, '/')}/src/`;
 
-        const cmd = `npm install`;
+        const cmd = `npm install -f`;
         console.log(`"${cmd} in ${cwd}`);
 
         // System call used for update of js-controller itself,
@@ -119,24 +41,26 @@ function npmInstall() {
         const exec = require('child_process').exec;
         const child = exec(cmd, {cwd});
 
+        // @ts-ignore
         child.stderr.pipe(process.stderr);
+        // @ts-ignore
         child.stdout.pipe(process.stdout);
 
         child.on('exit', (code /* , signal */) => {
             // code 1 is strange error that cannot be explained. Everything is installed but error :(
             if (code && code !== 1) {
-                reject('Cannot install: ' + code);
+                reject(`Cannot install: ${code}`);
             } else {
                 console.log(`"${cmd} in ${cwd} finished.`);
                 // command succeeded
-                resolve();
+                resolve(null);
             }
         });
     });
 }
 
 gulp.task('2-npm', () => {
-    if (fs.existsSync(__dirname + '/src/node_modules')) {
+    if (fs.existsSync(`${__dirname}/src/node_modules`)) {
         return Promise.resolve();
     } else {
         return npmInstall();
@@ -149,30 +73,33 @@ function build() {
     return new Promise((resolve, reject) => {
         const options = {
             stdio: 'pipe',
-            cwd:   __dirname + '/src/'
+            cwd:   `${__dirname}/src/`
         };
 
-        const version = JSON.parse(fs.readFileSync(__dirname + '/package.json').toString('utf8')).version;
-        const data = JSON.parse(fs.readFileSync(__dirname + '/src/package.json').toString('utf8'));
+        const version = JSON.parse(fs.readFileSync(`${__dirname}/package.json`).toString('utf8')).version;
+        const data = JSON.parse(fs.readFileSync(`${__dirname}/src/package.json`).toString('utf8'));
         data.version = version;
-        fs.writeFileSync(__dirname + '/src/package.json', JSON.stringify(data, null, 4));
+        fs.writeFileSync(`${__dirname}/src/package.json`, JSON.stringify(data, null, 4));
 
         console.log(options.cwd);
 
-        let script = __dirname + '/src/node_modules/react-scripts/scripts/build.js';
+        let script = `${__dirname}/src/node_modules/react-scripts/scripts/build.js`;
         if (!fs.existsSync(script)) {
-            script = __dirname + '/node_modules/react-scripts/scripts/build.js';
+            script = `${__dirname}/node_modules/react-scripts/scripts/build.js`;
         }
         if (!fs.existsSync(script)) {
-            console.error('Cannot find execution file: ' + script);
-            reject('Cannot find execution file: ' + script);
+            console.error(`Cannot find execution file: ${script}`);
+            reject(`Cannot find execution file: ${script}`);
         } else {
+            // @ts-ignore
             const child = cp.fork(script, [], options);
+            // @ts-ignore
             child.stdout.on('data', data => console.log(data.toString()));
+            // @ts-ignore
             child.stderr.on('data', data => console.log(data.toString()));
             child.on('close', code => {
                 console.log(`child process exited with code ${code}`);
-                code ? reject('Exit code: ' + code) : resolve();
+                code ? reject(`Exit code: ${code}`) : resolve(null);
             });
         }
     });
@@ -220,65 +147,23 @@ gulp.task('5-copy', () => copyFiles());
 gulp.task('5-copy-dep', gulp.series('3-build-dep', '5-copy'));
 
 gulp.task('6-patch', () => new Promise(resolve => {
-    if (fs.existsSync(__dirname + '/admin/index_m.html')) {
+    if (fs.existsSync(`${__dirname}/admin/index_m.html`)) {
         let code = fs.readFileSync(__dirname + '/admin/index_m.html').toString('utf8');
         code = code.replace(/<script>var script=document\.createElement\("script"\)[^<]+<\/script>/,
             `<script type="text/javascript" src="./../../lib/js/socket.io.js"></script>`);
 
-        fs.writeFileSync(__dirname + '/admin/index_m.html', code);
+        fs.writeFileSync(`${__dirname}/admin/index_m.html`, code);
     }
-    if (fs.existsSync(__dirname + '/src/build/index.html')) {
-        let code = fs.readFileSync(__dirname + '/src/build/index.html').toString('utf8');
+    if (fs.existsSync(`${__dirname}/src/build/index.html`)) {
+        let code = fs.readFileSync(`${__dirname}/src/build/index.html`).toString('utf8');
         code = code.replace(/<script>var script=document\.createElement\("script"\)[^<]+<\/script>/,
             `<script type="text/javascript" src="./../../lib/js/socket.io.js"></script>`);
 
-        fs.writeFileSync(__dirname + '/src/build/index.html', code);
+        fs.writeFileSync(`${__dirname}/src/build/index.html`, code);
     }
-    resolve();
+    resolve(null);
 }));
 
 gulp.task('6-patch-dep',  gulp.series('5-copy-dep', '6-patch'));
 
 gulp.task('default', gulp.series('6-patch-dep'));
-
-gulp.task('updatePackages', done => {
-    ioPackage.common.version = pkg.version;
-    ioPackage.common.news = ioPackage.common.news || {};
-    if (!ioPackage.common.news[pkg.version]) {
-        const news = ioPackage.common.news;
-        const newNews = {};
-
-        newNews[pkg.version] = {
-            en: 'news',
-            de: 'neues',
-            ru: 'новое'
-        };
-        ioPackage.common.news = Object.assign(newNews, news);
-    }
-    fs.writeFileSync('io-package.json', JSON.stringify(ioPackage, null, 4));
-    done();
-});
-
-gulp.task('updateReadme', done => {
-    const readme = fs.readFileSync('README.md').toString();
-    const pos = readme.indexOf('## Changelog\n');
-    if (pos !== -1) {
-        const readmeStart = readme.substring(0, pos + '## Changelog\n'.length);
-        const readmeEnd   = readme.substring(pos + '## Changelog\n'.length);
-
-        if (readme.indexOf(version) === -1) {
-            const timestamp = new Date();
-            const date = timestamp.getFullYear() + '-' +
-                ('0' + (timestamp.getMonth() + 1).toString(10)).slice(-2) + '-' +
-                ('0' + (timestamp.getDate()).toString(10)).slice(-2);
-
-            let news = '';
-            if (ioPackage.common.news && ioPackage.common.news[pkg.version]) {
-                news += '* ' + ioPackage.common.news[pkg.version].en;
-            }
-
-            fs.writeFileSync('README.md', `${readmeStart}### ${version} (${date})\n${news ? news + '\n\n' : '\n'}${readmeEnd}`);
-        }
-    }
-    done();
-});
