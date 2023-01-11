@@ -224,7 +224,11 @@ class Server extends Component {
     }
 
     onCameraSettingsChanged(settings) {
+        const oldSettings = JSON.parse(this.state.editedSettingsOld);
+        // apply changes
+        settings = Object.assign(oldSettings, settings);
         const editedSettings = JSON.stringify(settings);
+
         if (this.state.editedSettingsOld === editedSettings) {
             this.setState({ editChanged: false, editedSettings: null });
         } else if (this.state.editedSettingsOld !== editedSettings) {
@@ -457,7 +461,7 @@ class Server extends Component {
                 </FormControl>
             </div>
             {this.renderCameraButtons(cam, i)}
-            {description ? <div className={this.props.classes.lineUrl }>{description}</div> : null}
+            {description ? <div className={this.props.classes.lineUrl}>{description}</div> : null}
         </div>;
     }
 
