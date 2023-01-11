@@ -52,7 +52,7 @@ Here is an example how to add Reolink E1:
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.0.3 (2023-01-11)
 * (bluefox) Corrected GUI config error
 
 ### 1.0.2 (2023-01-07)

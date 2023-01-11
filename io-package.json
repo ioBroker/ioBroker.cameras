@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "cameras",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "news": {
+      "1.0.3": {
+        "en": "Corrected GUI config error",
+        "de": "Korrigiert GUI config Fehler",
+        "ru": "Исправлена ошибка GUI config",
+        "pt": "Erro de configuração GUI corrigido",
+        "nl": "Quality over Quantity (QoQ) Releases Vertaling:",
+        "fr": "Erreur de configuration GUI corrigée",
+        "it": "Errore di configurazione GUI corretto",
+        "es": "Error de configuración de GUI corregido",
+        "pl": "Kwalifikacja GUI",
+        "uk": "Виправлена помилка налаштування інтерфейсу",
+        "zh-cn": "更正"
+      },
       "1.0.2": {
         "en": "added RTSP camera\nadded cache of snapshots",
         "de": "rTSP Kamera\nhinzugefügt cache von snapshots",
@@ -75,18 +88,6 @@
         "es": "Se realizan los preparativos para js-controller@4.x",
         "pl": "Trwają przygotowania do js-controller@4.x",
         "zh-cn": "js-controller@4.x的准备工作做好了"
-      },
-      "0.1.4": {
-        "en": "Add role for states",
-        "de": "Rolle für Staaten hinzufügen",
-        "ru": "Добавить роль для состояний",
-        "pt": "Adicionar função para estados",
-        "nl": "Rol toevoegen voor staten",
-        "fr": "Ajouter un rôle pour les états",
-        "it": "Aggiungi ruolo per gli stati",
-        "es": "Agregar rol para los estados",
-        "pl": "Dodaj rolę dla stanów",
-        "zh-cn": "为状态添加角色"
       }
     },
     "title": "IP-Cameras",
