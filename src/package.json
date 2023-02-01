@@ -14,7 +14,7 @@
         "react-scripts": "^5.0.1",
         "@material-ui/icons": "^4.11.3",
         "eslint": "^8.31.0",
-        "eslint-plugin-import": "^2.26.0"
+        "eslint-plugin-import": "^2.27.5"
     },
     "scripts": {
         "start": "react-scripts start",
