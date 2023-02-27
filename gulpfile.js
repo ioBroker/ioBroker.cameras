@@ -10,22 +10,31 @@ const gulp       = require('gulp');
 const fs         = require('fs');
 const replace    = require('gulp-replace');
 const rename     = require('gulp-rename');
-const del        = require('del');
 const cp         = require('child_process');
 
-gulp.task('clean', () => {
-    return del([
-        // 'src/node_modules/**/*',
-        'admin/**/*',
-        'admin/*',
-        'src/build/**/*'
-    ])
-        // @ts-ignore
-        .then(del([
-            // 'src/node_modules',
-            'src/build',
-            'admin/'
-        ]));
+function deleteFoldersRecursive(path, exceptions) {
+    if (fs.existsSync(path)) {
+        const files = fs.readdirSync(path);
+        for (const file of files) {
+            const curPath = `${path}/${file}`;
+            if (exceptions && exceptions.find(e => curPath.endsWith(e))) {
+                continue;
+            }
+
+            const stat = fs.statSync(curPath);
+            if (stat.isDirectory()) {
+                deleteFoldersRecursive(curPath);
+                fs.rmdirSync(curPath);
+            } else {
+                fs.unlinkSync(curPath);
+            }
+        }
+    }
+}
+gulp.task('clean', done => {
+    deleteFoldersRecursive(`${__dirname}/admin`);
+    deleteFoldersRecursive(`${__dirname}/src/build`);
+    done();
 });
 
 function npmInstall() {
@@ -38,8 +47,7 @@ function npmInstall() {
 
         // System call used for update of js-controller itself,
         // because during installation npm packet will be deleted too, but some files must be loaded even during the install process.
-        const exec = require('child_process').exec;
-        const child = exec(cmd, {cwd});
+        const child = cp.exec(cmd, {cwd});
 
         // @ts-ignore
         child.stderr.pipe(process.stderr);
@@ -110,36 +118,33 @@ gulp.task('3-build', () => build());
 gulp.task('3-build-dep', gulp.series('2-npm', '3-build'));
 
 function copyFiles() {
-    return del([
-        'admin/**/*'
-    ]).then(() =>
-        Promise.all([
-            gulp.src([
-                'src/build/**/*',
-                '!src/build/index.html',
-                '!src/build/static/js/main.*.chunk.js',
-                '!src/build/i18n/**/*',
-                '!src/build/i18n',
-                'admin-config/*'
-            ])
-                .pipe(gulp.dest('admin/')),
-
-            gulp.src([
-                'src/build/index.html',
-            ])
-                .pipe(replace('href="/', 'href="'))
-                .pipe(replace('src="/', 'src="'))
-                .pipe(replace('<script type="text/javascript" src="./vendor/socket.io.js"></script>', '<script type="text/javascript" src="./../../socket.io/socket.io.js"></script>'))
-                .pipe(rename('index_m.html'))
-                .pipe(gulp.dest('admin/')),
-
-            gulp.src([
-                'src/build/static/js/main.*.chunk.js',
-            ])
-                .pipe(replace('s.p+"static/media/copy-content', '"./static/media/copy-content'))
-                .pipe(gulp.dest('admin/static/js/')),
+    deleteFoldersRecursive(`${__dirname}/admin`);
+    return Promise.all([
+        gulp.src([
+            'src/build/**/*',
+            '!src/build/index.html',
+            '!src/build/static/js/main.*.chunk.js',
+            '!src/build/i18n/**/*',
+            '!src/build/i18n',
+            'admin-config/*'
         ])
-    );
+            .pipe(gulp.dest('admin/')),
+
+        gulp.src([
+            'src/build/index.html',
+        ])
+            .pipe(replace('href="/', 'href="'))
+            .pipe(replace('src="/', 'src="'))
+            .pipe(replace('<script type="text/javascript" src="./vendor/socket.io.js"></script>', '<script type="text/javascript" src="./../../socket.io/socket.io.js"></script>'))
+            .pipe(rename('index_m.html'))
+            .pipe(gulp.dest('admin/')),
+
+        gulp.src([
+            'src/build/static/js/main.*.chunk.js',
+        ])
+            .pipe(replace('s.p+"static/media/copy-content', '"./static/media/copy-content'))
+            .pipe(gulp.dest('admin/static/js/')),
+    ]);
 }
 
 gulp.task('5-copy', () => copyFiles());
@@ -148,7 +153,7 @@ gulp.task('5-copy-dep', gulp.series('3-build-dep', '5-copy'));
 
 gulp.task('6-patch', () => new Promise(resolve => {
     if (fs.existsSync(`${__dirname}/admin/index_m.html`)) {
-        let code = fs.readFileSync(__dirname + '/admin/index_m.html').toString('utf8');
+        let code = fs.readFileSync(`${__dirname}/admin/index_m.html`).toString('utf8');
         code = code.replace(/<script>var script=document\.createElement\("script"\)[^<]+<\/script>/,
             `<script type="text/javascript" src="./../../lib/js/socket.io.js"></script>`);
 
