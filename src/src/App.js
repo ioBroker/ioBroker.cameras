@@ -6,8 +6,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
 import GenericApp from '@iobroker/adapter-react-v5/GenericApp';
-import Loader from '@iobroker/adapter-react-v5/Components/Loader'
-import I18n from '@iobroker/adapter-react-v5/i18n';
+import { Loader, I18n } from '@iobroker/adapter-react-v5';
 
 import TabOptions from './Tabs/Options';
 import TabCameras from './Tabs/Cameras';

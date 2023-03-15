@@ -91,10 +91,13 @@ function process(adapter, cam) {
         return cam.runningRequest;
     }
 
+    adapter.log.debug(`Requesting snapshot from ${cam.ip}...`);
+
     const outputFileName = path.normalize(`${adapter.config.tempPath}/${cam.ip.replace(/[.:]/g, '_')}.jpg`);
     cam.runningRequest = getRtspSnapshot(adapter.config.ffmpegPath, cam, outputFileName)
         .then(body => {
             cam.runningRequest = null;
+            adapter.log.debug(`Snapshot from ${cam.ip}. Done!`);
 
             const result = {
                 body,
@@ -116,5 +119,5 @@ module.exports = {
     init,
     process,
     unload,
-    executeFFmpeg,
+    getRtspSnapshot
 };

@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
 
-import TextField from '@mui/material/TextField';
+import { TextField, Checkbox, FormControlLabel } from '@mui/material';
 
 import { I18n } from '@iobroker/adapter-react-v5';
-import path from 'path';
-import {Checkbox, FormControlLabel} from '@mui/material';
 
 const styles = theme => ({
     page: {
@@ -47,12 +45,23 @@ const styles = theme => ({
     },
     suffix: {
         marginTop: theme.spacing(2),
-        marginRight: theme.spacing(1),
-        width: 90,
+        width: 200,
     },
     prefix: {
         marginTop: theme.spacing(2),
-        width: 90,
+        marginRight: theme.spacing(1),
+        width: 200,
+    },
+    ffmpgDiv: {
+        marginTop: theme.spacing(2),
+    },
+    ffmpgLabel: {
+        fontSize: 'smaller',
+        fontWeight: 'bold',
+    },
+    ffmpgCommand: {
+        fontFamily: 'monospace',
+        fontSize: 'smaller',
     },
 });
 
@@ -101,9 +110,7 @@ class RTSPImageConfig extends Component {
     }
 
     buildCommand(options) {
-        const parameters = [
-            '-y',
-        ];
+        const parameters = ['-y'];
         options.prefix && parameters.push(options.prefix);
         parameters.push(`-i`);
         parameters.push(`rtsp://${options.username}:${options.password}@${options.ip}:${options.port || 554}${options.urlPath ? (options.urlPath.startsWith('/') ? options.urlPath : `/${options.urlPath}`) : ''}`);
@@ -115,7 +122,7 @@ class RTSPImageConfig extends Component {
         parameters.push('-vframes');
         parameters.push('1');
         options.suffix && parameters.push(options.suffix);
-        parameters.push(path.normalize(`${this.props.tempPath}/${options.ip.replace(/[.:]/g, '_')}.jpg`));
+        parameters.push(`${this.props.tempPath}/${options.ip.replace(/[.:]/g, '_')}.jpg`);
         return parameters;
     }
 
@@ -165,26 +172,6 @@ class RTSPImageConfig extends Component {
                     onChange={e => this.setState({ password: e.target.value }, () => this.reportSettings())}
                 />
                 <br />
-                <TextField
-                    variant="standard"
-                    className={this.props.classes.width}
-                    label={I18n.t('Width')}
-                    helperText={I18n.t('in pixels')}
-                    error={this.state.originalHeight && !this.state.originalWidth}
-                    value={this.state.originalWidth}
-                    onChange={e => this.setState({ originalWidth: e.target.value }, () => this.reportSettings())}
-                />
-                <div style={{ display: 'inline-block', marginTop: 40, marginRight: 8 }}>x</div>
-                <TextField
-                    variant="standard"
-                    className={this.props.classes.height}
-                    label={I18n.t('Height')}
-                    error={!this.state.originalHeight && this.state.originalWidth}
-                    helperText={I18n.t('in pixels')}
-                    value={this.state.originalHeight}
-                    onChange={e => this.setState({ originalHeight: e.target.value }, () => this.reportSettings())}
-                />
-                <br />
                 <FormControlLabel
                     className={this.props.classes.expertMode}
                     control={<Checkbox
@@ -193,6 +180,27 @@ class RTSPImageConfig extends Component {
                     />}
                     label={I18n.t('Expert settings')}
                 />
+                {this.state.expertMode ? <br /> : null}
+                {this.state.expertMode ? <TextField
+                    variant="standard"
+                    className={this.props.classes.width}
+                    label={I18n.t('Width')}
+                    helperText={I18n.t('in pixels')}
+                    error={this.state.originalHeight && !this.state.originalWidth}
+                    value={this.state.originalWidth}
+                    onChange={e => this.setState({ originalWidth: e.target.value }, () => this.reportSettings())}
+                /> : null}
+                {this.state.expertMode ? <div style={{ display: 'inline-block', marginTop: 40, marginRight: 8 }}>x</div> : null}
+                {this.state.expertMode ? <TextField
+                    variant="standard"
+                    className={this.props.classes.height}
+                    label={I18n.t('Height')}
+                    error={!this.state.originalHeight && this.state.originalWidth}
+                    helperText={I18n.t('in pixels')}
+                    value={this.state.originalHeight}
+                    onChange={e => this.setState({ originalHeight: e.target.value }, () => this.reportSettings())}
+                /> : null}
+                {this.state.expertMode ? <br /> : null}
                 {this.state.expertMode ? <TextField
                         variant="standard"
                         className={this.props.classes.prefix}
@@ -208,8 +216,9 @@ class RTSPImageConfig extends Component {
                         onChange={e => this.setState({ suffix: e.target.value }, () => this.reportSettings())}
                     /> : null}
                 {this.state.expertMode ? <br /> : null}
-                {this.state.expertMode ? <div>
-                    <span>{I18n.t('ffmpeg command')}: </span><span>ffmpeg {this.buildCommand().join(' ')}</span>
+                {this.state.expertMode ? <br /> : null}
+                {this.state.expertMode ? <div className={this.props.classes.ffmpgDiv}>
+                    <span className={this.props.classes.ffmpgLabel}>{I18n.t('ffmpeg command')}: </span><span className={this.props.classes.ffmpgCommand}>ffmpeg {this.buildCommand(this.state).join(' ')}</span>
                 </div> : null}
             </form>
         </div>;

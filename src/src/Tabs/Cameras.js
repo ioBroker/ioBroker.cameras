@@ -13,6 +13,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 import IconDelete from '@mui/icons-material/Delete';
 import IconEdit from '@mui/icons-material/Edit';
@@ -21,19 +23,18 @@ import IconUp from '@mui/icons-material/ArrowUpward';
 import IconDown from '@mui/icons-material/ArrowDownward';
 import IconTest from '@mui/icons-material/Camera';
 
-import MessageDialog from '@iobroker/adapter-react-v5/Dialogs/Message';
-import I18n from '@iobroker/adapter-react-v5/i18n';
+import { I18n, Message as MessageDialog } from '@iobroker/adapter-react-v5';
 
 import URLImage from '../Types/URLImage';
 import URLBasicAuthImage from '../Types/URLBasicAuthImage';
 import RTSPImageConfig from '../Types/RTSPImage';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import RTSPReolinkE1Config from '../Types/RTSPReolinkE1';
 
 const TYPES = {
     url:          { Config: URLImage, name: 'URL' },
     urlBasicAuth: { Config: URLBasicAuthImage, name: 'URL with basic auth' },
     rtsp:         { Config: RTSPImageConfig, name: 'RTSP Snapshot' },
+    reolinkE1:    { Config: RTSPReolinkE1Config, name: 'Reolink E1 Snapshot' },
 };
 
 const styles = theme => ({
@@ -45,6 +46,10 @@ const styles = theme => ({
         width: '100%',
         paddingBottom: 5,
         borderBottom: '1px dashed gray',
+    },
+    lineCheck: {
+        display: 'inline-block',
+        width: 50,
     },
     lineText: {
         display: 'inline-block',
@@ -223,7 +228,6 @@ class Server extends Component {
 
         return hostIp;
     }
-
 
     getWebInstances() {
         this.props.socket.getAdapterInstances('web')
@@ -507,7 +511,17 @@ class Server extends Component {
             }
         }
 
-        return <div key={`cam${cam.id}`} className={this.props.classes.lineDiv}>
+        return <div key={`cam${cam.id}`} className={this.props.classes.lineDiv} style={{ opacity: cam.enabled === false ? 0.7 : 1}}>
+            <div className={this.props.classes.lineCheck}>
+                <Checkbox
+                    checked={cam.enabled !== false}
+                    onChange={() => {
+                        const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                        cameras[i].enabled = cameras[i].enabled === undefined ? false : !cameras[i].enabled;
+                        this.props.onChange('cameras', cameras);
+                    }}
+                />
+            </div>
             <div className={this.props.classes.lineText}>
                 <TextField
                     variant="standard"

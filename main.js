@@ -305,6 +305,7 @@ async function addTextToImage(data, dateFormat, title) {
 }
 
 function startWebServer(adapter) {
+    adapter.log.debug(`Starting web server on http://${adapter.config.bind}:${adapter.config.port}/`);
     adapter.__server = http.createServer((req, res) => {
         const clientIp = req.connection.remoteAddress;
 
@@ -321,14 +322,17 @@ function startWebServer(adapter) {
             adapter.__bforce[clientIp] = now;
             res.statusCode = 429;
             res.write('Blocked for 5 seconds');
-            return res.end();
+            res.end();
+            return;
         }
 
         if (query.key !== adapter.config.key) {
             adapter.__bforce[clientIp] = Date.now();
             res.statusCode = 401;
             res.write('Invalid key');
-            return res.end();
+            res.end();
+            adapter.log.debug(`Invalid key from ${clientIp}. Expected ${adapter.config.key}`);
+            return;
         }
 
         if (clientIp !== '127.0.0.1' &&
@@ -339,6 +343,8 @@ function startWebServer(adapter) {
             res.statusCode = 401;
             res.write('Invalid key');
             res.end();
+            adapter.log.debug(`Invalid key from ${clientIp}. Expected ${adapter.config.key}`);
+            return;
         }
 
         const cam = adapter.config.cameras.find(cam => cam.path === url);
@@ -346,27 +352,38 @@ function startWebServer(adapter) {
         if (cam) {
             if (adapter.__CAM_TYPES[cam.type]) {
                 adapter.log.debug(`Request ${cam.name} ${cam.type} ${cam.ip || cam.url}`);
+                let done = false;
                 adapter.__CAM_TYPES[cam.type].process(adapter, cam, req, res)
                     .then(data => {
-                        if (data && !data.done) {
-                            resizeImage(data, parseInt(query.w, 10), parseInt(query.h, 10))
+                        done = data.done;
+                        if (data && !done) {
+                            return resizeImage(data, parseInt(query.w, 10), parseInt(query.h, 10))
                                 .then(data => rotateImage(data, parseInt(query.angle, 10)))
                                 .then(data => addTextToImage(data, cam.addTime ? adapter.config.dateFormat || 'LTS' : null, cam.title))
                                 .then(data => {
-                                    res.setHeader('Content-type', data.contentType);
-                                    res.write(data.body || '');
-                                    res.end();
+                                    if (!done) {
+                                        done = true;
+                                        res.setHeader('Content-type', data.contentType);
+                                        res.write(data.body || '');
+                                        res.end();
+                                    }
                                 });
-                        } else if (!data) {
-                            res.statusCode = 500;
-                            res.write('No answer');
-                            res.end();
+                        } else if (!done) {
+                            if (!done) {
+                                done = true;
+                                res.statusCode = 500;
+                                res.write('No answer');
+                                res.end();
+                            }
                         }
                     })
                     .catch(e => {
-                        res.statusCode = 500;
-                        res.write(`Unknown error: ${e}`);
-                        res.end();
+                        if (!done) {
+                            done = true;
+                            res.statusCode = 500;
+                            res.write(`Unknown error: ${e}`);
+                            res.end();
+                        }
                     });
             } else {
                 res.statusCode = 501;
@@ -379,6 +396,7 @@ function startWebServer(adapter) {
             res.end();
         }
     });
+
     adapter.__server.on('clientError', (err, socket) =>
         socket.end('HTTP/1.1 400 Bad Request\r\n\r\n'));
 
@@ -448,11 +466,14 @@ function main(adapter) {
 
         // init all required camera providers
         adapter.config.cameras.forEach(item => {
-            if (item && item.type) {
+            if (item && item.type && item.enabled !== false) {
                 item.path = `/${item.name}`;
                 try {
                     adapter.__CAM_TYPES[item.type] = adapter.__CAM_TYPES[item.type] || require(`./cameras/${item.type}`);
-                    promises.push(adapter.__CAM_TYPES[item.type].init(adapter, item).catch(e => adapter.log.error(`Cannot init camera ${item.name}: ${e && e.toString()}`)));
+                    promises.push(adapter.__CAM_TYPES[item.type]
+                        .init(adapter, item)
+                        .catch(e => adapter.log.error(`Cannot init camera ${item.name}: ${e && e.toString()}`))
+                    );
                 } catch (e) {
                     adapter.log.error(`Cannot load "${item.type}": ${e}`);
                 }
