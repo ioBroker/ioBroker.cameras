@@ -1,16 +1,18 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
-import I18n from '@iobroker/adapter-react-v5/i18n';
+
 import TextField from '@mui/material/TextField';
 
-const styles = theme => ({
+import { I18n } from '@iobroker/adapter-react-v5';
+
+const styles = () => ({
     page: {
-        width: '100%'
+        width: '100%',
     },
     url: {
-        width: '100%'
-    }
+        width: '100%',
+    },
 });
 
 class Config extends Component {

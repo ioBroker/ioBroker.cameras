@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
 
 import TextField from '@mui/material/TextField';
 
-import I18n from '@iobroker/adapter-react-v5/i18n';
+import { I18n } from '@iobroker/adapter-react-v5';
 
 const styles = theme => ({
     page: {
@@ -40,10 +40,8 @@ class Config extends Component {
                 className={this.props.classes.url}
                 label={I18n.t('Camera URL')}
                 value={this.state.url}
-                onChange={e => {
-                    this.setState({ url: e.target.value }, () =>
-                        this.reportSettings());
-                }}
+                onChange={e => this.setState({ url: e.target.value }, () =>
+                    this.reportSettings())}
             />
         </div>;
     }

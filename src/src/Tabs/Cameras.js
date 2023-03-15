@@ -158,10 +158,77 @@ class Server extends Component {
         this.getWebInstances();
     }
 
+    static ip2int(ip) {
+        return ip.split('.').reduce((ipInt, octet) => (ipInt << 8) + parseInt(octet, 10), 0) >>> 0;
+    }
+
+    static findNetworkAddressOfHost(obj, localIp) {
+        const networkInterfaces = obj?.native?.hardware?.networkInterfaces;
+        if (!networkInterfaces) {
+            return null;
+        }
+
+        let hostIp;
+        Object.keys(networkInterfaces).forEach(inter => {
+            networkInterfaces[inter].forEach(ip => {
+                if (ip.internal) {
+                    return;
+                } else if (localIp.includes(':') && ip.family !== 'IPv6') {
+                    return;
+                } else if (localIp.includes('.') && !localIp.match(/[^.\d]/) && ip.family !== 'IPv4') {
+                    return;
+                }
+                if (localIp === '127.0.0.0' || localIp === 'localhost' || localIp.match(/[^.\d]/)) { // if DNS name
+                    hostIp = ip.address;
+                } else {
+                    if (ip.family === 'IPv4' && localIp.includes('.') &&
+                        (Server.ip2int(localIp) & Server.ip2int(ip.netmask)) === (Server.ip2int(ip.address) & Server.ip2int(ip.netmask))) {
+                        hostIp = ip.address;
+                    } else {
+                        hostIp = ip.address;
+                    }
+                }
+            });
+        });
+
+        if (!hostIp) {
+            Object.keys(networkInterfaces).forEach(inter => {
+                networkInterfaces[inter].forEach(ip => {
+                    if (ip.internal) {
+                        return;
+                    } else if (localIp.includes(':') && ip.family !== 'IPv6') {
+                        return;
+                    } else if (localIp.includes('.') && !localIp.match(/[^.\d]/) && ip.family !== 'IPv4') {
+                        return;
+                    }
+                    if (localIp === '127.0.0.0' || localIp === 'localhost' || localIp.match(/[^.\d]/)) { // if DNS name
+                        hostIp = ip.address;
+                    } else {
+                        hostIp = ip.address;
+                    }
+                });
+            });
+        }
+
+        if (!hostIp) {
+            Object.keys(networkInterfaces).forEach(inter => {
+                networkInterfaces[inter].forEach(ip => {
+                    if (ip.internal) {
+                        return;
+                    }
+                    hostIp = ip.address;
+                });
+            });
+        }
+
+        return hostIp;
+    }
+
+
     getWebInstances() {
         this.props.socket.getAdapterInstances('web')
-            .then(list => {
-                let webInstance = null;
+            .then(async list => {
+                let webInstance;
                 if (this.props.native.webInstance === '*') {
                     webInstance = list[Object.keys(list)[0]];
                 } else {
@@ -173,9 +240,12 @@ class Server extends Component {
                 }
                 if (!webInstance.native.bind || webInstance.native.bind === '0.0.0.0') {
                     // get current host
+                    const host = await this.props.socket.getObject(`system.host.${webInstance.common.host}`);
                     // get ips on this host
+                    const ip = Server.findNetworkAddressOfHost(host, window.location.hostname);
+
                     // but for now
-                    webInstance.native.bind = window.location.hostname;
+                    webInstance.native.bind = ip || window.location.hostname;
                 }
 
                 webInstance && this.setState({ webInstanceHost: `${webInstance.native.bind}:${webInstance.native.port || 8082}`});
@@ -247,10 +317,11 @@ class Server extends Component {
                 open={!0}
                 onClose={() => this.state.editCam !== null && this.setState({ editCam: false, editChanged: false })}
             >
-                <DialogTitle>{I18n.t('Edit camera %s [%s]', cam.name, cam.type)}</DialogTitle>
+                <DialogTitle>{I18n.t('Edit camera %s [%s]', cam.name, cam.type)} - {cam.desc}</DialogTitle>
                 <DialogContent>
                     <div className={this.props.classes.divConfig}>
                         <Config
+                            native={this.props.native}
                             settings={cam}
                             onChange={settings => this.onCameraSettingsChanged(settings)}
                             encrypt={(value, cb) =>
@@ -297,8 +368,29 @@ class Server extends Component {
                                 this.onCameraSettingsChanged(settings);
                             }}
                         />
-                        <div className={this.props.classes.sampleUrl}>{I18n.t('Local URL')}: <a className={this.props.classes.link} href={`http://${this.props.native.bind}:${this.props.native.port}/${cam.name}?key=${this.props.native.key}`} target="_blank" rel="noopener noreferrer">URL: http://{this.props.native.bind}:{this.props.native.port}/{cam.name}?key={this.props.native.key}</a></div>
-                        <div className={this.props.classes.sampleUrl}>{I18n.t('Web URL')}:   <a className={this.props.classes.link} href={`http://${this.state.webInstanceHost}/${this.props.adapterName}.${this.props.instance}/${cam.name}`}   target="_blank" rel="noopener noreferrer">URL: http://{this.state.webInstanceHost}/{this.props.adapterName}.{this.props.instance }/{cam.name}</a></div>
+                        <div className={this.props.classes.sampleUrl}>
+                            {I18n.t('Local URL')}
+                            :&nbsp;
+                            <a
+                                className={this.props.classes.link}
+                                href={`http://${this.props.native.bind}:${this.props.native.port}/${cam.name}?key=${this.props.native.key}`}
+                                target="_blank" rel="noopener noreferrer"
+                            >
+                                URL: http://{this.props.native.bind}:{this.props.native.port}/{cam.name}?key={this.props.native.key}
+                            </a>
+                        </div>
+                        <div className={this.props.classes.sampleUrl}>
+                            {I18n.t('Web URL')}
+                            :&nbsp;
+                            <a
+                                className={this.props.classes.link}
+                                href={`http://${this.state.webInstanceHost}/${this.props.adapterName}.${this.props.instance}/${cam.name}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                URL: http://{this.state.webInstanceHost}/{this.props.adapterName}.{this.props.instance }/{cam.name}
+                            </a>
+                        </div>
                     </div>
                 <div className={this.props.classes.divTestCam}>
                     <Button
@@ -480,7 +572,9 @@ class Server extends Component {
                     cameras.push({ name: `cam${i}`, type: 'url', id: Date.now() });
                     this.props.onChange('cameras', cameras);
                 }}
-            ><IconAdd /></Fab>
+            >
+                <IconAdd />
+            </Fab>
             {this.props.native.cameras ? this.props.native.cameras.map((cam, i) => this.renderCamera(cam, i)) : null}
             {this.renderConfigDialog()}
             {this.renderMessage()}

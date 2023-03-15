@@ -24,15 +24,29 @@ function executeFFmpeg(params, path) {
     });
 }
 
-function getRtspSnapshot(ffpmegPath, ip, login, password, port, urlPath, outputFileName) {
-    return executeFFmpeg([
+function buildCommand(options, outputFileName) {
+    const parameters = [
         '-y',
-        '-i',
-        `rtsp://${login}:${password}@${ip}:${port || 554}${urlPath ? (urlPath.startsWith('/') ? urlPath : `/${urlPath}`) : ''}`,
-        '-vframes',
-        '1',
-        outputFileName,
-    ], ffpmegPath)
+    ];
+    options.prefix && parameters.push(options.prefix);
+    parameters.push(`-i`);
+    parameters.push(`rtsp://${options.username}:${options.decodedPassword}@${options.ip}:${options.port || 554}${options.urlPath ? (options.urlPath.startsWith('/') ? options.urlPath : `/${options.urlPath}`) : ''}`);
+    parameters.push('-loglevel');
+    parameters.push('error');
+    if (options.originalWidth && options.originalHeight) {
+        parameters.push(`scale=${options.originalWidth}:${options.originalHeight}`);
+    }
+    parameters.push('-vframes');
+    parameters.push('1');
+    options.suffix && parameters.push(options.suffix);
+    parameters.push(outputFileName);
+    return parameters;
+}
+
+function getRtspSnapshot(ffpmegPath, options, outputFileName) {
+    const parameters = buildCommand(options, outputFileName);
+
+    return executeFFmpeg(parameters, ffpmegPath)
         .then(() => fs.readFileSync(outputFileName));
 }
 
@@ -78,7 +92,7 @@ function process(adapter, cam) {
     }
 
     const outputFileName = path.normalize(`${adapter.config.tempPath}/${cam.ip.replace(/[.:]/g, '_')}.jpg`);
-    cam.runningRequest = getRtspSnapshot(adapter.config.ffmpegPath, cam.ip, cam.username, cam.decodedPassword, cam.port, cam.urlPath, outputFileName)
+    cam.runningRequest = getRtspSnapshot(adapter.config.ffmpegPath, cam, outputFileName)
         .then(body => {
             cam.runningRequest = null;
 

@@ -47,5 +47,9 @@
   "Add new camera": "添加新相机",
   "Add time to screenshot": "添加时间到屏幕截图",
   "Time format": "时间格式",
-  "See here:": "看这里："
+  "See here:": "看这里：",
+  "Add title": "添加标题",
+  "Height": "高度",
+  "Width": "宽度",
+  "in pixels": "以像素为单位"
 }

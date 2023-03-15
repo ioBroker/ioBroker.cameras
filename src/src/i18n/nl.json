@@ -47,5 +47,9 @@
   "Add new camera": "Nieuwe camera toevoegen",
   "Add time to screenshot": "Voeg tijd toe aan screenshot",
   "Time format": "Tijd formaat",
-  "See here:": "Kijk hier:"
+  "See here:": "Kijk hier:",
+  "Add title": "Titel toevoegen",
+  "Height": "Hoogte",
+  "Width": "Breedte",
+  "in pixels": "in pixels"
 }

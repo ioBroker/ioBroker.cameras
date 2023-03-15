@@ -47,5 +47,9 @@
   "Add new camera": "Add new camera",
   "Add time to screenshot": "Add time to screenshot",
   "Time format": "Time format",
-  "See here:": "See here:"
+  "See here:": "See here:",
+  "Height": "Height",
+  "Add title": "Add title",
+  "Width": "Width",
+  "in pixels": "in pixels"
 }

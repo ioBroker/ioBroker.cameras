@@ -47,5 +47,9 @@
   "Add new camera": "Neue Kamera hinzufügen",
   "Add time to screenshot": "Zeit zum Screenshot hinzufügen",
   "Time format": "Zeitformat",
-  "See here:": "Siehe hier:"
+  "See here:": "Siehe hier:",
+  "Add title": "Titel hinzufügen",
+  "Height": "Höhe",
+  "Width": "Breite",
+  "in pixels": "in Pixel"
 }

@@ -47,5 +47,9 @@
   "Add new camera": "Додати нову камеру",
   "Add time to screenshot": "Додати час до знімка екрана",
   "Time format": "Формат часу",
-  "See here:": "Дивіться тут:"
+  "See here:": "Дивіться тут:",
+  "Add title": "Додайте заголовок",
+  "Height": "Висота",
+  "Width": "Ширина",
+  "in pixels": "в пікселях"
 }

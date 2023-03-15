@@ -12,24 +12,23 @@ import I18n from '@iobroker/adapter-react-v5/i18n';
 import TabOptions from './Tabs/Options';
 import TabCameras from './Tabs/Cameras';
 
-const styles = theme => ({
+const styles = () => ({
     root: {},
     tabContent: {
         padding: 10,
         height: 'calc(100% - 64px - 48px - 20px)',
-        overflow: 'auto'
+        overflow: 'auto',
     },
     tabContentIFrame: {
         padding: 10,
         height: 'calc(100% - 64px - 48px - 20px - 38px)',
-        overflow: 'auto'
-    }
+        overflow: 'auto',
+    },
 });
 
 class App extends GenericApp {
     constructor(props) {
         const extendedProps = {};
-        extendedProps.encryptedFields = ['password'];
         extendedProps.adapterName = 'cameras';
         extendedProps.doNotLoadAllObjects = true;
         extendedProps.translations = {

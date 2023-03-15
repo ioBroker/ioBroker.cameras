@@ -35,7 +35,7 @@ function startAdapter(options) {
 
     adapter.on('subscribesChange', subscriptions => {
         // Go through subscribes
-        console.log('Subscribe on ' + JSON.stringify(subscriptions));
+        console.log(`Subscribe on ${JSON.stringify(subscriptions)}`);
     });
 
 
@@ -78,7 +78,7 @@ function testCamera(adapter, item, cb) {
                 if ((name || '').toLowerCase() === 'content-type') {
                     contentType = value;
                 }
-            }
+            },
         };
 
         adapter.__CAM_TYPES[item.type].init(adapter, item)
@@ -179,7 +179,7 @@ function processMessage(adapter, obj) {
         case 'list': {
             obj.callback && adapter.sendTo(obj.from, obj.command, {
                 list: adapter.config.cameras.map(cam =>
-                    ({name: cam.name, desc: cam.desc, id: adapter.namespace + '.cameras.' + cam.name}))}, obj.callback);
+                    ({name: cam.name, desc: cam.desc, id: `${adapter.namespace}.cameras.${cam.name}`}))}, obj.callback);
 
             break;
         }
@@ -292,10 +292,9 @@ async function addTextToImage(data, dateFormat, title) {
                 },
                 top: Math.round(data.metadata.height * 0.02),
                 left: Math.round(data.metadata.width * 0.01),
-                blend: 'add'
+                blend: 'add',
             });
         }
-
 
         return sharp(data.body)
             .composite(layers)

@@ -1,6 +1,6 @@
 {
-  "short_name": "opcua ioBroker",
-  "name": "opcua ioBroker",
+  "short_name": "ioBroker.cameras",
+  "name": "ioBroker.cameras",
   "icons": [
     {
       "src": "favicon.ico",
