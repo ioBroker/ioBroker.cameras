@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "cameras",
-    "version": "1.0.3",
+    "version": "1.1.0",
     "news": {
+      "1.1.0": {
+        "en": "Added Reolink E1 camera",
+        "de": "Hinzugefügt Reolink E1 Kamera",
+        "ru": "Добавлена Reolink E1 камера",
+        "pt": "Adicionado câmera Reolink E1",
+        "nl": "Vertaling:",
+        "fr": "Ajout d'une caméra Reolink E1",
+        "it": "Reolink E1 fotocamera",
+        "es": "Cámara de reolink E1",
+        "pl": "Added Reolink E1 (ang.)",
+        "uk": "Додано Reolink E1 камери",
+        "zh-cn": "增加Reolink E1摄像机"
+      },
       "1.0.3": {
         "en": "Corrected GUI config error",
         "de": "Korrigiert GUI config Fehler",
@@ -76,18 +89,6 @@
         "es": "reemplazó el paquete obsoleto `request` con `axios`",
         "pl": "zastąpiono przestarzały pakiet `request` na `axios`",
         "zh-cn": "用 `axios` 替换了已弃用的包 `request`"
-      },
-      "0.1.5": {
-        "en": "Preparations for js-controller@4.x are made",
-        "de": "Vorbereitungen für js-controller@4.x sind getroffen",
-        "ru": "Подготовка к js-controller@4.x сделана",
-        "pt": "Os preparativos para js-controller@4.x são feitos",
-        "nl": "Voorbereidingen voor js-controller@4.x zijn getroffen",
-        "fr": "Les préparations pour js-controller@4.x sont faites",
-        "it": "Vengono effettuati i preparativi per js-controller@4.x",
-        "es": "Se realizan los preparativos para js-controller@4.x",
-        "pl": "Trwają przygotowania do js-controller@4.x",
-        "zh-cn": "js-controller@4.x的准备工作做好了"
       }
     },
     "title": "IP-Cameras",
