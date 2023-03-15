@@ -30,7 +30,7 @@ function buildCommand(options, outputFileName) {
     ];
     options.prefix && parameters.push(options.prefix);
     parameters.push(`-i`);
-    parameters.push(`rtsp://${options.username}:${options.decodedPassword}@${options.ip}:${options.port || 554}${options.urlPath ? (options.urlPath.startsWith('/') ? options.urlPath : `/${options.urlPath}`) : ''}`);
+    parameters.push(`rtsp://${options.username ? `${options.username}:${options.decodedPassword}` : ''}@${options.ip}:${options.port || 554}${options.urlPath ? (options.urlPath.startsWith('/') ? options.urlPath : `/${options.urlPath}`) : ''}`);
     parameters.push('-loglevel');
     parameters.push('error');
     if (options.originalWidth && options.originalHeight) {

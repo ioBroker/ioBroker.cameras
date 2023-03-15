@@ -103,7 +103,9 @@ function testCamera(adapter, item, cb) {
                         }
                     }
                     if (result.body) {
-                        return resizeImage(result, 300)
+                        return resizeImage(result, item.width, item.height)
+                            .then(data => rotateImage(data, item.angle))
+                            .then(data => addTextToImage(data, item.addTime ? adapter.config.dateFormat || 'LTS' : null, item.title))
                             .then(data => cb && cb({body: `data:${data.contentType};base64,${data.body.toString('base64')}`, contentType}));
                     } else {
                         result.error = result.error || 'No answer';

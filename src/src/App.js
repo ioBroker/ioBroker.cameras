@@ -11,7 +11,7 @@ import { Loader, I18n } from '@iobroker/adapter-react-v5';
 import TabOptions from './Tabs/Options';
 import TabCameras from './Tabs/Cameras';
 
-const styles = () => ({
+const styles = theme => ({
     root: {},
     tabContent: {
         padding: 10,
@@ -22,6 +22,12 @@ const styles = () => ({
         padding: 10,
         height: 'calc(100% - 64px - 48px - 20px - 38px)',
         overflow: 'auto',
+    },
+    selected: {
+        color: theme.palette.mode === 'dark' ? undefined : '#FFF !important',
+    },
+    indicator: {
+        backgroundColor: theme.palette.mode === 'dark' ? theme.palette.secondary.main : '#FFF',
     },
 });
 
@@ -48,19 +54,13 @@ class App extends GenericApp {
     }
 
     onAliveChanged = (id, state) => {
-        if (id) {
-            if (this.state.alive !== (state ? state.val : false)) {
-                this.setState({ alive: state ? state.val : false });
-            }
+        if (id && this.state.alive !== (!!state?.val)) {
+            this.setState({ alive: !!state?.val });
         }
     }
 
-    componentDidMount() {
-        super.componentDidMount();
-        this.socket.unsubscribeState(`${this.instanceId}.alive`, this.onAliveChanged);
-    }
     componentWillUnmount() {
-        this.socket.unsubscribeState(`${this.instanceId}.alive`, this.onAliveChanged);
+        this.subscribed && this.socket.unsubscribeState(this.subscribed, this.onAliveChanged);
         super.componentWillUnmount();
     }
 
@@ -68,14 +68,16 @@ class App extends GenericApp {
     onConnectionReady() {
         this.socket.getState(`${this.instanceId}.alive`)
             .then(state => {
-                if (this.state.alive !== (state ? state.val : false)) {
-                    this.setState({ alive: state ? state.val : false });
+                if (this.state.alive !== (!!state?.val)) {
+                    this.setState({ alive: !!state?.val });
                 }
 
                 // generate random key
                 if (!this.state.native.key) {
                     setTimeout(() => this.updateNativeValue('key', (Math.round(Math.random() * 100000000000) / 100000).toFixed(6)));
                 }
+                this.subscribed = `${this.instanceId}.alive`;
+                this.socket.subscribeState(this.subscribed, this.onAliveChanged);
             });
     }
 

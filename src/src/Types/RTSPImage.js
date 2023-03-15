@@ -113,7 +113,7 @@ class RTSPImageConfig extends Component {
         const parameters = ['-y'];
         options.prefix && parameters.push(options.prefix);
         parameters.push(`-i`);
-        parameters.push(`rtsp://${options.username}:${options.password}@${options.ip}:${options.port || 554}${options.urlPath ? (options.urlPath.startsWith('/') ? options.urlPath : `/${options.urlPath}`) : ''}`);
+        parameters.push(`rtsp://${options.username ? options.username + (options.password ? ':***' : '') : ''}@${options.ip}:${options.port || 554}${options.urlPath ? (options.urlPath.startsWith('/') ? options.urlPath : `/${options.urlPath}`) : ''}`);
         parameters.push('-loglevel');
         parameters.push('error');
         if (options.originalWidth && options.originalHeight) {
@@ -122,7 +122,7 @@ class RTSPImageConfig extends Component {
         parameters.push('-vframes');
         parameters.push('1');
         options.suffix && parameters.push(options.suffix);
-        parameters.push(`${this.props.tempPath}/${options.ip.replace(/[.:]/g, '_')}.jpg`);
+        parameters.push(`${this.props.native.tempPath ? `${this.props.native.tempPath}/` : ''}${options.ip.replace(/[.:]/g, '_')}.jpg`);
         return parameters;
     }
 

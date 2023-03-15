@@ -29,6 +29,7 @@ import URLImage from '../Types/URLImage';
 import URLBasicAuthImage from '../Types/URLBasicAuthImage';
 import RTSPImageConfig from '../Types/RTSPImage';
 import RTSPReolinkE1Config from '../Types/RTSPReolinkE1';
+import {CircularProgress} from '@mui/material';
 
 const TYPES = {
     url:          { Config: URLImage, name: 'URL' },
@@ -49,7 +50,10 @@ const styles = theme => ({
     },
     lineCheck: {
         display: 'inline-block',
-        width: 50,
+        width: 44,
+    },
+    lineCheckbox: {
+        marginTop: 10,
     },
     lineText: {
         display: 'inline-block',
@@ -57,7 +61,7 @@ const styles = theme => ({
     },
     lineDesc: {
         display: 'inline-block',
-        width: 'calc(100% - 600px)',
+        width: 'calc(100% - 644px)',
     },
     lineType: {
         display: 'inline-block',
@@ -110,13 +114,12 @@ const styles = theme => ({
     },
     divConfig: {
         verticalAlign: 'top',
-        width: 'calc(100% - 300px)',
-        display: 'inline-block',
     },
     divTestCam: {
-        width: 300,
-        display: 'inline-block',
+        flex: 1,
         verticalAlign: 'top',
+        display: 'flex',
+        flexDirection: 'column',
     },
     buttonIcon: {
         marginTop: 6,
@@ -280,7 +283,7 @@ class Server extends Component {
             this.setState({ message: 'Timeout', requesting: false });
         }, settings.timeout || this.props.native.defaultTimeout);
 
-        this.setState({ requesting: true }, () => {
+        this.setState({ requesting: true, testImg: null }, () => {
             this.props.socket.sendTo(`${this.props.adapterName}.${this.props.instance}`, 'test', settings)
                 .then(result => {
                     timeout && clearTimeout(timeout);
@@ -323,91 +326,94 @@ class Server extends Component {
             >
                 <DialogTitle>{I18n.t('Edit camera %s [%s]', cam.name, cam.type)} - {cam.desc}</DialogTitle>
                 <DialogContent>
-                    <div className={this.props.classes.divConfig}>
-                        <Config
-                            native={this.props.native}
-                            settings={cam}
-                            onChange={settings => this.onCameraSettingsChanged(settings)}
-                            encrypt={(value, cb) =>
-                                this.props.encrypt(value, cb)}
-                            decrypt={(value, cb) =>
-                                this.props.decrypt(value, cb)}
-                        />
-                        <br />
-                        <TextField
-                            variant="standard"
-                            className={this.props.classes.username}
-                            label={I18n.t('Cache timeout (ms)')}
-                            value={cam.cacheTimeout === undefined ? '' : cam.cacheTimeout}
-                            helperText={I18n.t('If empty, use default settings. If 0, cache disabled')}
-                            onChange={e => {
-                                const settings = JSON.parse(JSON.stringify(cam));
-                                settings.cacheTimeout = e.target.value;
-                                this.onCameraSettingsChanged(settings);
-                            }}
-                        />
-                        <br />
-                        <FormControlLabel
-                            label={I18n.t('Add time to screenshot')}
-                            control={
-                                <Checkbox
-                                    checked={cam.addTime || false}
-                                    onChange={e => {
-                                        const settings = JSON.parse(JSON.stringify(cam));
-                                        settings.addTime = e.target.checked;
-                                        this.onCameraSettingsChanged(settings);
-                                    }}
-                                />
-                            }
-                        />
-                        <br />
-                        <TextField
-                            variant="standard"
-                            className={this.props.classes.username}
-                            label={I18n.t('Add title')}
-                            value={cam.title === undefined ? '' : cam.title}
-                            onChange={e => {
-                                const settings = JSON.parse(JSON.stringify(cam));
-                                settings.title = e.target.value;
-                                this.onCameraSettingsChanged(settings);
-                            }}
-                        />
-                        <div className={this.props.classes.sampleUrl}>
-                            {I18n.t('Local URL')}
-                            :&nbsp;
-                            <a
-                                className={this.props.classes.link}
-                                href={`http://${this.props.native.bind}:${this.props.native.port}/${cam.name}?key=${this.props.native.key}`}
-                                target="_blank" rel="noopener noreferrer"
-                            >
-                                URL: http://{this.props.native.bind}:{this.props.native.port}/{cam.name}?key={this.props.native.key}
-                            </a>
+                    <div style={{ display: 'flex', gap: 10 }}>
+                        <div className={this.props.classes.divConfig}>
+                            <Config
+                                native={this.props.native}
+                                settings={cam}
+                                onChange={settings => this.onCameraSettingsChanged(settings)}
+                                encrypt={(value, cb) =>
+                                    this.props.encrypt(value, cb)}
+                                decrypt={(value, cb) =>
+                                    this.props.decrypt(value, cb)}
+                            />
+                            <br />
+                            <TextField
+                                variant="standard"
+                                className={this.props.classes.username}
+                                label={I18n.t('Cache timeout (ms)')}
+                                value={cam.cacheTimeout === undefined ? '' : cam.cacheTimeout}
+                                helperText={I18n.t('If empty, use default settings. If 0, cache disabled')}
+                                onChange={e => {
+                                    const settings = JSON.parse(JSON.stringify(cam));
+                                    settings.cacheTimeout = e.target.value;
+                                    this.onCameraSettingsChanged(settings);
+                                }}
+                            />
+                            <br />
+                            <FormControlLabel
+                                label={I18n.t('Add time to screenshot')}
+                                control={
+                                    <Checkbox
+                                        checked={cam.addTime || false}
+                                        onChange={e => {
+                                            const settings = JSON.parse(JSON.stringify(cam));
+                                            settings.addTime = e.target.checked;
+                                            this.onCameraSettingsChanged(settings);
+                                        }}
+                                    />
+                                }
+                            />
+                            <br />
+                            <TextField
+                                variant="standard"
+                                className={this.props.classes.username}
+                                label={I18n.t('Add title')}
+                                value={cam.title === undefined ? '' : cam.title}
+                                onChange={e => {
+                                    const settings = JSON.parse(JSON.stringify(cam));
+                                    settings.title = e.target.value;
+                                    this.onCameraSettingsChanged(settings);
+                                }}
+                            />
+                            <div className={this.props.classes.sampleUrl}>
+                                {I18n.t('Local URL')}
+                                :&nbsp;
+                                <a
+                                    className={this.props.classes.link}
+                                    href={`http://${this.props.native.bind}:${this.props.native.port}/${cam.name}?key=${this.props.native.key}`}
+                                    target="_blank" rel="noopener noreferrer"
+                                >
+                                    URL: http://{this.props.native.bind}:{this.props.native.port}/{cam.name}?key={this.props.native.key}
+                                </a>
+                            </div>
+                            <div className={this.props.classes.sampleUrl}>
+                                {I18n.t('Web URL')}
+                                :&nbsp;
+                                <a
+                                    className={this.props.classes.link}
+                                    href={`http://${this.state.webInstanceHost}/${this.props.adapterName}.${this.props.instance}/${cam.name}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    URL: http://{this.state.webInstanceHost}/{this.props.adapterName}.{this.props.instance }/{cam.name}
+                                </a>
+                            </div>
                         </div>
-                        <div className={this.props.classes.sampleUrl}>
-                            {I18n.t('Web URL')}
-                            :&nbsp;
-                            <a
-                                className={this.props.classes.link}
-                                href={`http://${this.state.webInstanceHost}/${this.props.adapterName}.${this.props.instance}/${cam.name}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                URL: http://{this.state.webInstanceHost}/{this.props.adapterName}.{this.props.instance }/{cam.name}
-                            </a>
+                        <div className={this.props.classes.divTestCam}>
+                            <Button
+                                disabled={this.state.requesting || !this.state.instanceAlive}
+                                variant="contained"
+                                color="primary"
+                                size="small"
+                                className={this.props.classes.buttonTest}
+                                onClick={() => this.onTest()}
+                                startIcon={<IconTest />}
+                            >{I18n.t('Test')}</Button>
+                            {this.state.testImg ? <img alt="test" className={this.props.classes.imgTest} src={this.state.testImg} /> : null}
+                            {this.state.requesting ? <CircularProgress /> : null}
                         </div>
                     </div>
-                <div className={this.props.classes.divTestCam}>
-                    <Button
-                        disabled={this.state.requesting || !this.state.instanceAlive}
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        className={this.props.classes.buttonTest}
-                        onClick={() => this.onTest()}
-                        startIcon={<IconTest />}
-                    >{I18n.t('Test')}</Button>
-                    {this.state.testImg ? <img alt="test" className={this.props.classes.imgTest} src={this.state.testImg} /> : null}
-                </div>
                 </DialogContent>
                 <DialogActions>
                     <Button
@@ -441,7 +447,7 @@ class Server extends Component {
                 onClick={() => {
                     let editedSettingsOld = JSON.parse(JSON.stringify(this.props.native.cameras[i]));
                     editedSettingsOld = JSON.stringify(editedSettingsOld);
-                    this.setState({ editCam: i, editedSettingsOld, editedSettings: null });
+                    this.setState({ editCam: i, editedSettingsOld, editedSettings: null, testImg: null });
                 }}>
                     <IconEdit className={this.props.classes.buttonIcon} />
             </Fab>,
@@ -511,9 +517,10 @@ class Server extends Component {
             }
         }
 
-        return <div key={`cam${cam.id}`} className={this.props.classes.lineDiv} style={{ opacity: cam.enabled === false ? 0.7 : 1}}>
+        return <div key={`cam${cam.id}`} className={this.props.classes.lineDiv} style={{ opacity: cam.enabled === false ? 0.5 : 1}}>
             <div className={this.props.classes.lineCheck}>
                 <Checkbox
+                    className={this.props.classes.lineCheckbox}
                     checked={cam.enabled !== false}
                     onChange={() => {
                         const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
@@ -580,7 +587,7 @@ class Server extends Component {
                     const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
                     let i = 1;
                     // eslint-disable-next-line
-                    while(cameras.find(cam => cam.name === `cam${i}`)) {
+                    while (cameras.find(cam => cam.name === `cam${i}`)) {
                         i++;
                     }
                     cameras.push({ name: `cam${i}`, type: 'url', id: Date.now() });
