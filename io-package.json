@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "cameras",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "news": {
+      "1.1.1": {
+        "en": "Added Reolink E1 camera",
+        "de": "Hinzugefügt Reolink E1 Kamera",
+        "ru": "Добавлена Reolink E1 камера",
+        "pt": "Adicionado câmera Reolink E1",
+        "nl": "Vertaling:",
+        "fr": "Ajout d'une caméra Reolink E1",
+        "it": "Reolink E1 fotocamera",
+        "es": "Cámara de reolink E1",
+        "pl": "Added Reolink E1 (ang.)",
+        "uk": "Додано Reolink E1 камери",
+        "zh-cn": "增加Reolink E1摄像机"
+      },
       "1.1.0": {
         "en": "Added Reolink E1 camera",
         "de": "Hinzugefügt Reolink E1 Kamera",
@@ -74,18 +87,6 @@
         "nl": "het verouderde pakket `request` vervangen door `axios`",
         "fr": "remplacé le paquet obsolète `request` par `axios`",
         "it": "ha sostituito il deprecato pacchetto `request` con `axios`",
-        "es": "reemplazó el paquete obsoleto `request` con `axios`",
-        "pl": "zastąpiono przestarzały pakiet `request` na `axios`",
-        "zh-cn": "用 `axios` 替换了已弃用的包 `request`"
-      },
-      "0.1.6": {
-        "en": "replaced the deprecated package `request` with `axios`",
-        "de": "das veraltete Paket „request“ durch „axios“ ersetzt",
-        "ru": "заменил устаревший пакет `request` на `axios`",
-        "pt": "substituiu o pacote obsoleto `request` por `axios`",
-        "nl": "het verouderde pakket `request` vervangen door `axios`",
-        "fr": "remplacé le paquet obsolète `request` par `axios`",
-        "it": "sostituito il deprecato pacchetto `request` con `axios`",
         "es": "reemplazó el paquete obsoleto `request` con `axios`",
         "pl": "zastąpiono przestarzały pakiet `request` na `axios`",
         "zh-cn": "用 `axios` 替换了已弃用的包 `request`"
