@@ -13,7 +13,7 @@
         "react-icons": "^4.8.0",
         "react-scripts": "^5.0.1",
         "@material-ui/icons": "^4.11.3",
-        "eslint": "^8.36.0",
+        "eslint": "^8.37.0",
         "eslint-plugin-import": "^2.27.5"
     },
     "scripts": {
