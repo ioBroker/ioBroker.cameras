@@ -239,22 +239,22 @@ class Server extends Component {
             .then(async list => {
                 let webInstance;
                 if (this.props.native.webInstance === '*') {
-                    webInstance = list[Object.keys(list)[0]];
+                    webInstance = list[0];
                 } else {
-                    const id = Object.keys(list).find(id => id.endsWith(this.props.native.webInstance));
-                    webInstance = list[id];
+                    const instance = this.props.native.webInstance;
+                    webInstance = list.find(obj => obj._id.endsWith(instance));
                 }
                 if (webInstance) {
                     webInstance.native = webInstance.native || {};
-                }
-                if (!webInstance.native.bind || webInstance.native.bind === '0.0.0.0') {
-                    // get current host
-                    const host = await this.props.socket.getObject(`system.host.${webInstance.common.host}`);
-                    // get ips on this host
-                    const ip = Server.findNetworkAddressOfHost(host, window.location.hostname);
+                    if (!webInstance.native.bind || webInstance.native.bind === '0.0.0.0') {
+                        // get current host
+                        const host = await this.props.socket.getObject(`system.host.${webInstance.common.host}`);
+                        // get ips on this host
+                        const ip = Server.findNetworkAddressOfHost(host, window.location.hostname);
 
-                    // but for now
-                    webInstance.native.bind = ip || window.location.hostname;
+                        // but for now
+                        webInstance.native.bind = ip || window.location.hostname;
+                    }
                 }
 
                 webInstance && this.setState({ webInstanceHost: `${webInstance.native.bind}:${webInstance.native.port || 8082}`});
@@ -263,7 +263,9 @@ class Server extends Component {
 
     renderMessage() {
         if (this.state.message) {
-            return <MessageDialog text={this.state.message} onClose={() => this.setState({ message: '' })} />;
+            const text = this.state.message.split('\n').map((item, i) => <p key={i}>{item}</p>);
+
+            return <MessageDialog text={text} onClose={() => this.setState({ message: '' })} />;
         } else {
             return null;
         }
@@ -294,6 +296,9 @@ class Server extends Component {
                         if (typeof error !== 'string') {
                             error = JSON.stringify(error);
                         }
+                        // hide password
+                        error = error.replace(/\/\/([^:]+):[^@]+@/, '//$1:xxx@');
+
                         this.setState({ message: error, requesting: false });
                     } else {
                         this.setState({ testImg: result.body, requesting: false });
