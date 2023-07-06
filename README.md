@@ -52,7 +52,7 @@ Here is an example of how to add Reolink E1:
 -->
 
 ## Changelog
-### 1.2.0 (2023-07-06)
+### **WORK IN PROGRESS**
 * (bluefox) Added eufy camera
 
 ### 1.1.1 (2023-03-15)

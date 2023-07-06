@@ -3,19 +3,6 @@
     "name": "cameras",
     "version": "1.2.0",
     "news": {
-      "1.2.0": {
-        "en": "Added eufy camera",
-        "de": "Hinzugefügt Eufakturkamera",
-        "ru": "Добавлена эуфи камера",
-        "pt": "Adicionado câmera eufy",
-        "nl": "Voegde de camera toe",
-        "fr": "Ajout de la caméra eufy",
-        "it": "Aggiunto eufy fotocamera",
-        "es": "Cámara exuberante",
-        "pl": "Added eufy camera",
-        "uk": "Додано відеокамеру",
-        "zh-cn": "增加电子摄影机"
-      },
       "1.1.1": {
         "en": "Added Reolink E1 camera",
         "de": "Hinzugefügt Reolink E1 Kamera",
