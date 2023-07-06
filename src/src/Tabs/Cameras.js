@@ -29,6 +29,7 @@ import URLImage from '../Types/URLImage';
 import URLBasicAuthImage from '../Types/URLBasicAuthImage';
 import RTSPImageConfig from '../Types/RTSPImage';
 import RTSPReolinkE1Config from '../Types/RTSPReolinkE1';
+import RTSPEufyConfig from '../Types/RTSPEufy';
 import {CircularProgress} from '@mui/material';
 
 const TYPES = {
@@ -36,6 +37,7 @@ const TYPES = {
     urlBasicAuth: { Config: URLBasicAuthImage, name: 'URL with basic auth' },
     rtsp:         { Config: RTSPImageConfig, name: 'RTSP Snapshot' },
     reolinkE1:    { Config: RTSPReolinkE1Config, name: 'Reolink E1 Snapshot' },
+    eufy:         { Config: RTSPEufyConfig, name: 'Eufy Security' },
 };
 
 const styles = theme => ({
@@ -330,7 +332,9 @@ class Server extends Component {
                         <div className={this.props.classes.divConfig}>
                             <Config
                                 native={this.props.native}
+                                socket={this.props.socket}
                                 settings={cam}
+                                themeType={this.props.themeType}
                                 onChange={settings => this.onCameraSettingsChanged(settings)}
                                 encrypt={(value, cb) =>
                                     this.props.encrypt(value, cb)}
@@ -565,7 +569,14 @@ class Server extends Component {
                         value={cam.type || ''}
                         onChange={e => {
                             const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
-                            cameras[i].type = e.target.value;
+                            const camera = cameras[i];
+                            cameras[i] = {
+                                type: e.target.value,
+                                desc: camera.desc,
+                                name: camera.name,
+                                enabled: camera.enabled,
+                                ip: camera.ip,
+                            };
                             this.props.onChange('cameras', cameras);
                         }}
                     >
@@ -613,6 +624,7 @@ Server.propTypes = {
     onLoad: PropTypes.func,
     onChange: PropTypes.func,
     socket: PropTypes.object.isRequired,
+    themeType: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(Server);

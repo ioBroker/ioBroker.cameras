@@ -52,5 +52,10 @@
   "Add title": "Add title",
   "Width": "Width",
   "in pixels": "in pixels",
-  "Expert settings": "Expert settings"
+  "Expert settings": "Expert settings",
+  "Reolink E1 Snapshot": "Reolink E1 Snapshot",
+  "Eufy Security": "Eufy Security",
+  "From eusec adapter": "From eusec adapter",
+  "By IP Address": "By IP Address",
+  "Camera OID": "Camera object ID"
 }

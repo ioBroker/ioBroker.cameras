@@ -3,21 +3,21 @@
     "version": "1.1.1",
     "private": true,
     "dependencies": {
-        "@iobroker/adapter-react-v5": "^4.0.15",
-        "@mui/material": "^5.11.13",
-        "@mui/icons-material": "^5.11.11",
-        "@mui/styles": "^5.11.13",
+        "@iobroker/adapter-react-v5": "^4.1.2",
+        "@mui/material": "^5.13.7",
+        "@mui/icons-material": "^5.13.7",
+        "@mui/styles": "^5.13.7",
         "babel-eslint": "^10.1.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "react-icons": "^4.8.0",
+        "react-icons": "^4.10.1",
         "react-scripts": "^5.0.1",
         "@material-ui/icons": "^4.11.3",
-        "eslint": "^8.36.0",
+        "eslint": "^8.44.0",
         "eslint-plugin-import": "^2.27.5"
     },
     "scripts": {
-        "start": "react-scripts start",
+        "start": "set DANGEROUSLY_DISABLE_HOST_CHECK=true&& react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
@@ -25,7 +25,10 @@
     "eslintConfig": {
         "extends": "react-app"
     },
-    "proxy": "http://localhost:8081",
+    "proxy": "http://127.0.0.1:8081",
+    "allowedHosts": [
+        "127.0.0.1"
+    ],
     "homepage": ".",
     "browserslist": [
         ">0.2%",

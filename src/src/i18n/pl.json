@@ -52,5 +52,10 @@
   "Height": "Wysokość",
   "Width": "Szerokość",
   "in pixels": "w pikselach",
-  "Expert settings": "Ustawienia eksperckie"
+  "Expert settings": "Ustawienia eksperckie",
+  "Reolink E1 Snapshot": "Połącz ponownie migawkę E1",
+  "Eufy Security": "Bezpieczeństwo Eufy",
+  "From eusec adapter": "Z adaptera eusec",
+  "By IP Address": "Według adresu IP",
+  "Camera OID": "Identyfikator obiektu kamery"
 }

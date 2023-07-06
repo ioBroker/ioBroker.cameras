@@ -52,5 +52,10 @@
   "Height": "Высота",
   "Width": "Ширина",
   "in pixels": "в пикселях",
-  "Expert settings": "Экспертные настройки"
+  "Expert settings": "Экспертные настройки",
+  "Reolink E1 Snapshot": "Снимок Reolink E1",
+  "Eufy Security": "Юфи Безопасность",
+  "From eusec adapter": "От адаптера eusec",
+  "By IP Address": "По IP-адресу",
+  "Camera OID": "Идентификатор объекта камеры"
 }

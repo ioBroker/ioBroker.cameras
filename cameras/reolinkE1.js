@@ -50,6 +50,10 @@ function process(adapter, cam) {
 
     const outputFileName = path.normalize(`${adapter.config.tempPath}/${cam.ip.replace(/[.:]/g, '_')}.jpg`);
 
+    if (!cam.settings) {
+        return Promise.reject(`Invalid settings for ${JSON.stringify(cam)}`);
+    }
+
     cam.runningRequest = getRtspSnapshot(adapter.config.ffmpegPath, cam.settings, outputFileName)
         .then(body => {
             cam.runningRequest = null;

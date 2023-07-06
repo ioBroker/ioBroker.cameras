@@ -52,5 +52,10 @@
   "Height": "高度",
   "Width": "宽度",
   "in pixels": "以像素为单位",
-  "Expert settings": "专家设置"
+  "Expert settings": "专家设置",
+  "Reolink E1 Snapshot": "重新链接 E1 快照",
+  "Eufy Security": "尤菲安全",
+  "From eusec adapter": "来自eusec适配器",
+  "By IP Address": "通过IP地址",
+  "Camera OID": "相机对象ID"
 }

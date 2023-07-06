@@ -127,7 +127,7 @@ function testCamera(adapter, item, cb) {
 
 function getCameraImage(cam) {
     if (adapter.__CAM_TYPES[cam.type]) {
-        adapter.log.debug(`Request ${cam.type} ${cam.ip || cam.url} ${cam.name}`);
+        adapter.log.debug(`Request ${cam.type} ${cam.ip || cam.url || cam.oid || ''} ${cam.name}`);
 
         return adapter.__CAM_TYPES[cam.type].process(adapter, cam)
             .then(data => {

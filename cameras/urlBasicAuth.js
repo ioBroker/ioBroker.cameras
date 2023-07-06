@@ -19,7 +19,7 @@ function init(adapter, cam) {
 
     cam.timeout = parseInt(cam.timeout || adapter.config.defaultTimeout, 10) || 2000;
 
-    // calculate basic authentication. Password was encrypted and must be decrypted
+    // Calculate basic authentication. The password was encrypted and must be decrypted
     cam.basicAuth = `Basic ${Buffer.from(`${cam.username}:${adapter.decrypt(cam.password)}`).toString('base64')}`;
     return Promise.resolve();
 }
