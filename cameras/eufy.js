@@ -71,7 +71,7 @@ function process(adapter, cam) {
 
     const outputFileName = path.normalize(`${adapter.config.tempPath}/${cam.ip.replace(/[.:]/g, '_')}.jpg`);
 
-    cam.runningRequest = getRtspSnapshot(adapter.config.ffmpegPath, cam.settings, outputFileName)
+    cam.runningRequest = getRtspSnapshot(adapter.config.ffmpegPath, cam.settings, outputFileName, adapter)
         .then(body => {
             cam.runningRequest = null;
             adapter.log.debug(`Eufy from ${cam.ip}. Done!`);

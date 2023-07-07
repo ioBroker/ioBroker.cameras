@@ -2,11 +2,13 @@ const spawn = require('child_process').spawn;
 const fs = require('fs');
 const path = require('path');
 
-function executeFFmpeg(params, path) {
+function executeFFmpeg(params, path, adapter) {
     return new Promise((resolve, reject) => {
         if (params && !Array.isArray(params)) {
             params = params.split(' ');
         }
+
+        adapter && adapter.log.debug(`Executing ${path} ${params.join(' ')}`);
 
         const proc = spawn(path, params || []);
 
@@ -28,9 +30,20 @@ function buildCommand(options, outputFileName) {
     const parameters = [
         '-y',
     ];
+    let password = options.decodedPassword;
+    if (options.username) {
+        // convert special characters
+        password = encodeURIComponent(password)
+            .replace(/!/g, '%21')
+            .replace(/'/g, '%27')
+            .replace(/\(/g, '%28')
+            .replace(/\)/g, '%29')
+            .replace(/\*/g, '%2A');
+    }
+
     options.prefix && parameters.push(options.prefix);
     parameters.push(`-i`);
-    parameters.push(`rtsp://${options.username ? `${options.username}:${options.decodedPassword}@` : ''}${options.ip}:${options.port || 554}${options.urlPath ? (options.urlPath.startsWith('/') ? options.urlPath : `/${options.urlPath}`) : ''}`);
+    parameters.push(`rtsp://${options.username ? `${encodeURIComponent(options.username)}:${password}@` : ''}${options.ip}:${options.port || 554}${options.urlPath ? (options.urlPath.startsWith('/') ? options.urlPath : `/${options.urlPath}`) : ''}`);
     parameters.push('-loglevel');
     parameters.push('error');
     if (options.originalWidth && options.originalHeight) {
@@ -43,10 +56,10 @@ function buildCommand(options, outputFileName) {
     return parameters;
 }
 
-function getRtspSnapshot(ffpmegPath, options, outputFileName) {
+function getRtspSnapshot(ffpmegPath, options, outputFileName, adapter) {
     const parameters = buildCommand(options, outputFileName);
 
-    return executeFFmpeg(parameters, ffpmegPath)
+    return executeFFmpeg(parameters, ffpmegPath, adapter)
         .then(() => fs.readFileSync(outputFileName));
 }
 
@@ -94,7 +107,7 @@ function process(adapter, cam) {
     adapter.log.debug(`Requesting snapshot from ${cam.ip}...`);
 
     const outputFileName = path.normalize(`${adapter.config.tempPath}/${cam.ip.replace(/[.:]/g, '_')}.jpg`);
-    cam.runningRequest = getRtspSnapshot(adapter.config.ffmpegPath, cam, outputFileName)
+    cam.runningRequest = getRtspSnapshot(adapter.config.ffmpegPath, cam, outputFileName, adapter)
         .then(body => {
             cam.runningRequest = null;
             adapter.log.debug(`Snapshot from ${cam.ip}. Done!`);

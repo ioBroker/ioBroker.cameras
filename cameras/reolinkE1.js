@@ -54,7 +54,7 @@ function process(adapter, cam) {
         return Promise.reject(`Invalid settings for ${JSON.stringify(cam)}`);
     }
 
-    cam.runningRequest = getRtspSnapshot(adapter.config.ffmpegPath, cam.settings, outputFileName)
+    cam.runningRequest = getRtspSnapshot(adapter.config.ffmpegPath, cam.settings, outputFileName, adapter)
         .then(body => {
             cam.runningRequest = null;
             adapter.log.debug(`Reolink E1 from ${cam.ip}. Done!`);
