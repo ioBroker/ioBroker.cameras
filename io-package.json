@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "cameras",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "news": {
+      "1.2.2": {
+        "en": "Corrected passwords with exclamation mark",
+        "de": "Korrigierte Passwörter mit Ausrufzeichen",
+        "ru": "Исправлены пароли с знаком возбуждения",
+        "pt": "Senhas corrigidas com marca de exclamação",
+        "nl": "Vertaling:",
+        "fr": "Mot de passe corrigé avec marque d'exclamation",
+        "it": "Password corrette con marchio esclamativo",
+        "es": "Contraseñas corregidas con marca de exclamación",
+        "pl": "Komentarz z wykrzyknikiem",
+        "uk": "Виправлені паролі з маркуванням екскламації",
+        "zh-cn": "修改了开释标志的密码"
+      },
       "1.2.1": {
         "en": "Added eufy camera",
         "de": "Hinzugefügt Eufakturkamera",
@@ -79,18 +92,6 @@
         "es": "GUI actualizado a MUIv5",
         "pl": "GUI zaktualizuje MUIv5",
         "zh-cn": "古伊向MUIv5更新"
-      },
-      "0.1.8": {
-        "en": "replaced the deprecated package `request` with `axios`",
-        "de": "das veraltete Paket „request“ durch „axios“ ersetzt",
-        "ru": "заменил устаревший пакет `request` на `axios`",
-        "pt": "substituiu o pacote obsoleto `request` por `axios`",
-        "nl": "het verouderde pakket `request` vervangen door `axios`",
-        "fr": "remplacé le paquet obsolète `request` par `axios`",
-        "it": "sostituito il deprecato pacchetto `request` con `axios`",
-        "es": "reemplazó el paquete obsoleto `request` con `axios`",
-        "pl": "zastąpiono przestarzały pakiet `request` na `axios`",
-        "zh-cn": "用 `axios` 替换了已弃用的包 `request`"
       }
     },
     "title": "IP-Cameras",

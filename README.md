@@ -11,7 +11,7 @@
 **Tests:**: [![Travis-CI](http://img.shields.io/travis/ioBroker/ioBroker.cameras/master.svg)](https://travis-ci.org/ioBroker/ioBroker.cameras)
 
 ## IP-Cameras adapter for ioBroker
-You can integrate you web/ip cameras into vis and other visualizations.
+You can integrate your web/ip cameras into vis and other visualizations.
 If you configure a camera with name `cam1` it will be available on 
 web server under `http(s)://iobroker-IP:8082/cameras.0/cam1`.
 
@@ -52,7 +52,7 @@ Here is an example of how to add Reolink E1:
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.2.2 (2023-07-07)
 * (bluefox) Corrected passwords with exclamation mark
 
 ### 1.2.1 (2023-07-06)
