@@ -206,6 +206,12 @@ function processMessage(adapter, obj) {
             }
             break;
         }
+        case 'webStreaming': {
+            if (obj.callback && obj.message) {
+                const url = rtsp.webStreaming(obj.message.rtsp);
+                adapter.sendTo(obj.from, obj.command, {url}, obj.callback);
+            }
+        }
     }
 }
 

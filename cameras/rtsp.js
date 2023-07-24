@@ -1,6 +1,9 @@
 const spawn = require('child_process').spawn;
 const fs = require('fs');
 const path = require('path');
+const uuidv4 = require('uuid/v4');
+
+// ffmpeg -rtsp_transport udp -i rtsp://localhost:8090/stream -c:a aac -b:a 160000 -ac 2 -s 854x480 -c:v libx264 -b:v 800000 -hls_time 10 -hls_list_size 2 -hls_flags delete_segments -start_number 1 playlist.m3u8
 
 function executeFFmpeg(params, path, adapter) {
     return new Promise((resolve, reject) => {
@@ -11,6 +14,7 @@ function executeFFmpeg(params, path, adapter) {
         adapter && adapter.log.debug(`Executing ${path} ${params.join(' ')}`);
 
         const proc = spawn(path, params || []);
+        proc.on('error', err => reject(err));
 
         const stdout = [];
         const stderr = [];
@@ -128,9 +132,35 @@ function process(adapter, cam) {
     return cam.runningRequest;
 }
 
+const streamings = {};
+
+function webStreaming(url, id) {
+    if (!id) {
+        id = uuidv4();
+    }
+    const stopTimeout = () => {
+        delete streamings[id];
+    };
+    if (!id) {
+        streamings[id] = {
+            url,
+        };
+    } else {
+        clearTimeout(streamings[id].timeout);
+    }
+    streamings[id].timeout = setTimeout(stopTimeout, 10 * 60 * 1000);
+}
+
+function stopWebStreaming(url) {
+    
+}
+
 module.exports = {
     init,
     process,
     unload,
-    getRtspSnapshot
+    getRtspSnapshot,
+    executeFFmpeg,
+    webStreaming,
+    stopWebStreaming
 };

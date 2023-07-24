@@ -1,0 +1,53 @@
+{
+    "name": "iobroker.vis-2-widgets-camera",
+    "private": true,
+    "version": "0.4.2",
+    "dependencies": {
+        "@craco/craco": "^7.1.0",
+        "@emotion/react": "^11.11.1",
+        "@emotion/styled": "^11.11.0",
+        "@iobroker/adapter-react-v5": "^4.1.2",
+        "@iobroker/vis-2-widgets-react-dev": "^0.4.4",
+        "@mui/icons-material": "^5.11.16",
+        "@mui/material": "^5.13.6",
+        "@mui/styles": "^5.13.2",
+        "@mui/system": "^5.13.6",
+        "craco-esbuild": "^0.5.2",
+        "craco-module-federation": "^1.1.0",
+        "eslint": "^8.44.0",
+        "eslint-config-airbnb": "^19.0.4",
+        "eslint-plugin-eqeqeq-fix": "^1.0.3",
+        "eslint-plugin-import": "^2.27.5",
+        "eslint-plugin-jsx-a11y": "^6.7.1",
+        "eslint-plugin-only-warn": "^1.1.0",
+        "eslint-plugin-react": "^7.32.2",
+        "eslint-plugin-react-hooks": "^4.6.0",
+        "moment": "^2.29.4",
+        "node-sass": "^9.0.0",
+        "prop-types": "^15.8.1",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-scripts": "^5.0.1",
+        "sass": "^1.63.6",
+        "uuid": "^9.0.0"
+    },
+    "scripts": {
+        "start": "set PORT=4173 && craco start",
+        "old-start": "set PORT=4173 && react-scripts start",
+        "lint": "eslint --fix --ext .js,.jsx src",
+        "build": "craco build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "i18n": "node node_modules/@iobroker/vis-2-widgets-react-dev/searchI18n vis_2_widgets_camera"
+    },
+    "eslintConfig": {
+        "extends": "react-app"
+    },
+    "homepage": ".",
+    "browserslist": [
+        ">0.2%",
+        "not dead",
+        "not ie <= 11",
+        "not op_mini all"
+    ]
+}
