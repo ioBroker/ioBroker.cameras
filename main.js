@@ -316,14 +316,9 @@ function startWebServer(adapter) {
     adapter.log.debug(`Starting web server on http://${adapter.config.bind}:${adapter.config.port}/`);
     adapter.__server = http.createServer((req, res) => {
         const clientIp = req.connection.remoteAddress;
-        console.log(req.url);
-        const match = req.url.match(/^\/streaming\/(.*?)\/(.*)$/);
-        console.log(match);
-        let path;
+        const match = req.url.match(/^\/streaming\/([0-9a-z\-]+)\/(playlist[0-9]*\.(m3u8|ts))$/);
         if (match) {
-            path = `${__dirname}/data/${match[1]}/${match[2]}`;
-        }
-        if (match) {
+            let path = `${__dirname}/data/${match[1]}/${match[2]}`;
             if (fs.existsSync(path)) {
                 const stat = fs.statSync(path);
 
@@ -341,7 +336,7 @@ function startWebServer(adapter) {
                 }
 
                 res.writeHead(200, {
-                    'Content-Type': 'audio/mpeg',
+                    'Content-Type': match[3] === 'ts' ? 'video/mpeg' : 'text/plain',
                     'Content-Length': stat.size,
                     ...headers,
                 });
@@ -544,7 +539,8 @@ function main(adapter) {
         Promise.all(promises)
             .then(() => syncConfig())
             .then(() => fillFiles())
-            .then(() => startWebServer(adapter));
+            .then(() => rtsp.cleanRtspData())
+            .then(() => startWebServer(adapter))
     });
 }
 

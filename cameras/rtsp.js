@@ -139,8 +139,14 @@ function webStreaming(adapter, url) {
         const id = uuidv4();
         const path = `${__dirname}/../data/${id}`;
         fs.mkdirSync(path);
+        const command = [
+            ...`-rtsp_transport tcp -i`.split(' '),
+            url,
+            ...`-c:a aac -b:a 160000 -ac 2 -s 854x480 -c:v libx264 -b:v 800000 -hls_time 10 -hls_list_size 2 -hls_flags delete_segments -start_number 1`.split(' '),
+            `${path}/playlist.m3u8`,
+        ];
         const proc = spawn(adapter.config.ffmpegPath, 
-            `-rtsp_transport udp -i ${url} -c:a aac -b:a 160000 -ac 2 -s 854x480 -c:v libx264 -b:v 800000 -hls_time 10 -hls_list_size 2 -hls_flags delete_segments -start_number 1 ${path}/playlist.m3u8`.split(' ')
+            command
         );
         proc.stdout.setEncoding('utf8');
         proc.stdout.on('data', data => console.log(data.toString('utf8')));
@@ -158,7 +164,7 @@ function webStreaming(adapter, url) {
     const stopTimeout = () => {
         streamings[url].proc.kill();
         delete streamings[url];
-        // fs.rmdirSync(path, { recursive: true });
+        // fs.rmdirSync(`${__dirname}/../data/${streamings[url].id}`, { recursive: true });
     };
     streamings[url].timeout = setTimeout(stopTimeout, 10 * 60 * 1000);
     return streamings[url].id;
@@ -168,6 +174,18 @@ function stopWebStreaming(url) {
     
 }
 
+const cleanRtspData = () => {
+    fs.readdir(__dirname + '/../data', (err, files) => {
+        files.forEach(file => {
+            const fileDir = __dirname + '/../data/' + file;
+    
+            if (file !== '.gitignore') {
+                fs.rmdirSync(fileDir, { recursive: true });
+            }
+        });
+    });
+};
+
 module.exports = {
     init,
     process,
@@ -175,5 +193,6 @@ module.exports = {
     getRtspSnapshot,
     executeFFmpeg,
     webStreaming,
-    stopWebStreaming
+    stopWebStreaming,
+    cleanRtspData
 };
