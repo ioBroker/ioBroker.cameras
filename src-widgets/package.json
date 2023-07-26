@@ -22,6 +22,7 @@
         "eslint-plugin-only-warn": "^1.1.0",
         "eslint-plugin-react": "^7.32.2",
         "eslint-plugin-react-hooks": "^4.6.0",
+        "hls.js": "^1.4.10",
         "moment": "^2.29.4",
         "node-sass": "^9.0.0",
         "prop-types": "^15.8.1",

@@ -208,8 +208,8 @@ function processMessage(adapter, obj) {
         }
         case 'webStreaming': {
             if (obj.callback && obj.message) {
-                const url = rtsp.webStreaming(obj.message.rtsp);
-                adapter.sendTo(obj.from, obj.command, {url}, obj.callback);
+                const url = rtsp.webStreaming(adapter, obj.message.rtsp);
+                adapter.sendTo(obj.from, obj.command, {url: `http://127.0.0.1:8200/streaming/${url}/playlist.m3u8`}, obj.callback);
             }
         }
     }
@@ -316,6 +316,40 @@ function startWebServer(adapter) {
     adapter.log.debug(`Starting web server on http://${adapter.config.bind}:${adapter.config.port}/`);
     adapter.__server = http.createServer((req, res) => {
         const clientIp = req.connection.remoteAddress;
+        console.log(req.url);
+        const match = req.url.match(/^\/streaming\/(.*?)\/(.*)$/);
+        console.log(match);
+        let path;
+        if (match) {
+            path = `${__dirname}/data/${match[1]}/${match[2]}`;
+        }
+        if (match) {
+            if (fs.existsSync(path)) {
+                const stat = fs.statSync(path);
+
+                const headers = {
+                    'Access-Control-Allow-Origin': '*', /* @dev First, read about security */
+                    'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
+                    'Access-Control-Max-Age': 2592000, // 30 days
+                    /** add other headers as per requirement */
+                };
+                
+                if (req.method === 'OPTIONS') {
+                    res.writeHead(204, headers);
+                    res.end();
+                    return;
+                }
+
+                res.writeHead(200, {
+                    'Content-Type': 'audio/mpeg',
+                    'Content-Length': stat.size,
+                    ...headers,
+                });
+                const file = fs.createReadStream(path);
+                file.pipe(res);
+            }
+            return;
+        }
 
         const parts = req.url.split('?');
         const url = parts[0];
