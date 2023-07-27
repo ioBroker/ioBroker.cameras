@@ -32,9 +32,7 @@ class RtspCamera extends Generic {
     constructor(props) {
         super(props);
         this.videoInterval = null;
-        this.fullVideoInterval = null;
         this.videoRef = React.createRef();
-        this.fullVideoRef = React.createRef();
         this.state.videoUrl = null;
     }
 
@@ -81,8 +79,9 @@ class RtspCamera extends Generic {
 
     async propertiesUpdate() {
         if (this.state.rxData.rtsp) {
-            const player = await this.props.context.socket.sendTo(`cameras.${this.props.instance}`, 'webStreaming', { rtsp: this.state.rxData.rtsp });
+            const player = await this.props.context.socket.sendTo('cameras.0', 'webStreaming', { rtsp: this.state.rxData.rtsp });
             if (Hls.isSupported() && this.state.rxData.rtsp !== this.state.videoUrl) {
+                this.props.context.socket.sendTo('cameras.0', 'stopWebStreaming', { rtsp: this.state.videoUrl });
                 this.setState({ videoUrl: this.state.rxData.rtsp });
                 const video = this.videoRef.current;
                 const hls = new Hls();
@@ -91,9 +90,13 @@ class RtspCamera extends Generic {
                 hls.on(Hls.Events.MEDIA_ATTACHED, () => {
                     console.log('video and hls.js are now bound together !');
                     hls.loadSource(player.url);
-                    hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
-                    });
                 });
+            }
+        } else {
+            this.videoRef.current.src = '';
+            if (this.state.videoUrl) {
+                this.props.context.socket.sendTo('cameras.0', 'stopWebStreaming', { rtsp: this.state.videoUrl });
+                this.setState({ videoUrl: null });
             }
         }
     }
@@ -131,12 +134,9 @@ class RtspCamera extends Generic {
                     // this.propertiesUpdate();
                 }}
                 onPause={() => {
-                    setTimeout(() => {
-                        this.props.context.socket.sendTo(`cameras.${this.props.instance}`, 'stopWebStreaming', { rtsp: this.state.rxData.rtsp });
-                    }, 10000);
-                }}
-                onClick={(e) => {
-                    // console.log(e.target);
+                    // setTimeout(() => {
+                    //     this.props.context.socket.sendTo(`cameras.${this.props.instance}`, 'stopWebStreaming', { rtsp: this.state.rxData.rtsp });
+                    // }, 10000);
                 }}
             ></video>
         </div>;
