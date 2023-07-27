@@ -81,14 +81,10 @@ class RtspCamera extends Generic {
 
     async propertiesUpdate() {
         if (this.state.rxData.rtsp) {
-            const player = await this.props.context.socket.sendTo(`${this.props.adapterName}.${this.props.instance}`, 'webStreaming', { rtsp: this.state.rxData.rtsp });
+            const player = await this.props.context.socket.sendTo(`cameras.${this.props.instance}`, 'webStreaming', { rtsp: this.state.rxData.rtsp });
             if (Hls.isSupported() && this.state.rxData.rtsp !== this.state.videoUrl) {
                 this.setState({ videoUrl: this.state.rxData.rtsp });
                 const video = this.videoRef.current;
-                console.log(video.url);
-                if (video.url) {
-                    return;
-                }
                 const hls = new Hls();
                 // bind them together
                 hls.attachMedia(video);
@@ -121,20 +117,29 @@ class RtspCamera extends Generic {
     renderWidgetBody(props) {
         super.renderWidgetBody(props);
 
-        const content = <>
-            <div
-                className={this.props.classes.imageContainer}
-            >
-                <video
-                    ref={this.videoRef}
-                    id="video"
-                    autoPlay="true"
-                    controls="controls"
-                    type="application/x-mpegURL"
-                    className={this.props.classes.camera}
-                ></video>
-            </div>
-        </>;
+        const content = <div
+            className={this.props.classes.imageContainer}
+        >
+            <video
+                ref={this.videoRef}
+                id="video"
+                autoPlay="true"
+                controls="controls"
+                type="application/x-mpegURL"
+                className={this.props.classes.camera}
+                onPlay={() => {
+                    // this.propertiesUpdate();
+                }}
+                onPause={() => {
+                    setTimeout(() => {
+                        this.props.context.socket.sendTo(`cameras.${this.props.instance}`, 'stopWebStreaming', { rtsp: this.state.rxData.rtsp });
+                    }, 10000);
+                }}
+                onClick={(e) => {
+                    // console.log(e.target);
+                }}
+            ></video>
+        </div>;
 
         if (this.state.rxData.noCard || props.widget.usedInWidget) {
             return content;

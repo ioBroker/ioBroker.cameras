@@ -208,9 +208,18 @@ function processMessage(adapter, obj) {
         }
         case 'webStreaming': {
             if (obj.callback && obj.message) {
+                console.log(obj.message);
                 const url = rtsp.webStreaming(adapter, obj.message.rtsp);
                 adapter.sendTo(obj.from, obj.command, {url: `http://127.0.0.1:8200/streaming/${url}/playlist.m3u8`}, obj.callback);
             }
+            break;
+        }
+        case 'stopWebStreaming': {
+            if (obj.callback && obj.message) {
+                rtsp.stopWebStreaming(obj.message.rtsp);
+                adapter.sendTo(obj.from, obj.command, {result: true}, obj.callback);
+            }
+            break;
         }
     }
 }

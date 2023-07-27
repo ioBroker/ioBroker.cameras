@@ -148,16 +148,20 @@ function webStreaming(adapter, url) {
         const proc = spawn(adapter.config.ffmpegPath, 
             command
         );
-        proc.stdout.setEncoding('utf8');
-        proc.stdout.on('data', data => console.log(data.toString('utf8')));
-
-        proc.stderr.setEncoding('utf8');
-        proc.stderr.on('data', data => console.error(data.toString('utf8')));
+        console.log(1);
+        console.log(streamings);
         streamings[url] = {
             url,
             proc,
             id,
         };
+        console.log(2);
+        console.log(streamings);
+        proc.stdout.setEncoding('utf8');
+        proc.stdout.on('data', data => console.log(data.toString('utf8')));
+
+        proc.stderr.setEncoding('utf8');
+        proc.stderr.on('data', data => console.error(data.toString('utf8')));
     } else {
         clearTimeout(streamings[url].timeout);
     }
@@ -171,7 +175,10 @@ function webStreaming(adapter, url) {
 }
 
 function stopWebStreaming(url) {
-    
+    if (streamings[url]) {
+        streamings[url].proc.kill();
+        delete streamings[url];
+    }
 }
 
 const cleanRtspData = () => {
