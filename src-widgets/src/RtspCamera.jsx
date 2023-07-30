@@ -94,7 +94,7 @@ class RtspCamera extends Generic {
                 // bind them together
                 hls.attachMedia(videoEl);
                 hls.on(Hls.Events.MEDIA_ATTACHED, () => {
-                    console.log('video and hls.js are now bound together !');
+                    console.log(`video and hls.js are now bound together! Loading ${player.url}`);
                     hls.loadSource(player.url);
                 });
             }
@@ -139,12 +139,13 @@ class RtspCamera extends Generic {
         const content = <div
             className={this.props.classes.imageContainer}
         >
+            {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
             <video
-                ref={this.videoRef}
                 id="video"
-                autoPlay="true"
+                autoPlay
                 controls="controls"
                 type="application/x-mpegURL"
+                ref={this.videoRef}
                 className={this.props.classes.camera}
                 onPlay={() => {
                     // this.propertiesUpdate();
@@ -154,7 +155,9 @@ class RtspCamera extends Generic {
                     //     this.props.context.socket.sendTo(`cameras.${this.props.instance}`, 'stopWebStreaming', { rtsp: this.state.rxData.rtsp });
                     // }, 10000);
                 }}
-            ></video>
+            >
+                Your browser does not support the video tag.
+            </video>
         </div>;
 
         if (this.state.rxData.noCard || props.widget.usedInWidget) {
