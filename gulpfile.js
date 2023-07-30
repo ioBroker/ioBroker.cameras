@@ -11,7 +11,12 @@ const fs         = require('fs');
 const replace    = require('gulp-replace');
 const rename     = require('gulp-rename');
 const cp         = require('child_process');
+const adapterName = require('./package.json').name.replace('iobroker.', '');
+const gulpHelper = require('@iobroker/vis-2-widgets-react-dev/gulpHelper');
 
+gulpHelper.gulpTasks(gulp, adapterName, __dirname, `${__dirname}/src-widgets/`);
+
+gulp.task('default', gulp.series('widget-build'));
 function deleteFoldersRecursive(path, exceptions) {
     if (fs.existsSync(path)) {
         const files = fs.readdirSync(path);
@@ -174,4 +179,4 @@ gulp.task('6-patch', () => new Promise(resolve => {
 
 gulp.task('6-patch-dep',  gulp.series('5-copy-dep', '6-patch'));
 
-gulp.task('default', gulp.series('6-patch-dep'));
+gulp.task('default', gulp.series('6-patch-dep', 'widget-build'));

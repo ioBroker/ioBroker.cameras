@@ -160,7 +160,22 @@
       "sentry": {
         "dsn": "https://4559263b70ec40af801ccd777f5a79e6@sentry.iobroker.net/231"
       }
-    }
+    },
+    "visWidgets": {
+      "vis2CameraWidgets": {
+        "i18n": "component",
+        "name": "vis2CameraWidgets",
+        "url": "cameras/customWidgets.js",
+        "color": "#508000",
+        "label": "cameras_set_label",
+        "components": [
+          "RtspCamera"
+        ]
+      }
+    },
+    "restartAdapters": [
+      "vis-2"
+    ]
   },
   "native": {
     "bind": "127.0.0.1",

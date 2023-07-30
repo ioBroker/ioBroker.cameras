@@ -17,3 +17,4 @@ admin/i18n/*/flat.txt
 /ffmpeg
 
 /src-widgets/package-lock.json
+/src-widgets/build/

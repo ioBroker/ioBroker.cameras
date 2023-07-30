@@ -1,1 +1,7 @@
-{}
+{
+  "RTSP url": "RTSP-адрес",
+  "RTSP Camera": "RTSP-камера",
+  "cameras_set_label": "RTSP-камера",
+  "name": "Имя",
+  "without_card": "Без рамки"
+}

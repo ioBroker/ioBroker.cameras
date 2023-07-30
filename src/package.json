@@ -3,18 +3,18 @@
     "version": "1.2.2",
     "private": true,
     "dependencies": {
-        "@iobroker/adapter-react-v5": "^4.1.2",
-        "@mui/material": "^5.13.7",
-        "@mui/icons-material": "^5.13.7",
-        "@mui/styles": "^5.13.7",
+        "@iobroker/adapter-react-v5": "^4.3.3",
+        "@mui/material": "^5.14.2",
+        "@mui/icons-material": "^5.14.1",
+        "@mui/styles": "^5.14.1",
         "babel-eslint": "^10.1.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-icons": "^4.10.1",
         "react-scripts": "^5.0.1",
         "@material-ui/icons": "^4.11.3",
-        "eslint": "^8.44.0",
-        "eslint-plugin-import": "^2.27.5"
+        "eslint": "^8.46.0",
+        "eslint-plugin-import": "^2.28.0"
     },
     "scripts": {
         "start": "set DANGEROUSLY_DISABLE_HOST_CHECK=true&& react-scripts start",

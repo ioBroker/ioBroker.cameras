@@ -1,6 +1,7 @@
 {
-    "Rtsp Camera": "Rtsp Camera",
-    "without_card": "Without card",
-    "name": "Name",
-    "RTSP url": "RTSP url"
+  "RTSP Camera": "RTSP Camera",
+  "without_card": "Without frame",
+  "name": "Name",
+  "RTSP url": "RTSP url",
+  "cameras_set_label": "RTSP Camera"
 }

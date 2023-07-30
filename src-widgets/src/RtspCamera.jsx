@@ -6,7 +6,10 @@ import Generic from './Generic';
 
 const styles = () => ({
     camera: {
-        width: '100%', height: '100%', objectFit: 'contain', cursor: 'pointer',
+        width: '100%',
+        height: '100%',
+        objectFit: 'contain',
+        cursor: 'pointer',
     },
     time: {
         textAlign: 'right',
@@ -33,15 +36,18 @@ class RtspCamera extends Generic {
         super(props);
         this.videoInterval = null;
         this.videoRef = React.createRef();
-        this.state.videoUrl = null;
+        this.videoUrl = null;
     }
 
     static getWidgetInfo() {
         return {
             id: 'tplCameras2RtspCamera',
             visSet: 'vis-2-widgets-cameras',
-            visName: 'Rtsp Camera',
-            visWidgetLabel: 'Rtsp Camera',
+            visName: 'RTSP Camera',
+            visWidgetLabel: 'RTSP Camera',
+            visWidgetSetLabel: 'Cameras',
+            visSetLabel: 'Cameras',
+            visSetColor: '#9f0026',
             visAttrs: [
                 {
                     name: 'common',
@@ -68,7 +74,7 @@ class RtspCamera extends Generic {
                 height: 240,
                 position: 'relative',
             },
-            visPrev: 'widgets/vis-2-widgets-material/img/prev_camera.png',
+            visPrev: 'widgets/cameras/img/prev_camera.png',
         };
     }
 
@@ -80,13 +86,13 @@ class RtspCamera extends Generic {
     async propertiesUpdate() {
         if (this.state.rxData.rtsp) {
             const player = await this.props.context.socket.sendTo('cameras.0', 'webStreaming', { rtsp: this.state.rxData.rtsp });
-            if (Hls.isSupported() && this.state.rxData.rtsp !== this.state.videoUrl) {
-                this.props.context.socket.sendTo('cameras.0', 'stopWebStreaming', { rtsp: this.state.videoUrl });
-                this.setState({ videoUrl: this.state.rxData.rtsp });
-                const video = this.videoRef.current;
+            if (Hls.isSupported() && this.state.rxData.rtsp !== this.videoUrl) {
+                this.props.context.socket.sendTo('cameras.0', 'stopWebStreaming', { rtsp: this.videoUrl });
+                this.videoUrl = this.state.rxData.rtsp;
+                const videoEl = this.videoRef.current;
                 const hls = new Hls();
                 // bind them together
-                hls.attachMedia(video);
+                hls.attachMedia(videoEl);
                 hls.on(Hls.Events.MEDIA_ATTACHED, () => {
                     console.log('video and hls.js are now bound together !');
                     hls.loadSource(player.url);
@@ -94,9 +100,9 @@ class RtspCamera extends Generic {
             }
         } else {
             this.videoRef.current.src = '';
-            if (this.state.videoUrl) {
-                this.props.context.socket.sendTo('cameras.0', 'stopWebStreaming', { rtsp: this.state.videoUrl });
-                this.setState({ videoUrl: null });
+            if (this.videoUrl) {
+                this.props.context.socket.sendTo('cameras.0', 'stopWebStreaming', { rtsp: this.videoUrl });
+                this.videoUrl = null;
             }
         }
     }
@@ -115,6 +121,16 @@ class RtspCamera extends Generic {
 
     componentWillUnmount() {
         super.componentWillUnmount();
+        this.videoInterval && clearInterval(this.videoInterval);
+        this.videoInterval = null;
+
+        if (this.videoRef.current) {
+            this.videoRef.current.src = '';
+        }
+        if (this.videoUrl) {
+            this.props.context.socket.sendTo('cameras.0', 'stopWebStreaming', { rtsp: this.videoUrl });
+            this.videoUrl = null;
+        }
     }
 
     renderWidgetBody(props) {

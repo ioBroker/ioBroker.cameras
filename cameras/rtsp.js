@@ -74,7 +74,7 @@ function init(adapter, cam) {
         return Promise.reject(`Invalid IP: "${cam.ip}"`);
     }
 
-    cam.decodedPassword = adapter.decrypt(cam.password);
+    cam.decodedPassword = cam.password ? adapter.decrypt(cam.password) : '';
     if (cam.cacheTimeout === undefined || cam.cacheTimeout === null || cam.cacheTimeout === '') {
         cam.cacheTimeout = adapter.config.defaultCacheTimeout;
     } else {
@@ -88,7 +88,7 @@ function unload(adapter, cam) {
     if (adapter.__urlCameras[cam.name]) {
         delete adapter.__urlCameras[cam.name];
     }
-    // after last unload all the resources must be cleared too
+    // after last unload, all the resources must be cleared too
     if (Object.keys(adapter.__urlCameras)) {
         // unload
     }
@@ -145,7 +145,7 @@ function webStreaming(adapter, url) {
             ...`-c:a aac -b:a 160000 -ac 2 -s 854x480 -c:v libx264 -b:v 800000 -hls_time 10 -hls_list_size 2 -hls_flags delete_segments -start_number 1`.split(' '),
             `${path}/playlist.m3u8`,
         ];
-        const proc = spawn(adapter.config.ffmpegPath, 
+        const proc = spawn(adapter.config.ffmpegPath,
             command
         );
         streamings[url] = {
@@ -184,7 +184,7 @@ const cleanRtspData = () => {
     fs.readdir(__dirname + '/../data', (err, files) => {
         files.forEach(file => {
             const fileDir = __dirname + '/../data/' + file;
-    
+
             if (file !== '.gitignore') {
                 fs.rmdirSync(fileDir, { recursive: true });
             }

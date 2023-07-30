@@ -1,6 +1,8 @@
 const { getRtspSnapshot } = require('./rtsp');
 const path = require('path');
 
+// documentation https://reolink.com/wp-content/uploads/2017/01/Reolink-CGI-command-v1.61.pdf
+
 function init(adapter, cam) {
     adapter.__urlCameras = adapter.__urlCameras || {};
     adapter.__urlCameras[cam.name] = true;
@@ -10,7 +12,7 @@ function init(adapter, cam) {
         return Promise.reject(`Invalid IP: "${cam.ip}"`);
     }
 
-    cam.decodedPassword = adapter.decrypt(cam.password);
+    cam.decodedPassword = cam.password ? adapter.decrypt(cam.password) : '';
     if (cam.cacheTimeout === undefined || cam.cacheTimeout === null || cam.cacheTimeout === '') {
         cam.cacheTimeout = adapter.config.defaultCacheTimeout;
     } else {

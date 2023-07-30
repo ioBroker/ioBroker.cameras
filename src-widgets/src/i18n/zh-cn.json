@@ -1,1 +1,7 @@
-{}
+{
+  "RTSP url": "RTSP 网址",
+  "RTSP Camera": "RTSP摄像头",
+  "cameras_set_label": "RTSP摄像头",
+  "name": "姓名",
+  "without_card": "无框"
+}

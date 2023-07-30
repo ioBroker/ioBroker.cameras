@@ -1,1 +1,7 @@
-{}
+{
+  "RTSP url": "RTSP-URL",
+  "RTSP Camera": "RTSP-Kamera",
+  "cameras_set_label": "RTSP-Kamera",
+  "name": "Name",
+  "without_card": "Ohne Rahmen"
+}
