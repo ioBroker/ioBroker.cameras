@@ -4,5 +4,6 @@
   "cameras_set_label": "RTSP摄像头",
   "name": "姓名",
   "without_card": "无框",
-  "Cameras": "相机"
+  "Cameras": "相机",
+  "Camera": "相机"
 }

@@ -4,5 +4,6 @@
   "cameras_set_label": "RTSP-Kamera",
   "name": "Name",
   "without_card": "Ohne Rahmen",
-  "Cameras": "Kameras"
+  "Cameras": "Kameras",
+  "Camera": "Kamera"
 }

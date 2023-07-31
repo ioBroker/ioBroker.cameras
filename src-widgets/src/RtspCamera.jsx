@@ -36,6 +36,7 @@ const styles = () => ({
 
 const CameraField = props => {
     const [cameras, setCameras] = React.useState([]);
+
     useEffect(() => {
         (async () => {
             const _cameras = [];
@@ -46,6 +47,8 @@ const CameraField = props => {
                     _cameras.push({
                         instanceId,
                         name: camera.name,
+                        ip: camera.ip,
+                        desc: camera.desc,
                     });
                 });
             });
@@ -54,13 +57,15 @@ const CameraField = props => {
     }, []);
 
     return <Select
+        fullWidth
         variant="standard"
         value={props.data.camera || ''}
-        onChange={e => {
-            props.setData({ camera: e.target.value });
-        }}
+        onChange={e => props.setData({ camera: e.target.value })}
     >
-        {cameras.map(camera => <MenuItem key={camera.name} value={camera}>{`cameras.${camera.instanceId}.${camera.name}`}</MenuItem>)}
+        {cameras.map(camera => <MenuItem key={camera.name} value={camera}>
+            <div>{`cameras.${camera.instanceId}.${camera.name}`}</div>
+            <div style={{ fontSize: 10, fontStyle: 'italic', opacity: 0.7 }}>{`${camera.desc}/${camera.ip}`}</div>
+        </MenuItem>)}
     </Select>;
 };
 
@@ -126,22 +131,26 @@ class RtspCamera extends Generic {
     async propertiesUpdate() {
         if (this.state.rxData.camera) {
             const player = await this.props.context.socket.sendTo(`cameras.${this.state.rxData.camera?.instanceId}`, 'webStreaming', { camera: this.state.rxData.camera?.name });
-            if (Hls.isSupported() && this.state.rxData.camera !== this.currentCam) {
-                this.props.context.socket.sendTo(`cameras.${this.currentCam?.instanceId}`, 'stopWebStreaming', { camera: this.currentCam });
-                this.currentCam = this.state.rxData.camera;
+            if (Hls.isSupported() && JSON.stringify(this.state.rxData.camera) !== JSON.stringify(this.currentCam)) {
+                if (this.currentCam?.name) {
+                    this.props.context.socket.sendTo(`cameras.${this.currentCam.instanceId}`, 'stopWebStreaming', { camera: this.currentCam.name });
+                }
+                this.currentCam = JSON.stringify(this.state.rxData.camera);
                 const videoEl = this.videoRef.current;
                 const hls = new Hls();
                 // bind them together
                 hls.attachMedia(videoEl);
                 hls.on(Hls.Events.MEDIA_ATTACHED, () => {
                     console.log(`video and hls.js are now bound together! Loading ${player.url}`);
-                    hls.loadSource(player.url);
+                    hls.loadSource(`../${player.url}`);
                 });
             }
         } else {
             this.videoRef.current.src = '';
             if (this.currentCam) {
-                this.props.context.socket.sendTo(`cameras.${this.currentCam?.instanceId}`, 'stopWebStreaming', { camera: this.currentCam?.name });
+                if (this.currentCam.name) {
+                    this.props.context.socket.sendTo(`cameras.${this.currentCam.instanceId}`, 'stopWebStreaming', { camera: this.currentCam.name });
+                }
                 this.currentCam = null;
             }
         }
@@ -168,7 +177,9 @@ class RtspCamera extends Generic {
             this.videoRef.current.src = '';
         }
         if (this.currentCam) {
-            this.props.context.socket.sendTo('cameras.0', 'stopWebStreaming', { camera: this.currentCam?.name });
+            if (this.currentCam.name) {
+                this.props.context.socket.sendTo(`cameras.${this.currentCam.instanceId}`, 'stopWebStreaming', { camera: this.currentCam.name });
+            }
             this.currentCam = null;
         }
     }

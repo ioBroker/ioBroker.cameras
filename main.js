@@ -211,18 +211,24 @@ function processMessage(adapter, obj) {
                 if (!obj.message.camera.match(/^[a-zA-Z0-9-_]+$/)) {
                     adapter.sendTo(obj.from, obj.command, {error: 'Invalid camera name'}, obj.callback);
                 }
+                const url = `${adapter.namespace}/${obj.message.camera}/streaming/playlist.m3u8`;
+                adapter.log.debug(`Start streaming for "${obj.message.camera}": ${url}`);
                 rtsp.webStreaming(adapter, obj.message.camera);
-                adapter.sendTo(obj.from, obj.command, {url: `http://localhost:8082/cameras.${adapter.instance}/${obj.message.camera}/streaming/playlist.m3u8`}, obj.callback);
+                adapter.sendTo(obj.from, obj.command, {url}, obj.callback);
             }
             break;
         }
         case 'stopWebStreaming': {
+            adapter.log.debug(`Stop streaming "${JSON.stringify(obj.message)}"`);
             if (obj.callback && obj.message) {
-                if (!obj.message.camera.match(/^[a-zA-Z0-9-_]+$/)) {
+                if (!obj.message.camera || !obj.message.camera.match(/^[a-zA-Z0-9-_]+$/)) {
+                    adapter.log.warn(`Invalid camera name "${obj.message.camera}"`);
                     adapter.sendTo(obj.from, obj.command, {error: 'Invalid camera name'}, obj.callback);
+                } else {
+                    adapter.log.debug(`Stop streaming "${obj.message.camera}"`);
+                    rtsp.stopWebStreaming(obj.message.camera);
+                    adapter.sendTo(obj.from, obj.command, {result: true}, obj.callback);
                 }
-                rtsp.stopWebStreaming(obj.message.camera);
-                adapter.sendTo(obj.from, obj.command, {result: true}, obj.callback);
             }
             break;
         }
@@ -268,13 +274,13 @@ function rotateImage(data, angle) {
         return sharp(data.body)
             .jpeg()
             .toBuffer()
-            .then(body =>({body, contentType: 'image/jpeg'}));
+            .then(body =>({ body, contentType: 'image/jpeg' }));
     }  else {
         return sharp(data.body)
             .rotate(angle)
             .jpeg()
             .toBuffer()
-            .then(body => ({body, contentType: 'image/jpeg'}));
+            .then(body => ({ body, contentType: 'image/jpeg' }));
     }
 }
 
@@ -295,12 +301,12 @@ async function addTextToImage(data, dateFormat, title) {
                 input: {
                     text: {
                         text: title,
-                        dpi: data.metadata.height * 0.2
+                        dpi: data.metadata.height * 0.2,
                     },
                 },
                 top: Math.round(data.metadata.height * 0.95),
                 left: Math.round(data.metadata.width * 0.01),
-                blend: 'add'
+                blend: 'add',
             });
         }
 
@@ -309,7 +315,7 @@ async function addTextToImage(data, dateFormat, title) {
                 input: {
                     text: {
                         text: date,
-                        dpi: data.metadata.height * 0.2
+                        dpi: data.metadata.height * 0.2,
                     },
                 },
                 top: Math.round(data.metadata.height * 0.02),
@@ -371,16 +377,17 @@ function startWebServer(adapter) {
         const match = url.match(/^\/([0-9a-zA-Z_-]+)\/streaming\/(playlist[0-9]*\.(m3u8|ts))$/);
         if (match) {
             let path = `${__dirname}/data/${match[1]}/${match[2]}`;
+            adapter.log.debug(`Check streaming: ${path}`);
+            const headers = {
+                'Access-Control-Allow-Origin': '*', /* @dev First, read about security */
+                'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
+                'Access-Control-Max-Age': 2592000, // 30 days
+                /** add other headers as per requirement */
+            };
+
             if (fs.existsSync(path)) {
                 const stat = fs.statSync(path);
 
-                const headers = {
-                    'Access-Control-Allow-Origin': '*', /* @dev First, read about security */
-                    'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
-                    'Access-Control-Max-Age': 2592000, // 30 days
-                    /** add other headers as per requirement */
-                };
-                
                 if (req.method === 'OPTIONS') {
                     res.writeHead(204, headers);
                     res.end();
@@ -394,6 +401,10 @@ function startWebServer(adapter) {
                 });
                 const file = fs.createReadStream(path);
                 file.pipe(res);
+            } else {
+                res.writeHead(404, headers);
+                res.write('Not found');
+                res.end();
             }
             return;
         }

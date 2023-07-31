@@ -4,5 +4,6 @@
   "cameras_set_label": "Камера RTSP",
   "name": "Ім'я",
   "without_card": "Без рами",
-  "Cameras": "Фотоапарати"
+  "Cameras": "Фотоапарати",
+  "Camera": "Камера"
 }
