@@ -38,10 +38,16 @@ function startAdapter(options) {
         console.log(`Subscribe on ${JSON.stringify(subscriptions)}`);
     });
 
+    adapter.on('stateChange', (id, state) => {
+        if (id.endsWith('.running') && id.startsWith(adapter.namespace)) {
+            adapter.log.debug(`State change: ${id} ${JSON.stringify(state)}`);
+        }
+    });
 
     moment.locale('de');
 
     adapter.on('unload', cb => {
+        rtsp.stopAllStreams();
         adapter.__bforceInterval && clearInterval(adapter.__bforceInterval);
         adapter.__bforceInterval = null;
         try {
@@ -151,7 +157,7 @@ function getCameraImage(cam) {
     }
 }
 
-function processMessage(adapter, obj) {
+async function processMessage(adapter, obj) {
     if (!obj || !obj.command) {
         return;
     }
@@ -213,7 +219,7 @@ function processMessage(adapter, obj) {
                 }
                 const url = `${adapter.namespace}/${obj.message.camera}/streaming/playlist.m3u8`;
                 adapter.log.debug(`Start streaming for "${obj.message.camera}": ${url}`);
-                rtsp.webStreaming(adapter, obj.message.camera);
+                await rtsp.webStreaming(adapter, obj.message.camera);
                 adapter.sendTo(obj.from, obj.command, {url}, obj.callback);
             }
             break;
@@ -376,7 +382,8 @@ function startWebServer(adapter) {
 
         const match = url.match(/^\/([0-9a-zA-Z_-]+)\/streaming\/(playlist[0-9]*\.(m3u8|ts))$/);
         if (match) {
-            let path = `${__dirname}/data/${match[1]}/${match[2]}`;
+            const [, camera, fileName, ext] = match;
+            const path = `${__dirname}/data/${camera}/${fileName}`;
             adapter.log.debug(`Check streaming: ${path}`);
             const headers = {
                 'Access-Control-Allow-Origin': '*', /* @dev First, read about security */
@@ -385,17 +392,44 @@ function startWebServer(adapter) {
                 /** add other headers as per requirement */
             };
 
-            if (fs.existsSync(path)) {
-                const stat = fs.statSync(path);
-
-                if (req.method === 'OPTIONS') {
-                    res.writeHead(204, headers);
+            if (req.method === 'OPTIONS') {
+                // check if the camera exists
+                const obj = adapter.config.cameras.find(c => c.name === camera);
+                if (!obj || obj.type !== 'rtsp') {
+                    res.writeHead(404, headers);
                     res.end();
                     return;
                 }
+                res.writeHead(204, headers);
+                res.end();
+                return;
+            }
+
+            if (ext === 'm3u8') {
+                // try to start streaming
+                rtsp.webStreaming(adapter, camera)
+                    .then(() => {
+                        const stat = fs.statSync(path);
+
+                        res.writeHead(200, {
+                            'Content-Type': 'text/plain',
+                            'Content-Length': stat.size,
+                            ...headers,
+                        });
+                        const file = fs.createReadStream(path);
+                        file.pipe(res);
+                    })
+                    .catch(e => {
+                        adapter.log.error(`Cannot start streaming for "${camera}": ${e}`);
+                        res.writeHead(404, headers);
+                        res.write('Not found');
+                        res.end();
+                    });
+            } else if (fs.existsSync(path)) {
+                const stat = fs.statSync(path);
 
                 res.writeHead(200, {
-                    'Content-Type': match[3] === 'ts' ? 'video/mpeg' : 'text/plain',
+                    'Content-Type': 'video/mpeg',
                     'Content-Length': stat.size,
                     ...headers,
                 });
@@ -496,6 +530,75 @@ function fillFiles() {
     });
 }
 
+async function syncData() {
+    const states = await adapter.getStatesOfAsync('');
+    let running;
+    let stream;
+    // create new states
+    for (let c = 0; c < adapter.config.cameras.length; c++) {
+        try {
+            running = await adapter.getObjectAsync(`${adapter.config.cameras[c].name}.running`);
+        } catch (e) {
+            // ignore
+        }
+        if (!running) {
+            try {
+                await adapter.setObjectAsync(`${adapter.config.cameras[c].name}.running`, {
+                    type: 'state',
+                    common: {
+                        name: `${adapter.config.cameras[c].name}.running`,
+                        type: 'boolean',
+                        role: 'indicator',
+                        read: true,
+                        write: true,
+                    },
+                    native: {},
+                });
+            } catch (e) {
+                // ignore
+            }
+        }
+        try {
+            stream = await adapter.getObjectAsync(`${adapter.config.cameras[c].name}.stream`);
+        } catch (e) {
+            // ignore
+        }
+        if (!stream) {
+            try {
+                await adapter.setObjectAsync(`${adapter.config.cameras[c].name}.stream`, {
+                    type: 'state',
+                    common: {
+                        name: `${adapter.config.cameras[c].name}.stream`,
+                        type: 'string',
+                        role: 'indicator',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                });
+            } catch (e) {
+                // ignore
+            }
+        }
+    }
+
+    // delete old states
+    for (let s = 0; s < states.length; s++) {
+        if (states[s]._id.match(/\.running$/) || states[s]._id.match(/\.stream$/)) {
+            const parts = states[s]._id.split('.');
+            parts.pop();
+            const name = parts.pop();
+            if (!adapter.config.cameras.find(cam => cam.name !== name)) {
+                try {
+                    await adapter.delObjectAsync(states[s]._id);
+                } catch (e) {
+                    // ignore
+                }
+            }
+        }
+    }
+}
+
 function main(adapter) {
     // read secret key
     adapter.getForeignObject('system.config', null, (err, data) => {
@@ -560,6 +663,10 @@ function main(adapter) {
                 }
             });
         }, 30000);
+
+        adapter.subscribeStates('*');
+
+        promises.push(syncData());
 
         Promise.all(promises)
             .then(() => syncConfig())

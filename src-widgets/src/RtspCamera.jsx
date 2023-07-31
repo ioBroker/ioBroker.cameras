@@ -54,7 +54,7 @@ const CameraField = props => {
             });
             setCameras(_cameras);
         })();
-    }, []);
+    }, [props.context.socket]);
 
     return <Select
         fullWidth
@@ -130,38 +130,43 @@ class RtspCamera extends Generic {
 
     async propertiesUpdate() {
         if (this.state.rxData.camera) {
-            const player = await this.props.context.socket.sendTo(`cameras.${this.state.rxData.camera?.instanceId}`, 'webStreaming', { camera: this.state.rxData.camera?.name });
-            if (Hls.isSupported() && JSON.stringify(this.state.rxData.camera) !== JSON.stringify(this.currentCam)) {
-                if (this.currentCam?.name) {
-                    this.props.context.socket.sendTo(`cameras.${this.currentCam.instanceId}`, 'stopWebStreaming', { camera: this.currentCam.name });
+            // const player = await this.props.context.socket.sendTo(`cameras.${this.state.rxData.camera?.instanceId}`, 'webStreaming', { camera: this.state.rxData.camera?.name });
+            const url = `../cameras.${this.state.rxData.camera?.instanceId}/${this.state.rxData.camera?.name}/streaming/playlist.m3u8`;
+            if (Hls.isSupported() && url !== this.url) {
+                if (this.hls) {
+                    this.hls.detachMedia();
+                    this.hls.destroy();
+                    this.videoRef.current.src = '';
                 }
-                this.currentCam = JSON.stringify(this.state.rxData.camera);
-                const videoEl = this.videoRef.current;
-                const hls = new Hls();
+                // if (this.currentCam?.name) {
+                //     this.props.context.socket.sendTo(`cameras.${this.currentCam.instanceId}`, 'stopWebStreaming', { camera: this.currentCam.name });
+                // }
+                this.url = url;
+                this.hls = new Hls();
                 // bind them together
-                hls.attachMedia(videoEl);
-                hls.on(Hls.Events.MEDIA_ATTACHED, () => {
-                    console.log(`video and hls.js are now bound together! Loading ${player.url}`);
-                    hls.loadSource(`../${player.url}`);
+                this.hls.attachMedia(this.videoRef.current);
+                this.hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+                    console.log(`video and hls.js are now bound together! Loading url: ${this.url}`);
+                    this.hls.loadSource(this.url);
                 });
             }
         } else {
-            this.videoRef.current.src = '';
-            if (this.currentCam) {
-                if (this.currentCam.name) {
-                    this.props.context.socket.sendTo(`cameras.${this.currentCam.instanceId}`, 'stopWebStreaming', { camera: this.currentCam.name });
-                }
-                this.currentCam = null;
+            if (this.videoRef.current) {
+                this.videoRef.current.src = '';
             }
+            if (this.hls) {
+                this.hls.detachMedia();
+                this.hls.destroy();
+            }
+            this.url = null;
         }
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         super.componentDidMount();
-        this.videoInterval = setInterval(async () => {
-            this.propertiesUpdate();
-        }, 20000);
-        await this.propertiesUpdate();
+        this.videoInterval = setInterval(() => this.propertiesUpdate(), 20000);
+        this.propertiesUpdate()
+            .catch(e => console.error(e));
     }
 
     async onRxDataChanged(/* prevRxData */) {
@@ -176,12 +181,12 @@ class RtspCamera extends Generic {
         if (this.videoRef.current) {
             this.videoRef.current.src = '';
         }
-        if (this.currentCam) {
-            if (this.currentCam.name) {
-                this.props.context.socket.sendTo(`cameras.${this.currentCam.instanceId}`, 'stopWebStreaming', { camera: this.currentCam.name });
-            }
-            this.currentCam = null;
+        if (this.hls) {
+            this.hls.detachMedia();
+            this.hls.destroy();
+            this.hls = null;
         }
+        this.url = null;
     }
 
     renderWidgetBody(props) {

@@ -133,22 +133,7 @@ const streamings = {};
 
 // ffmpeg -rtsp_transport udp -i rtsp://localhost:8090/stream -c:a aac -b:a 160000 -ac 2 -s 854x480 -c:v libx264 -b:v 800000 -hls_time 10 -hls_list_size 2 -hls_flags delete_segments -start_number 1 playlist.m3u8
 
-function stopTimeout(camera) {
-    if (streamings[camera]) {
-        streamings[camera].timeout && clearTimeout(streamings[camera].timeout);
-        streamings[camera].timeout = null;
-        try {
-            streamings[camera].proc.kill();
-            // console.log('delete: ', `${__dirname}/../data/${streamings[url].id}`);
-            fs.rmdirSync(`${__dirname}/../data/${camera}`, { recursive: true });
-        } catch (e) {
-            console.error(`Cannot stop process: ${e}`);
-        }
-        delete streamings[camera];
-    }
-}
-
-function webStreaming(adapter, camera) {
+async function webStreaming(adapter, camera) {
     const cameraObject = adapter.config.cameras.find(c => c.name === camera && c.type === 'rtsp');
     if (!cameraObject.decodedPassword && cameraObject.password) {
         cameraObject.decodedPassword = adapter.decrypt(cameraObject.password);
@@ -156,13 +141,14 @@ function webStreaming(adapter, camera) {
 
     const url = cameraObject ? `rtsp://${cameraObject.username || cameraObject.decodedPassword ? `${cameraObject.username}:${cameraObject.decodedPassword}@` : ''}${cameraObject.ip}:${cameraObject.port}/${cameraObject.urlPath}` : '';
 
-    adapter.log.debug(`Starting streaming for ${camera} (${url.replace(cameraObject.decodedPassword, '****')})`);
     if (!url) {
         adapter.log.error(`No URL for camera ${camera}`);
-        return;
+        throw new Error(`No URL for camera ${camera}`);
     }
 
-    if (!streamings[camera] || streamings[camera].closed) {
+    if (!streamings[camera]) {
+        adapter.log.debug(`Starting streaming for ${camera} (${url.replace(cameraObject.decodedPassword || 'ABCDEF', '****')})`);
+
         const path = `${__dirname}/../data/${camera}`;
         if (!fs.existsSync(path)) {
             fs.mkdirSync(path);
@@ -183,11 +169,8 @@ function webStreaming(adapter, camera) {
             camera,
         };
         proc.on('close', () => {
-            adapter.log.debug(`Streaming for ${camera} (${url}) closed`);
-            if (streamings[camera]) {
-                streamings[camera].closed = true;
-                stopTimeout(camera);
-            }
+            adapter.log.debug(`Streaming for ${camera} (${url.replace(cameraObject.decodedPassword || 'ABCDEF', '****')}) closed`);
+            stopWebStreaming(camera);
         });
         proc.stdout.setEncoding('utf8');
         proc.stdout.on('data', data => adapter.log.debug(data.toString('utf8')));
@@ -198,29 +181,54 @@ function webStreaming(adapter, camera) {
         streamings[camera].timeout && clearTimeout(streamings[camera].timeout);
     }
 
-    streamings[camera].timeout = setTimeout(stopTimeout, 10 * 60 * 1000, camera);
+    // what for first file playlist.m3u8 playlist.m3u8
+    const fileName = `${__dirname}/../data/${camera}/playlist.m3u8`;
+    let count = 0;
+    while (!fs.existsSync(fileName) && count < 300) { // wait 30 seconds
+        await new Promise(resolve => setTimeout(resolve, 100));
+        count++;
+    }
+    if (count >= 300) {
+        adapter.log.error(`Cannot start streaming ${fileName}`);
+        throw new Error(`File ${fileName} still not exists`);
+    }
+
+    streamings[camera].timeout = setTimeout(stopWebStreaming, 120000, camera);
 }
 
 function stopWebStreaming(camera) {
     if (streamings[camera]) {
-        streamings[camera].proc.kill();
-        // console.log('delete: ', `${__dirname}/../data/${streamings[url].id}`);
-        fs.rmdirSync(`${__dirname}/../data/${camera}`, { recursive: true });
+        streamings[camera].timeout && clearTimeout(streamings[camera].timeout);
+        streamings[camera].timeout = null;
+
+        try {
+            streamings[camera].proc.kill();
+            console.log('delete: ', `${__dirname}/../data/${camera}`);
+            fs.rmSync(`${__dirname}/../data/${camera}`, { recursive: true });
+        } catch (e) {
+            console.error(`Cannot stop process: ${e}`);
+        }
         delete streamings[camera];
     }
 }
 
 const cleanRtspData = () => {
-    fs.readdir(__dirname + '/../data', (err, files) => {
+    fs.readdir(`${__dirname}/../data`, (err, files) => {
         files.forEach(file => {
-            const fileDir = __dirname + '/../data/' + file;
+            const fileDir = `${__dirname}/../data/${file}`;
 
             if (file !== '.gitignore') {
-                fs.rmdirSync(fileDir, { recursive: true });
+                fs.rmSync(fileDir, { recursive: true });
             }
         });
     });
 };
+
+function stopAllStreams() {
+    for (const camera in streamings) {
+        stopWebStreaming(camera);
+    }
+}
 
 module.exports = {
     init,
@@ -230,5 +238,6 @@ module.exports = {
     executeFFmpeg,
     webStreaming,
     stopWebStreaming,
-    cleanRtspData
+    cleanRtspData,
+    stopAllStreams,
 };
