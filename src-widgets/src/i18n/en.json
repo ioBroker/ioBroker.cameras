@@ -4,5 +4,6 @@
   "name": "Name",
   "RTSP url": "RTSP url",
   "cameras_set_label": "RTSP Camera",
-  "Cameras": "Cameras"
+  "Cameras": "Cameras",
+  "Camera": "Camera"
 }

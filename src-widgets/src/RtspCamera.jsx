@@ -1,5 +1,5 @@
-import React from 'react';
-import { Card, CardContent } from '@mui/material';
+import React, { useEffect } from 'react';
+import { Card, CardContent, MenuItem, Select } from '@mui/material';
 import { withStyles } from '@mui/styles';
 import Hls from 'hls.js';
 
@@ -32,12 +32,32 @@ const styles = () => ({
     },
 });
 
+const CameraField = props => {
+    const [cameras, setCameras] = React.useState([]);
+    useEffect(() => {
+        (async () => {
+            const adapter = await props.context.socket.getState('system.adapter.cameras.0');
+            setCameras(adapter.native.cameras);
+        })();
+    }, []);
+
+    return <Select
+        variant="standard"
+        value={props.data.camera || ''}
+        onChange={e => {
+            props.setData({ camera: e.target.value });
+        }}
+    >
+        {cameras.map(camera => <MenuItem key={camera.name} value={camera.name}>{camera.name}</MenuItem>)}
+    </Select>;
+};
+
 class RtspCamera extends Generic {
     constructor(props) {
         super(props);
         this.videoInterval = null;
         this.videoRef = React.createRef();
-        this.videoUrl = null;
+        this.currentCam = null;
     }
 
     static getWidgetInfo() {
@@ -64,8 +84,15 @@ class RtspCamera extends Generic {
                             hidden: '!!data.noCard',
                         },
                         {
+                            label: 'Camera',
                             name: 'camera',
-                            label: 'RTSP url',
+                            type: 'custom',
+                            component: (field, data, setData, props) => <CameraField
+                                field={field}
+                                data={data}
+                                setData={setData}
+                                context={props.context}
+                            />,
                         },
                     ],
                 },
@@ -87,9 +114,9 @@ class RtspCamera extends Generic {
     async propertiesUpdate() {
         if (this.state.rxData.camera) {
             const player = await this.props.context.socket.sendTo('cameras.0', 'webStreaming', { camera: this.state.rxData.camera });
-            if (Hls.isSupported() && this.state.rxData.camera !== this.videoUrl) {
-                this.props.context.socket.sendTo('cameras.0', 'stopWebStreaming', { camera: this.videoUrl });
-                this.videoUrl = this.state.rxData.camera;
+            if (Hls.isSupported() && this.state.rxData.camera !== this.currentCam) {
+                this.props.context.socket.sendTo('cameras.0', 'stopWebStreaming', { camera: this.currentCam });
+                this.currentCam = this.state.rxData.camera;
                 const videoEl = this.videoRef.current;
                 const hls = new Hls();
                 // bind them together
@@ -101,9 +128,9 @@ class RtspCamera extends Generic {
             }
         } else {
             this.videoRef.current.src = '';
-            if (this.videoUrl) {
-                this.props.context.socket.sendTo('cameras.0', 'stopWebStreaming', { camera: this.videoUrl });
-                this.videoUrl = null;
+            if (this.currentCam) {
+                this.props.context.socket.sendTo('cameras.0', 'stopWebStreaming', { camera: this.currentCam });
+                this.currentCam = null;
             }
         }
     }
@@ -128,9 +155,9 @@ class RtspCamera extends Generic {
         if (this.videoRef.current) {
             this.videoRef.current.src = '';
         }
-        if (this.videoUrl) {
-            this.props.context.socket.sendTo('cameras.0', 'stopWebStreaming', { camera: this.videoUrl });
-            this.videoUrl = null;
+        if (this.currentCam) {
+            this.props.context.socket.sendTo('cameras.0', 'stopWebStreaming', { camera: this.currentCam });
+            this.currentCam = null;
         }
     }
 

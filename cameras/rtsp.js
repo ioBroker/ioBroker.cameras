@@ -137,7 +137,7 @@ function webStreaming(adapter, camera) {
     const cameraObject = adapter.config.cameras.find(c => c.name === camera && c.type === 'rtsp');
     const url = `rtsp://${camera.username || camera.password ? camera.username + ':' + camera.password + '@' : ''}${cameraObject.ip}:${cameraObject.port}/${cameraObject.urlPath}`;
 
-    if (!streamings[camera]) {
+    if (!streamings[camera] || streamings[camera].closed) {
         const path = `${__dirname}/../data/${camera}`;
         if (!fs.existsSync(path)) {
             fs.mkdirSync(path);
@@ -156,6 +156,9 @@ function webStreaming(adapter, camera) {
             proc,
             camera,
         };
+        proc.on('close', () => {
+            streamings[camera].closed = true;
+        });
         proc.stdout.setEncoding('utf8');
         proc.stdout.on('data', data => console.log(data.toString('utf8')));
 
