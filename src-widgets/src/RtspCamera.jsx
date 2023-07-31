@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card, CardContent } from '@mui/material';
 import { withStyles } from '@mui/styles';
 import Hls from 'hls.js';
 
@@ -63,7 +64,7 @@ class RtspCamera extends Generic {
                             hidden: '!!data.noCard',
                         },
                         {
-                            name: 'rtsp',
+                            name: 'camera',
                             label: 'RTSP url',
                         },
                     ],
@@ -84,11 +85,11 @@ class RtspCamera extends Generic {
     }
 
     async propertiesUpdate() {
-        if (this.state.rxData.rtsp) {
-            const player = await this.props.context.socket.sendTo('cameras.0', 'webStreaming', { rtsp: this.state.rxData.rtsp });
-            if (Hls.isSupported() && this.state.rxData.rtsp !== this.videoUrl) {
-                this.props.context.socket.sendTo('cameras.0', 'stopWebStreaming', { rtsp: this.videoUrl });
-                this.videoUrl = this.state.rxData.rtsp;
+        if (this.state.rxData.camera) {
+            const player = await this.props.context.socket.sendTo('cameras.0', 'webStreaming', { camera: this.state.rxData.camera });
+            if (Hls.isSupported() && this.state.rxData.camera !== this.videoUrl) {
+                this.props.context.socket.sendTo('cameras.0', 'stopWebStreaming', { camera: this.videoUrl });
+                this.videoUrl = this.state.rxData.camera;
                 const videoEl = this.videoRef.current;
                 const hls = new Hls();
                 // bind them together
@@ -101,7 +102,7 @@ class RtspCamera extends Generic {
         } else {
             this.videoRef.current.src = '';
             if (this.videoUrl) {
-                this.props.context.socket.sendTo('cameras.0', 'stopWebStreaming', { rtsp: this.videoUrl });
+                this.props.context.socket.sendTo('cameras.0', 'stopWebStreaming', { camera: this.videoUrl });
                 this.videoUrl = null;
             }
         }
@@ -128,7 +129,7 @@ class RtspCamera extends Generic {
             this.videoRef.current.src = '';
         }
         if (this.videoUrl) {
-            this.props.context.socket.sendTo('cameras.0', 'stopWebStreaming', { rtsp: this.videoUrl });
+            this.props.context.socket.sendTo('cameras.0', 'stopWebStreaming', { camera: this.videoUrl });
             this.videoUrl = null;
         }
     }
@@ -168,7 +169,7 @@ class RtspCamera extends Generic {
             boxSizing: 'border-box',
             paddingBottom: 10,
             height: '100%',
-        });
+        }, null, null, { Card, CardContent });
     }
 }
 

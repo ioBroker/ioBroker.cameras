@@ -52,7 +52,7 @@ class App extends WidgetDemoApp {
                 }}
                 data={{
                     name: 'Camera',
-                    rtsp: 'rtsp://localhost:8554/file',
+                    camera: 'cam2',
                 }}
                 adapterName="cameras"
                 instance={0}

@@ -1,7 +1,6 @@
 const spawn = require('child_process').spawn;
 const fs = require('fs');
 const path = require('path');
-const uuidv4 = require('uuid').v4;
 
 function executeFFmpeg(params, path, adapter) {
     return new Promise((resolve, reject) => {
@@ -134,11 +133,15 @@ const streamings = {};
 
 // ffmpeg -rtsp_transport udp -i rtsp://localhost:8090/stream -c:a aac -b:a 160000 -ac 2 -s 854x480 -c:v libx264 -b:v 800000 -hls_time 10 -hls_list_size 2 -hls_flags delete_segments -start_number 1 playlist.m3u8
 
-function webStreaming(adapter, url) {
-    if (!streamings[url]) {
-        const id = uuidv4();
-        const path = `${__dirname}/../data/${id}`;
-        fs.mkdirSync(path);
+function webStreaming(adapter, camera) {
+    const cameraObject = adapter.config.cameras.find(c => c.name === camera && c.type === 'rtsp');
+    const url = `rtsp://${camera.username || camera.password ? camera.username + ':' + camera.password + '@' : ''}${cameraObject.ip}:${cameraObject.port}/${cameraObject.urlPath}`;
+
+    if (!streamings[camera]) {
+        const path = `${__dirname}/../data/${camera}`;
+        if (!fs.existsSync(path)) {
+            fs.mkdirSync(path);
+        }
         const command = [
             ...`-rtsp_transport tcp -i`.split(' '),
             url,
@@ -148,35 +151,34 @@ function webStreaming(adapter, url) {
         const proc = spawn(adapter.config.ffmpegPath,
             command
         );
-        streamings[url] = {
+        streamings[camera] = {
             url,
             proc,
-            id,
+            camera,
         };
         proc.stdout.setEncoding('utf8');
-        // proc.stdout.on('data', data => console.log(data.toString('utf8')));
+        proc.stdout.on('data', data => console.log(data.toString('utf8')));
 
         proc.stderr.setEncoding('utf8');
-        // proc.stderr.on('data', data => console.error(data.toString('utf8')));
+        proc.stderr.on('data', data => console.error(data.toString('utf8')));
     } else {
-        clearTimeout(streamings[url].timeout);
+        clearTimeout(streamings[camera].timeout);
     }
     const stopTimeout = () => {
-        streamings[url].proc.kill();
+        streamings[camera].proc.kill();
         // console.log('delete: ', `${__dirname}/../data/${streamings[url].id}`);
-        fs.rmdirSync(`${__dirname}/../data/${streamings[url].id}`, { recursive: true });
-        delete streamings[url];
+        fs.rmdirSync(`${__dirname}/../data/${camera}`, { recursive: true });
+        delete streamings[camera];
     };
-    streamings[url].timeout = setTimeout(stopTimeout, 10 * 60 * 1000);
-    return streamings[url].id;
+    streamings[camera].timeout = setTimeout(stopTimeout, 10 * 60 * 1000);
 }
 
-function stopWebStreaming(url) {
-    if (streamings[url]) {
-        streamings[url].proc.kill();
+function stopWebStreaming(camera) {
+    if (streamings[camera]) {
+        streamings[camera].proc.kill();
         // console.log('delete: ', `${__dirname}/../data/${streamings[url].id}`);
-        fs.rmdirSync(`${__dirname}/../data/${streamings[url].id}`, { recursive: true });
-        delete streamings[url];
+        fs.rmdirSync(`${__dirname}/../data/${camera}`, { recursive: true });
+        delete streamings[camera];
     }
 }
 
@@ -186,7 +188,7 @@ const cleanRtspData = () => {
             const fileDir = __dirname + '/../data/' + file;
 
             if (file !== '.gitignore') {
-                fs.rmdirSync(fileDir, { recursive: true });
+                // fs.rmdirSync(fileDir, { recursive: true });
             }
         });
     });

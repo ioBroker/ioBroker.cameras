@@ -208,14 +208,20 @@ function processMessage(adapter, obj) {
         }
         case 'webStreaming': {
             if (obj.callback && obj.message) {
-                const url = rtsp.webStreaming(adapter, obj.message.rtsp);
-                adapter.sendTo(obj.from, obj.command, {url: `http://127.0.0.1:8200/streaming/${url}/playlist.m3u8`}, obj.callback);
+                if (!obj.message.camera.match(/^[a-zA-Z0-9-_]+$/)) {
+                    adapter.sendTo(obj.from, obj.command, {error: 'Invalid camera name'}, obj.callback);
+                }
+                rtsp.webStreaming(adapter, obj.message.camera);
+                adapter.sendTo(obj.from, obj.command, {url: `http://localhost:8082/cameras.0/${obj.message.camera}/streaming/playlist.m3u8`}, obj.callback);
             }
             break;
         }
         case 'stopWebStreaming': {
             if (obj.callback && obj.message) {
-                rtsp.stopWebStreaming(obj.message.rtsp);
+                if (!obj.message.camera.match(/^[a-zA-Z0-9-_]+$/)) {
+                    adapter.sendTo(obj.from, obj.command, {error: 'Invalid camera name'}, obj.callback);
+                }
+                rtsp.stopWebStreaming(obj.message.camera);
                 adapter.sendTo(obj.from, obj.command, {result: true}, obj.callback);
             }
             break;
@@ -324,36 +330,6 @@ function startWebServer(adapter) {
     adapter.log.debug(`Starting web server on http://${adapter.config.bind}:${adapter.config.port}/`);
     adapter.__server = http.createServer((req, res) => {
         const clientIp = req.connection.remoteAddress;
-        const match = req.url.match(/^\/streaming\/([0-9a-z\-]+)\/(playlist[0-9]*\.(m3u8|ts))$/);
-        if (match) {
-            let path = `${__dirname}/data/${match[1]}/${match[2]}`;
-            if (fs.existsSync(path)) {
-                const stat = fs.statSync(path);
-
-                const headers = {
-                    'Access-Control-Allow-Origin': '*', /* @dev First, read about security */
-                    'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
-                    'Access-Control-Max-Age': 2592000, // 30 days
-                    /** add other headers as per requirement */
-                };
-                
-                if (req.method === 'OPTIONS') {
-                    res.writeHead(204, headers);
-                    res.end();
-                    return;
-                }
-
-                res.writeHead(200, {
-                    'Content-Type': match[3] === 'ts' ? 'video/mpeg' : 'text/plain',
-                    'Content-Length': stat.size,
-                    ...headers,
-                });
-                const file = fs.createReadStream(path);
-                file.pipe(res);
-            }
-            return;
-        }
-
         const parts = req.url.split('?');
         const url = parts[0];
         const query = {};
@@ -389,6 +365,36 @@ function startWebServer(adapter) {
             res.write('Invalid key');
             res.end();
             adapter.log.debug(`Invalid key from ${clientIp}. Expected ${adapter.config.key}`);
+            return;
+        }
+
+        const match = url.match(/^\/([0-9a-zA-Z_-]+)\/streaming\/(playlist[0-9]*\.(m3u8|ts))$/);
+        if (match) {
+            let path = `${__dirname}/data/${match[1]}/${match[2]}`;
+            if (fs.existsSync(path)) {
+                const stat = fs.statSync(path);
+
+                const headers = {
+                    'Access-Control-Allow-Origin': '*', /* @dev First, read about security */
+                    'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
+                    'Access-Control-Max-Age': 2592000, // 30 days
+                    /** add other headers as per requirement */
+                };
+                
+                if (req.method === 'OPTIONS') {
+                    res.writeHead(204, headers);
+                    res.end();
+                    return;
+                }
+
+                res.writeHead(200, {
+                    'Content-Type': match[3] === 'ts' ? 'video/mpeg' : 'text/plain',
+                    'Content-Length': stat.size,
+                    ...headers,
+                });
+                const file = fs.createReadStream(path);
+                file.pipe(res);
+            }
             return;
         }
 
