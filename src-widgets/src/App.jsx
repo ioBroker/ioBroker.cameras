@@ -52,7 +52,10 @@ class App extends WidgetDemoApp {
                 }}
                 data={{
                     name: 'Camera',
-                    camera: 'cam2',
+                    camera: {
+                        name: 'cam2',
+                        instanceId: '0',
+                    },
                 }}
                 adapterName="cameras"
                 instance={0}

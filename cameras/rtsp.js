@@ -142,6 +142,9 @@ function webStreaming(adapter, camera) {
         if (!fs.existsSync(path)) {
             fs.mkdirSync(path);
         }
+        if (fs.existsSync(`${path}/playlist.m3u8`)) {
+            fs.unlinkSync(`${path}/playlist.m3u8`);
+        }
         const command = [
             ...`-rtsp_transport tcp -i`.split(' '),
             url,
@@ -191,7 +194,7 @@ const cleanRtspData = () => {
             const fileDir = __dirname + '/../data/' + file;
 
             if (file !== '.gitignore') {
-                // fs.rmdirSync(fileDir, { recursive: true });
+                fs.rmdirSync(fileDir, { recursive: true });
             }
         });
     });

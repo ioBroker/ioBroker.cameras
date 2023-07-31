@@ -212,7 +212,7 @@ function processMessage(adapter, obj) {
                     adapter.sendTo(obj.from, obj.command, {error: 'Invalid camera name'}, obj.callback);
                 }
                 rtsp.webStreaming(adapter, obj.message.camera);
-                adapter.sendTo(obj.from, obj.command, {url: `http://localhost:8082/cameras.0/${obj.message.camera}/streaming/playlist.m3u8`}, obj.callback);
+                adapter.sendTo(obj.from, obj.command, {url: `http://localhost:8082/cameras.${adapter.instance}/${obj.message.camera}/streaming/playlist.m3u8`}, obj.callback);
             }
             break;
         }
