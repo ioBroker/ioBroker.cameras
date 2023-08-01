@@ -5,5 +5,8 @@
   "name": "Nom",
   "without_card": "Sans cadre",
   "Cameras": "Appareils photo",
-  "Camera": "Caméra"
+  "Camera": "Caméra",
+  "Close": "Fermer",
+  "videoWidth": "Largeur vidéo",
+  "tooltip_videoWidth": "Ne définissez pas une largeur de vidéo trop élevée pour économiser le haut débit. C'est pour les deux : petites et complètes vidéos. S'il n'est pas défini, la taille initiale du widget sera prise."
 }

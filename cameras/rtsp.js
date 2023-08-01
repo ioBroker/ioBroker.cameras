@@ -3,13 +3,25 @@ const fs = require('fs');
 const path = require('path');
 const ffmpeg = require('fluent-ffmpeg');
 
-function executeFFmpeg(params, path, adapter) {
+function maskPassword(str, password) {
+    if (password) {
+        password = encodeURIComponent(password)
+            .replace(/!/g, '%21')
+            .replace(/'/g, '%27')
+            .replace(/\(/g, '%28')
+            .replace(/\)/g, '%29')
+            .replace(/\*/g, '%2A');
+    }
+    return str.replace(password || 'ABCGHFG', '******');
+}
+
+function executeFFmpeg(params, path, adapter, decodedPassword) {
     return new Promise((resolve, reject) => {
         if (params && !Array.isArray(params)) {
             params = params.split(' ');
         }
 
-        adapter && adapter.log.debug(`Executing ${path} ${params.join(' ')}`);
+        adapter && adapter.log.debug(`Executing ${path} ${maskPassword(params.join(' '), decodedPassword)}`);
 
         const proc = spawn(path, params || []);
         proc.on('error', err => reject(err));
@@ -61,7 +73,7 @@ function buildCommand(options, outputFileName) {
 function getRtspSnapshot(ffpmegPath, options, outputFileName, adapter) {
     const parameters = buildCommand(options, outputFileName);
 
-    return executeFFmpeg(parameters, ffpmegPath, adapter)
+    return executeFFmpeg(parameters, ffpmegPath, adapter, options.decodedPassword)
         .then(() => fs.readFileSync(outputFileName));
 }
 
@@ -110,9 +122,16 @@ function process(adapter, cam) {
 
     const outputFileName = path.normalize(`${adapter.config.tempPath}/${cam.ip.replace(/[.:]/g, '_')}.jpg`);
     cam.runningRequest = getRtspSnapshot(adapter.config.ffmpegPath, cam, outputFileName, adapter)
-        .then(body => {
+        .then(async body => {
             cam.runningRequest = null;
             adapter.log.debug(`Snapshot from ${cam.ip}. Done!`);
+
+            if (!ratio[cam.name]) {
+                // try to get width and height
+                const image = await adapter._sharp(body);
+                const metadata = await image.metadata();
+                ratio[cam.name] = metadata.width / metadata.height;
+            }
 
             const result = {
                 body,
@@ -131,47 +150,119 @@ function process(adapter, cam) {
 }
 
 const streamings = {};
+const ratio = {};
 
 // ffmpeg -rtsp_transport udp -i rtsp://localhost:8090/stream -c:a aac -b:a 160000 -ac 2 -s 854x480 -c:v libx264 -b:v 800000 -hls_time 10 -hls_list_size 2 -hls_flags delete_segments -start_number 1 playlist.m3u8
 
-async function webStreaming(adapter, camera) {
+async function webStreaming(adapter, camera, options, fromState) {
     const cameraObject = adapter.config.cameras.find(c => c.name === camera && c.type === 'rtsp');
-    if (!cameraObject.decodedPassword && cameraObject.password) {
+    if (cameraObject && !cameraObject.decodedPassword && cameraObject.password) {
         cameraObject.decodedPassword = adapter.decrypt(cameraObject.password);
     }
 
     const url = cameraObject ? `rtsp://${cameraObject.username || cameraObject.decodedPassword ? `${cameraObject.username}:${cameraObject.decodedPassword}@` : ''}${cameraObject.ip}:${cameraObject.port}/${cameraObject.urlPath}` : '';
+
+    if (!fromState) {
+        await adapter.setStateAsync(`${camera}.running`, true, true);
+    }
 
     if (!url) {
         adapter.log.error(`No URL for camera ${camera}`);
         throw new Error(`No URL for camera ${camera}`);
     }
 
+    const desiredWidth = (options && options.width) || 0;
+
+    if (streamings[camera] && streamings[camera].width !== desiredWidth) {
+        // if width changed drastically
+        if (streamings[camera].width && desiredWidth && Math.abs(streamings[camera].width - desiredWidth) < 100) {
+            streamings[camera].width = desiredWidth;
+        } else {
+            // stop streaming
+            adapter.log.debug(`Stopping streaming for ${camera} while requested width is ${desiredWidth}. was ${streamings[camera].width}`);
+            stopWebStreaming(adapter, camera);
+            // wait 3 seconds
+            await new Promise(resolve => setTimeout(resolve, 10000));
+        }
+    }
+
     if (!streamings[camera]) {
-        adapter.log.debug(`Starting streaming for ${camera} (${url.replace(cameraObject.decodedPassword || 'ABCDEF', '****')})`);
-        const command = ffmpeg(url).
-            setFfmpegPath(adapter.config.ffmpegPath).
-            // addInputOption('-preset', 'ultrafast').
-            addInputOption('-rtsp_transport', 'tcp').
-            addInputOption('-re').outputFormat('mjpeg').fps(2).addOptions('-q:v 0');
         streamings[camera] = {
             url,
-            proc: command,
             camera,
+            width: desiredWidth,
         };
+        adapter.log.debug(`Starting streaming for ${camera} (${url.replace(cameraObject.decodedPassword || 'ABCDEF', '****')}), width: ${desiredWidth}`);
+        const command = ffmpeg(url)
+            .setFfmpegPath(adapter.config.ffmpegPath)
+            // .addInputOption('-preset', 'ultrafast')
+            .addInputOption('-rtsp_transport', 'tcp')
+            .addInputOption('-re')
+            .outputFormat('mjpeg')
+            .fps(2)
+            .addOptions('-q:v 0');
+
+        streamings[camera].proc = command;
+
+        if (desiredWidth) {
+            // first try to find the best scale
+            if (!ratio[camera]) {
+                const outputFileName = path.normalize(`${adapter.config.tempPath}/${cameraObject.ip.replace(/[.:]/g, '_')}.jpg`);
+                const body = await getRtspSnapshot(adapter.config.ffmpegPath, cameraObject, outputFileName, adapter);
+                // try to get width and height
+                const image = await adapter._sharp(body);
+                const metadata = await image.metadata();
+                ratio[camera] = metadata.width / metadata.height;
+            }
+            command.addOptions(`-vf scale=${options.width}:${Math.round(options.width / ratio[camera])}`);
+        }
+
         command.on('end', function() {
             adapter.log.debug(`Streaming for ${camera} stopped`);
-            adapter.setState(`${camera}.running`, '', false);
+            adapter.setState(`${camera}.stream`, '', true);
+            adapter.setState(`${camera}.running`, false, true);
         });
         command.on('error', function(err, stdout, stderr) {
-            console.log('Cannot process video: ' + err.message);
+            if (streamings[camera]) {
+                adapter.setState(`${camera}.stream`, '', true);
+                adapter.setState(`${camera}.running`, false, true);
+                adapter.log.debug(`Cannot process video for "${camera}": ${err.message}`);
+            } else {
+                adapter.log.debug(`Streaming for ${camera} stopped`);
+            }
         });
+
         const ffstream = command.pipe();
         let chunks = Buffer.from([]);
-        ffstream.on('data', function(chunk) {
-            if (chunk[0] == 0xFF && chunk[1] == 0xD8) {
+        let lastFrame = 0;
+        streamings[camera].monitor = setInterval(() => {
+            if (Date.now() - lastFrame > 10000) {
+                streamings[camera].monitor && clearInterval(streamings[camera].monitor);
+                streamings[camera].monitor = null;
+                adapter.log.debug(`No data for ${camera} for 10 seconds. Stopping`);
+                stopWebStreaming(adapter, camera);
+            }
+        }, 10000);
+
+        ffstream.on('data', chunk => {
+            if (chunk.length > 2 && chunk[0] === 0xFF && chunk[1] === 0xD8) {
                 const frame = chunks.toString('base64');
-                adapter.setState(`${camera}.stream`, frame, true);
+                let found = false;
+                if (!lastFrame || Date.now() - lastFrame > 300) {
+                    lastFrame = Date.now();
+                    console.log(`frame ${frame.length}`);
+                    adapter._streamSubscribes.forEach(sub => {
+                        if (sub.camera === camera) {
+                            found = true;
+                            adapter.sendTo(sub.from, 'im', {s: sub.sid, m: `startCamera/${camera}`, d: frame});
+                        }
+                    });
+                    if (!found) {
+                        adapter.setState(`${camera}.stream`, frame, true);
+                    }
+                } else {
+                    console.log(`skip frame ${frame.length}`);
+                }
                 chunks = chunk;
             } else {
                 chunks = Buffer.concat([chunks, chunk]);
@@ -182,22 +273,23 @@ async function webStreaming(adapter, camera) {
 
 function stopWebStreaming(adapter, camera) {
     if (streamings[camera]) {
-        streamings[camera].timeout && clearTimeout(streamings[camera].timeout);
-        streamings[camera].timeout = null;
-
+        streamings[camera].monitor && clearInterval(streamings[camera].monitor);
+        streamings[camera].monitor = null;
         try {
             streamings[camera].proc.kill();
-            adapter.setState(`${camera}.stream`, '', true);
         } catch (e) {
             console.error(`Cannot stop process: ${e}`);
         }
+        adapter.setState(`${camera}.stream`, '', true);
+        adapter.setState(`${camera}.running`, false, true);
         delete streamings[camera];
     }
 }
 
 function stopAllStreams(adapter) {
     for (const camera in streamings) {
-        adapter.setState(`${camera}.running`, '', false);
+        adapter.setState(`${camera}.stream`, '', true);
+        adapter.setState(`${camera}.running`, false, true);
     }
 }
 

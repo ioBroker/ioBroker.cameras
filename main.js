@@ -21,6 +21,8 @@ let adapter;
 
 let lang = 'en';
 
+const cameraTimeouts = {};
+
 /**
  * Starts the adapter instance
  * @param {Partial<ioBroker.AdapterOptions>} [options]
@@ -38,12 +40,16 @@ function startAdapter(options) {
         console.log(`Subscribe on ${JSON.stringify(subscriptions)}`);
     });
 
-    adapter.on('stateChange', (id, state) => {
-        if (id.endsWith('.running') && id.startsWith(adapter.namespace)) {
+    adapter.on('stateChange', async (id, state) => {
+        if (state && !state.ack && id.endsWith('.running') && id.startsWith(adapter.namespace)) {
             id = id.split('.');
             const camera = id[id.length - 2];
-            if (state?.val) {
-                rtsp.webStreaming(adapter, camera);
+            if (state.val) {
+                try {
+                    await rtsp.webStreaming(adapter, camera, null, true);
+                } catch (e) {
+                    adapter.log.error(`Cannot start camera ${camera}: ${e}`);
+                }
             } else {
                 adapter.log.debug(`Stop camera ${camera}`);
                 rtsp.stopWebStreaming(adapter, camera);
@@ -54,6 +60,10 @@ function startAdapter(options) {
     moment.locale('de');
 
     adapter.on('unload', cb => {
+        Object.keys(cameraTimeouts).forEach(id => {
+            cameraTimeouts[id] && clearTimeout(cameraTimeouts[id]);
+            cameraTimeouts[id] = null;
+        });
         rtsp.stopAllStreams(adapter);
         adapter.__bforceInterval && clearInterval(adapter.__bforceInterval);
         adapter.__bforceInterval = null;
@@ -217,6 +227,81 @@ async function processMessage(adapter, obj) {
                     })
                     .catch(error => adapter.sendTo(obj.from, obj.command, {error}, obj.callback));
             }
+            break;
+        }
+
+        case 'clientSubscribe': {
+            adapter.log.debug(`Subscribe: ${JSON.stringify(obj.message)}`);
+            if (!adapter._streamSubscribes) {
+                return;
+            }
+            if (obj.message.type && obj.message.type.startsWith('startCamera/')) {
+                const [, camera] = obj.message.type.split('/');
+                // start camera with obj.message.data
+                if (!adapter._streamSubscribes.find(s => s.camera === camera)) {
+                    adapter.log.debug(`Start camera "${camera}"`);
+                }
+
+                try {
+                    await rtsp.webStreaming(adapter, camera, obj.message.data);
+                } catch (e) {
+                    adapter.log.error(`Cannot start camera on subscribe "${camera}": ${e}`);
+                }
+
+                cameraTimeouts[camera] && clearTimeout(cameraTimeouts[camera]);
+
+                cameraTimeouts[camera] = setTimeout(c => {
+                    cameraTimeouts[camera] = null;
+                    // disable the camera after 1 minute if no one requested the stream
+                    adapter.log.debug(`Stop camera "${c}" after 1 minute timeout`);
+                    rtsp.stopWebStreaming(adapter, c);
+                }, 60000, camera);
+
+                // inform GUI that camera is started
+                adapter.sendTo(obj.from, obj.command, {result: true}, obj.callback);
+                const sub = adapter._streamSubscribes.find(s => s.sid === obj.message.sid && s.camera === camera);
+                if (!sub) {
+                    adapter._streamSubscribes.push({sid: obj.message.sid, from: obj.from, camera, ts: Date.now()});
+                } else {
+                    sub.ts = Date.now();
+                }
+            }
+            break;
+        }
+
+        case 'clientSubscribeError':
+        case 'clientUnsubscribe': {
+            adapter.log.debug(`Unsubscribe: ${JSON.stringify(obj.message)}`);
+            if (!adapter._streamSubscribes) {
+                return;
+            }
+            let messageTypes = obj.message.type;
+            if (!Array.isArray(messageTypes)) {
+                messageTypes = [messageTypes];
+            }
+            messageTypes.forEach(messageType => {
+                if (messageType && messageType.startsWith('startCamera/')) {
+                    const [, camera] = messageType.split('/');
+                    let deleted;
+                    do {
+                        deleted = false;
+                        const pos = adapter._streamSubscribes.findIndex(s => s.sid === obj.message.sid && s.from === obj.from && s.camera === camera);
+                        if (pos !== -1) {
+                            deleted = true;
+                            adapter._streamSubscribes.splice(pos, 1);
+                            // check if anyone else subscribed on this camera
+                            if (!adapter._streamSubscribes.find(s => s.camera === camera || Date.now() - s.ts > 60000)) {
+                                // stop camera
+                                // ...
+                                adapter.log.debug(`Stop camera "${camera}"`);
+                                cameraTimeouts[camera] && clearTimeout(cameraTimeouts[camera]);
+                                cameraTimeouts[camera] = null;
+                                rtsp.stopWebStreaming(adapter, camera);
+                            }
+                        }
+                    } while (deleted);
+                }
+            });
             break;
         }
     }
@@ -437,7 +522,7 @@ async function syncConfig() {
 }
 
 function fillFiles() {
-    // write all states with actual images one time at start
+    // write all states with actual images one time at the start
     return new Promise(resolve => {
         const promises = adapter.config.cameras.map(cam =>
             getCameraImage(cam)
@@ -476,12 +561,16 @@ async function syncData() {
                 // ignore
             }
         }
-        adapter.getState(`${adapter.config.cameras[c].name}.running`, (err, state) => {
-            if (state?.val) {
-                adapter.log.debug(`Start camera ${adapter.config.cameras[c].name}`);
-                rtsp.webStreaming(adapter, adapter.config.cameras[c].name);
+        const stateRunning = await adapter.getStateAsync(`${adapter.config.cameras[c].name}.running`);
+        if (stateRunning && stateRunning.val && !stateRunning.ack) {
+            adapter.log.debug(`Start camera ${adapter.config.cameras[c].name}`);
+            try {
+                rtsp.webStreaming(adapter, adapter.config.cameras[c].name, null, true)
+                    .catch(e => adapter.log.error(`Cannot start camera ${adapter.config.cameras[c].name}: ${e}`));
+            } catch (e) {
+                adapter.log.error(`Cannot start camera ${adapter.config.cameras[c].name}: ${e}`);
             }
-        });
+        }
         try {
             stream = await adapter.getObjectAsync(`${adapter.config.cameras[c].name}.stream`);
         } catch (e) {
@@ -512,7 +601,7 @@ async function syncData() {
             const parts = states[s]._id.split('.');
             parts.pop();
             const name = parts.pop();
-            if (!adapter.config.cameras.find(cam => cam.name !== name)) {
+            if (!adapter.config.cameras.find(cam => cam.name === name)) {
                 try {
                     await adapter.delObjectAsync(states[s]._id);
                 } catch (e) {
@@ -524,6 +613,9 @@ async function syncData() {
 }
 
 function main(adapter) {
+    adapter._streamSubscribes = [];
+    adapter._sharp = sharp;
+
     // read secret key
     adapter.getForeignObject('system.config', null, (err, data) => {
         // store system secret
@@ -553,9 +645,11 @@ function main(adapter) {
             adapter.log.error(`Cannot create snapshots directory: ${e}`);
         }
 
+        adapter.config.cameras = adapter.config.cameras.filter(cam => cam.enabled !== false);
+
         // init all required camera providers
         adapter.config.cameras.forEach(item => {
-            if (item && item.type && item.enabled !== false) {
+            if (item && item.type) {
                 item.path = `/${item.name}`;
                 try {
                     adapter.__CAM_TYPES[item.type] = adapter.__CAM_TYPES[item.type] || require(`./cameras/${item.type}`);
@@ -578,7 +672,7 @@ function main(adapter) {
 
         adapter.__bforce = {};
 
-        // garage collector
+        // garbage collector
         adapter.__bforceInterval = setInterval(() => {
             const now = Date.now();
             Object.keys(adapter.__bforce).forEach(ip => {

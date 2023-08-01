@@ -5,5 +5,8 @@
   "name": "Naam",
   "without_card": "Zonder lijst",
   "Cameras": "Camera's",
-  "Camera": "Camera"
+  "Camera": "Camera",
+  "Close": "Dichtbij",
+  "videoWidth": "Videobreedte",
+  "tooltip_videoWidth": "Stel de breedte van de video niet te hoog in om breedband te besparen. Het is voor beide: kleine en volledige video's. Als dit niet is ingesteld, wordt de oorspronkelijke grootte van de widget gebruikt."
 }

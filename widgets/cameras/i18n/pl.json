@@ -5,5 +5,8 @@
   "name": "Nazwa",
   "without_card": "Bez ramy",
   "Cameras": "kamery",
-  "Camera": "Kamera"
+  "Camera": "Kamera",
+  "Close": "Zamknąć",
+  "videoWidth": "Szerokość wideo",
+  "tooltip_videoWidth": "Nie ustawiaj zbyt dużej szerokości wideo, aby zaoszczędzić łącze szerokopasmowe. Dotyczy to zarówno małych, jak i pełnych filmów. Jeśli nie ustawiono, zostanie wzięty początkowy rozmiar widżetu."
 }
