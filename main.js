@@ -40,15 +40,13 @@ function startAdapter(options) {
 
     adapter.on('stateChange', (id, state) => {
         if (id.endsWith('.running') && id.startsWith(adapter.namespace)) {
-            adapter.log.debug(`State change: ${id} ${JSON.stringify(state)}`);
             id = id.split('.');
             const camera = id[id.length - 2];
-            if (state.val) {
-                adapter.log.debug(`Start camera ${camera}`);
+            if (state?.val) {
                 rtsp.webStreaming(adapter, camera);
             } else {
                 adapter.log.debug(`Stop camera ${camera}`);
-                rtsp.stopWebStreaming(camera);
+                rtsp.stopWebStreaming(adapter, camera);
             }
         }
     });

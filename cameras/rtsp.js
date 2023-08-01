@@ -161,7 +161,7 @@ async function webStreaming(adapter, camera) {
         };
         command.on('end', function() {
             adapter.log.debug(`Streaming for ${camera} stopped`);
-            stopWebStreaming(adapter, camera);
+            adapter.setState(`${camera}.running`, '', false);
         });
         command.on('error', function(err, stdout, stderr) {
             console.log('Cannot process video: ' + err.message);

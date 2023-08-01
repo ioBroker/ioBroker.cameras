@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import {
-    Card, CardContent, MenuItem, Select,
+    Button,
+    Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select,
 } from '@mui/material';
 import { withStyles } from '@mui/styles';
 
@@ -12,6 +13,11 @@ const styles = () => ({
         height: '100%',
         objectFit: 'contain',
         cursor: 'pointer',
+    },
+    fullCamera: {
+        width: '100%',
+        height: '100%',
+        objectFit: 'contain',
     },
     time: {
         textAlign: 'right',
@@ -73,7 +79,9 @@ class RtspCamera extends Generic {
         super(props);
         this.videoInterval = null;
         this.videoRef = React.createRef();
+        this.fullVideoRef = React.createRef();
         this.currentCam = null;
+        this.state.full = false;
     }
 
     static getWidgetInfo() {
@@ -127,8 +135,11 @@ class RtspCamera extends Generic {
         return RtspCamera.getWidgetInfo();
     }
 
-    updateStream = (id, state) => {
-        const canvas = this.videoRef.current;
+    drawCamera = (ref, state) => {
+        const canvas = ref.current;
+        if (!canvas) {
+            return;
+        }
         const context = canvas.getContext('2d');
         try {
             const imageObj = new Image();
@@ -160,21 +171,31 @@ class RtspCamera extends Generic {
         }
     };
 
+    updateStream = (id, state) => {
+        this.drawCamera(this.videoRef, state);
+        if (this.state.full) {
+            this.drawCamera(this.fullVideoRef, state);
+        }
+    };
+
     async propertiesUpdate() {
         if (this.state.rxData.camera?.name !== this.currentCam?.name) {
             if (this.currentCam?.name) {
                 this.props.context.socket.setState(`cameras.${this.currentCam.instanceId}.${this.currentCam.name}.running`, { val: false });
                 this.props.context.socket.unsubscribeState(`cameras.${this.currentCam.instanceId}.${this.currentCam.name}.stream`, this.updateStream);
             }
-            if (!this.state.rxData.camera?.name) {
+            if (this.state.rxData.camera?.name) {
+                this.props.context.socket.subscribeState(
+                    `cameras.${this.state.rxData.camera.instanceId}.${this.state.rxData.camera.name}.stream`,
+                    this.updateStream,
+                );
+            } else {
                 const canvas = this.videoRef.current;
-                const context = canvas.getContext('2d');
-                context.clearRect(0, 0, canvas.width, canvas.height);
+                if (canvas) {
+                    const context = canvas.getContext('2d');
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                }
             }
-            this.props.context.socket.subscribeState(
-                `cameras.${this.state.rxData.camera.instanceId}.${this.state.rxData.camera.name}.stream`,
-                this.updateStream,
-            );
             this.currentCam = this.state.rxData.camera;
         }
         if (this.currentCam?.name) {
@@ -204,17 +225,47 @@ class RtspCamera extends Generic {
         this.videoInterval = null;
     }
 
+    renderDialog() {
+        return <Dialog fullScreen open={this.state.full} onClose={() => this.setState({ full: false })}>
+            <DialogTitle>{this.state.rxData.name}</DialogTitle>
+            <DialogContent>
+                <div
+                    className={this.props.classes.imageContainer}
+                >
+                    <canvas
+                        id="full-video"
+                        ref={this.fullVideoRef}
+                        className={this.props.classes.fullCamera}
+                    ></canvas>
+                </div>
+            </DialogContent>
+            <DialogActions>
+                <Button
+                    onClick={() => {
+                        this.setState({ full: false });
+                    }}
+                    color="primary"
+                    variant="contained"
+                >
+                    {Generic.t('Close')}
+                </Button>
+            </DialogActions>
+        </Dialog>;
+    }
+
     renderWidgetBody(props) {
         super.renderWidgetBody(props);
 
         const content = <div
             className={this.props.classes.imageContainer}
+            onClick={() => this.setState({ full: true })}
         >
             <canvas
                 id="video"
                 ref={this.videoRef}
                 className={this.props.classes.camera}
             ></canvas>
+            {this.renderDialog()}
         </div>;
 
         if (this.state.rxData.noCard || props.widget.usedInWidget) {
