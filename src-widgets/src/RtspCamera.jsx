@@ -3,7 +3,6 @@ import {
     Card, CardContent, MenuItem, Select,
 } from '@mui/material';
 import { withStyles } from '@mui/styles';
-import Hls from 'hls.js';
 
 import Generic from './Generic';
 
@@ -128,45 +127,71 @@ class RtspCamera extends Generic {
         return RtspCamera.getWidgetInfo();
     }
 
+    updateStream = (id, state) => {
+        const canvas = this.videoRef.current;
+        const context = canvas.getContext('2d');
+        try {
+            const imageObj = new Image();
+            imageObj.src = `data:image/jpeg;base64,${state.val}`;
+            imageObj.onload = () => {
+                const hRatio = canvas.width  / imageObj.width;
+                const vRatio =  canvas.height / imageObj.height;
+                const ratio  = Math.min(hRatio, vRatio);
+                const centerShiftX = (canvas.width - imageObj.width * ratio) / 2;
+                const centerShiftY = (canvas.height - imageObj.height * ratio) / 2;
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.drawImage(
+                    imageObj,
+                    0,
+                    0,
+                    imageObj.width,
+                    imageObj.height,
+                    centerShiftX,
+                    centerShiftY,
+                    imageObj.width * ratio,
+                    imageObj.height * ratio,
+                );
+            };
+            imageObj.onerror = e => {
+                console.error(e);
+            };
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
     async propertiesUpdate() {
-        if (this.state.rxData.camera) {
-            // const player = await this.props.context.socket.sendTo(`cameras.${this.state.rxData.camera?.instanceId}`, 'webStreaming', { camera: this.state.rxData.camera?.name });
-            const url = `../cameras.${this.state.rxData.camera?.instanceId}/${this.state.rxData.camera?.name}/streaming/playlist.m3u8`;
-            if (Hls.isSupported() && url !== this.url) {
-                if (this.hls) {
-                    this.hls.detachMedia();
-                    this.hls.destroy();
-                    this.videoRef.current.src = '';
-                }
-                // if (this.currentCam?.name) {
-                //     this.props.context.socket.sendTo(`cameras.${this.currentCam.instanceId}`, 'stopWebStreaming', { camera: this.currentCam.name });
-                // }
-                this.url = url;
-                this.hls = new Hls();
-                // bind them together
-                this.hls.attachMedia(this.videoRef.current);
-                this.hls.on(Hls.Events.MEDIA_ATTACHED, () => {
-                    console.log(`video and hls.js are now bound together! Loading url: ${this.url}`);
-                    this.hls.loadSource(this.url);
-                });
+        if (this.state.rxData.camera?.name !== this.currentCam?.name) {
+            if (this.currentCam?.name) {
+                this.props.context.socket.setState(`cameras.${this.currentCam.instanceId}.${this.currentCam.name}.running`, { val: false });
+                this.props.context.socket.unsubscribeState(`cameras.${this.currentCam.instanceId}.${this.currentCam.name}.stream`, this.updateStream);
             }
-        } else {
-            if (this.videoRef.current) {
-                this.videoRef.current.src = '';
+            if (!this.state.rxData.camera?.name) {
+                const canvas = this.videoRef.current;
+                const context = canvas.getContext('2d');
+                context.clearRect(0, 0, canvas.width, canvas.height);
             }
-            if (this.hls) {
-                this.hls.detachMedia();
-                this.hls.destroy();
-            }
-            this.url = null;
+            this.props.context.socket.subscribeState(
+                `cameras.${this.state.rxData.camera.instanceId}.${this.state.rxData.camera.name}.stream`,
+                this.updateStream,
+            );
+            this.currentCam = this.state.rxData.camera;
+        }
+        if (this.currentCam?.name) {
+            this.props.context.socket.setState(`cameras.${this.state.rxData.camera.instanceId}.${this.state.rxData.camera.name}.running`, {
+                val: true,
+                expire: 30,
+            });
         }
     }
 
     componentDidMount() {
         super.componentDidMount();
-        this.videoInterval = setInterval(() => this.propertiesUpdate(), 20000);
         this.propertiesUpdate()
             .catch(e => console.error(e));
+        this.videoInterval = setInterval(() => {
+            this.propertiesUpdate();
+        }, 10000);
     }
 
     async onRxDataChanged(/* prevRxData */) {
@@ -177,16 +202,6 @@ class RtspCamera extends Generic {
         super.componentWillUnmount();
         this.videoInterval && clearInterval(this.videoInterval);
         this.videoInterval = null;
-
-        if (this.videoRef.current) {
-            this.videoRef.current.src = '';
-        }
-        if (this.hls) {
-            this.hls.detachMedia();
-            this.hls.destroy();
-            this.hls = null;
-        }
-        this.url = null;
     }
 
     renderWidgetBody(props) {
@@ -195,25 +210,11 @@ class RtspCamera extends Generic {
         const content = <div
             className={this.props.classes.imageContainer}
         >
-            {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-            <video
+            <canvas
                 id="video"
-                autoPlay
-                controls="controls"
-                type="application/x-mpegURL"
                 ref={this.videoRef}
                 className={this.props.classes.camera}
-                onPlay={() => {
-                    // this.propertiesUpdate();
-                }}
-                onPause={() => {
-                    // setTimeout(() => {
-                    //     this.props.context.socket.sendTo(`cameras.${this.props.instance}`, 'stopWebStreaming', { rtsp: this.state.rxData.rtsp });
-                    // }, 10000);
-                }}
-            >
-                Your browser does not support the video tag.
-            </video>
+            ></canvas>
         </div>;
 
         if (this.state.rxData.noCard || props.widget.usedInWidget) {

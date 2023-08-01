@@ -41,13 +41,22 @@ function startAdapter(options) {
     adapter.on('stateChange', (id, state) => {
         if (id.endsWith('.running') && id.startsWith(adapter.namespace)) {
             adapter.log.debug(`State change: ${id} ${JSON.stringify(state)}`);
+            id = id.split('.');
+            const camera = id[id.length - 2];
+            if (state.val) {
+                adapter.log.debug(`Start camera ${camera}`);
+                rtsp.webStreaming(adapter, camera);
+            } else {
+                adapter.log.debug(`Stop camera ${camera}`);
+                rtsp.stopWebStreaming(camera);
+            }
         }
     });
 
     moment.locale('de');
 
     adapter.on('unload', cb => {
-        rtsp.stopAllStreams();
+        rtsp.stopAllStreams(adapter);
         adapter.__bforceInterval && clearInterval(adapter.__bforceInterval);
         adapter.__bforceInterval = null;
         try {
@@ -212,32 +221,6 @@ async function processMessage(adapter, obj) {
             }
             break;
         }
-        case 'webStreaming': {
-            if (obj.callback && obj.message) {
-                if (!obj.message.camera.match(/^[a-zA-Z0-9-_]+$/)) {
-                    adapter.sendTo(obj.from, obj.command, {error: 'Invalid camera name'}, obj.callback);
-                }
-                const url = `${adapter.namespace}/${obj.message.camera}/streaming/playlist.m3u8`;
-                adapter.log.debug(`Start streaming for "${obj.message.camera}": ${url}`);
-                await rtsp.webStreaming(adapter, obj.message.camera);
-                adapter.sendTo(obj.from, obj.command, {url}, obj.callback);
-            }
-            break;
-        }
-        case 'stopWebStreaming': {
-            adapter.log.debug(`Stop streaming "${JSON.stringify(obj.message)}"`);
-            if (obj.callback && obj.message) {
-                if (!obj.message.camera || !obj.message.camera.match(/^[a-zA-Z0-9-_]+$/)) {
-                    adapter.log.warn(`Invalid camera name "${obj.message.camera}"`);
-                    adapter.sendTo(obj.from, obj.command, {error: 'Invalid camera name'}, obj.callback);
-                } else {
-                    adapter.log.debug(`Stop streaming "${obj.message.camera}"`);
-                    rtsp.stopWebStreaming(obj.message.camera);
-                    adapter.sendTo(obj.from, obj.command, {result: true}, obj.callback);
-                }
-            }
-            break;
-        }
     }
 }
 
@@ -380,69 +363,6 @@ function startWebServer(adapter) {
             return;
         }
 
-        const match = url.match(/^\/([0-9a-zA-Z_-]+)\/streaming\/(playlist[0-9]*\.(m3u8|ts))$/);
-        if (match) {
-            const [, camera, fileName, ext] = match;
-            const path = `${__dirname}/data/${camera}/${fileName}`;
-            adapter.log.debug(`Check streaming: ${path}`);
-            const headers = {
-                'Access-Control-Allow-Origin': '*', /* @dev First, read about security */
-                'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
-                'Access-Control-Max-Age': 2592000, // 30 days
-                /** add other headers as per requirement */
-            };
-
-            if (req.method === 'OPTIONS') {
-                // check if the camera exists
-                const obj = adapter.config.cameras.find(c => c.name === camera);
-                if (!obj || obj.type !== 'rtsp') {
-                    res.writeHead(404, headers);
-                    res.end();
-                    return;
-                }
-                res.writeHead(204, headers);
-                res.end();
-                return;
-            }
-
-            if (ext === 'm3u8') {
-                // try to start streaming
-                rtsp.webStreaming(adapter, camera)
-                    .then(() => {
-                        const stat = fs.statSync(path);
-
-                        res.writeHead(200, {
-                            'Content-Type': 'text/plain',
-                            'Content-Length': stat.size,
-                            ...headers,
-                        });
-                        const file = fs.createReadStream(path);
-                        file.pipe(res);
-                    })
-                    .catch(e => {
-                        adapter.log.error(`Cannot start streaming for "${camera}": ${e}`);
-                        res.writeHead(404, headers);
-                        res.write('Not found');
-                        res.end();
-                    });
-            } else if (fs.existsSync(path)) {
-                const stat = fs.statSync(path);
-
-                res.writeHead(200, {
-                    'Content-Type': 'video/mpeg',
-                    'Content-Length': stat.size,
-                    ...headers,
-                });
-                const file = fs.createReadStream(path);
-                file.pipe(res);
-            } else {
-                res.writeHead(404, headers);
-                res.write('Not found');
-                res.end();
-            }
-            return;
-        }
-
         const cam = adapter.config.cameras.find(cam => cam.path === url);
 
         if (cam) {
@@ -558,6 +478,12 @@ async function syncData() {
                 // ignore
             }
         }
+        adapter.getState(`${adapter.config.cameras[c].name}.running`, (err, state) => {
+            if (state?.val) {
+                adapter.log.debug(`Start camera ${adapter.config.cameras[c].name}`);
+                rtsp.webStreaming(adapter, adapter.config.cameras[c].name);
+            }
+        });
         try {
             stream = await adapter.getObjectAsync(`${adapter.config.cameras[c].name}.stream`);
         } catch (e) {
@@ -671,8 +597,7 @@ function main(adapter) {
         Promise.all(promises)
             .then(() => syncConfig())
             .then(() => fillFiles())
-            .then(() => rtsp.cleanRtspData())
-            .then(() => startWebServer(adapter))
+            .then(() => startWebServer(adapter));
     });
 }
 

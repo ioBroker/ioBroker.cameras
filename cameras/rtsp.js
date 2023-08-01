@@ -1,6 +1,7 @@
 const spawn = require('child_process').spawn;
 const fs = require('fs');
 const path = require('path');
+const ffmpeg = require('fluent-ffmpeg');
 
 function executeFFmpeg(params, path, adapter) {
     return new Promise((resolve, reject) => {
@@ -148,63 +149,45 @@ async function webStreaming(adapter, camera) {
 
     if (!streamings[camera]) {
         adapter.log.debug(`Starting streaming for ${camera} (${url.replace(cameraObject.decodedPassword || 'ABCDEF', '****')})`);
-
-        const path = `${__dirname}/../data/${camera}`;
-        if (!fs.existsSync(path)) {
-            fs.mkdirSync(path);
-        }
-        if (fs.existsSync(`${path}/playlist.m3u8`)) {
-            fs.unlinkSync(`${path}/playlist.m3u8`);
-        }
-        const command = [
-            ...`-rtsp_transport tcp -i`.split(' '),
-            url,
-            ...`-c:a aac -b:a 160000 -ac 2 -s 854x480 -c:v libx264 -b:v 800000 -hls_time 10 -hls_list_size 2 -hls_flags delete_segments -start_number 1`.split(' '),
-            `${path}/playlist.m3u8`,
-        ];
-        const proc = spawn(adapter.config.ffmpegPath, command);
+        const command = ffmpeg(url).
+            setFfmpegPath(adapter.config.ffmpegPath).
+            // addInputOption('-preset', 'ultrafast').
+            addInputOption('-rtsp_transport', 'tcp').
+            addInputOption('-re').outputFormat('mjpeg').fps(2).addOptions('-q:v 0');
         streamings[camera] = {
             url,
-            proc,
+            proc: command,
             camera,
         };
-        proc.on('close', () => {
-            adapter.log.debug(`Streaming for ${camera} (${url.replace(cameraObject.decodedPassword || 'ABCDEF', '****')}) closed`);
-            stopWebStreaming(camera);
+        command.on('end', function() {
+            adapter.log.debug(`Streaming for ${camera} stopped`);
+            stopWebStreaming(adapter, camera);
         });
-        proc.stdout.setEncoding('utf8');
-        proc.stdout.on('data', data => adapter.log.debug(data.toString('utf8')));
-
-        proc.stderr.setEncoding('utf8');
-        proc.stderr.on('data', data => adapter.log.warn(data.toString('utf8')));
-    } else {
-        streamings[camera].timeout && clearTimeout(streamings[camera].timeout);
+        command.on('error', function(err, stdout, stderr) {
+            console.log('Cannot process video: ' + err.message);
+        });
+        const ffstream = command.pipe();
+        let chunks = Buffer.from([]);
+        ffstream.on('data', function(chunk) {
+            if (chunk[0] == 0xFF && chunk[1] == 0xD8) {
+                const frame = chunks.toString('base64');
+                adapter.setState(`${camera}.stream`, frame, true);
+                chunks = chunk;
+            } else {
+                chunks = Buffer.concat([chunks, chunk]);
+            }
+        });
     }
-
-    // what for first file playlist.m3u8 playlist.m3u8
-    const fileName = `${__dirname}/../data/${camera}/playlist.m3u8`;
-    let count = 0;
-    while (!fs.existsSync(fileName) && count < 300) { // wait 30 seconds
-        await new Promise(resolve => setTimeout(resolve, 100));
-        count++;
-    }
-    if (count >= 300) {
-        adapter.log.error(`Cannot start streaming ${fileName}`);
-        throw new Error(`File ${fileName} still not exists`);
-    }
-
-    streamings[camera].timeout = setTimeout(stopWebStreaming, 120000, camera);
 }
 
-function stopWebStreaming(camera) {
+function stopWebStreaming(adapter, camera) {
     if (streamings[camera]) {
         streamings[camera].timeout && clearTimeout(streamings[camera].timeout);
         streamings[camera].timeout = null;
 
         try {
             streamings[camera].proc.kill();
-            console.log('delete: ', `${__dirname}/../data/${camera}`);
-            fs.rmSync(`${__dirname}/../data/${camera}`, { recursive: true });
+            adapter.setState(`${camera}.stream`, '', true);
         } catch (e) {
             console.error(`Cannot stop process: ${e}`);
         }
@@ -212,21 +195,9 @@ function stopWebStreaming(camera) {
     }
 }
 
-const cleanRtspData = () => {
-    fs.readdir(`${__dirname}/../data`, (err, files) => {
-        files.forEach(file => {
-            const fileDir = `${__dirname}/../data/${file}`;
-
-            if (file !== '.gitignore') {
-                fs.rmSync(fileDir, { recursive: true });
-            }
-        });
-    });
-};
-
-function stopAllStreams() {
+function stopAllStreams(adapter) {
     for (const camera in streamings) {
-        stopWebStreaming(camera);
+        adapter.setState(`${camera}.running`, '', false);
     }
 }
 
@@ -238,6 +209,5 @@ module.exports = {
     executeFFmpeg,
     webStreaming,
     stopWebStreaming,
-    cleanRtspData,
     stopAllStreams,
 };
