@@ -6,6 +6,8 @@ const rtsp        = require('./cameras/rtsp');
 const fs          = require('fs');
 const path        = require('path');
 const moment      = require('moment');
+const decompress = require('decompress');
+
 let sharp;
 try {
     sharp = require('sharp');
@@ -612,85 +614,88 @@ async function syncData() {
     }
 }
 
-function main(adapter) {
+async function main(adapter) {
     adapter._streamSubscribes = [];
     adapter._sharp = sharp;
 
+    if (!adapter.config.ffmpegPath && process.platform === 'win32' && !fs.existsSync(`${__dirname}/win-ffmpeg.exe`)) {
+        adapter.log.info('Decompress ffmpeg.exe...');
+        await decompress(`${__dirname}/win-ffmpeg.zip`, __dirname);
+    }
+
     // read secret key
-    adapter.getForeignObject('system.config', null, (err, data) => {
-        // store system secret
-        adapter.__systemSecret = data.native.secret;
-        lang = adapter.config.language || data.common.language;
+    const data = await adapter.getForeignObjectAsync('system.config');
+    // store system secret
+    adapter.__systemSecret = data.native.secret;
+    lang = adapter.config.language || data.common.language;
 
-        adapter.__CAM_TYPES = {};
-        const promises = [];
+    adapter.__CAM_TYPES = {};
+    const promises = [];
 
-        adapter.config.tempPath = adapter.config.tempPath || (`${__dirname}/snapshots`);
-        adapter.config.defaultCacheTimeout = parseInt(adapter.config.defaultCacheTimeout, 10) || 0;
+    adapter.config.tempPath = adapter.config.tempPath || (`${__dirname}/snapshots`);
+    adapter.config.defaultCacheTimeout = parseInt(adapter.config.defaultCacheTimeout, 10) || 0;
 
-        if (!fs.existsSync(adapter.config.ffmpegPath) && !fs.existsSync(`${adapter.config.ffmpegPath}.exe`)) {
-            if (process.platform === 'win32') {
-                adapter.config.ffmpegPath = `${__dirname}/win-ffmpeg.exe`;
-            } else {
-                adapter.log.error(`Cannot find ffmpeg in "${adapter.config.ffmpegPath}"`);
+    if (!fs.existsSync(adapter.config.ffmpegPath) && !fs.existsSync(`${adapter.config.ffmpegPath}.exe`)) {
+        if (process.platform === 'win32') {
+            adapter.config.ffmpegPath = `${__dirname}/win-ffmpeg.exe`;
+        } else {
+            adapter.log.error(`Cannot find ffmpeg in "${adapter.config.ffmpegPath}"`);
+        }
+    }
+
+    try {
+        if (!fs.existsSync(adapter.config.tempPath)) {
+            fs.mkdirSync(adapter.config.tempPath);
+            adapter.log.debug(`Create snapshots directory: ${path.normalize(adapter.config.tempPath)}`);
+        }
+    } catch (e) {
+        adapter.log.error(`Cannot create snapshots directory: ${e}`);
+    }
+
+    adapter.config.cameras = adapter.config.cameras.filter(cam => cam.enabled !== false);
+
+    // init all required camera providers
+    adapter.config.cameras.forEach(item => {
+        if (item && item.type) {
+            item.path = `/${item.name}`;
+            try {
+                adapter.__CAM_TYPES[item.type] = adapter.__CAM_TYPES[item.type] || require(`./cameras/${item.type}`);
+                promises.push(adapter.__CAM_TYPES[item.type]
+                    .init(adapter, item)
+                    .catch(e => adapter.log.error(`Cannot init camera ${item.name}: ${e && e.toString()}`))
+                );
+            } catch (e) {
+                adapter.log.error(`Cannot load "${item.type}": ${e}`);
             }
         }
+    });
 
-        try {
-            if (!fs.existsSync(adapter.config.tempPath)) {
-                fs.mkdirSync(adapter.config.tempPath);
-                adapter.log.debug(`Create snapshots directory: ${path.normalize(adapter.config.tempPath)}`);
-            }
-        } catch (e) {
-            adapter.log.error(`Cannot create snapshots directory: ${e}`);
+    if (typeof adapter.config.allowIPs === 'string') {
+        adapter.config.allowIPs = adapter.config.allowIPs.split(/,;/).map(i => i.trim()).filter(i => i);
+        if (adapter.config.allowIPs.find(i => i === '*')) {
+            adapter.config.allowIPs = true;
         }
+    }
 
-        adapter.config.cameras = adapter.config.cameras.filter(cam => cam.enabled !== false);
+    adapter.__bforce = {};
 
-        // init all required camera providers
-        adapter.config.cameras.forEach(item => {
-            if (item && item.type) {
-                item.path = `/${item.name}`;
-                try {
-                    adapter.__CAM_TYPES[item.type] = adapter.__CAM_TYPES[item.type] || require(`./cameras/${item.type}`);
-                    promises.push(adapter.__CAM_TYPES[item.type]
-                        .init(adapter, item)
-                        .catch(e => adapter.log.error(`Cannot init camera ${item.name}: ${e && e.toString()}`))
-                    );
-                } catch (e) {
-                    adapter.log.error(`Cannot load "${item.type}": ${e}`);
-                }
+    // garbage collector
+    adapter.__bforceInterval = setInterval(() => {
+        const now = Date.now();
+        Object.keys(adapter.__bforce).forEach(ip => {
+            if (now - adapter.__bforce[ip] > 5000) {
+                delete adapter.__bforce[ip];
             }
         });
+    }, 30000);
 
-        if (typeof adapter.config.allowIPs === 'string') {
-            adapter.config.allowIPs = adapter.config.allowIPs.split(/,;/).map(i => i.trim()).filter(i => i);
-            if (adapter.config.allowIPs.find(i => i === '*')) {
-                adapter.config.allowIPs = true;
-            }
-        }
+    adapter.subscribeStates('*');
 
-        adapter.__bforce = {};
-
-        // garbage collector
-        adapter.__bforceInterval = setInterval(() => {
-            const now = Date.now();
-            Object.keys(adapter.__bforce).forEach(ip => {
-                if (now - adapter.__bforce[ip] > 5000) {
-                    delete adapter.__bforce[ip];
-                }
-            });
-        }, 30000);
-
-        adapter.subscribeStates('*');
-
-        promises.push(syncData());
-
-        Promise.all(promises)
-            .then(() => syncConfig())
-            .then(() => fillFiles())
-            .then(() => startWebServer(adapter));
-    });
+    await syncData();
+    await Promise.all(promises);
+    await syncConfig();
+    await fillFiles();
+    startWebServer(adapter);
 }
 
 // @ts-ignore parent is a valid property on module

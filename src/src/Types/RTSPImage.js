@@ -128,7 +128,7 @@ class RTSPImageConfig extends Component {
         options.prefix && parameters.push(options.prefix);
         parameters.push('-rtsp_transport');
         parameters.push(options.protocol || 'udp');
-        parameters.push(`-i`);
+        parameters.push('-i');
         parameters.push(`rtsp://${options.username ? options.username + (options.password ? ':***' : '') : ''}@${options.ip}:${options.port || 554}${options.urlPath ? (options.urlPath.startsWith('/') ? options.urlPath : `/${options.urlPath}`) : ''}`);
         parameters.push('-loglevel');
         parameters.push('error');
@@ -165,7 +165,7 @@ class RTSPImageConfig extends Component {
                     <Select
                         variant="standard"
                         value={this.state.protocol || 'udp'}
-                        onChange={e => this.setState({ port: e.target.value }, () => this.reportSettings())}
+                        onChange={e => this.setState({ protocol: e.target.value }, () => this.reportSettings())}
                     >
                         <MenuItem value="udp">UDP</MenuItem>
                         <MenuItem value="tcp">TCP</MenuItem>
