@@ -2,7 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
 
-import { TextField, Checkbox, FormControlLabel } from '@mui/material';
+import {
+    TextField,
+    Checkbox,
+    FormControlLabel,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
+} from '@mui/material';
 
 import { I18n } from '@iobroker/adapter-react-v5';
 
@@ -15,7 +23,11 @@ const styles = theme => ({
         width: 200,
     },
     port: {
+        marginRight: theme.spacing(1),
         width: 200,
+    },
+    protocol: {
+        width: 70,
     },
     username: {
         marginTop: theme.spacing(2),
@@ -83,6 +95,7 @@ class RTSPImageConfig extends Component {
         state.originalHeight = state.originalHeight || '';
         state.prefix   = state.prefix || '';
         state.suffix   = state.suffix || '';
+        state.protocol = state.protocol || 'udp';
 
         this.state     = state;
     }
@@ -103,6 +116,7 @@ class RTSPImageConfig extends Component {
                 timeout:  this.state.timeout,
                 prefix:   this.state.prefix,
                 suffix:   this.state.suffix,
+                protocol: this.state.protocol,
                 originalWidth: this.state.originalWidth,
                 originalHeight: this.state.originalHeight,
             });
@@ -112,6 +126,8 @@ class RTSPImageConfig extends Component {
     buildCommand(options) {
         const parameters = ['-y'];
         options.prefix && parameters.push(options.prefix);
+        parameters.push('-rtsp_transport');
+        parameters.push(options.protocol || 'udp');
         parameters.push(`-i`);
         parameters.push(`rtsp://${options.username ? options.username + (options.password ? ':***' : '') : ''}@${options.ip}:${options.port || 554}${options.urlPath ? (options.urlPath.startsWith('/') ? options.urlPath : `/${options.urlPath}`) : ''}`);
         parameters.push('-loglevel');
@@ -144,6 +160,17 @@ class RTSPImageConfig extends Component {
                     value={this.state.port}
                     onChange={e => this.setState({ port: e.target.value }, () => this.reportSettings())}
                 />
+                <FormControl className={this.props.classes.protocol} variant="standart">
+                    <InputLabel>{I18n.t('Protocol')}</InputLabel>
+                    <Select
+                        variant="standard"
+                        value={this.state.protocol || 'udp'}
+                        onChange={e => this.setState({ port: e.target.value }, () => this.reportSettings())}
+                    >
+                        <MenuItem value="udp">UDP</MenuItem>
+                        <MenuItem value="tcp">TCP</MenuItem>
+                    </Select>
+                </FormControl>
                 <br />
                 <TextField
                     variant="standard"

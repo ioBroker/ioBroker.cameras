@@ -56,6 +56,8 @@ function buildCommand(options, outputFileName) {
     }
 
     options.prefix && parameters.push(options.prefix);
+    parameters.push(`-rtsp_transport`);
+    parameters.push(options.protocol || 'udp');
     parameters.push(`-i`);
     parameters.push(`rtsp://${options.username ? `${encodeURIComponent(options.username)}:${password}@` : ''}${options.ip}:${options.port || 554}${options.urlPath ? (options.urlPath.startsWith('/') ? options.urlPath : `/${options.urlPath}`) : ''}`);
     parameters.push('-loglevel');
