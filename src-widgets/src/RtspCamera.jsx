@@ -224,7 +224,7 @@ class RtspCamera extends Generic {
             this.useMessages = await this.props.context.socket.checkFeatureSupported('INSTANCE_MESSAGES');
         }
         if (this.state.rxData.camera !== this.currentCam) {
-            this.width = this.getImageWidth();
+            //this.width = this.getImageWidth();
             if (this.currentCam) {
                 const { instanceId, name } = RtspCamera.getNameAndInstance(this.currentCam);
                 if (this.useMessages) {
@@ -238,7 +238,7 @@ class RtspCamera extends Generic {
                 this.setState({ loading: true });
                 const { instanceId, name } = RtspCamera.getNameAndInstance(this.state.rxData.camera);
                 if (this.useMessages) {
-                    await this.props.context.socket.subscribeOnInstance(`cameras.${instanceId}`, `startCamera/${name}`, { width: this.width }, this.onCameras);
+                    await this.props.context.socket.subscribeOnInstance(`cameras.${instanceId}`, `startCamera/${name}`, { width: this.getImageWidth() }, this.onCameras);
                 } else {
                     await this.props.context.socket.subscribeState(
                         `cameras.${instanceId}.${name}.stream`,
@@ -257,7 +257,7 @@ class RtspCamera extends Generic {
             // refresh stream
             const { instanceId, name } = RtspCamera.getNameAndInstance(this.currentCam);
             if (this.useMessages) {
-                await this.props.context.socket.subscribeOnInstance(`cameras.${instanceId}`, `startCamera/${name}`, { width: this.width }, this.onCameras);
+                await this.props.context.socket.subscribeOnInstance(`cameras.${instanceId}`, `startCamera/${name}`, { width: this.getImageWidth() }, this.onCameras);
             } else {
                 await this.props.context.socket.setState(`cameras.${instanceId}.${name}.running`, {
                     val: true,
@@ -268,12 +268,12 @@ class RtspCamera extends Generic {
     }
 
     getImageWidth() {
-        if (parseInt(this.state.rxData.width, 10)) {
-            return parseInt(this.state.rxData.width, 10);
+        // if (parseInt(this.state.rxData.width, 10)) {
+        //    return parseInt(this.state.rxData.width, 10);
+        //}
+        if (this.state.full) {
+            return this.fullVideoRef.current?.parentElement.clientWidth || 0;
         }
-        // if (this.state.full) {
-        //     return this.fullVideoRef.current?.parentElement.clientWidth || 0;
-        // }
 
         return this.videoRef.current?.parentElement.clientWidth || 0;
     }
