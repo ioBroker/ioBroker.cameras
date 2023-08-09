@@ -8,5 +8,6 @@
   "Camera": "Camera",
   "Close": "Close",
   "videoWidth": "Video width",
-  "tooltip_videoWidth": "Do not set width of video too hight to save broadband. It is for both: small and full videos. If not set, the initial size of widget will be taken."
+  "tooltip_videoWidth": "Do not set width of video too hight to save broadband. It is for both: small and full videos. If not set, the initial size of widget will be taken.",
+  "Camera instance %s inactive": "Camera instance %s inactive"
 }

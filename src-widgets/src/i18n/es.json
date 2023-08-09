@@ -8,5 +8,6 @@
   "Camera": "Cámara",
   "Close": "Cerca",
   "videoWidth": "Ancho de vídeo",
-  "tooltip_videoWidth": "No configure el ancho del video demasiado alto para ahorrar banda ancha. Es para ambos: videos pequeños y completos. Si no se establece, se tomará el tamaño inicial del widget."
+  "tooltip_videoWidth": "No configure el ancho del video demasiado alto para ahorrar banda ancha. Es para ambos: videos pequeños y completos. Si no se establece, se tomará el tamaño inicial del widget.",
+  "Camera instance %s inactive": "Instancia de cámara %s inactiva"
 }

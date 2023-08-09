@@ -8,5 +8,6 @@
   "Camera": "Câmera",
   "Close": "Fechar",
   "videoWidth": "Largura do vídeo",
-  "tooltip_videoWidth": "Não defina a largura do vídeo muito alta para economizar banda larga. É para ambos: vídeos pequenos e completos. Se não for definido, o tamanho inicial do widget será usado."
+  "tooltip_videoWidth": "Não defina a largura do vídeo muito alta para economizar banda larga. É para ambos: vídeos pequenos e completos. Se não for definido, o tamanho inicial do widget será usado.",
+  "Camera instance %s inactive": "Instância da câmera %s inativa"
 }

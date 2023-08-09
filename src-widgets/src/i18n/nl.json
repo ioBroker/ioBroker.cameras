@@ -8,5 +8,6 @@
   "Camera": "Camera",
   "Close": "Dichtbij",
   "videoWidth": "Videobreedte",
-  "tooltip_videoWidth": "Stel de breedte van de video niet te hoog in om breedband te besparen. Het is voor beide: kleine en volledige video's. Als dit niet is ingesteld, wordt de oorspronkelijke grootte van de widget gebruikt."
+  "tooltip_videoWidth": "Stel de breedte van de video niet te hoog in om breedband te besparen. Het is voor beide: kleine en volledige video's. Als dit niet is ingesteld, wordt de oorspronkelijke grootte van de widget gebruikt.",
+  "Camera instance %s inactive": "Camera-instantie %s inactief"
 }

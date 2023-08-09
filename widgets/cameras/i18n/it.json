@@ -8,5 +8,6 @@
   "Camera": "Telecamera",
   "Close": "Vicino",
   "videoWidth": "Larghezza video",
-  "tooltip_videoWidth": "Non impostare la larghezza del video troppo alta per salvare la banda larga. È per entrambi: video piccoli e completi. Se non impostato, verrà utilizzata la dimensione iniziale del widget."
+  "tooltip_videoWidth": "Non impostare la larghezza del video troppo alta per salvare la banda larga. È per entrambi: video piccoli e completi. Se non impostato, verrà utilizzata la dimensione iniziale del widget.",
+  "Camera instance %s inactive": "Istanza fotocamera %s inattiva"
 }

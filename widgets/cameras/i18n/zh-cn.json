@@ -8,5 +8,6 @@
   "Camera": "相机",
   "Close": "关闭",
   "videoWidth": "视频宽度",
-  "tooltip_videoWidth": "不要将视频宽度设置得太高，以节省宽带。它适用于：小视频和完整视频。如果未设置，则将采用小部件的初始大小。"
+  "tooltip_videoWidth": "不要将视频宽度设置得太高，以节省宽带。它适用于：小视频和完整视频。如果未设置，则将采用小部件的初始大小。",
+  "Camera instance %s inactive": "相机实例 %s 不活动"
 }
