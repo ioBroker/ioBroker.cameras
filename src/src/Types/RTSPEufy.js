@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
 
-import { Switch } from '@mui/material';
-
-import TextField from '@mui/material/TextField';
+import {
+    Button,
+    Switch,
+    TextField,
+} from '@mui/material';
 
 import { I18n, SelectID } from '@iobroker/adapter-react-v5';
-import Button from '@mui/material/Button';
 
 const styles = theme => ({
     page: {

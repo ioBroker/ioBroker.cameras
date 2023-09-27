@@ -2,26 +2,31 @@ import React, {Component} from 'react';
 import { withStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
 
-import Fab from '@mui/material/Fab';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import TextField from '@mui/material/TextField';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import  {
+    Fab,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControl,
+    FormControlLabel,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+    Checkbox,
+    CircularProgress,
+} from '@mui/material';
 
-import IconDelete from '@mui/icons-material/Delete';
-import IconEdit from '@mui/icons-material/Edit';
-import IconAdd from '@mui/icons-material/Add';
-import IconUp from '@mui/icons-material/ArrowUpward';
-import IconDown from '@mui/icons-material/ArrowDownward';
-import IconTest from '@mui/icons-material/Camera';
+import {
+    Delete as IconDelete,
+    Edit as IconEdit,
+    Add as IconAdd,
+    ArrowUpward as IconUp,
+    ArrowDownward as IconDown,
+    CameraAlt as IconTest,
+} from '@mui/icons-material';
 
 import { I18n, Message as MessageDialog } from '@iobroker/adapter-react-v5';
 
@@ -30,7 +35,7 @@ import URLBasicAuthImage from '../Types/URLBasicAuthImage';
 import RTSPImageConfig from '../Types/RTSPImage';
 import RTSPReolinkE1Config from '../Types/RTSPReolinkE1';
 import RTSPEufyConfig from '../Types/RTSPEufy';
-import {CircularProgress} from '@mui/material';
+import RTSPHiKamConfig from '../Types/RTSPHiKam';
 
 const TYPES = {
     url:          { Config: URLImage, name: 'URL' },
@@ -38,6 +43,7 @@ const TYPES = {
     rtsp:         { Config: RTSPImageConfig, name: 'RTSP Snapshot' },
     reolinkE1:    { Config: RTSPReolinkE1Config, name: 'Reolink E1 Snapshot' },
     eufy:         { Config: RTSPEufyConfig, name: 'Eufy Security' },
+    hikam:         { Config: RTSPHiKamConfig, name: 'HiKam / WiWiCam' },
 };
 
 const styles = theme => ({

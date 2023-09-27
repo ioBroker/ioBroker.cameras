@@ -31,6 +31,11 @@ sendTo('cameras.0', 'image', {
 The result is always in `jpg` format.
 
 Supported cameras:
+- Reolink E1 Pro (important, without `Pro` it will not work)
+- Eufy via eusec adapter
+- [HiKam](https://support.hikam.de/support/solutions/articles/16000070656-zugriff-auf-kameras-der-2-generation-via-onvif-f%C3%BCr-s6-q8-a7-2-generation-) of second and third generation via ONVIF (für S6, Q8, A7 2. Generation), A7 Pro, A9
+- [WIWICam M1 via HiKam adapter](https://www.wiwacam.com/de/mw1-minikamera-kurzanleitung-und-faq/)
+
 ### URL image
 This is a normal URL request, where all parameters are in URL. Like `http://mycam/snapshot.jpg`  
 
@@ -52,6 +57,9 @@ Here is an example of how to add Reolink E1:
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) Added WiWiCam MW1 and HiKam cameras 
+
 ### 1.2.2 (2023-07-07)
 * (bluefox) Corrected passwords with exclamation mark
 
