@@ -31,10 +31,12 @@ sendTo('cameras.0', 'image', {
 The result is always in `jpg` format.
 
 Supported cameras:
-- Reolink E1 Pro (important, without `Pro` it will not work)
+- Reolink E1 Pro via RTSP (important, without `Pro` it will not work)
 - Eufy via eusec adapter
 - [HiKam](https://support.hikam.de/support/solutions/articles/16000070656-zugriff-auf-kameras-der-2-generation-via-onvif-f%C3%BCr-s6-q8-a7-2-generation-) of second and third generation via ONVIF (für S6, Q8, A7 2. Generation), A7 Pro, A9
 - [WIWICam M1 via HiKam adapter](https://www.wiwacam.com/de/mw1-minikamera-kurzanleitung-und-faq/)
+- RTSP Native - if your camera supports RTSP protocol
+- Screenshots via HTTP URL - if you can get the snapshot from your camera via URL
 
 ### URL image
 This is a normal URL request, where all parameters are in URL. Like `http://mycam/snapshot.jpg`  
@@ -50,6 +52,15 @@ If you want to access snapshots on RTSP cameras, you can use ffmpeg. You need to
 Here is an example of how to add Reolink E1:
 
 ![rtsp](img/rtsp.png)
+
+## For developers - how to add new camera
+To add a new camera, you must create a Pull Request on GitHub with the following changes:
+- Add new file into `cameras` folder. This is backend to read the single image from the camera. 
+- Add GUI file in the `src/src/Types/` folder. This is the configuration dialog for the camera
+- Add this dialog in `src/src/Tabs/Cameras.js` file analogical as other cameras are added. Only two lines should be added:
+  - Import new configuration dialog like `import RTSPMyCamConfig from '../Types/RTSPMyCam';`
+  - Extend `TYPES` structure with the new camera like `mycam:         { Config: RTSPMyCamConfig, name: 'MyCam' },`
+    The attribute name must be the same as the name of the file in the `cameras` folder.
 
 <!--
 	Placeholder for the next version (at the beginning of the line):

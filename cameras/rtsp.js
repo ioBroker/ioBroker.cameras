@@ -194,7 +194,9 @@ async function webStreaming(adapter, camera, options, fromState) {
             camera,
             width: desiredWidth,
         };
+
         adapter.log.debug(`Starting streaming for ${camera} (${url.replace(cameraObject.decodedPassword || 'ABCDEF', '****')}), width: ${desiredWidth}`);
+
         const command = ffmpeg(url)
             .setFfmpegPath(adapter.config.ffmpegPath)
             // .addInputOption('-preset', 'ultrafast')
@@ -219,12 +221,12 @@ async function webStreaming(adapter, camera, options, fromState) {
             command.addOptions(`-vf scale=${options.width}:${Math.round(options.width / ratio[camera])}`);
         }
 
-        command.on('end', function() {
+        command.on('end', function () {
             adapter.log.debug(`Streaming for ${camera} stopped`);
             adapter.setState(`${camera}.stream`, '', true);
             adapter.setState(`${camera}.running`, false, true);
         });
-        command.on('error', function(err, stdout, stderr) {
+        command.on('error', function (err /* , stdout, stderr */) {
             if (streamings[camera]) {
                 adapter.setState(`${camera}.stream`, '', true);
                 adapter.setState(`${camera}.running`, false, true);
@@ -234,7 +236,7 @@ async function webStreaming(adapter, camera, options, fromState) {
             }
         });
 
-        const ffstream = command.pipe();
+        const ffStream = command.pipe();
         let chunks = Buffer.from([]);
         let lastFrame = 0;
         streamings[camera].monitor = setInterval(() => {
@@ -246,7 +248,7 @@ async function webStreaming(adapter, camera, options, fromState) {
             }
         }, 10000);
 
-        ffstream.on('data', chunk => {
+        ffStream.on('data', chunk => {
             if (chunk.length > 2 && chunk[0] === 0xFF && chunk[1] === 0xD8) {
                 const frame = chunks.toString('base64');
                 let found = false;
@@ -256,7 +258,7 @@ async function webStreaming(adapter, camera, options, fromState) {
                     adapter._streamSubscribes.forEach(sub => {
                         if (sub.camera === camera) {
                             found = true;
-                            adapter.sendTo(sub.from, 'im', {s: sub.sid, m: `startCamera/${camera}`, d: frame});
+                            adapter.sendTo(sub.from, 'im', { s: sub.sid, m: `startCamera/${camera}`, d: frame });
                         }
                     });
                     if (!found) {
