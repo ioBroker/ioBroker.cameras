@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "cameras",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "news": {
+      "1.2.3": {
+        "en": "Added WiWiCam MW1 and HiKam cameras",
+        "de": "WiWiCam MW1 und HiKam Kameras hinzugefügt",
+        "ru": "Добавлены WiWiCam MW1 и HiKam камеры",
+        "pt": "Adicionado WiWiCam MW1 e HiKam câmeras",
+        "nl": "Vertaling:",
+        "fr": "Ajout de caméras WiWiCam MW1 et HiKam",
+        "it": "Aggiunte WiWiCam MW1 e HiKam telecamere",
+        "es": "Cámaras WiWiCam MW1 y HiKam",
+        "pl": "Added WiWiCam MW1 i HiKam camera",
+        "uk": "Додано відеокамери WiWiCam MW1 і HiKam",
+        "zh-cn": "添加WiCam MW1和HKam摄像机"
+      },
       "1.2.2": {
         "en": "Corrected passwords with exclamation mark",
         "de": "Korrigierte Passwörter mit Ausrufzeichen",
@@ -80,18 +93,6 @@
         "pl": "rTSP camera\ndodać podręcznik",
         "uk": "додана камера RTSP\nдодано кеш знімків",
         "zh-cn": "添加了RTSP摄像机\nd. 绑架事件的增量"
-      },
-      "0.2.0": {
-        "en": "GUI updated to MUIv5",
-        "de": "GUI aktualisiert auf MUIv5",
-        "ru": "GUI обновлено до MUIv5",
-        "pt": "GUI atualizado para MUIv5",
-        "nl": "GUI heeft MUIV5",
-        "fr": "GUI mise à jour de MUIv5",
-        "it": "GUI aggiornata a MUIv5",
-        "es": "GUI actualizado a MUIv5",
-        "pl": "GUI zaktualizuje MUIv5",
-        "zh-cn": "古伊向MUIv5更新"
       }
     },
     "title": "IP-Cameras",

@@ -68,8 +68,8 @@ To add a new camera, you must create a Pull Request on GitHub with the following
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
-* (bluefox) Added WiWiCam MW1 and HiKam cameras 
+### 1.2.3 (2023-09-27)
+* (bluefox) Added WiWiCam MW1 and HiKam cameras
 
 ### 1.2.2 (2023-07-07)
 * (bluefox) Corrected passwords with exclamation mark

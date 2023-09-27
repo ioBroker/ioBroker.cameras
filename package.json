@@ -1,6 +1,6 @@
 {
   "name": "iobroker.cameras",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Connect IP-cameras to iobroker",
   "author": {
     "name": "bluefox",
