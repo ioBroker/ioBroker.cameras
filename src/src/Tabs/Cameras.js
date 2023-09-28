@@ -43,7 +43,7 @@ const TYPES = {
     rtsp:         { Config: RTSPImageConfig, name: 'RTSP Snapshot' },
     reolinkE1:    { Config: RTSPReolinkE1Config, name: 'Reolink E1 Snapshot' },
     eufy:         { Config: RTSPEufyConfig, name: 'Eufy Security' },
-    hikam:         { Config: RTSPHiKamConfig, name: 'HiKam / WiWiCam' },
+    hikam:        { Config: RTSPHiKamConfig, name: 'HiKam / WiWiCam' },
 };
 
 const styles = theme => ({
@@ -166,6 +166,9 @@ class Server extends Component {
             if (TYPES[type].name && !TYPES[type].translated) {
                 TYPES[type].translated = true;
                 TYPES[type].name = I18n.t(TYPES[type].name);
+                if (TYPES[type].Config.getRtsp && TYPES[type].Config.getRtsp()) {
+                    TYPES[type].rtsp = true;
+                }
             }
         });
     }
@@ -587,6 +590,7 @@ class Server extends Component {
                                 name: camera.name,
                                 enabled: camera.enabled,
                                 ip: camera.ip,
+                                rtsp: TYPES[e.target.value].rtsp,
                             };
                             this.props.onChange('cameras', cameras);
                         }}

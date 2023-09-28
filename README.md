@@ -53,7 +53,7 @@ Here is an example of how to add Reolink E1:
 
 ![rtsp](img/rtsp.png)
 
-## For developers - how to add new camera
+## How to add a new camera (For developers)
 To add a new camera, you must create a Pull Request on GitHub with the following changes:
 - Add new file into `cameras` folder. This is backend to read the single image from the camera. 
 - Add GUI file in the `src/src/Types/` folder. This is the configuration dialog for the camera
@@ -68,6 +68,10 @@ To add a new camera, you must create a Pull Request on GitHub with the following
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) Utilized the new js-controller feature: sendToUI. RTSP Streaming works only with js-controller 5.0.13 or higher
+* (bluefox) Implemented a second widget for simple cameras
+
 ### 1.2.3 (2023-09-27)
 * (bluefox) Added WiWiCam MW1 and HiKam cameras
 
@@ -97,7 +101,7 @@ To add a new camera, you must create a Pull Request on GitHub with the following
 * (bluefox) Preparations for js-controller@4.x are made
 
 ### 0.1.4 (2021-07-13)
-* (bluefox) Add role for states
+* (bluefox) Add a role for states
 
 ### 0.1.3 (2020-08-08)
 * (Hirsch-DE) Parameters were applied

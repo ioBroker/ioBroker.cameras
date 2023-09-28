@@ -170,7 +170,8 @@
         "color": "#508000",
         "label": "cameras_set_label",
         "components": [
-          "RtspCamera"
+          "RtspCamera",
+          "SnapshotCamera"
         ]
       }
     },

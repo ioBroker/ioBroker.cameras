@@ -9,5 +9,12 @@
   "Close": "Cerca",
   "videoWidth": "Ancho de vídeo",
   "tooltip_videoWidth": "No configure el ancho del video demasiado alto para ahorrar banda ancha. Es para ambos: videos pequeños y completos. Si no se establece, se tomará el tamaño inicial del widget.",
-  "Camera instance %s inactive": "Instancia de cámara %s inactiva"
+  "Camera instance %s inactive": "Instancia de cámara %s inactiva",
+  "disabled": "desactivado",
+  "pollingInterval": "Intervalo de votación",
+  "pollingIntervalFull": "Intervalo de sondeo en el diálogo",
+  "tooltip_ms": "milisegundos",
+  "rotate": "Girar imagen",
+  "Polling Camera": "Cámara de sondeo",
+  "Cannot load URL": "No se puede cargar la URL"
 }

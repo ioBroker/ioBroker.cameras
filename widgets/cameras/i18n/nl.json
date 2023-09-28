@@ -9,5 +9,12 @@
   "Close": "Dichtbij",
   "videoWidth": "Videobreedte",
   "tooltip_videoWidth": "Stel de breedte van de video niet te hoog in om breedband te besparen. Het is voor beide: kleine en volledige video's. Als dit niet is ingesteld, wordt de oorspronkelijke grootte van de widget gebruikt.",
-  "Camera instance %s inactive": "Camera-instantie %s inactief"
+  "Camera instance %s inactive": "Camera-instantie %s inactief",
+  "disabled": "gehandicapt",
+  "pollingInterval": "Polling-interval",
+  "pollingIntervalFull": "Polling-interval in dialoogvenster",
+  "tooltip_ms": "milliseconden",
+  "rotate": "Afbeelding roteren",
+  "Polling Camera": "Pollingcamera",
+  "Cannot load URL": "Kan URL niet laden"
 }

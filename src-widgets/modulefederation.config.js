@@ -4,6 +4,7 @@ module.exports = makeFederation(
     'vis2CameraWidgets',
     {
         './RtspCamera': './src/RtspCamera',
+        './SnapshotCamera': './src/SnapshotCamera',
         './translations': './src/translations',
     }
 );

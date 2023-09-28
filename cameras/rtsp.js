@@ -102,7 +102,7 @@ function unload(adapter, cam) {
     if (adapter.__urlCameras[cam.name]) {
         delete adapter.__urlCameras[cam.name];
     }
-    // after last unload, all the resources must be cleared too
+    // after last unloading, all the resources must be cleared too
     if (Object.keys(adapter.__urlCameras)) {
         // unload
     }
@@ -151,18 +151,20 @@ function process(adapter, cam) {
     return cam.runningRequest;
 }
 
+function getRtspURL(adapter, cameraObject) {
+    if (!cameraObject.decodedPassword && cameraObject.password) {
+        cameraObject.decodedPassword = adapter.decrypt(cameraObject.password);
+    }
+
+    return `rtsp://${cameraObject.username ? `${encodeURIComponent(cameraObject.username)}:${cameraObject.decodedPassword}@` : ''}${cameraObject.ip}:${cameraObject.port || 554}${cameraObject.urlPath ? (cameraObject.urlPath.startsWith('/') ? cameraObject.urlPath : `/${cameraObject.urlPath}`) : ''}`;
+}
 const streamings = {};
 const ratio = {};
 
 // ffmpeg -rtsp_transport udp -i rtsp://localhost:8090/stream -c:a aac -b:a 160000 -ac 2 -s 854x480 -c:v libx264 -b:v 800000 -hls_time 10 -hls_list_size 2 -hls_flags delete_segments -start_number 1 playlist.m3u8
 
 async function webStreaming(adapter, camera, options, fromState) {
-    const cameraObject = adapter.config.cameras.find(c => c.name === camera && c.type === 'rtsp');
-    if (cameraObject && !cameraObject.decodedPassword && cameraObject.password) {
-        cameraObject.decodedPassword = adapter.decrypt(cameraObject.password);
-    }
-
-    const url = cameraObject ? `rtsp://${cameraObject.username || cameraObject.decodedPassword ? `${cameraObject.username}:${cameraObject.decodedPassword}@` : ''}${cameraObject.ip}:${cameraObject.port}/${cameraObject.urlPath}` : '';
+    const url = typeof options === 'string' ? options : options.url;
 
     if (!fromState) {
         await adapter.setStateAsync(`${camera}.running`, true, true);
@@ -195,7 +197,7 @@ async function webStreaming(adapter, camera, options, fromState) {
             width: desiredWidth,
         };
 
-        adapter.log.debug(`Starting streaming for ${camera} (${url.replace(cameraObject.decodedPassword || 'ABCDEF', '****')}), width: ${desiredWidth}`);
+        adapter.log.debug(`Starting streaming for ${camera} (${url.replace(/:[^@]+@/, ':****@')}), width: ${desiredWidth}`);
 
         const command = ffmpeg(url)
             .setFfmpegPath(adapter.config.ffmpegPath)
@@ -211,6 +213,8 @@ async function webStreaming(adapter, camera, options, fromState) {
         if (desiredWidth) {
             // first try to find the best scale
             if (!ratio[camera]) {
+                const cameraObject = adapter.config.cameras.find(c => c.name === camera);
+
                 const outputFileName = path.normalize(`${adapter.config.tempPath}/${cameraObject.ip.replace(/[.:]/g, '_')}.jpg`);
                 const body = await getRtspSnapshot(adapter.config.ffmpegPath, cameraObject, outputFileName, adapter);
                 // try to get width and height
@@ -258,7 +262,7 @@ async function webStreaming(adapter, camera, options, fromState) {
                     adapter._streamSubscribes.forEach(sub => {
                         if (sub.camera === camera) {
                             found = true;
-                            adapter.sendTo(sub.from, 'im', { s: sub.sid, m: `startCamera/${camera}`, d: frame });
+                            adapter.sendToUI && adapter.sendToUI({ clientId: sub.clientId, data: frame });
                         }
                     });
                     if (!found) {
@@ -301,6 +305,7 @@ module.exports = {
     init,
     process,
     unload,
+    getRtspURL,
     getRtspSnapshot,
     executeFFmpeg,
     webStreaming,

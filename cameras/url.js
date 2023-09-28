@@ -23,7 +23,7 @@ function unload(adapter, cam) {
     if (adapter.__urlCameras[cam.name]) {
         delete adapter.__urlCameras[cam.name];
     }
-    // after last unload all the resources must be cleared too
+    // after last unload, all the resources must be cleared too
     if (Object.keys(adapter.__urlCameras)) {
         // unload
     }

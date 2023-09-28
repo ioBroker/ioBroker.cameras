@@ -7,6 +7,7 @@ import { I18n } from '@iobroker/adapter-react-v5';
 import { Checkbox } from '@mui/material';
 import translations from './translations';
 import RtspCamera from './RtspCamera';
+import SnapshotCamera from './SnapshotCamera';
 
 const styles = theme => ({
     app: {
@@ -42,6 +43,23 @@ class App extends WidgetDemoApp {
         const widgets = {
             camera: <RtspCamera
                 key="Camera"
+                context={{
+                    socket: this.socket,
+                    systemConfig: this.state.systemConfig,
+                }}
+                style={{
+                    width: 400,
+                    height: 180,
+                }}
+                data={{
+                    name: 'Camera',
+                    camera: '0/cam2',
+                }}
+                adapterName="cameras"
+                instance={0}
+            />,
+            snapshot: <SnapshotCamera
+                key="SnapshotCamera"
                 context={{
                     socket: this.socket,
                     systemConfig: this.state.systemConfig,

@@ -9,5 +9,12 @@
   "Close": "Schließen",
   "videoWidth": "Videobreite",
   "tooltip_videoWidth": "Stellen Sie die Breite des Videos nicht zu hoch ein, um Breitband zu sparen. Es ist sowohl für kleine als auch für vollständige Videos geeignet. Wenn nicht festgelegt, wird die anfängliche Größe des Widgets verwendet.",
-  "Camera instance %s inactive": "Kamerainstanz %s inaktiv"
+  "Camera instance %s inactive": "Kamerainstanz %s inaktiv",
+  "disabled": "deaktiviert",
+  "pollingInterval": "Abrufintervall",
+  "pollingIntervalFull": "Abfrageintervall im Dialog",
+  "tooltip_ms": "Millisekunden",
+  "rotate": "Bild drehen",
+  "Polling Camera": "URL kamera",
+  "Cannot load URL": "URL kann nicht geladen werden"
 }

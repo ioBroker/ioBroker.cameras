@@ -9,5 +9,12 @@
   "Close": "Zamknąć",
   "videoWidth": "Szerokość wideo",
   "tooltip_videoWidth": "Nie ustawiaj zbyt dużej szerokości wideo, aby zaoszczędzić łącze szerokopasmowe. Dotyczy to zarówno małych, jak i pełnych filmów. Jeśli nie ustawiono, zostanie wzięty początkowy rozmiar widżetu.",
-  "Camera instance %s inactive": "Instancja kamery %s nieaktywna"
+  "Camera instance %s inactive": "Instancja kamery %s nieaktywna",
+  "disabled": "wyłączony",
+  "pollingInterval": "Interwał odpytywania",
+  "pollingIntervalFull": "Interwał odpytywania w oknie dialogowym",
+  "tooltip_ms": "milisekundy",
+  "rotate": "Obróć obraz",
+  "Polling Camera": "Kamera wyborcza",
+  "Cannot load URL": "Nie można załadować adresu URL"
 }

@@ -67,9 +67,9 @@ jobs:
       - name: Run local tests
         #         npm downgrade to 6 (mainly for node.js 16) is needed because else testing fails
         #         after installing additional adapters
-        run: |
-          npm install -g npm@6
-          npm test
+        # run: |
+        #  npm install -g npm@6
+        run: npm test
 #      - name: Run unit tests
 #        run: npm run test:unit
 #      - name: Run integration tests # (linux/osx)

@@ -1,7 +1,8 @@
-const { getRtspSnapshot } = require('./rtsp');
+const { getRtspSnapshot, getRtspURL } = require('./rtsp');
 const path = require('path');
 
-// documentation https://reolink.com/wp-content/uploads/2017/01/Reolink-CGI-command-v1.61.pdf
+// documentation https://www.wiwacam.com/de/mw1-minikamera-kurzanleitung-und-faq/
+// https://support.hikam.de/support/solutions/articles/16000070656-zugriff-auf-kameras-der-2-generation-via-onvif-f%C3%BCr-s6-q8-a7-2-generation-
 
 function init(adapter, cam) {
     adapter.__urlCameras = adapter.__urlCameras || {};
@@ -30,7 +31,7 @@ function unload(adapter, cam) {
     if (adapter.__urlCameras[cam.name]) {
         delete adapter.__urlCameras[cam.name];
     }
-    // after last unload all the resources must be cleared too
+    // after last unload, all the resources must be cleared too
     if (Object.keys(adapter.__urlCameras)) {
         // unload
     }
@@ -81,4 +82,5 @@ module.exports = {
     init,
     process,
     unload,
+    getRtspURL,
 };

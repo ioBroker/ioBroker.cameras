@@ -1,4 +1,4 @@
-const { getRtspSnapshot } = require('./rtsp');
+const { getRtspSnapshot, getRtspURL } = require('./rtsp');
 const path = require('path');
 
 // documentation https://reolink.com/wp-content/uploads/2017/01/Reolink-CGI-command-v1.61.pdf
@@ -30,7 +30,7 @@ function unload(adapter, cam) {
     if (adapter.__urlCameras[cam.name]) {
         delete adapter.__urlCameras[cam.name];
     }
-    // after last unload all the resources must be cleared too
+    // after last unload, all the resources must be cleared too
     if (Object.keys(adapter.__urlCameras)) {
         // unload
     }
@@ -81,4 +81,5 @@ module.exports = {
     init,
     process,
     unload,
+    getRtspURL,
 };

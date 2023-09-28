@@ -47,6 +47,10 @@ class RTSPHiKamConfig extends Component {
         this.state     = state;
     }
 
+    static getRtsp() {
+        return true; // this camera can be used in RTSP snapshot
+    }
+
     componentDidMount() {
         this.props.decrypt(this.state.password,
             password => this.setState({ password }));
