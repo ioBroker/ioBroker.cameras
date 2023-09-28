@@ -68,7 +68,7 @@ To add a new camera, you must create a Pull Request on GitHub with the following
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.3.0 (2023-09-28)
 * (bluefox) Utilized the new js-controller feature: sendToUI. RTSP Streaming works only with js-controller 5.0.13 or higher
 * (bluefox) Implemented a second widget for simple cameras
 

@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "cameras",
-    "version": "1.2.3",
+    "version": "1.3.0",
     "news": {
+      "1.3.0": {
+        "en": "Utilized the new js-controller feature: sendToUI. RTSP Streaming works only with js-controller 5.0.13 or higher\nImplemented a second widget for simple cameras",
+        "de": "Verwenden Sie die neue js-Controller-Funktion: sendToUI. FTE Streaming funktioniert nur mit js-controller 5.0.13 oder höher\nImplementiert ein zweites Widget für einfache Kameras",
+        "ru": "Использование новой функции JS-контроллера: sendToUI. РТСП Потоковые работы только с js-controller 5.0.13 или выше\nРеализован второй виджет для простых камер",
+        "pt": "Utilizado o novo recurso js-controller: sendToUI. RT RT RT RT RT RT RT RT RT RT RT Streaming funciona apenas com js-controller 5.0.13 ou superior\nImplementado um segundo widget para câmeras simples",
+        "nl": "Gebruikte het nieuwe JS-controller kenmerk: stuur ToUI. RTP Streaming werkt alleen met Js-controller 5.013 of hoger\nEen tweede widget voor eenvoudige camera's",
+        "fr": "Utilisé la nouvelle fonction js-controller: sendToUI. RTSP Le streaming fonctionne uniquement avec js-controller 5.0.13 ou supérieur\nMise en œuvre d'un deuxième widget pour les caméras simples",
+        "it": "Utilizzato la nuova funzione js-controller: sendToUI. NT1 Streaming funziona solo con js-controller 5.0.13 o superiore\nImplementato un secondo widget per semplici telecamere",
+        "es": "Utilizó la nueva función js-controller: sendToUI. RTSP Streaming funciona sólo con js-controller 5.0.13 o superior\nImplementado un segundo widget para cámaras simples",
+        "pl": "Utilizował nowy system sterowania js: wysyła ToUI. RTSP Streaming działa tylko z kontrolerem 5.0.13 lub wyższym\nPoprawiono drugi widget dla zwykłych kamer",
+        "uk": "Утилізовано нову функцію js-controller: sendToUI. РТСП Потокові роботи тільки з js-controller 5.0.13 або вище\nРеалізовано другий віджет для простих камер",
+        "zh-cn": "利用新的控制容忍特点:派遣ToUI。 RTSP 精简工作只与控制力行5.13或更高。\n对简单的摄像器实施第二发目标"
+      },
       "1.2.3": {
         "en": "Added WiWiCam MW1 and HiKam cameras",
         "de": "WiWiCam MW1 und HiKam Kameras hinzugefügt",
@@ -80,19 +93,6 @@
         "pl": "Kwalifikacja GUI",
         "uk": "Виправлена помилка налаштування інтерфейсу",
         "zh-cn": "更正"
-      },
-      "1.0.2": {
-        "en": "added RTSP camera\nadded cache of snapshots",
-        "de": "rTSP Kamera\nhinzugefügt cache von snapshots",
-        "ru": "добавлена RTSP камера\nдобавлен кэш снимков",
-        "pt": "adicionado RTSP câmera\nadicionado cache de instantâneos",
-        "nl": "voegde RTSP camera toe\nvoegde kache van foto's toe",
-        "fr": "appareil photo RTSP\ncache ajouté de snapshots",
-        "it": "rTSP fotocamera\ncache aggiunta di snapshot",
-        "es": "cámara RTSP\nañadido caché de instantáneas",
-        "pl": "rTSP camera\ndodać podręcznik",
-        "uk": "додана камера RTSP\nдодано кеш знімків",
-        "zh-cn": "添加了RTSP摄像机\nd. 绑架事件的增量"
       }
     },
     "title": "IP-Cameras",
