@@ -46,7 +46,7 @@ class SnapshotCamera extends Generic {
     static getWidgetInfo() {
         return {
             id: 'tplCameras2SnapshotCamera',
-            visSet: 'vis-2-widgets-cameras',
+            visSet: 'cameras',
             visName: 'Polling Camera',
             visWidgetLabel: 'Polling Camera',
             visAttrs: [

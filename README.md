@@ -59,7 +59,7 @@ To add a new camera, you must create a Pull Request on GitHub with the following
 - Add GUI file in the `src/src/Types/` folder. This is the configuration dialog for the camera
 - Add this dialog in `src/src/Tabs/Cameras.js` file analogical as other cameras are added. Only two lines should be added:
   - Import new configuration dialog like `import RTSPMyCamConfig from '../Types/RTSPMyCam';`
-  - Extend `TYPES` structure with the new camera like `mycam:         { Config: RTSPMyCamConfig, name: 'MyCam' },`
+  - Extend `TYPES` structure with the new camera like `mycam: { Config: RTSPMyCamConfig, name: 'MyCam' },`
     The attribute name must be the same as the name of the file in the `cameras` folder.
 
 <!--
@@ -68,6 +68,9 @@ To add a new camera, you must create a Pull Request on GitHub with the following
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) Changed widget set name
+
 ### 1.3.0 (2023-09-28)
 * (bluefox) Utilized the new js-controller feature: sendToUI. RTSP Streaming works only with js-controller 5.0.13 or higher
 * (bluefox) Implemented a second widget for simple cameras

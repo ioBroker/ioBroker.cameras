@@ -89,7 +89,7 @@ class RtspCamera extends Generic {
     static getWidgetInfo() {
         return {
             id: 'tplCameras2RtspCamera',
-            visSet: 'vis-2-widgets-cameras',
+            visSet: 'cameras',
             visName: 'RTSP Camera',
             visWidgetLabel: 'RTSP Camera',
             visWidgetSetLabel: 'Cameras',
