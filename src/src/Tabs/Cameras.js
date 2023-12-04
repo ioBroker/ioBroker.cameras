@@ -359,6 +359,19 @@ class Server extends Component {
                             <TextField
                                 variant="standard"
                                 className={this.props.classes.username}
+                                label={I18n.t('Request timeout (ms)')}
+                                value={cam.timeout === undefined ? '' : cam.timeout}
+                                helperText={I18n.t('If empty or 0, use default settings.')}
+                                onChange={e => {
+                                    const settings = JSON.parse(JSON.stringify(cam));
+                                    settings.timeout = e.target.value;
+                                    this.onCameraSettingsChanged(settings);
+                                }}
+                            />
+                            <br />
+                            <TextField
+                                variant="standard"
+                                className={this.props.classes.username}
                                 label={I18n.t('Cache timeout (ms)')}
                                 value={cam.cacheTimeout === undefined ? '' : cam.cacheTimeout}
                                 helperText={I18n.t('If empty, use default settings. If 0, cache disabled')}

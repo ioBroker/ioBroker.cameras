@@ -13,15 +13,11 @@ function init(adapter, cam) {
     }
 
     cam.decodedPassword = cam.password ? adapter.decrypt(cam.password) : '';
-    if (cam.cacheTimeout === undefined || cam.cacheTimeout === null || cam.cacheTimeout === '') {
-        cam.cacheTimeout = adapter.config.defaultCacheTimeout;
-    } else {
-        cam.cacheTimeout = parseInt(cam.cacheTimeout, 10) || 0;
-    }
 
     cam.settings = JSON.parse(JSON.stringify(cam));
     cam.settings.port = 554;
     cam.settings.urlPath = cam.quality === 'high' ? '/h264Preview_01_main' : '/h264Preview_01_sub';
+    cam.settings.timeout = parseInt(cam.timeout || adapter.config.defaultTimeout, 10) || 2000;
 
     return Promise.resolve();
 }
@@ -40,10 +36,6 @@ function unload(adapter, cam) {
 }
 
 function process(adapter, cam) {
-    if (cam.cache && cam.cacheTime > Date.now()) {
-        return Promise.resolve(cam.cache);
-    }
-
     if (cam.runningRequest) {
         return cam.runningRequest;
     }
@@ -61,17 +53,10 @@ function process(adapter, cam) {
             cam.runningRequest = null;
             adapter.log.debug(`Reolink E1 from ${cam.ip}. Done!`);
 
-            const result = {
+            return {
                 body,
                 contentType: 'image/jpeg',
             };
-
-            if (cam.cacheTimeout) {
-                cam.cache = result;
-                cam.cacheTime = Date.now() + cam.cacheTimeout;
-            }
-
-            return result;
         });
 
     return cam.runningRequest;

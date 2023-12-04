@@ -78,6 +78,11 @@ class SnapshotCamera extends Generic {
                             default: 300,
                         },
                         {
+                            name: 'noCacheByFull',
+                            label: 'noCacheByFull',
+                            type: 'checkbox',
+                        },
+                        {
                             name: 'rotate',
                             label: 'rotate',
                             type: 'select',
@@ -131,8 +136,9 @@ class SnapshotCamera extends Generic {
         };
     }
 
-    getImageWidth() {
-        if (this.state.full) {
+    getImageWidth(isFull) {
+        isFull = isFull === undefined ? this.state.full : isFull;
+        if (isFull && this.fullVideoRef.current) {
             return this.fullVideoRef.current?.parentElement.clientWidth || 0;
         }
 
@@ -157,9 +163,8 @@ class SnapshotCamera extends Generic {
     updateImage = () => {
         if (!this.loading) {
             this.loading = true;
-            const url = this.getUrl();
             if (this.videoRef.current) {
-                this.videoRef.current.src = url;
+                this.videoRef.current.src = this.getUrl();
                 this.videoRef.current.onload = e => {
                     if (e.target && !e.target.style.opacity !== '1') {
                         e.target.style.opacity = '1';
@@ -177,7 +182,7 @@ class SnapshotCamera extends Generic {
                 };
             }
             if (this.fullVideoRef.current && this.state.full) {
-                this.fullVideoRef.current.src = url;
+                this.fullVideoRef.current.src = this.getUrl(true);
             }
         }
     };
@@ -260,13 +265,16 @@ class SnapshotCamera extends Generic {
 
     getUrl(isFull) {
         if (this.state.rxData.camera) {
-            if (isFull) {
-                const parts = window.location.pathname.split('/');
-                parts.pop();
-                return `${window.location.protocol}//${window.location.host}/${parts.join('/')}cameras.${this.state.rxData.camera}?ts=${Date.now()}&w=${this.getImageWidth()}${this.state.rxData.rotate ? `&angle=${this.state.rxData.rotate}` : ''}`;
-            }
-            return `../cameras.${this.state.rxData.camera}?ts=${Date.now()}&w=${this.getImageWidth()}${this.state.rxData.rotate ? `&angle=${this.state.rxData.rotate}` : ''}`;
+            const url = `../cameras.${this.state.rxData.camera}?`;
+            const params = [
+                `ts=${Date.now()}`,
+                `w=${this.getImageWidth(isFull)}`,
+                `noCache=${isFull ? this.state.rxData.noCacheByFull : false}`,
+                this.state.rxData.rotate ? `angle=${this.state.rxData.rotate}` : '',
+            ];
+            return url + params.filter(p => p).join('');
         }
+
         return '';
     }
 

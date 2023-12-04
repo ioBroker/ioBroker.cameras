@@ -16,5 +16,6 @@
   "tooltip_ms": "milisekundy",
   "rotate": "Obróć obraz",
   "Polling Camera": "Kamera wyborcza",
-  "Cannot load URL": "Nie można załadować adresu URL"
+  "Cannot load URL": "Nie można załadować adresu URL",
+  "noCacheByFull": "Brak pamięci podręcznej w oknie dialogowym"
 }

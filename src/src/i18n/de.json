@@ -15,7 +15,7 @@
   "not connected": "nicht verbunden",
   "Description": "Beschreibung",
   "Name": "Name",
-  "Test": "Prüfung",
+  "Test": "Prüfen",
   "Apply": "Speichern",
   "Username": "Nutzername",
   "Password": "Passwort",
@@ -57,5 +57,9 @@
   "Eufy Security": "Eufy-Sicherheit",
   "From eusec adapter": "Vom Eusec-Adapter",
   "By IP Address": "Nach IP-Adresse",
-  "Camera OID": "Kameraobjekt-ID"
+  "Camera OID": "Kameraobjekt-ID",
+  "Protocol": "Protokoll",
+  "HiKam / WiWiCam": "HiKam / WiWiCam",
+  "Request timeout (ms)": "Anforderungszeitüberschreitung (ms)",
+  "If empty or 0, use default settings.": "Wenn leer oder 0, verwenden Sie die Standardeinstellungen."
 }

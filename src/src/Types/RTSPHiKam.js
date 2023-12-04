@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
 
-import { MenuItem, Select } from '@mui/material';
-
-import TextField from '@mui/material/TextField';
+import {
+    MenuItem,
+    Select,
+    TextField,
+} from '@mui/material';
 
 import { I18n } from '@iobroker/adapter-react-v5';
 
@@ -41,7 +43,6 @@ class RTSPHiKamConfig extends Component {
         state.ip       = state.ip || '';
         state.password = state.password || '';
         state.username = state.username === undefined ? 'admin' : (state.username || '');
-        state.timeout  = state.timeout  || 5000;
         state.quality  = state.quality  || 'low';
 
         this.state     = state;
@@ -62,7 +63,6 @@ class RTSPHiKamConfig extends Component {
                 ip:       this.state.ip,
                 username: this.state.username,
                 password,
-                timeout:  this.state.timeout,
                 quality:  this.state.quality,
             });
         });

@@ -11,12 +11,6 @@ function init(adapter, cam) {
 
     cam.password = cam.password || '';
 
-    if (cam.cacheTimeout === undefined || cam.cacheTimeout === null || cam.cacheTimeout === '') {
-        cam.cacheTimeout = adapter.config.defaultCacheTimeout;
-    } else {
-        cam.cacheTimeout = parseInt(cam.cacheTimeout, 10) || 0;
-    }
-
     cam.timeout = parseInt(cam.timeout || adapter.config.defaultTimeout, 10) || 2000;
 
     // Calculate basic authentication. The password was encrypted and must be decrypted
@@ -29,11 +23,7 @@ function unload(adapter, cam) {
     return Promise.resolve();
 }
 
-function process(adapter, cam, req, res) {
-    if (cam.cache && cam.cacheTime > Date.now()) {
-        return Promise.resolve(cam.cache);
-    }
-
+function process(adapter, cam) {
     if (cam.runningRequest) {
         return cam.runningRequest;
     }
@@ -42,21 +32,14 @@ function process(adapter, cam, req, res) {
         responseType: 'arraybuffer',
         validateStatus: status => status < 400,
         timeout: cam.timeout,
-        headers: {Authorization: cam.basicAuth}
+        headers: { Authorization: cam.basicAuth },
     })
         .then(response => {
             cam.runningRequest = null;
-            const result = {
+            return {
                 body: response.data,
                 contentType: response.headers['Content-type'] || response.headers['content-type']
             };
-
-            if (cam.cacheTimeout) {
-                cam.cache = result;
-                cam.cacheTime = Date.now() + cam.cacheTimeout;
-            }
-
-            return result;
         })
         .catch(error => {
             if (error.response) {

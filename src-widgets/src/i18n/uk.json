@@ -16,5 +16,6 @@
   "tooltip_ms": "мілісекунд",
   "rotate": "Повернути зображення",
   "Polling Camera": "Камера опитування",
-  "Cannot load URL": "Не вдається завантажити URL"
+  "Cannot load URL": "Не вдається завантажити URL",
+  "noCacheByFull": "У діалоговому вікні немає кешу"
 }

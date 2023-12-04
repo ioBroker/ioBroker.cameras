@@ -15,11 +15,6 @@ async function init(adapter, cam) {
         throw new Error(`Invalid IP: "${cam.ip}"`);
     }
 
-    if (cam.cacheTimeout === undefined || cam.cacheTimeout === null || cam.cacheTimeout === '') {
-        cam.cacheTimeout = adapter.config.defaultCacheTimeout;
-    } else {
-        cam.cacheTimeout = parseInt(cam.cacheTimeout, 10) || 0;
-    }
     cam.settings = JSON.parse(JSON.stringify(cam));
 
     if (cam.useOid) {
@@ -38,6 +33,7 @@ async function init(adapter, cam) {
             cam.settings.urlPath = u.pathname;
             cam.settings.username = u.username;
             cam.settings.decodedPassword = u.password;
+            cam.settings.timeout = parseInt(cam.timeout || adapter.config.defaultTimeout, 10) || 10000;
         }
     } else {
         cam.settings.port = 80;
@@ -49,7 +45,7 @@ function unload(adapter, cam) {
     if (adapter.__urlCameras[cam.name]) {
         delete adapter.__urlCameras[cam.name];
     }
-    // after last unload all the resources must be cleared too
+    // after last unloading, all the resources must be cleared too
     if (Object.keys(adapter.__urlCameras)) {
         // unload
     }
@@ -59,10 +55,6 @@ function unload(adapter, cam) {
 }
 
 function process(adapter, cam) {
-    if (cam.cache && cam.cacheTime > Date.now()) {
-        return Promise.resolve(cam.cache);
-    }
-
     if (cam.runningRequest) {
         return cam.runningRequest;
     }
@@ -76,17 +68,10 @@ function process(adapter, cam) {
             cam.runningRequest = null;
             adapter.log.debug(`Eufy from ${cam.ip}. Done!`);
 
-            const result = {
+            return {
                 body,
                 contentType: 'image/jpeg',
             };
-
-            if (cam.cacheTimeout) {
-                cam.cache = result;
-                cam.cacheTime = Date.now() + cam.cacheTimeout;
-            }
-
-            return result;
         });
 
     return cam.runningRequest;

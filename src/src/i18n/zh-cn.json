@@ -57,5 +57,9 @@
   "Eufy Security": "尤菲安全",
   "From eusec adapter": "来自eusec适配器",
   "By IP Address": "通过IP地址",
-  "Camera OID": "相机对象ID"
+  "Camera OID": "相机对象ID",
+  "Protocol": "协议",
+  "HiKam / WiWiCam": "HiKam / WiWiCam",
+  "Request timeout (ms)": "请求超时（毫秒）",
+  "If empty or 0, use default settings.": "如果为空或 0，则使用默认设置。"
 }

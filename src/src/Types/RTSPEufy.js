@@ -41,7 +41,6 @@ class RTSPEufyConfig extends Component {
 
         // set default values
         state.ip       = state.ip || '';
-        state.timeout  = state.timeout  || 5000;
         state.oid      = state.oid || '';
         state.useOid   = state.useOid || false;
         state.eusecInstalled = false;
@@ -65,7 +64,6 @@ class RTSPEufyConfig extends Component {
         this.props.onChange({
             ip:      this.state.ip,
             oid:     this.state.oid,
-            timeout: this.state.timeout,
             useOid:  this.state.useOid,
         });
     }

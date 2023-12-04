@@ -144,6 +144,7 @@
     "subscribable": true,
     "eraseOnUpload": true,
     "stopBeforeUpdate": true,
+    "tier": 3,
     "dependencies": [
       {
         "js-controller": ">=3.1.4",
@@ -184,7 +185,7 @@
     "port": 8200,
     "key": "",
     "webInstance": "*",
-    "defaultTimeout": 2000,
+    "defaultTimeout": 5000,
     "defaultCacheTimeout": 100,
     "allowIPs": "",
     "ffmpegPath": "/usr/bin/ffmpeg",

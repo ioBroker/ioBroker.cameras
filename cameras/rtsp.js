@@ -15,7 +15,9 @@ function maskPassword(str, password) {
     return str.replace(password || 'ABCGHFG', '******');
 }
 
-function executeFFmpeg(params, path, adapter, decodedPassword) {
+function executeFFmpeg(params, path, adapter, decodedPassword, timeoutMs) {
+    timeoutMs = timeoutMs || 10000;
+
     return new Promise((resolve, reject) => {
         if (params && !Array.isArray(params)) {
             params = params.split(' ');
@@ -35,8 +37,20 @@ function executeFFmpeg(params, path, adapter, decodedPassword) {
         proc.stderr.setEncoding('utf8');
         proc.stderr.on('data', data => stderr.push(data.toString('utf8')));
 
-        proc.on('close', code =>
-            code ? reject(stderr.join('')) : resolve(stdout.join('')));
+
+        let timeout = setTimeout(() => {
+            timeout = null;
+            proc.kill();
+            reject('timeout');
+        }, timeoutMs);
+
+        proc.on('close', code => {
+            if (timeout) {
+                clearTimeout(timeout);
+                timeout = null;
+                code ? reject(stderr.join('')) : resolve(stdout.join(''));
+            }
+        });
     });
 }
 
@@ -56,17 +70,23 @@ function buildCommand(options, outputFileName) {
     }
 
     options.prefix && parameters.push(options.prefix);
+
     parameters.push(`-rtsp_transport`);
     parameters.push(options.protocol || 'udp');
+
     parameters.push('-i');
     parameters.push(`rtsp://${options.username ? `${encodeURIComponent(options.username)}:${password}@` : ''}${options.ip}:${options.port || 554}${options.urlPath ? (options.urlPath.startsWith('/') ? options.urlPath : `/${options.urlPath}`) : ''}`);
+
     parameters.push('-loglevel');
     parameters.push('error');
+
     if (options.originalWidth && options.originalHeight) {
         parameters.push(`scale=${options.originalWidth}:${options.originalHeight}`);
     }
+
     parameters.push('-vframes');
     parameters.push('1');
+
     options.suffix && parameters.push(options.suffix);
     parameters.push(outputFileName);
     return parameters;
@@ -75,7 +95,7 @@ function buildCommand(options, outputFileName) {
 function getRtspSnapshot(ffpmegPath, options, outputFileName, adapter) {
     const parameters = buildCommand(options, outputFileName);
 
-    return executeFFmpeg(parameters, ffpmegPath, adapter, options.decodedPassword)
+    return executeFFmpeg(parameters, ffpmegPath, adapter, options.decodedPassword, options.timeout)
         .then(() => fs.readFileSync(outputFileName));
 }
 
@@ -89,11 +109,7 @@ function init(adapter, cam) {
     }
 
     cam.decodedPassword = cam.password ? adapter.decrypt(cam.password) : '';
-    if (cam.cacheTimeout === undefined || cam.cacheTimeout === null || cam.cacheTimeout === '') {
-        cam.cacheTimeout = adapter.config.defaultCacheTimeout;
-    } else {
-        cam.cacheTimeout = parseInt(cam.cacheTimeout, 10) || 0;
-    }
+    cam.timeout = parseInt(cam.timeout || adapter.config.defaultTimeout, 10) || 10000;
 
     return Promise.resolve();
 }
@@ -112,10 +128,6 @@ function unload(adapter, cam) {
 }
 
 function process(adapter, cam) {
-    if (cam.cache && cam.cacheTime > Date.now()) {
-        return Promise.resolve(cam.cache);
-    }
-
     if (cam.runningRequest) {
         return cam.runningRequest;
     }
@@ -135,17 +147,10 @@ function process(adapter, cam) {
                 ratio[cam.name] = metadata.width / metadata.height;
             }
 
-            const result = {
+            return {
                 body,
                 contentType: 'image/jpeg',
             };
-
-            if (cam.cacheTimeout) {
-                cam.cache = result;
-                cam.cacheTime = Date.now() + cam.cacheTimeout;
-            }
-
-            return result;
         });
 
     return cam.runningRequest;

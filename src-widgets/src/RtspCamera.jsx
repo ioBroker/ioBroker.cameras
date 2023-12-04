@@ -2,7 +2,11 @@ import React, { useEffect } from 'react';
 import { withStyles } from '@mui/styles';
 import {
     Button,
-    CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select,
+    CircularProgress, Dialog,
+    DialogActions, DialogContent,
+    DialogTitle,
+    MenuItem,
+    Select,
 } from '@mui/material';
 
 import { Close } from '@mui/icons-material';
@@ -32,6 +36,7 @@ const styles = () => ({
 
 export const CameraField = props => {
     const [cameras, setCameras] = React.useState(null);
+    const [camera, setCamera] = React.useState(props.data.camera || '');
 
     useEffect(() => {
         (async () => {
@@ -39,12 +44,12 @@ export const CameraField = props => {
             const instances = await props.context.socket.getAdapterInstances('cameras');
             instances.forEach(instance => {
                 const instanceId = instance._id.split('.').pop();
-                instance.native.cameras.filter(camera => !props.rtsp || camera.type === 'rtsp' || camera.rtsp).forEach(camera => {
+                instance.native.cameras.filter(iCamera => !props.rtsp || iCamera.type === 'rtsp' || iCamera.rtsp).forEach(iCamera => {
                     _cameras.push({
-                        enabled: camera.enabled !== false,
-                        value: `${instanceId}/${camera.name}`,
-                        label: `cameras.${instanceId}/${camera.name}`,
-                        subLabel: `${camera.desc}/${camera.ip}`,
+                        enabled: iCamera.enabled !== false,
+                        value: `${instanceId}/${iCamera.name}`,
+                        label: `cameras.${instanceId}/${iCamera.name}`,
+                        subLabel: `${iCamera.desc}/${iCamera.ip}`,
                     });
                 });
             });
@@ -55,13 +60,20 @@ export const CameraField = props => {
     return cameras ? <Select
         fullWidth
         variant="standard"
-        value={props.data.camera || ''}
-        onChange={e => props.setData({ camera: e.target.value })}
+        value={camera}
+        onChange={e => {
+            props.setData({ camera: e.target.value });
+            setCamera(e.target.value);
+        }}
     >
-        {cameras.map(camera => <MenuItem key={camera.value} value={camera.value} style={{ display: 'block', opacity: camera.enabled ? 1 : 0.5 }}>
-            <div>{camera.label}</div>
-            <div style={{ fontSize: 10, fontStyle: 'italic', opacity: 0.7 }}>{camera.subLabel}</div>
-            {!camera.enabled ? <div
+        {cameras.map(iCamera => <MenuItem
+            key={iCamera.value}
+            value={iCamera.value}
+            style={{ display: 'block', opacity: iCamera.enabled ? 1 : 0.5 }}
+        >
+            <div>{iCamera.label}</div>
+            <div style={{ fontSize: 10, fontStyle: 'italic', opacity: 0.7 }}>{iCamera.subLabel}</div>
+            {!iCamera.enabled ? <div
                 style={{
                     fontSize: 10,
                     fontStyle: 'italic',
@@ -254,7 +266,12 @@ class RtspCamera extends Generic {
                     this.setState({ loading: true });
                     const { instanceId, name } = RtspCamera.getNameAndInstance(this.state.rxData.camera);
                     if (this.useMessages) {
-                        await this.props.context.socket.subscribeOnInstance(`cameras.${instanceId}`, `startCamera/${name}`, { width: this.getImageWidth() }, this.onCameras);
+                        await this.props.context.socket.subscribeOnInstance(
+                            `cameras.${instanceId}`,
+                            `startCamera/${name}`,
+                            { width: this.getImageWidth() },
+                            this.onCameras,
+                        );
                     } else {
                         await this.props.context.socket.subscribeState(
                             `cameras.${instanceId}.${name}.stream`,
@@ -282,7 +299,12 @@ class RtspCamera extends Generic {
             // refresh stream
             const { instanceId, name } = RtspCamera.getNameAndInstance(this.currentCam);
             if (this.useMessages) {
-                await this.props.context.socket.subscribeOnInstance(`cameras.${instanceId}`, `startCamera/${name}`, { width: this.getImageWidth() }, this.onCameras);
+                await this.props.context.socket.subscribeOnInstance(
+                    `cameras.${instanceId}`,
+                    `startCamera/${name}`,
+                    { width: this.getImageWidth() },
+                    this.onCameras,
+                );
             } else {
                 await this.props.context.socket.setState(`cameras.${instanceId}.${name}.running`, {
                     val: true,
@@ -300,12 +322,13 @@ class RtspCamera extends Generic {
         }
     }
 
-    getImageWidth() {
+    getImageWidth(isFull) {
+        isFull = isFull === undefined ? this.state.full : isFull;
         // if (parseInt(this.state.rxData.width, 10)) {
         //    return parseInt(this.state.rxData.width, 10);
         // }
-        if (this.state.full) {
-            return this.fullVideoRef.current?.parentElement.clientWidth || 0;
+        if (isFull && this.fullVideoRef.current) {
+            return this.fullVideoRef.current.parentElement.clientWidth || 0;
         }
 
         return this.videoRef.current?.parentElement.clientWidth || 0;

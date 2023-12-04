@@ -89,7 +89,6 @@ class RTSPImageConfig extends Component {
         state.urlPath  = state.urlPath || '';
         state.password = state.password || '';
         state.username = state.username === undefined ? 'admin' : (state.username || '');
-        state.timeout  = state.timeout  || 5000;
         state.url      = `rtsp://${state.username ? `${state.username}:***@` : ''}${state.ip}:${state.port}${state.urlPath ? (state.urlPath.startsWith('/') ? state.urlPath : `/${state.urlPath}`) : ''}`;
         state.originalWidth = state.originalWidth || '';
         state.originalHeight = state.originalHeight || '';
@@ -117,7 +116,6 @@ class RTSPImageConfig extends Component {
                 password,
                 port:     this.state.port,
                 urlPath:  this.state.urlPath,
-                timeout:  this.state.timeout,
                 prefix:   this.state.prefix,
                 suffix:   this.state.suffix,
                 protocol: this.state.protocol,

@@ -93,94 +93,70 @@ function startAdapter(options) {
     return adapter;
 }
 
-function testCamera(adapter, item, cb) {
+async function testCamera(adapter, item) {
     if (item && item.type) {
-        const url = `/${item.name}_test`;
+        let result = null;
+        // load camera module
         try {
             adapter.__CAM_TYPES[item.type] = adapter.__CAM_TYPES[item.type] || require(`./cameras/${item.type}`);
         } catch (e) {
             adapter.log.error(`Cannot load "${item.type}": ${e}`);
-            return cb({error: `Cannot load "${item.type}"`});
+            throw new Error(`Cannot load "${item.type}"`);
         }
-        const req = { url };
-        let body;
-        let status;
-        let contentType;
-        const res = {
-            status: _status => status = _status,
-            send: _body => body = _body,
-            setHeader: (name, value) => {
-                if ((name || '').toLowerCase() === 'content-type') {
-                    contentType = value;
-                }
-            },
-        };
 
-        adapter.__CAM_TYPES[item.type].init(adapter, item)
-            .then(() => {
-                try {
-                    return adapter.__CAM_TYPES[item.type].process(adapter, item, req, res);
-                } catch (e) {
-                    console.log(`Cannot get image: ${e}`);
-                    cb && cb({error: `Cannot get image: ${e}`});
-                    cb = null;
-                    return null;
-                }
-            })
-            .then(result => {
-                // result = {body, contentType: status.headers['Content-type'] || status.headers['content-type']}
-                if (result && cb) {
-                    if (result.done) {
-                        if (status >= 200 && status < 400) {
-                            result = {body: `data:${contentType};base64,${body.toString('base64')}`, contentType};
-                        } else {
-                            return cb && cb(result);
-                        }
-                    }
-                    if (result.body) {
-                        return resizeImage(result, item.width, item.height)
-                            .then(data => rotateImage(data, item.angle))
-                            .then(data => addTextToImage(data, item.addTime ? adapter.config.dateFormat || 'LTS' : null, item.title))
-                            .then(data => cb && cb({body: `data:${data.contentType};base64,${data.body.toString('base64')}`, contentType}));
-                    } else {
-                        result.error = result.error || 'No answer';
-                        return cb && cb(result);
-                    }
-                } else if (cb) {
-                    return cb && cb({error: 'No answer'});
-                }
-            })
-            .catch(e => {
-                adapter.log.warn(`Cannot get image: ${e && e.toString()}`);
-                cb && cb({error: e && e.toString()});
-            })
-            .then(() => adapter.__CAM_TYPES[item.type].unload(adapter, item));
+        // init camera
+        await adapter.__CAM_TYPES[item.type].init(adapter, item);
+        // get image
+        let data = await adapter.__CAM_TYPES[item.type].process(adapter, item);
+        if (data && data.body) {
+            data = await resizeImage(data, item.width, item.height);
+            data = await rotateImage(data, item.angle);
+            data = await addTextToImage(data, item.addTime ? adapter.config.dateFormat || 'LTS' : null, item.title);
+            result = { body: `data:${data.contentType};base64,${data.body.toString('base64')}`, contentType: data.contentType };
+        } else {
+            throw new Error(`No answer${data && data.error ? `: ${data.error}` : ''}`);
+        }
+
+        // unload camera
+        await adapter.__CAM_TYPES[item.type].unload(adapter, item);
+        return result;
     } else {
-        cb && cb({error: 'Unknown type or invalid parameters'});
+        throw new Error('Unknown type or invalid parameters');
     }
 }
 
-function getCameraImage(cam) {
+async function getCameraImage(cam) {
     if (adapter.__CAM_TYPES[cam.type]) {
         adapter.log.debug(`Request ${cam.type} ${cam.ip || cam.url || cam.oid || ''} ${cam.name}`);
 
-        return adapter.__CAM_TYPES[cam.type].process(adapter, cam)
-            .then(data => {
-                if (data) {
-                    let imageData;
-                    return resizeImage(data, cam.width, cam.height)
-                        .then(data => rotateImage(data, cam.angle))
-                        .then(data => addTextToImage(data, cam.addTime ? adapter.config.dateFormat || 'LTS' : null, cam.title))
-                        .then(_imageData => {
-                            imageData = _imageData;
-                            return adapter.writeFileAsync(adapter.namespace, `/${cam.name}.jpg`, Buffer.from(_imageData.body));
-                        })
-                        .then(() => imageData.body);
-                } else if (!data) {
-                    adapter.log.error(`No data from camera ${cam.name}`);
-                }
-            })
-            .catch(e => adapter.log.error(`Cannot get camera image of ${cam.name}: ${e}`));
+        const params = {
+            w: parseInt(cam.width, 10) || 0,
+            h: parseInt(cam.height, 10) || 0,
+            angle: parseInt(cam.angle, 10) || 0,
+        };
+
+        if (!cam.noCache && cam.cache && cam.cacheTime > Date.now() && JSON.stringify(cam.cacheParams) === JSON.stringify(params)) {
+            adapter.log.debug(`Take from cache ${cam.name} ${cam.type} ${cam.ip || cam.url}`);
+            return cam.cache.body;
+        }
+
+        let data = await adapter.__CAM_TYPES[cam.type].process(adapter, cam);
+        if (data) {
+            data = await resizeImage(data, cam.width, cam.height);
+            data = await rotateImage(data, cam.angle);
+            data = await addTextToImage(data, cam.addTime ? adapter.config.dateFormat || 'LTS' : null, cam.title);
+
+            if (cam.cacheTimeout) {
+                cam.cache = data;
+                cam.cacheParams = params;
+                cam.cacheTime = Date.now() + cam.cacheTimeout;
+            }
+
+            await adapter.writeFileAsync(adapter.namespace, `/${cam.name}.jpg`, Buffer.from(data.body));
+            return data.body;
+        } else {
+            return Promise.reject('No data from camera');
+        }
     } else {
         return Promise.reject('Unsupported camera type');
     }
@@ -266,22 +242,32 @@ async function processMessage(adapter, obj) {
 
     switch (obj.command) {
         case 'test': {
-            testCamera(adapter, obj.message, result =>
-                obj.callback && adapter.sendTo(obj.from, obj.command, result, obj.callback));
+            try {
+                const data = await testCamera(adapter, obj.message);
+                obj.callback && adapter.sendTo(obj.from, obj.command, data, obj.callback);
+            } catch (e) {
+                obj.callback && adapter.sendTo(obj.from, obj.command, { error: e.toString() }, obj.callback);
+            }
             break;
         }
 
         case 'image': {
-            let cam = adapter.config.cameras.find(cam => cam.name === obj.message.name);
-            if (cam && obj.callback) {
-                cam = Object.assign(JSON.parse(JSON.stringify(cam), obj.message));
+            if (obj.message) {
+                let cam = adapter.config.cameras.find(cam => cam.name === obj.message.name);
+                if (cam && obj.callback) {
+                    cam = Object.assign(JSON.parse(JSON.stringify(cam), obj.message));
 
-                getCameraImage(cam)
-                    .then(data =>
-                        adapter.sendTo(obj.from, obj.command, { data: Buffer.from(data).toString('base64'), contentType: 'image/jpeg' }, obj.callback))
-                    .catch(e => adapter.sendTo(obj.from, obj.command, { error: e }, obj.callback));
+                    try {
+                        const data = await getCameraImage(cam);
+                        adapter.sendTo(obj.from, obj.command, { data: Buffer.from(data).toString('base64'), contentType: 'image/jpeg' }, obj.callback);
+                    } catch (e) {
+                        adapter.sendTo(obj.from, obj.command, { error: e }, obj.callback);
+                    }
+                } else {
+                    obj.callback && adapter.sendTo(obj.from, obj.command, { error: 'Name not found' }, obj.callback);
+                }
             } else {
-                obj.callback && adapter.sendTo(obj.from, obj.command, { error: 'Name not found' }, obj.callback);
+                obj.callback && adapter.sendTo(obj.from, obj.command, { error: 'Invalid request' }, obj.callback);
             }
             break;
         }
@@ -341,13 +327,13 @@ function resizeImage(data, width, height) {
         return sharp(data.body)
             .jpeg()
             .toBuffer()
-            .then(body => ({body, contentType: 'image/jpeg'}));
+            .then(body => ({ body, contentType: 'image/jpeg' }));
     }  else {
         return sharp(data.body)
             .resize(width || null, height || null)
             .jpeg()
             .toBuffer()
-            .then(body => ({body, contentType: 'image/jpeg'}));
+            .then(body => ({ body, contentType: 'image/jpeg' }));
     }
 }
 
@@ -410,15 +396,22 @@ async function addTextToImage(data, dateFormat, title) {
             .composite(layers)
             .jpeg()
             .toBuffer()
-            .then(body => ({body, contentType: 'image/jpeg'}));
+            .then(body => ({ body, contentType: 'image/jpeg' }));
     }
 }
 
 function startWebServer(adapter) {
     adapter.log.debug(`Starting web server on http://${adapter.config.bind}:${adapter.config.port}/`);
-    adapter.__server = http.createServer((req, res) => {
-        const clientIp = req.connection.remoteAddress;
-        const parts = req.url.split('?');
+    adapter.__server = http.createServer(async (req, res) => {
+        const clientIp = req.socket.remoteAddress;
+        if (!clientIp) {
+            res.statusCode = 401;
+            res.write('Invalid key');
+            res.end();
+            adapter.log.debug(`Invalid key from unknown IP`);
+            return;
+        }
+        const parts = (req.url || '').split('?');
         const url = parts[0];
         const query = {};
         (parts[1] || '').split('&').forEach(p => {
@@ -458,42 +451,41 @@ function startWebServer(adapter) {
 
         const cam = adapter.config.cameras.find(cam => cam.path === url);
 
+        const ignoreCache = query.noCache === 'true' || query.noCache === true || query.noCache === 1 || query.noCache === '1';
+
         if (cam) {
             if (adapter.__CAM_TYPES[cam.type]) {
-                adapter.log.debug(`Request ${cam.name} ${cam.type} ${cam.ip || cam.url}`);
-                let done = false;
-                adapter.__CAM_TYPES[cam.type].process(adapter, cam, req, res)
-                    .then(data => {
-                        done = data.done;
-                        if (data && !done) {
-                            return resizeImage(data, parseInt(query.w, 10), parseInt(query.h, 10))
-                                .then(data => rotateImage(data, parseInt(query.angle, 10)))
-                                .then(data => addTextToImage(data, cam.addTime ? adapter.config.dateFormat || 'LTS' : null, cam.title))
-                                .then(data => {
-                                    if (!done) {
-                                        done = true;
-                                        res.setHeader('Content-type', data.contentType);
-                                        res.write(data.body || '');
-                                        res.end();
-                                    }
-                                });
-                        } else if (!done) {
-                            if (!done) {
-                                done = true;
-                                res.statusCode = 500;
-                                res.write('No answer');
-                                res.end();
-                            }
+                let data;
+                try {
+                    const params = {
+                        w: parseInt(query.w, 10) || 0,
+                        h: parseInt(query.h, 10) || 0,
+                        angle: parseInt(query.angle, 10) || 0,
+                    };
+                    if (!ignoreCache && cam.cache && cam.cacheTime > Date.now() && JSON.stringify(cam.cacheParams) === JSON.stringify(params)) {
+                        adapter.log.debug(`Take from cache ${cam.name} ${cam.type} ${cam.ip || cam.url}`);
+                        data = cam.cache;
+                    } else {
+                        adapter.log.debug(`Request ${cam.name} ${cam.type} ${cam.ip || cam.url}`);
+                        data = await adapter.__CAM_TYPES[cam.type].process(adapter, cam);
+                        data = await resizeImage(data, params.w, params.h);
+                        data = await rotateImage(data, params.angle);
+                        data = await addTextToImage(data, cam.addTime ? adapter.config.dateFormat || 'LTS' : null, cam.title);
+                        if (cam.cacheTimeout) {
+                            cam.cache = data;
+                            cam.cacheParams = params;
+                            cam.cacheTime = Date.now() + cam.cacheTimeout;
                         }
-                    })
-                    .catch(e => {
-                        if (!done) {
-                            done = true;
-                            res.statusCode = 500;
-                            res.write(`Unknown error: ${e}`);
-                            res.end();
-                        }
-                    });
+                    }
+
+                    res.setHeader('Content-type', data.contentType);
+                    res.write(data.body || '');
+                    res.end();
+                } catch (e) {
+                    res.statusCode = 500;
+                    res.write(`Unknown error: ${e}`);
+                    res.end();
+                }
             } else {
                 res.statusCode = 501;
                 res.write(`Unknown camera type: ${cam.type}`);
@@ -510,7 +502,7 @@ function startWebServer(adapter) {
         socket.end('HTTP/1.1 400 Bad Request\r\n\r\n'));
 
     adapter.__server.listen({port: adapter.config.port || '127', host: adapter.config.bind}, () =>
-        adapter.log.debug(`Server started on ${adapter.config.bind}:${adapter.config.port}`));
+        adapter.log.info(`Server started on ${adapter.config.bind}:${adapter.config.port}`));
 }
 
 async function syncConfig() {
@@ -666,6 +658,13 @@ async function main(adapter) {
     adapter.config.cameras.forEach(item => {
         if (item && item.type) {
             item.path = `/${item.name}`;
+
+            if (item.cacheTimeout === undefined || item.cacheTimeout === null || item.cacheTimeout === '') {
+                item.cacheTimeout = adapter.config.defaultCacheTimeout;
+            } else {
+                item.cacheTimeout = parseInt(item.cacheTimeout, 10) || 0;
+            }
+
             try {
                 adapter.__CAM_TYPES[item.type] = adapter.__CAM_TYPES[item.type] || require(`./cameras/${item.type}`);
                 promises.push(adapter.__CAM_TYPES[item.type]

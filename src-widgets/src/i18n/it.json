@@ -16,5 +16,6 @@
   "tooltip_ms": "millisecondi",
   "rotate": "Ruota l'immagine",
   "Polling Camera": "Telecamera per sondaggi",
-  "Cannot load URL": "Impossibile caricare l'URL"
+  "Cannot load URL": "Impossibile caricare l'URL",
+  "noCacheByFull": "Nessuna cache nella finestra di dialogo"
 }

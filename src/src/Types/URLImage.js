@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
 
-import TextField from '@mui/material/TextField';
+import {
+    TextField,
+} from '@mui/material';
 
 import { I18n } from '@iobroker/adapter-react-v5';
 
-const styles = theme => ({
+const styles = () => ({
     page: {
         width: '100%',
     },

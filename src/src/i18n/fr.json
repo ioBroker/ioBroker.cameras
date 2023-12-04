@@ -57,5 +57,9 @@
   "Eufy Security": "Sécurité Eufy",
   "From eusec adapter": "De l'adaptateur eusec",
   "By IP Address": "Par adresse IP",
-  "Camera OID": "ID d'objet caméra"
+  "Camera OID": "ID d'objet caméra",
+  "Protocol": "Protocole",
+  "HiKam / WiWiCam": "HiKam / WiWiCam",
+  "Request timeout (ms)": "Délai d'expiration de la demande (ms)",
+  "If empty or 0, use default settings.": "S'il est vide ou 0, utilisez les paramètres par défaut."
 }

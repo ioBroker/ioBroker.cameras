@@ -16,5 +16,6 @@
   "tooltip_ms": "milliseconds",
   "rotate": "Rotate image",
   "Polling Camera": "Polling Camera",
-  "Cannot load URL": "Cannot load URL"
+  "Cannot load URL": "Cannot load URL",
+  "noCacheByFull": "No cache in dialog"
 }

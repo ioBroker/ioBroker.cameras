@@ -2,20 +2,28 @@ import React, { Component } from 'react';
 import { withStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
 
-import TextField from '@mui/material/TextField';
-import DialogMessage from '@iobroker/adapter-react-v5/Dialogs/Message';
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import InputLabel from '@mui/material/InputLabel';
+import {
+    TextField,
+    Snackbar,
+    IconButton,
+    FormControl,
+    Select,
+    Button,
+    MenuItem,
+    InputLabel,
+} from '@mui/material';
 
-import { MdClose as IconClose } from 'react-icons/md';
-import { MdCheck as IconTest } from 'react-icons/md';
+import {
+    MdClose as IconClose,
+    MdCheck as IconTest,
+} from 'react-icons/md';
 
-import { I18n, Logo, Message, Error as DialogError } from '@iobroker/adapter-react-v5';
+import {
+    I18n,
+    Logo,
+    Message,
+    Error as DialogError,
+} from '@iobroker/adapter-react-v5';
 
 const styles = () => ({
     tab: {
@@ -107,7 +115,10 @@ class Options extends Component {
 
     renderHint() {
         if (this.state.showHint) {
-            return <Message text={I18n.t('Click now Get new connection certificates to request new temporary password')} onClose={() => this.setState({ showHint: false })}/>;
+            return <Message
+                text={I18n.t('Click now Get new connection certificates to request new temporary password')}
+                onClose={() => this.setState({ showHint: false })}
+            />;
         } else {
             return null;
         }
@@ -259,19 +270,7 @@ class Options extends Component {
         if (!this.state.messageText) {
             return null;
         }
-        return <DialogMessage title={I18n.t('Success')} onClose={() => this.setState({ messageText: '' })}>{this.state.messageText}</DialogMessage>
-    }
-
-    checkConnection() {
-        this.setState({ requesting: true }, () =>
-            this.props.socket.sendTo(`${this.props.adapterName}.${this.props.instance}`, 'test', this.props.native)
-                .then(data => {
-                    if (data.error) {
-                        this.setState({ requesting: false }, () => this.showError(I18n.t(data.error)));
-                    } else {
-                        this.setState({ messageText: data.result, requesting: false });
-                    }
-                }));
+        return <Message title={I18n.t('Success')} onClose={() => this.setState({ messageText: '' })}>{this.state.messageText}</Message>
     }
 
     render() {

@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
 
-import TextField from '@mui/material/TextField';
+import {
+    TextField,
+} from '@mui/material';
 
 import { I18n } from '@iobroker/adapter-react-v5';
 
@@ -25,7 +27,6 @@ class Config extends Component {
         state.url      = state.url || '';
         state.password = state.password || '';
         state.username = state.username || '';
-        state.timeout  = state.timeout  || 1000;
 
         this.state = state;
     }
@@ -41,7 +42,6 @@ class Config extends Component {
                 url:      this.state.url,
                 username: this.state.username,
                 password,
-                timeout:  this.state.timeout,
             });
         });
     }
