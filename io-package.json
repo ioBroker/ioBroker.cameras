@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "cameras",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "news": {
+      "1.4.0": {
+        "en": "Changed widget set name\nAdded the caching of images with time, size and rotation\nAdded timeout for RTSP cameras",
+        "de": "Geänderter Widget-Setname\nHinzufügen des Caches von Bildern mit Zeit, Größe und Rotation\nTimeout für RTSP-Kameras hinzugefügt",
+        "ru": "Изменено имя виджета\nДобавлен кэширование изображений со временем, размером и поворотом\nДобавлена таймаут для RTSP камер",
+        "pt": "Nome do conjunto de widget alterado\nAdicionado o cache de imagens com tempo, tamanho e rotação\nAdicionado timeout para câmeras RTSP",
+        "nl": "Veranderde Widgets naam\nVoeg de beelden toe met tijd, grootte en rotatie\nVertaling:",
+        "fr": "Nom du jeu de widget modifié\nAjout du cache des images avec le temps, la taille et la rotation\nAjout du timeout pour les caméras RTSP",
+        "it": "Modificato nome del set widget\nAggiunto il caching di immagini con tempo, dimensione e rotazione\nTimeout aggiunto per telecamere RTSP",
+        "es": "Nombre del widget cambiado\nAñadido el caché de imágenes con tiempo, tamaño y rotación\nTiempo de salida adicional para las cámaras RTSP",
+        "pl": "Zmiana widget\nDodać do nich obrazy z czasem, rozmiarami i rotacją\nDodany czas na kamery RTSP",
+        "uk": "Змінено назву набір віджетів\nДодано кешування зображень з часом, розміром і обертанням\nДодано розклад для RTSP камери",
+        "zh-cn": "B. 改变目标的名称\n增加图像时、规模和轮换\n增聘了RTSP摄像时间"
+      },
       "1.3.0": {
         "en": "Utilized the new js-controller feature: sendToUI. RTSP Streaming works only with js-controller 5.0.13 or higher\nImplemented a second widget for simple cameras",
         "de": "Verwenden Sie die neue js-Controller-Funktion: sendToUI. FTE Streaming funktioniert nur mit js-controller 5.0.13 oder höher\nImplementiert ein zweites Widget für einfache Kameras",
@@ -80,19 +93,6 @@
         "pl": "Added Reolink E1 (ang.)",
         "uk": "Додано Reolink E1 камери",
         "zh-cn": "增加Reolink E1摄像机"
-      },
-      "1.0.3": {
-        "en": "Corrected GUI config error",
-        "de": "Korrigiert GUI config Fehler",
-        "ru": "Исправлена ошибка GUI config",
-        "pt": "Erro de configuração GUI corrigido",
-        "nl": "Quality over Quantity (QoQ) Releases Vertaling:",
-        "fr": "Erreur de configuration GUI corrigée",
-        "it": "Errore di configurazione GUI corretto",
-        "es": "Error de configuración de GUI corregido",
-        "pl": "Kwalifikacja GUI",
-        "uk": "Виправлена помилка налаштування інтерфейсу",
-        "zh-cn": "更正"
       }
     },
     "title": "IP-Cameras",

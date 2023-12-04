@@ -16,5 +16,6 @@
   "tooltip_ms": "миллисекунды",
   "rotate": "Поворот изображения",
   "Polling Camera": "URL-Камера",
-  "Cannot load URL": "Невозможно загрузить URL"
+  "Cannot load URL": "Невозможно загрузить URL",
+  "noCacheByFull": "Нет кеша в диалоге"
 }

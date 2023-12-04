@@ -16,5 +16,6 @@
   "tooltip_ms": "milissegundos",
   "rotate": "Girar imagem",
   "Polling Camera": "Câmera de votação",
-  "Cannot load URL": "Não é possível carregar o URL"
+  "Cannot load URL": "Não é possível carregar o URL",
+  "noCacheByFull": "Sem cache na caixa de diálogo"
 }

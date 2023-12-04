@@ -16,5 +16,6 @@
   "tooltip_ms": "Millisekunden",
   "rotate": "Bild drehen",
   "Polling Camera": "URL kamera",
-  "Cannot load URL": "URL kann nicht geladen werden"
+  "Cannot load URL": "URL kann nicht geladen werden",
+  "noCacheByFull": "Kein Cache im Dialog"
 }

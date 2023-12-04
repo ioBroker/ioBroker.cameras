@@ -71,7 +71,7 @@ To add a new camera, you must create a Pull Request on GitHub with the following
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.4.0 (2023-12-04)
 * (bluefox) Changed widget set name
 * (bluefox) Added the caching of images with time, size and rotation
 * (bluefox) Added timeout for RTSP cameras

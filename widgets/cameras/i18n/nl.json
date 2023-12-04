@@ -16,5 +16,6 @@
   "tooltip_ms": "milliseconden",
   "rotate": "Afbeelding roteren",
   "Polling Camera": "Pollingcamera",
-  "Cannot load URL": "Kan URL niet laden"
+  "Cannot load URL": "Kan URL niet laden",
+  "noCacheByFull": "Geen cache in dialoogvenster"
 }
