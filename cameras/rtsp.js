@@ -110,6 +110,7 @@ function init(adapter, cam) {
 
     cam.decodedPassword = cam.password ? adapter.decrypt(cam.password) : '';
     cam.timeout = parseInt(cam.timeout || adapter.config.defaultTimeout, 10) || 10000;
+    cam.lastFrame = null;
 
     return Promise.resolve();
 }
@@ -133,6 +134,13 @@ function process(adapter, cam) {
     }
 
     adapter.log.debug(`Requesting snapshot from ${cam.ip}...`);
+
+    if (streamings[cam.name] && streamings[cam.name].lastBase64Frame) {
+        return Promise.resolve({
+            body: Buffer.from(streamings[cam.name].lastBase64Frame, 'base64'),
+            contentType: 'image/jpeg',
+        });
+    }
 
     const outputFileName = path.normalize(`${adapter.config.tempPath}/${cam.ip.replace(/[.:]/g, '_')}.jpg`);
     cam.runningRequest = getRtspSnapshot(adapter.config.ffmpegPath, cam, outputFileName, adapter)
@@ -264,6 +272,8 @@ async function webStreaming(adapter, camera, options, fromState) {
                 if (!lastFrame || Date.now() - lastFrame > 300) {
                     lastFrame = Date.now();
                     console.log(`frame ${frame.length}`);
+                    streamings[camera].lastBase64Frame = frame;
+
                     const clientsToDelete = [];
                     adapter._streamSubscribes.forEach(sub => {
                         if (sub.camera === camera) {
