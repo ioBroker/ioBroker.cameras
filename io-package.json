@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "cameras",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "news": {
+      "2.0.3": {
+        "en": "Minimal supported NodeJS version is 18\nCorrected widgets",
+        "de": "Minimal unterstützt NodeJS-Version ist 18\nKorrigierte Widgets",
+        "ru": "Минимальная поддержка Версия NodeJS 18\nИсправленные виджеты",
+        "pt": "Minimal suportado NodeJS versão é 18\nWidgets corrigidos",
+        "nl": "Minimale ondersteuning NodeJS versie 18\nVertaling:",
+        "fr": "Support minimal NodeJS version is 18\nWidgets corrigés",
+        "it": "Minimal supportato NodeJS versione è 18\nWidget corretti",
+        "es": "Soporte mínimo NodeJS versión es 18\nWidgets corregidos",
+        "pl": "Minimalny Wersja NodeJS wynosi 18\nPoprawiony widget",
+        "uk": "Мінімалістична підтримка Версія NodeJS - 18\nВиправлені віджети",
+        "zh-cn": "明米支助 未提交法院的版本 18\n伤势"
+      },
       "1.4.0": {
         "en": "Changed widget set name\nAdded the caching of images with time, size and rotation\nAdded timeout for RTSP cameras",
         "de": "Geänderter Widget-Setname\nHinzufügen des Caches von Bildern mit Zeit, Größe und Rotation\nTimeout für RTSP-Kameras hinzugefügt",
