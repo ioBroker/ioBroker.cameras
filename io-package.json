@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "cameras",
-    "version": "1.4.0",
+    "version": "2.0.0",
     "news": {
+      "2.0.0": {
+        "en": "Minimal supported NodeJS version is 18",
+        "de": "Minimal unterstützt NodeJS-Version ist 18",
+        "ru": "Минимальная поддержка Версия NodeJS 18",
+        "pt": "Minimal suportado NodeJS versão é 18",
+        "nl": "Minimale ondersteuning NodeJS versie 18",
+        "fr": "Support minimal NodeJS version is 18",
+        "it": "Minimal supportato NodeJS versione è 18",
+        "es": "Soporte mínimo NodeJS versión es 18",
+        "pl": "Minimalny Wersja NodeJS wynosi 18",
+        "uk": "Мінімалістична підтримка Версія NodeJS - 18",
+        "zh-cn": "明米支助 未提交法院的版本 18"
+      },
       "1.4.0": {
         "en": "Changed widget set name\nAdded the caching of images with time, size and rotation\nAdded timeout for RTSP cameras",
         "de": "Geänderter Widget-Setname\nHinzufügen des Caches von Bildern mit Zeit, Größe und Rotation\nTimeout für RTSP-Kameras hinzugefügt",
@@ -69,19 +82,6 @@
         "zh-cn": "增加电子摄影机"
       },
       "1.1.1": {
-        "en": "Added Reolink E1 camera",
-        "de": "Hinzugefügt Reolink E1 Kamera",
-        "ru": "Добавлена Reolink E1 камера",
-        "pt": "Adicionado câmera Reolink E1",
-        "nl": "Vertaling:",
-        "fr": "Ajout d'une caméra Reolink E1",
-        "it": "Reolink E1 fotocamera",
-        "es": "Cámara de reolink E1",
-        "pl": "Added Reolink E1 (ang.)",
-        "uk": "Додано Reolink E1 камери",
-        "zh-cn": "增加Reolink E1摄像机"
-      },
-      "1.1.0": {
         "en": "Added Reolink E1 camera",
         "de": "Hinzugefügt Reolink E1 Kamera",
         "ru": "Добавлена Reolink E1 камера",
