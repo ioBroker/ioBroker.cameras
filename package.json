@@ -20,8 +20,10 @@
     "type": "git",
     "url": "https://github.com/ioBroker/ioBroker.cameras"
   },
+  "optionalDependencies": {
+    "@img/sharp-win32-x64": "^0.33.1"
+  },
   "dependencies": {
-    "@img/sharp-win32-x64": "^0.33.1",
     "@iobroker/adapter-core": "^3.0.4",
     "axios": "^1.6.2",
     "decompress": "^4.2.1",
