@@ -272,7 +272,7 @@ class SnapshotCamera extends Generic {
                 `noCache=${isFull ? this.state.rxData.noCacheByFull : false}`,
                 this.state.rxData.rotate ? `angle=${this.state.rxData.rotate}` : '',
             ];
-            return url + params.filter(p => p).join('');
+            return url + params.filter(p => p).join('&');
         }
 
         return '';
