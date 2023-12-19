@@ -49,7 +49,7 @@ export const CameraField = props => {
                         enabled: iCamera.enabled !== false,
                         value: `${instanceId}/${iCamera.name}`,
                         label: `cameras.${instanceId}/${iCamera.name}`,
-                        subLabel: `${iCamera.desc}/${iCamera.ip}`,
+                        subLabel: iCamera.desc ? `${iCamera.desc}/${iCamera.ip}` : iCamera.ip || '',
                     });
                 });
             });

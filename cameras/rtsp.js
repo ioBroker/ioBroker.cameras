@@ -264,16 +264,25 @@ async function webStreaming(adapter, camera, options, fromState) {
                 if (!lastFrame || Date.now() - lastFrame > 300) {
                     lastFrame = Date.now();
                     console.log(`frame ${frame.length}`);
+                    const clientsToDelete = [];
                     adapter._streamSubscribes.forEach(sub => {
                         if (sub.camera === camera) {
                             found = true;
                             try {
                                 adapter.sendToUI && adapter.sendToUI({ clientId: sub.clientId, data: frame });
                             } catch (e) {
+                                if (e && e.toString().includes('not registered')) {
+                                    // forget this client
+                                    clientsToDelete.push(sub.clientId);
+                                }
                                 adapter.log.warn(`Cannot send to UI: ${e}`);
                             }
                         }
                     });
+                    if (clientsToDelete.length) {
+                        adapter._streamSubscribes = adapter._streamSubscribes.filter(sub => !clientsToDelete.includes(sub.clientId));
+                    }
+
                     if (!found) {
                         adapter.setState(`${camera}.stream`, frame, true);
                     }

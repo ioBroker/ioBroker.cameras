@@ -215,24 +215,33 @@ function onClientUnsubscribe(clientId, obj) {
     if (!adapter._streamSubscribes) {
         return;
     }
-    if (obj.message.type && obj.message.type.startsWith('startCamera/')) {
-        const camera = obj.message.type.substring('startCamera/'.length);
-        let deleted;
-        do {
-            deleted = false;
-            const pos = adapter._streamSubscribes.findIndex(s => s.clientId === clientId);
-            if (pos !== -1) {
-                deleted = true;
-                adapter._streamSubscribes.splice(pos, 1);
-                // check if anyone else subscribed on this camera
-                if (!adapter._streamSubscribes.find(s => s.camera === camera || Date.now() - s.ts > 60000)) {
-                    // stop camera
-                    adapter.log.debug(`Stop camera "${camera}"`);
-                    rtsp.stopWebStreaming(adapter, camera);
-                }
-            }
-        } while (deleted);
+    if (!obj || !obj.message || !obj.message.type) {
+        return;
     }
+
+    if (!Array.isArray(obj.message.type)) {
+        obj.message.type = [obj.message.type];
+    }
+    obj.message.type.forEach(type => {
+        if (type && type.startsWith('startCamera/')) {
+            const camera = type.substring('startCamera/'.length);
+            let deleted;
+            do {
+                deleted = false;
+                const pos = adapter._streamSubscribes.findIndex(s => s.clientId === clientId);
+                if (pos !== -1) {
+                    deleted = true;
+                    adapter._streamSubscribes.splice(pos, 1);
+                    // check if anyone else subscribed on this camera
+                    if (!adapter._streamSubscribes.find(s => s.camera === camera || Date.now() - s.ts > 60000)) {
+                        // stop camera
+                        adapter.log.debug(`Stop camera "${camera}"`);
+                        rtsp.stopWebStreaming(adapter, camera);
+                    }
+                }
+            } while (deleted);
+        }
+    });
 }
 
 async function processMessage(adapter, obj) {
