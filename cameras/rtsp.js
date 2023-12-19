@@ -267,7 +267,11 @@ async function webStreaming(adapter, camera, options, fromState) {
                     adapter._streamSubscribes.forEach(sub => {
                         if (sub.camera === camera) {
                             found = true;
-                            adapter.sendToUI && adapter.sendToUI({ clientId: sub.clientId, data: frame });
+                            try {
+                                adapter.sendToUI && adapter.sendToUI({ clientId: sub.clientId, data: frame });
+                            } catch (e) {
+                                adapter.log.warn(`Cannot send to UI: ${e}`);
+                            }
                         }
                     });
                     if (!found) {
