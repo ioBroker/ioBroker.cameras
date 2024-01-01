@@ -28,7 +28,7 @@
     "moment": "^2.29.4",
     "sharp": "0.32.6",
     "uuid": "^9.0.1",
-    "ws": "^8.15.1"
+    "ws": "^8.16.0"
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.7.0",
