@@ -128,7 +128,10 @@
       "web-cam",
       "video"
     ],
-    "license": "MIT",
+    "licenseInformation": {
+      "type": "free",
+      "license": "MIT"
+    },
     "platform": "Javascript/Node.js",
     "icon": "cameras.png",
     "enabled": true,
@@ -138,6 +141,9 @@
     "webExtension": "lib/web.js",
     "mode": "daemon",
     "type": "multimedia",
+    "adminUI": {
+      "config": "materialize"
+    },
     "compact": true,
     "messagebox": true,
     "materialize": true,
