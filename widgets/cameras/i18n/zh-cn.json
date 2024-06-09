@@ -17,5 +17,6 @@
   "rotate": "旋转图像",
   "Polling Camera": "投票摄像头",
   "Cannot load URL": "无法加载网址",
-  "noCacheByFull": "对话框中没有缓存"
+  "noCacheByFull": "对话框中没有缓存",
+  "camera_in_dialog": "相机对话"
 }

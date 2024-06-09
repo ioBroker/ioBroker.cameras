@@ -17,5 +17,6 @@
   "rotate": "Bild drehen",
   "Polling Camera": "URL kamera",
   "Cannot load URL": "URL kann nicht geladen werden",
-  "noCacheByFull": "Kein Cache im Dialog"
+  "noCacheByFull": "Kein Cache im Dialog",
+  "camera_in_dialog": "Kamera im Dialog"
 }

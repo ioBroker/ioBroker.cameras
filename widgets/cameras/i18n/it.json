@@ -17,5 +17,6 @@
   "rotate": "Ruota l'immagine",
   "Polling Camera": "Telecamera per sondaggi",
   "Cannot load URL": "Impossibile caricare l'URL",
-  "noCacheByFull": "Nessuna cache nella finestra di dialogo"
+  "noCacheByFull": "Nessuna cache nella finestra di dialogo",
+  "camera_in_dialog": "Fotocamera nella finestra di dialogo"
 }

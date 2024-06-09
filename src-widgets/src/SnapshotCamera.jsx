@@ -105,6 +105,18 @@ class SnapshotCamera extends Generic {
                                 context={props.context}
                             />,
                         },
+                        {
+                            label: 'camera_in_dialog',
+                            name: 'bigCamera',
+                            type: 'custom',
+                            component: (field, data, setData, props) => <CameraField
+                                field={field}
+                                data={data}
+                                setData={setData}
+                                context={props.context}
+                            />,
+                            hidden: '!data.camera',
+                        },
                     ],
                 },
             ],
@@ -229,6 +241,10 @@ class SnapshotCamera extends Generic {
     }
 
     renderDialog(url) {
+        if (this.state.full && this.state.rxData.bigCamera) {
+            url = this.getUrl(true) || url;
+        }
+
         return this.state.full ? <Dialog
             fullWidth
             maxWidth="lg"
@@ -264,7 +280,16 @@ class SnapshotCamera extends Generic {
     }
 
     getUrl(isFull) {
-        if (this.state.rxData.camera) {
+        if (isFull && !this.state.rxData.bigCamera) {
+            const url = `../cameras.${this.state.rxData.bigCamera}?`;
+            const params = [
+                `ts=${Date.now()}`,
+                `w=${this.getImageWidth(true)}`,
+                `noCache=${this.state.rxData.noCacheByFull}`,
+                this.state.rxData.rotate ? `angle=${this.state.rxData.rotate}` : '',
+            ];
+            return url + params.filter(p => p).join('&');
+        } else if (this.state.rxData.camera) {
             const url = `../cameras.${this.state.rxData.camera}?`;
             const params = [
                 `ts=${Date.now()}`,

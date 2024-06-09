@@ -17,5 +17,6 @@
   "rotate": "Faire pivoter l'image",
   "Polling Camera": "Caméra de sondage",
   "Cannot load URL": "Impossible de charger l'URL",
-  "noCacheByFull": "Pas de cache dans la boîte de dialogue"
+  "noCacheByFull": "Pas de cache dans la boîte de dialogue",
+  "camera_in_dialog": "Caméra dans la boîte de dialogue"
 }

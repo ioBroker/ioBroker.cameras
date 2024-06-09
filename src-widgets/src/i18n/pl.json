@@ -17,5 +17,6 @@
   "rotate": "Obróć obraz",
   "Polling Camera": "Kamera wyborcza",
   "Cannot load URL": "Nie można załadować adresu URL",
-  "noCacheByFull": "Brak pamięci podręcznej w oknie dialogowym"
+  "noCacheByFull": "Brak pamięci podręcznej w oknie dialogowym",
+  "camera_in_dialog": "Kamera w oknie dialogowym"
 }

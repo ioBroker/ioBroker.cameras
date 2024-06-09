@@ -17,5 +17,6 @@
   "rotate": "Girar imagen",
   "Polling Camera": "Cámara de sondeo",
   "Cannot load URL": "No se puede cargar la URL",
-  "noCacheByFull": "No hay caché en el diálogo"
+  "noCacheByFull": "No hay caché en el diálogo",
+  "camera_in_dialog": "Cámara en diálogo"
 }

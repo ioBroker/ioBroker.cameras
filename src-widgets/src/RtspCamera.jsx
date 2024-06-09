@@ -36,7 +36,7 @@ const styles = () => ({
 
 export const CameraField = props => {
     const [cameras, setCameras] = React.useState(null);
-    const [camera, setCamera] = React.useState(props.data.camera || '');
+    const [camera, setCamera] = React.useState(props.data[props.field.name] || '');
 
     useEffect(() => {
         (async () => {
@@ -62,7 +62,7 @@ export const CameraField = props => {
         variant="standard"
         value={camera}
         onChange={e => {
-            props.setData({ camera: e.target.value });
+            props.setData({ [props.field.name]: e.target.value });
             setCamera(e.target.value);
         }}
     >
@@ -201,6 +201,7 @@ class RtspCamera extends Generic {
             }
 
             RtspCamera.drawCamera(this.videoRef, state.val);
+
             if (this.state.full) {
                 RtspCamera.drawCamera(this.fullVideoRef, state.val);
             }
@@ -234,7 +235,9 @@ class RtspCamera extends Generic {
             if (this.state.loading) {
                 this.setState({ loading: false });
             }
+
             RtspCamera.drawCamera(this.videoRef, data);
+
             if (this.state.full) {
                 RtspCamera.drawCamera(this.fullVideoRef, data);
             }

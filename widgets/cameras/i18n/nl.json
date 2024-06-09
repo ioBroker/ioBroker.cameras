@@ -17,5 +17,6 @@
   "rotate": "Afbeelding roteren",
   "Polling Camera": "Pollingcamera",
   "Cannot load URL": "Kan URL niet laden",
-  "noCacheByFull": "Geen cache in dialoogvenster"
+  "noCacheByFull": "Geen cache in dialoogvenster",
+  "camera_in_dialog": "Camera in dialoog"
 }
