@@ -71,7 +71,7 @@ To add a new camera, you must create a Pull Request on GitHub with the following
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.0.8 (2024-06-09)
 * (bluefox) Packages updated
 * (bluefox) Allowed selecting another source (with bigger resolution) for URL cameras
 
