@@ -289,7 +289,8 @@ class SnapshotCamera extends Generic {
                 this.state.rxData.rotate ? `angle=${this.state.rxData.rotate}` : '',
             ];
             return url + params.filter(p => p).join('&');
-        } else if (this.state.rxData.camera) {
+        }
+        if (this.state.rxData.camera) {
             const url = `../cameras.${this.state.rxData.camera}?`;
             const params = [
                 `ts=${Date.now()}`,

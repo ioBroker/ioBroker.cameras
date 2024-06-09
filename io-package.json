@@ -3,19 +3,6 @@
     "name": "cameras",
     "version": "2.0.6",
     "news": {
-      "2.0.6": {
-        "en": "Packages updated\nAllowed selecting another source (with bigger resolution) for URL cameras",
-        "de": "Pakete aktualisiert\nErlaubte Auswahl einer anderen Quelle (mit größerer Auflösung) für URL-Kameras",
-        "ru": "Обновленные пакеты\nПозволяет выбрать другой источник (с большим разрешением) для камер URL",
-        "pt": "Pacotes atualizados\nPermite selecionar outra fonte (com maior resolução) para câmeras URL",
-        "nl": "Pakketten bijgewerkt\nToegestaan om een andere bron (met grotere resolutie) voor URL-camera's te selecteren",
-        "fr": "Mise à jour des paquets\nPermet de sélectionner une autre source (avec une plus grande résolution) pour les caméras URL",
-        "it": "Pacchetti aggiornati\nConsente di selezionare un'altra fonte (con risoluzione più grande) per le telecamere URL",
-        "es": "Paquetes actualizados\nPermitido seleccionar otra fuente (con mayor resolución) para las cámaras URL",
-        "pl": "Aktualizacja pakietów\nDozwolone wybranie innego źródła (o większej rozdzielczości) dla kamer URL",
-        "uk": "Пакети оновлені\nДозволяє вибрати інший джерело (з великою роздільною здатністю) для фотокамер URL",
-        "zh-cn": "更新软件包\n允许为 URL 相机选择另一个源( 分辨率更大)"
-      },
       "2.0.5": {
         "en": "Minimal supported NodeJS version is 18\nCorrected widgets",
         "de": "Minimal unterstützt NodeJS-Version ist 18\nKorrigierte Widgets",
