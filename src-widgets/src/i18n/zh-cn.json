@@ -18,5 +18,6 @@
   "Polling Camera": "投票摄像头",
   "Cannot load URL": "无法加载网址",
   "noCacheByFull": "对话框中没有缓存",
-  "camera_in_dialog": "相机对话"
+  "camera_in_dialog": "相机对话",
+  "No camera selected": "未选择相机"
 }

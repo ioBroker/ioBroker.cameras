@@ -1,5 +1,5 @@
 import React from 'react';
-import { withStyles } from '@mui/styles';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 
 import {
     AppBar,
@@ -7,14 +7,12 @@ import {
     Tab,
 } from '@mui/material';
 
-import GenericApp from '@iobroker/adapter-react-v5/GenericApp';
-import { Loader, I18n } from '@iobroker/adapter-react-v5';
+import { Loader, I18n, GenericApp } from '@iobroker/adapter-react-v5';
 
 import TabOptions from './Tabs/Options';
 import TabCameras from './Tabs/Cameras';
 
-const styles = theme => ({
-    root: {},
+const styles = {
     tabContent: {
         padding: 10,
         height: 'calc(100% - 64px - 48px - 20px)',
@@ -25,13 +23,13 @@ const styles = theme => ({
         height: 'calc(100% - 64px - 48px - 20px - 38px)',
         overflow: 'auto',
     },
-    selected: {
+    selected: theme => ({
         color: theme.palette.mode === 'dark' ? undefined : '#FFF !important',
-    },
-    indicator: {
+    }),
+    indicator: theme => ({
         backgroundColor: theme.palette.mode === 'dark' ? theme.palette.secondary.main : '#FFF',
-    },
-});
+    }),
+};
 
 class App extends GenericApp {
     constructor(props) {
@@ -104,68 +102,76 @@ class App extends GenericApp {
 
     render() {
         if (!this.state.loaded) {
-            return <Loader theme={this.state.themeType}/>;
+            return <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={this.state.theme}>
+                    <Loader themeType={this.state.themeType} />
+                </ThemeProvider>
+            </StyledEngineProvider>
         }
 
-        return <div className="App" style={{ background: this.state.themeType === 'dark' ? 'black' : 'white' }}>
-            <AppBar position="static">
-                <Tabs
-                    value={this.getSelectedTab()}
-                    onChange={(e, index) => this.selectTab(e.target.dataset.name, index)}
-                    classes={{ indicator: this.props.classes.indicator }}
-                >
-                    <Tab
-                        classes={{ selected: this.props.classes.selected }}
-                        selected={this.state.selectedTab === 'options'}
-                        label={I18n.t('Options')}
-                        data-name="options"
-                    />
-                    <Tab
-                        classes={{ selected: this.props.classes.selected }}
-                        selected={this.state.selectedTab === 'cameras'}
-                        label={I18n.t('Cameras')}
-                        data-name="cameras"
-                    />
-                </Tabs>
-            </AppBar>
+        return <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={this.state.theme}>
+                <div className="App" style={{ background: this.state.themeType === 'dark' ? 'black' : 'white' }}>
+                    <AppBar position="static">
+                        <Tabs
+                            value={this.getSelectedTab()}
+                            onChange={(e, index) => this.selectTab(e.target.dataset.name, index)}
+                            sx={{ '& .MuiTabs-indicator': styles.indicator }}
+                        >
+                            <Tab
+                                sx={{ '&.Mui-selected': styles.selected }}
+                                selected={this.state.selectedTab === 'options'}
+                                label={I18n.t('Options')}
+                                data-name="options"
+                            />
+                            <Tab
+                                sx={{ '&.Mui-selected': styles.selected }}
+                                selected={this.state.selectedTab === 'cameras'}
+                                label={I18n.t('Cameras')}
+                                data-name="cameras"
+                            />
+                        </Tabs>
+                    </AppBar>
 
-            <div className={this.isIFrame ? this.props.classes.tabContentIFrame : this.props.classes.tabContent}>
-                {(this.state.selectedTab === 'options' || !this.state.selectedTab) && <TabOptions
-                    key="options"
-                    common={this.common}
-                    socket={this.socket}
-                    native={this.state.native}
-                    encrypt={(value, cb) => cb(this.encrypt(value))}
-                    decrypt={(value, cb) => cb(this.decrypt(value))}
-                    onError={text => this.setState({ errorText: text })}
-                    onLoad={native => this.onLoadConfig(native)}
-                    instance={this.instance}
-                    theme={this.state.theme}
-                    getIpAddresses={() => this.socket.getIpAddresses(this.common.host)}
-                    getExtendableInstances={() => this.getExtendableInstances()}
-                    onConfigError={configError => this.setConfigurationError(configError)}
-                    adapterName={this.adapterName}
-                    onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}
-                    instanceAlive={this.state.alive}
-                />}
-                {this.state.selectedTab === 'cameras' && <TabCameras
-                    key="cameras"
-                    theme={this.state.theme}
-                    socket={this.socket}
-                    themeType={this.state.themeType}
-                    adapterName={ this.adapterName }
-                    instance={this.instance}
-                    encrypt={(value, cb) => cb(this.encrypt(value))}
-                    decrypt={(value, cb) => cb(this.decrypt(value))}
-                    instanceAlive={this.state.alive}
-                    native={this.state.native}
-                    onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}
-                />}
-            </div>
-            {this.renderError()}
-            {this.renderSaveCloseButtons()}
-        </div>;
+                    <div style={this.isIFrame ? styles.tabContentIFrame : styles.tabContent}>
+                        {(this.state.selectedTab === 'options' || !this.state.selectedTab) && <TabOptions
+                            key="options"
+                            common={this.common}
+                            socket={this.socket}
+                            native={this.state.native}
+                            encrypt={(value, cb) => cb(this.encrypt(value))}
+                            decrypt={(value, cb) => cb(this.decrypt(value))}
+                            onError={text => this.setState({ errorText: text })}
+                            onLoad={native => this.onLoadConfig(native)}
+                            instance={this.instance}
+                            theme={this.state.theme}
+                            getIpAddresses={() => this.socket.getIpAddresses(this.common.host)}
+                            getExtendableInstances={() => this.getExtendableInstances()}
+                            onConfigError={configError => this.setConfigurationError(configError)}
+                            adapterName={this.adapterName}
+                            onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}
+                            instanceAlive={this.state.alive}
+                        />}
+                        {this.state.selectedTab === 'cameras' && <TabCameras
+                            key="cameras"
+                            theme={this.state.theme}
+                            socket={this.socket}
+                            themeType={this.state.themeType}
+                            adapterName={ this.adapterName }
+                            instance={this.instance}
+                            encrypt={(value, cb) => cb(this.encrypt(value))}
+                            decrypt={(value, cb) => cb(this.decrypt(value))}
+                            instanceAlive={this.state.alive}
+                            native={this.state.native}
+                            onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}
+                        />}
+                    </div>
+                    {this.renderError()}
+                    {this.renderSaveCloseButtons()}
+                </div>
+            </ThemeProvider>
+        </StyledEngineProvider>
     }
 }
 
-export default withStyles(styles)(App);
+export default App;

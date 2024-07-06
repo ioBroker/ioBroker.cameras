@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@mui/styles';
 
 import {
     MenuItem,
@@ -10,28 +9,28 @@ import {
 
 import { I18n } from '@iobroker/adapter-react-v5';
 
-const styles = theme => ({
+const styles = {
     page: {
         width: '100%',
     },
     ip: {
-        marginRight: theme.spacing(1),
+        marginRight: 8,
         width: 200,
     },
     username: {
-        marginTop: theme.spacing(2),
-        marginRight: theme.spacing(1),
+        marginTop: 16,
+        marginRight: 8,
         width: 200,
     },
     password: {
-        marginTop: theme.spacing(2),
+        marginTop: 16,
         width: 200,
     },
     quality: {
-        marginTop: theme.spacing(2),
+        marginTop: 16,
         width: 200,
     },
-});
+};
 
 class RTSPReolinkE1Config extends Component {
     constructor(props) {
@@ -69,11 +68,11 @@ class RTSPReolinkE1Config extends Component {
     }
 
     render() {
-        return <div className={this.props.classes.page}>
+        return <div style={styles.page}>
             <form>
                 <TextField
                     variant="standard"
-                    className={this.props.classes.ip}
+                    style={styles.ip}
                     label={I18n.t('Camera IP')}
                     value={this.state.ip}
                     onChange={e => this.setState({ ip: e.target.value }, () => this.reportSettings())}
@@ -82,7 +81,7 @@ class RTSPReolinkE1Config extends Component {
                 <TextField
                     variant="standard"
                     autoComplete="new-password"
-                    className={this.props.classes.username}
+                    style={styles.username}
                     label={I18n.t('Username')}
                     value={this.state.username}
                     onChange={e => this.setState({ username: e.target.value }, () => this.reportSettings())}
@@ -91,14 +90,14 @@ class RTSPReolinkE1Config extends Component {
                     variant="standard"
                     type="password"
                     autoComplete="new-password"
-                    className={this.props.classes.password}
+                    style={styles.password}
                     label={I18n.t('Password')}
                     value={this.state.password}
                     onChange={e => this.setState({ password: e.target.value }, () => this.reportSettings())}
                 />
                 <br />
                 <Select
-                    className={this.props.classes.quality}
+                    style={styles.quality}
                     variant="standard"
                     value={this.state.quality}
                     label={I18n.t('Quality')}
@@ -120,4 +119,4 @@ RTSPReolinkE1Config.propTypes = {
     encode: PropTypes.func,
 };
 
-export default withStyles(styles)(RTSPReolinkE1Config);
+export default RTSPReolinkE1Config;

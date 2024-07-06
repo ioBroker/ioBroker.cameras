@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { withStyles } from '@mui/styles';
 import {
     Button,
     CircularProgress, Dialog,
@@ -13,7 +12,7 @@ import { Close } from '@mui/icons-material';
 
 import Generic from './Generic';
 
-const styles = () => ({
+const styles = {
     camera: {
         width: '100%',
         height: '100%',
@@ -32,7 +31,7 @@ const styles = () => ({
         width: '100%',
         height: '100%',
     },
-});
+};
 
 export const CameraField = props => {
     const [cameras, setCameras] = React.useState(null);
@@ -404,10 +403,10 @@ class RtspCamera extends Generic {
         >
             <DialogTitle>{this.state.rxData.widgetTitle}</DialogTitle>
             <DialogContent>
-                <div className={this.props.classes.imageContainer}>
+                <div style={styles.imageContainer}>
                     <canvas
                         ref={this.fullVideoRef}
-                        className={this.props.classes.fullCamera}
+                        style={styles.fullCamera}
                     ></canvas>
                 </div>
             </DialogContent>
@@ -432,10 +431,10 @@ class RtspCamera extends Generic {
         super.renderWidgetBody(props);
 
         const content = <div
-            className={this.props.classes.imageContainer}
+            style={styles.imageContainer}
             onClick={() => this.setState({ full: true })}
         >
-            {this.state.loading && this.state.alive && <CircularProgress className={this.props.classes.progress} />}
+            {this.state.loading && this.state.alive && <CircularProgress style={styles.progress} />}
             {!this.state.alive ? <div
                 style={{ position: 'absolute', top: 0, left: 0 }}
             >
@@ -443,7 +442,7 @@ class RtspCamera extends Generic {
             </div> : null}
             <canvas
                 ref={this.videoRef}
-                className={this.props.classes.camera}
+                style={styles.camera}
             ></canvas>
             {this.renderDialog()}
         </div>;
@@ -460,4 +459,4 @@ class RtspCamera extends Generic {
     }
 }
 
-export default withStyles(styles)(RtspCamera);
+export default RtspCamera;

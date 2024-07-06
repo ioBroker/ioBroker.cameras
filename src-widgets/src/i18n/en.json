@@ -18,5 +18,6 @@
   "Polling Camera": "Polling Camera",
   "Cannot load URL": "Cannot load URL",
   "noCacheByFull": "No cache in dialog",
-  "camera_in_dialog": "Camera in Dialog"
+  "camera_in_dialog": "Camera in Dialog",
+  "No camera selected": "No camera selected"
 }

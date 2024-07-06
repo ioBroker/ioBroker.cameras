@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@mui/styles';
 
 import {
     TextField,
@@ -8,14 +7,14 @@ import {
 
 import { I18n } from '@iobroker/adapter-react-v5';
 
-const styles = () => ({
+const styles = {
     page: {
         width: '100%',
     },
     url: {
         width: '100%',
     },
-});
+};
 
 class Config extends Component {
     constructor(props) {
@@ -35,11 +34,11 @@ class Config extends Component {
     }
 
     render() {
-        return <div className={this.props.classes.page}>
+        return <div style={styles.page}>
             <TextField
                 variant="standard"
                 key="url"
-                className={this.props.classes.url}
+                style={styles.url}
                 label={I18n.t('Camera URL')}
                 value={this.state.url}
                 onChange={e => this.setState({ url: e.target.value }, () =>
@@ -55,4 +54,4 @@ Config.propTypes = {
     settings: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Config);
+export default Config;

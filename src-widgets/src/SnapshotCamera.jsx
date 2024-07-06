@@ -1,5 +1,4 @@
 import React from 'react';
-import { withStyles } from '@mui/styles';
 import {
     Button,
     Dialog, DialogActions, DialogContent, DialogTitle,
@@ -10,7 +9,7 @@ import { Close } from '@mui/icons-material';
 import Generic from './Generic';
 import { CameraField } from './RtspCamera';
 
-const styles = () => ({
+const styles = {
     camera: {
         width: '100%',
         height: '100%',
@@ -29,7 +28,7 @@ const styles = () => ({
         width: '100%',
         height: '100%',
     },
-});
+};
 
 class SnapshotCamera extends Generic {
     constructor(props) {
@@ -253,11 +252,11 @@ class SnapshotCamera extends Generic {
         >
             <DialogTitle>{this.state.rxData.widgetTitle}</DialogTitle>
             <DialogContent>
-                <div className={this.props.classes.imageContainer}>
+                <div style={styles.imageContainer}>
                     <img
                         src={url}
                         ref={this.fullVideoRef}
-                        className={this.props.classes.fullCamera}
+                        style={styles.fullCamera}
                         alt={this.state.rxData.camera}
                     />
                 </div>
@@ -310,7 +309,7 @@ class SnapshotCamera extends Generic {
         const url = this.getUrl();
 
         const content = <div
-            className={this.props.classes.imageContainer}
+            style={styles.imageContainer}
             onClick={() => !this.state.error && this.setState({ full: true }, () => this.restartPollingInterval())}
         >
             {!this.state.alive ? <div
@@ -321,7 +320,7 @@ class SnapshotCamera extends Generic {
             {url ? <img
                 src={url}
                 ref={this.videoRef}
-                className={this.props.classes.camera}
+                style={styles.camera}
                 alt={this.state.rxData.camera}
             /> : Generic.t('No camera selected')}
             {this.state.alive && this.state.error ? <div
@@ -352,4 +351,4 @@ class SnapshotCamera extends Generic {
     }
 }
 
-export default withStyles(styles)(SnapshotCamera);
+export default SnapshotCamera;

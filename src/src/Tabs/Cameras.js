@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import { withStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
 
 import  {
@@ -46,7 +45,7 @@ const TYPES = {
     hikam:        { Config: RTSPHiKamConfig, name: 'HiKam / WiWiCam' },
 };
 
-const styles = theme => ({
+const styles = {
     tab: {
         width: '100%',
         height: '100%',
@@ -133,7 +132,7 @@ const styles = theme => ({
         marginTop: 6,
     },
     buttonTest: {
-        marginBottom: theme.spacing(1),
+        marginBottom: 8,
     },
     imgTest: {
         width: '100%',
@@ -141,13 +140,13 @@ const styles = theme => ({
     },
     sampleUrl: {
         display: 'block',
-        marginTop: theme.spacing(1),
+        marginTop: 8,
     },
     link: {
         color: 'inherit',
         textDecoration: 'underline',
     },
-});
+};
 
 class Server extends Component {
     constructor(props) {
@@ -343,7 +342,7 @@ class Server extends Component {
                 <DialogTitle>{I18n.t('Edit camera %s [%s]', cam.name, cam.type)} - {cam.desc}</DialogTitle>
                 <DialogContent>
                     <div style={{ display: 'flex', gap: 10 }}>
-                        <div className={this.props.classes.divConfig}>
+                        <div style={styles.divConfig}>
                             <Config
                                 native={this.props.native}
                                 socket={this.props.socket}
@@ -358,7 +357,7 @@ class Server extends Component {
                             <br />
                             <TextField
                                 variant="standard"
-                                className={this.props.classes.username}
+                                style={styles.username}
                                 label={I18n.t('Request timeout (ms)')}
                                 value={cam.timeout === undefined ? '' : cam.timeout}
                                 helperText={I18n.t('If empty or 0, use default settings.')}
@@ -371,7 +370,7 @@ class Server extends Component {
                             <br />
                             <TextField
                                 variant="standard"
-                                className={this.props.classes.username}
+                                style={styles.username}
                                 label={I18n.t('Cache timeout (ms)')}
                                 value={cam.cacheTimeout === undefined ? '' : cam.cacheTimeout}
                                 helperText={I18n.t('If empty, use default settings. If 0, cache disabled')}
@@ -398,7 +397,7 @@ class Server extends Component {
                             <br />
                             <TextField
                                 variant="standard"
-                                className={this.props.classes.username}
+                                style={styles.username}
                                 label={I18n.t('Add title')}
                                 value={cam.title === undefined ? '' : cam.title}
                                 onChange={e => {
@@ -407,22 +406,22 @@ class Server extends Component {
                                     this.onCameraSettingsChanged(settings);
                                 }}
                             />
-                            <div className={this.props.classes.sampleUrl}>
+                            <div style={styles.sampleUrl}>
                                 {I18n.t('Local URL')}
                                 :&nbsp;
                                 <a
-                                    className={this.props.classes.link}
+                                    style={styles.link}
                                     href={`http://${this.props.native.bind}:${this.props.native.port}/${cam.name}?key=${this.props.native.key}`}
                                     target="_blank" rel="noopener noreferrer"
                                 >
                                     URL: http://{this.props.native.bind}:{this.props.native.port}/{cam.name}?key={this.props.native.key}
                                 </a>
                             </div>
-                            <div className={this.props.classes.sampleUrl}>
+                            <div style={styles.sampleUrl}>
                                 {I18n.t('Web URL')}
                                 :&nbsp;
                                 <a
-                                    className={this.props.classes.link}
+                                    style={styles.link}
                                     href={`http://${this.state.webInstanceHost}/${this.props.adapterName}.${this.props.instance}/${cam.name}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -431,17 +430,17 @@ class Server extends Component {
                                 </a>
                             </div>
                         </div>
-                        <div className={this.props.classes.divTestCam}>
+                        <div style={styles.divTestCam}>
                             <Button
                                 disabled={this.state.requesting || !this.state.instanceAlive}
                                 variant="contained"
                                 color="primary"
                                 size="small"
-                                className={this.props.classes.buttonTest}
+                                style={styles.buttonTest}
                                 onClick={() => this.onTest()}
                                 startIcon={<IconTest />}
                             >{I18n.t('Test')}</Button>
-                            {this.state.testImg ? <img alt="test" className={this.props.classes.imgTest} src={this.state.testImg} /> : null}
+                            {this.state.testImg ? <img alt="test" style={styles.imgTest} src={this.state.testImg} /> : null}
                             {this.state.requesting ? <CircularProgress /> : null}
                         </div>
                     </div>
@@ -474,20 +473,20 @@ class Server extends Component {
             <Fab
                 size="small"
                 key="edit"
-                className={this.props.classes.lineEdit}
+                style={styles.lineEdit}
                 onClick={() => {
                     let editedSettingsOld = JSON.parse(JSON.stringify(this.props.native.cameras[i]));
                     editedSettingsOld = JSON.stringify(editedSettingsOld);
                     this.setState({ editCam: i, editedSettingsOld, editedSettings: null, testImg: null });
                 }}>
-                    <IconEdit className={this.props.classes.buttonIcon} />
+                    <IconEdit style={styles.buttonIcon} />
             </Fab>,
 
             i ?
                 <Fab
                     size="small"
                     key="up"
-                    className={this.props.classes.lineUp}
+                    style={styles.lineUp}
                     onClick={() => {
                         const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
                         const cam = cameras[i];
@@ -495,16 +494,16 @@ class Server extends Component {
                         cameras.splice(i - 1, 0, cam);
                         this.props.onChange('cameras', cameras);
                     }}>
-                    <IconUp className={this.props.classes.buttonIcon}/>
+                    <IconUp style={styles.buttonIcon}/>
                 </Fab>
                 :
-                <div key="upEmpty" className={this.props.classes.lineNoButtonUp}>&nbsp;</div>,
+                <div key="upEmpty" style={styles.lineNoButtonUp}>&nbsp;</div>,
 
             i !== this.props.native.cameras.length - 1 ?
                 <Fab
                     size="small"
                     key="down"
-                    className={this.props.classes.lineDown}
+                    style={styles.lineDown}
                     onClick={() => {
                         const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
                         const cam = cameras[i];
@@ -512,21 +511,21 @@ class Server extends Component {
                         cameras.splice(i + 1, 0, cam);
                         this.props.onChange('cameras', cameras);
                     }}>
-                    <IconDown className={this.props.classes.buttonIcon}/>
+                    <IconDown style={styles.buttonIcon}/>
                 </Fab>
                 :
-                <div key="downEmpty" className={this.props.classes.lineNoButtonDown}>&nbsp;</div>,
+                <div key="downEmpty" style={styles.lineNoButtonDown}>&nbsp;</div>,
 
             <Fab
                 size="small"
                 key="delete"
-                className={this.props.classes.lineDelete}
+                style={styles.lineDelete}
                 onClick={() => {
                     const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
                     cameras.splice(i, 1);
                     this.props.onChange('cameras', cameras);
                 }}>
-                    <IconDelete className={this.props.classes.buttonIcon}/>
+                    <IconDelete style={styles.buttonIcon}/>
             </Fab>
         ];
     }
@@ -548,10 +547,10 @@ class Server extends Component {
             }
         }
 
-        return <div key={`cam${cam.id}`} className={this.props.classes.lineDiv} style={{ opacity: cam.enabled === false ? 0.5 : 1}}>
-            <div className={this.props.classes.lineCheck}>
+        return <div key={`cam${cam.id}`} style={styles.lineDiv} style={{ opacity: cam.enabled === false ? 0.5 : 1}}>
+            <div style={styles.lineCheck}>
                 <Checkbox
-                    className={this.props.classes.lineCheckbox}
+                    style={styles.lineCheckbox}
                     checked={cam.enabled !== false}
                     onChange={() => {
                         const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
@@ -560,10 +559,10 @@ class Server extends Component {
                     }}
                 />
             </div>
-            <div className={this.props.classes.lineText}>
+            <div style={styles.lineText}>
                 <TextField
                     variant="standard"
-                    className={this.props.classes.name}
+                    style={styles.name}
                     label={I18n.t('Name')}
                     error={error}
                     value={cam.name || ''}
@@ -575,10 +574,10 @@ class Server extends Component {
                     }}
                 />
             </div>
-            <div className={this.props.classes.lineDesc}>
+            <div style={styles.lineDesc}>
                 <TextField
                     variant="standard"
-                    className={this.props.classes.desc}
+                    style={styles.desc}
                     label={I18n.t('Description')}
                     value={cam.desc || ''}
                     onChange={e => {
@@ -588,8 +587,8 @@ class Server extends Component {
                     }}
                 />
             </div>
-            <div className={this.props.classes.lineType}>
-                <FormControl className={this.props.classes.type} variant="standard">
+            <div style={styles.lineType}>
+                <FormControl style={styles.type} variant="standard">
                     <InputLabel>{I18n.t('Type')}</InputLabel>
                     <Select
                         variant="standard"
@@ -613,12 +612,12 @@ class Server extends Component {
                 </FormControl>
             </div>
             {this.renderCameraButtons(cam, i)}
-            {description ? <div className={this.props.classes.lineUrl}>{description}</div> : null}
+            {description ? <div style={styles.lineUrl}>{description}</div> : null}
         </div>;
     }
 
     render() {
-        return <div className={this.props.classes.tab}>
+        return <div style={styles.tab}>
             <Fab
                 size="small"
                 title={I18n.t('Add new camera')}
@@ -655,4 +654,4 @@ Server.propTypes = {
     themeType: PropTypes.string.isRequired,
 };
 
-export default withStyles(styles)(Server);
+export default Server;

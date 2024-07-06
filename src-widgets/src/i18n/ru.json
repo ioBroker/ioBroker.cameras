@@ -18,5 +18,6 @@
   "Polling Camera": "URL-Камера",
   "Cannot load URL": "Невозможно загрузить URL",
   "noCacheByFull": "Нет кеша в диалоге",
-  "camera_in_dialog": "Камера в диалоге"
+  "camera_in_dialog": "Камера в диалоге",
+  "No camera selected": "Камера не выбрана"
 }

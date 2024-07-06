@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { withStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
 
 import {
@@ -25,7 +24,7 @@ import {
     Error as DialogError,
 } from '@iobroker/adapter-react-v5';
 
-const styles = () => ({
+const styles = {
     tab: {
         width: '100%',
         minHeight: '100%',
@@ -47,7 +46,7 @@ const styles = () => ({
     link: {
         color: 'inherit',
     }
-});
+};
 
 class Options extends Component {
     constructor(props) {
@@ -104,7 +103,7 @@ class Options extends Component {
                     key="close"
                     aria-label="Close"
                     color="inherit"
-                    className={this.props.classes.close}
+                    style={styles.close}
                     onClick={() => this.setState({ toast: '' })}
                 >
                     <IconClose />
@@ -150,7 +149,7 @@ class Options extends Component {
     renderSettings() {
         return [
             this.state.ips && this.state.ips.length ?
-                <FormControl key="bindSelect" className={this.props.classes.bind} variant="standard">
+                <FormControl key="bindSelect" style={styles.bind} variant="standard">
                     <InputLabel>{I18n.t('Local IP address')}</InputLabel>
                     <Select
                         variant="standard"
@@ -165,7 +164,7 @@ class Options extends Component {
                     variant="standard"
                     disabled={this.state.requesting}
                     key="bind"
-                    className={this.props.classes.bind}
+                    style={styles.bind}
                     label={I18n.t('Local IP address')}
                     value={this.props.native.bind}
                     onChange={e => this.props.onChange('bind', e.target.value)}
@@ -177,7 +176,7 @@ class Options extends Component {
                 type="number"
                 min={1}
                 max={0xFFFF}
-                className={this.props.classes.port}
+                style={styles.port}
                 label={I18n.t('Local port')}
                 value={this.props.native.port}
                 onChange={e => this.props.onChange('port', e.target.value)}
@@ -190,13 +189,13 @@ class Options extends Component {
                 type="number"
                 min={0}
                 max={10000}
-                className={this.props.classes.defaultTimeout}
+                style={styles.defaultTimeout}
                 label={I18n.t('Default timeout (ms)')}
                 value={this.props.native.defaultTimeout}
                 onChange={e => this.props.onChange('defaultTimeout', e.target.value)}
             />,
             <br key="br2" />,
-            <FormControl key="webInstanceSelect"  className={this.props.classes.bind} variant="standard">
+            <FormControl key="webInstanceSelect"  style={styles.bind} variant="standard">
                 <InputLabel>{I18n.t('WEB Instance')}</InputLabel>
                 <Select
                     variant="standard"
@@ -213,7 +212,7 @@ class Options extends Component {
                 variant="standard"
                 disabled={this.state.requesting}
                 key="ffmpegPath"
-                className={this.props.classes.ffmpegPath}
+                style={styles.ffmpegPath}
                 label={I18n.t('Path to ffpmeg executable')}
                 value={this.props.native.ffmpegPath || ''}
                 onChange={e => this.props.onChange('ffmpegPath', e.target.value)}
@@ -232,7 +231,7 @@ class Options extends Component {
                 variant="standard"
                 disabled={this.state.requesting}
                 key="tempPath"
-                className={this.props.classes.ffmpegPath}
+                style={styles.ffmpegPath}
                 label={I18n.t('Path to store temporary images')}
                 value={this.props.native.tempPath || ''}
                 onChange={e => this.props.onChange('tempPath', e.target.value)}
@@ -243,7 +242,7 @@ class Options extends Component {
                 variant="standard"
                 disabled={this.state.requesting}
                 key="defaultCacheTimeout"
-                className={this.props.classes.ffmpegPath}
+                style={styles.ffmpegPath}
                 label={I18n.t('Default cache timeout (ms)')}
                 min={0}
                 max={60000}
@@ -257,11 +256,11 @@ class Options extends Component {
                 variant="standard"
                 disabled={this.state.requesting}
                 key="dateFormat"
-                className={this.props.classes.ffmpegPath}
+                style={styles.ffmpegPath}
                 label={I18n.t('Time format')}
                 value={this.props.native.dateFormat || ''}
                 onChange={e => this.props.onChange('dateFormat', e.target.value)}
-                helperText={<span>{I18n.t('See here:')} <a href="https://momentjs.com/docs/#/displaying/" rel="noreferrer" target="_blank" className={this.props.classes.link}>https://momentjs.com/</a></span>}
+                helperText={<span>{I18n.t('See here:')} <a href="https://momentjs.com/docs/#/displaying/" rel="noreferrer" target="_blank" style={styles.link}>https://momentjs.com/</a></span>}
             />,
         ];
     }
@@ -274,7 +273,7 @@ class Options extends Component {
     }
 
     render() {
-        return <form key="option" className={this.props.classes.tab}>
+        return <form key="option" style={styles.tab}>
             <Logo
                 instance={this.props.instance}
                 common={this.props.common}
@@ -308,4 +307,4 @@ Options.propTypes = {
     theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Options);
+export default Options;

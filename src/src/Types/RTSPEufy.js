@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@mui/styles';
 
 import {
     Button,
@@ -10,28 +9,28 @@ import {
 
 import { I18n, SelectID } from '@iobroker/adapter-react-v5';
 
-const styles = theme => ({
+const styles = {
     page: {
         width: '100%',
     },
     ip: {
-        marginRight: theme.spacing(1),
+        marginRight: 8,
         width: 200,
     },
     username: {
-        marginTop: theme.spacing(2),
-        marginRight: theme.spacing(1),
+        marginTop: 16,
+        marginRight: 8,
         width: 200,
     },
     password: {
-        marginTop: theme.spacing(2),
+        marginTop: 16,
         width: 200,
     },
     quality: {
-        marginTop: theme.spacing(2),
+        marginTop: 16,
         width: 200,
     },
-});
+};
 
 class RTSPEufyConfig extends Component {
     constructor(props) {
@@ -88,7 +87,7 @@ class RTSPEufyConfig extends Component {
     }
 
     render() {
-        return <div className={this.props.classes.page}>
+        return <div style={styles.page}>
             {this.renderSelectID()}
             <form>
                 {this.state.eusecInstalled ? <div>
@@ -102,7 +101,7 @@ class RTSPEufyConfig extends Component {
 
                 {!this.state.useOid ? <TextField
                     variant="standard"
-                    className={this.props.classes.ip}
+                    style={styles.ip}
                     label={I18n.t('Camera IP')}
                     value={this.state.ip}
                     onChange={e => this.setState({ ip: e.target.value }, () => this.reportSettings())}
@@ -131,4 +130,4 @@ RTSPEufyConfig.propTypes = {
     themeType: PropTypes.string,
 };
 
-export default withStyles(styles)(RTSPEufyConfig);
+export default RTSPEufyConfig;

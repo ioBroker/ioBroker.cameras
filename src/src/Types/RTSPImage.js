@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@mui/styles';
 
 import {
     TextField,
@@ -14,58 +13,58 @@ import {
 
 import { I18n } from '@iobroker/adapter-react-v5';
 
-const styles = theme => ({
+const styles = {
     page: {
         width: '100%',
     },
     ip: {
-        marginRight: theme.spacing(1),
+        marginRight: 8,
         width: 200,
     },
     port: {
-        marginRight: theme.spacing(1),
+        marginRight: 8,
         width: 200,
     },
     protocol: {
         width: 70,
     },
     username: {
-        marginTop: theme.spacing(2),
-        marginRight: theme.spacing(1),
+        marginTop: 16,
+        marginRight: 8,
         width: 200,
     },
     password: {
-        marginTop: theme.spacing(2),
+        marginTop: 16,
         width: 200,
     },
     urlPath: {
-        marginTop: theme.spacing(2),
-        marginBotton: `${theme.spacing(3)} !important`,
+        marginTop: 16,
+        marginBotton: `24px !important`,
         width: 408,
     },
     width: {
-        marginTop: theme.spacing(2),
-        marginRight: theme.spacing(1),
+        marginTop: 16,
+        marginRight: 8,
         width: 90,
     },
     height: {
-        marginTop: theme.spacing(2),
+        marginTop: 16,
         width: 90,
     },
     expertMode: {
-        marginTop: theme.spacing(2),
+        marginTop: 16,
     },
     suffix: {
-        marginTop: theme.spacing(2),
+        marginTop: 16,
         width: 200,
     },
     prefix: {
-        marginTop: theme.spacing(2),
-        marginRight: theme.spacing(1),
+        marginTop: 16,
+        marginRight: 8,
         width: 200,
     },
     ffmpgDiv: {
-        marginTop: theme.spacing(2),
+        marginTop: 16,
     },
     ffmpgLabel: {
         fontSize: 'smaller',
@@ -75,7 +74,7 @@ const styles = theme => ({
         fontFamily: 'monospace',
         fontSize: 'smaller',
     },
-});
+};
 
 class RTSPImageConfig extends Component {
     constructor(props) {
@@ -145,24 +144,24 @@ class RTSPImageConfig extends Component {
     }
 
     render() {
-        return <div className={this.props.classes.page}>
+        return <div style={styles.page}>
             <form>
                 <TextField
                     variant="standard"
-                    className={this.props.classes.ip}
+                    style={styles.ip}
                     label={I18n.t('Camera IP')}
                     value={this.state.ip}
                     onChange={e => this.setState({ ip: e.target.value }, () => this.reportSettings())}
                 />
                 <TextField
                     variant="standard"
-                    className={this.props.classes.port}
+                    style={styles.port}
                     type="number"
                     label={I18n.t('Port')}
                     value={this.state.port}
                     onChange={e => this.setState({ port: e.target.value }, () => this.reportSettings())}
                 />
-                <FormControl className={this.props.classes.protocol} variant="standart">
+                <FormControl style={styles.protocol} variant="standart">
                     <InputLabel>{I18n.t('Protocol')}</InputLabel>
                     <Select
                         variant="standard"
@@ -176,7 +175,7 @@ class RTSPImageConfig extends Component {
                 <br />
                 <TextField
                     variant="standard"
-                    className={this.props.classes.urlPath}
+                    style={styles.urlPath}
                     label={I18n.t('Path')}
                     value={this.state.urlPath}
                     onChange={e => this.setState({ urlPath: e.target.value }, () => this.reportSettings())}
@@ -186,7 +185,7 @@ class RTSPImageConfig extends Component {
                 <TextField
                     variant="standard"
                     autoComplete="new-password"
-                    className={this.props.classes.username}
+                    style={styles.username}
                     label={I18n.t('Username')}
                     value={this.state.username}
                     onChange={e => this.setState({ username: e.target.value }, () => this.reportSettings())}
@@ -195,14 +194,14 @@ class RTSPImageConfig extends Component {
                     variant="standard"
                     type="password"
                     autoComplete="new-password"
-                    className={this.props.classes.password}
+                    style={styles.password}
                     label={I18n.t('Password')}
                     value={this.state.password}
                     onChange={e => this.setState({ password: e.target.value }, () => this.reportSettings())}
                 />
                 <br />
                 <FormControlLabel
-                    className={this.props.classes.expertMode}
+                    style={styles.expertMode}
                     control={<Checkbox
                         checked={!!this.state.expertMode}
                         onChange={e => this.setState({ expertMode: e.target.checked })}
@@ -212,7 +211,7 @@ class RTSPImageConfig extends Component {
                 {this.state.expertMode ? <br /> : null}
                 {this.state.expertMode ? <TextField
                     variant="standard"
-                    className={this.props.classes.width}
+                    style={styles.width}
                     label={I18n.t('Width')}
                     helperText={I18n.t('in pixels')}
                     error={this.state.originalHeight && !this.state.originalWidth}
@@ -222,7 +221,7 @@ class RTSPImageConfig extends Component {
                 {this.state.expertMode ? <div style={{ display: 'inline-block', marginTop: 40, marginRight: 8 }}>x</div> : null}
                 {this.state.expertMode ? <TextField
                     variant="standard"
-                    className={this.props.classes.height}
+                    style={styles.height}
                     label={I18n.t('Height')}
                     error={!this.state.originalHeight && this.state.originalWidth}
                     helperText={I18n.t('in pixels')}
@@ -232,22 +231,22 @@ class RTSPImageConfig extends Component {
                 {this.state.expertMode ? <br /> : null}
                 {this.state.expertMode ? <TextField
                         variant="standard"
-                        className={this.props.classes.prefix}
+                        style={styles.prefix}
                         label={I18n.t('Prefix in command')}
                         value={this.state.prefix}
                         onChange={e => this.setState({ prefix: e.target.value }, () => this.reportSettings())}
                     /> : null}
                 {this.state.expertMode ? <TextField
                         variant="standard"
-                        className={this.props.classes.suffix}
+                        style={styles.suffix}
                         label={I18n.t('Suffix in command')}
                         value={this.state.suffix}
                         onChange={e => this.setState({ suffix: e.target.value }, () => this.reportSettings())}
                     /> : null}
                 {this.state.expertMode ? <br /> : null}
                 {this.state.expertMode ? <br /> : null}
-                {this.state.expertMode ? <div className={this.props.classes.ffmpgDiv}>
-                    <span className={this.props.classes.ffmpgLabel}>{I18n.t('ffmpeg command')}: </span><span className={this.props.classes.ffmpgCommand}>ffmpeg {this.buildCommand(this.state).join(' ')}</span>
+                {this.state.expertMode ? <div style={styles.ffmpgDiv}>
+                    <span style={styles.ffmpgLabel}>{I18n.t('ffmpeg command')}: </span><span style={styles.ffmpgCommand}>ffmpeg {this.buildCommand(this.state).join(' ')}</span>
                 </div> : null}
             </form>
         </div>;
@@ -262,4 +261,4 @@ RTSPImageConfig.propTypes = {
     encode: PropTypes.func,
 };
 
-export default withStyles(styles)(RTSPImageConfig);
+export default RTSPImageConfig;
