@@ -18,5 +18,6 @@
   "Polling Camera": "Камера опитування",
   "Cannot load URL": "Не вдається завантажити URL",
   "noCacheByFull": "У діалоговому вікні немає кешу",
-  "camera_in_dialog": "Камера в діалозі"
+  "camera_in_dialog": "Камера в діалозі",
+  "No camera selected": "Камера не вибрана"
 }
