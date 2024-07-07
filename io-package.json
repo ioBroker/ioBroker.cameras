@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "cameras",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "news": {
+      "2.1.1": {
+        "en": "Removed withStyles package",
+        "de": "MitStyles-Paket entfernt",
+        "ru": "Удаленный пакет со Стайлз",
+        "pt": "Removido com pacote Estilos",
+        "nl": "Verwijderd metStyles pakket",
+        "fr": "Enlever avec le paquetStyles",
+        "it": "Rimosso con pacchettoStyles",
+        "es": "Retire el paquete de estilos",
+        "pl": "Usunięty z pakietem Styles",
+        "uk": "Видаліть пакет \"Стиль\"",
+        "zh-cn": "用 Styles 软件包删除"
+      },
       "2.0.8": {
         "en": "Packages updated\nAllowed selecting another source (with bigger resolution) for URL cameras",
         "de": "Pakete aktualisiert\nErlaubte Auswahl einer anderen Quelle (mit größerer Auflösung) für URL-Kameras",
