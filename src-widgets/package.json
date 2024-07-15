@@ -1,7 +1,7 @@
 {
     "name": "iobroker.vis-2-widgets-camera",
     "private": true,
-    "version": "2.0.1",
+    "version": "2.0.2",
     "dependencies": {
         "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
         "@craco/craco": "^7.1.0",
