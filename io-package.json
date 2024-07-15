@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "cameras",
-    "version": "2.1.1",
+    "version": "2.1.2",
     "news": {
+      "2.1.2": {
+        "en": "Updated packages",
+        "de": "Aktualisierte Pakete",
+        "ru": "Обновленные пакеты",
+        "pt": "Pacotes atualizados",
+        "nl": "Bijgewerkte pakketten",
+        "fr": "Paquets mis à jour",
+        "it": "Pacchetti aggiornati",
+        "es": "Paquetes actualizados",
+        "pl": "Aktualizacja pakietów",
+        "uk": "Оновлені пакети",
+        "zh-cn": "更新软件包"
+      },
       "2.1.1": {
         "en": "Removed withStyles package",
         "de": "MitStyles-Paket entfernt",
@@ -80,19 +93,6 @@
         "pl": "Added WiWiCam MW1 i HiKam camera",
         "uk": "Додано відеокамери WiWiCam MW1 і HiKam",
         "zh-cn": "添加WiCam MW1和HKam摄像机"
-      },
-      "1.2.2": {
-        "en": "Corrected passwords with exclamation mark",
-        "de": "Korrigierte Passwörter mit Ausrufzeichen",
-        "ru": "Исправлены пароли с знаком возбуждения",
-        "pt": "Senhas corrigidas com marca de exclamação",
-        "nl": "Vertaling:",
-        "fr": "Mot de passe corrigé avec marque d'exclamation",
-        "it": "Password corrette con marchio esclamativo",
-        "es": "Contraseñas corregidas con marca de exclamación",
-        "pl": "Komentarz z wykrzyknikiem",
-        "uk": "Виправлені паролі з маркуванням екскламації",
-        "zh-cn": "修改了开释标志的密码"
       }
     },
     "title": "IP-Cameras",
