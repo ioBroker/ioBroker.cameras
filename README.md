@@ -71,6 +71,9 @@ To add a new camera, you must create a Pull Request on GitHub with the following
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) Updated packages
+
 ### 2.1.1 (2024-07-07)
 * (bluefox) Removed withStyles package
 

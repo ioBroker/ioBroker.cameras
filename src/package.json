@@ -3,10 +3,10 @@
     "version": "2.1.1",
     "private": true,
     "dependencies": {
-        "@iobroker/adapter-react-v5": "^6.0.13",
+        "@iobroker/adapter-react-v5": "^6.0.19",
         "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-        "@mui/icons-material": "^5.16.0",
-        "@mui/material": "^5.16.0",
+        "@mui/icons-material": "^5.16.1",
+        "@mui/material": "^5.16.1",
         "babel-eslint": "^10.1.0",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
