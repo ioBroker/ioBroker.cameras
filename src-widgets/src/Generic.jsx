@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 
-import { VisRxWidget } from '@iobroker/vis-2-widgets-react-dev';
-
-class Generic extends (window.visRxWidget || VisRxWidget) {
+class Generic extends window.visRxWidget {
     static getI18nPrefix() {
         return 'cameras_';
     }

@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import {
-    TextField,
-} from '@mui/material';
+import { TextField } from '@mui/material';
 
 import { I18n } from '@iobroker/adapter-react-v5';
 
@@ -22,7 +20,7 @@ class Config extends Component {
 
         const state = JSON.parse(JSON.stringify(this.props.settings));
         // set default values
-        state.url  = state.url || '';
+        state.url = state.url || '';
 
         this.state = state;
     }
@@ -34,17 +32,18 @@ class Config extends Component {
     }
 
     render() {
-        return <div style={styles.page}>
-            <TextField
-                variant="standard"
-                key="url"
-                style={styles.url}
-                label={I18n.t('Camera URL')}
-                value={this.state.url}
-                onChange={e => this.setState({ url: e.target.value }, () =>
-                    this.reportSettings())}
-            />
-        </div>;
+        return (
+            <div style={styles.page}>
+                <TextField
+                    variant="standard"
+                    key="url"
+                    style={styles.url}
+                    label={I18n.t('Camera URL')}
+                    value={this.state.url}
+                    onChange={e => this.setState({ url: e.target.value }, () => this.reportSettings())}
+                />
+            </div>
+        );
     }
 }
 

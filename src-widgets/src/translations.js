@@ -1,15 +1,27 @@
+import en from './i18n/en';
+import de from './i18n/de';
+import ru from './i18n/ru';
+import pt from './i18n/pt';
+import nl from './i18n/nl';
+import fr from './i18n/fr';
+import it from './i18n/it';
+import es from './i18n/es';
+import pl from './i18n/pl';
+import uk from './i18n/uk';
+import zhcn from './i18n/zh-cn';
+
 const translations = {
-    en: require('./i18n/en.json'),
-    de: require('./i18n/de.json'),
-    ru: require('./i18n/ru.json'),
-    pt: require('./i18n/pt.json'),
-    nl: require('./i18n/nl.json'),
-    fr: require('./i18n/fr.json'),
-    it: require('./i18n/it.json'),
-    es: require('./i18n/es.json'),
-    pl: require('./i18n/pl.json'),
-    'zh-cn': require('./i18n/zh-cn.json'),
-    uk: require('./i18n/uk.json'),
+    en,
+    de,
+    ru,
+    pt,
+    nl,
+    fr,
+    it,
+    es,
+    pl,
+    'zh-cn': zhcn,
+    uk,
     prefix: 'cameras_',
 };
 

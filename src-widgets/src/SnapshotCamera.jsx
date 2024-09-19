@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-    Button,
-    Dialog, DialogActions, DialogContent, DialogTitle,
-} from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
 import { Close } from '@mui/icons-material';
 
@@ -97,23 +94,27 @@ class SnapshotCamera extends Generic {
                             label: 'Camera',
                             name: 'camera',
                             type: 'custom',
-                            component: (field, data, setData, props) => <CameraField
-                                field={field}
-                                data={data}
-                                setData={setData}
-                                context={props.context}
-                            />,
+                            component: (field, data, setData, props) => (
+                                <CameraField
+                                    field={field}
+                                    data={data}
+                                    setData={setData}
+                                    context={props.context}
+                                />
+                            ),
                         },
                         {
                             label: 'camera_in_dialog',
                             name: 'bigCamera',
                             type: 'custom',
-                            component: (field, data, setData, props) => <CameraField
-                                field={field}
-                                data={data}
-                                setData={setData}
-                                context={props.context}
-                            />,
+                            component: (field, data, setData, props) => (
+                                <CameraField
+                                    field={field}
+                                    data={data}
+                                    setData={setData}
+                                    context={props.context}
+                                />
+                            ),
                             hidden: '!data.camera',
                         },
                     ],
@@ -161,11 +162,17 @@ class SnapshotCamera extends Generic {
 
         if (this.subsribedOnAlive !== (data ? data.instanceId : null)) {
             if (this.subsribedOnAlive) {
-                this.props.context.socket.unsubscribeState(`system.adapter.cameras.${this.subsribedOnAlive}.alive`, this.onAliveChanged);
+                this.props.context.socket.unsubscribeState(
+                    `system.adapter.cameras.${this.subsribedOnAlive}.alive`,
+                    this.onAliveChanged,
+                );
                 this.subsribedOnAlive = '';
             }
             if (data) {
-                this.props.context.socket.subscribeState(`system.adapter.cameras.${data.instanceId}.alive`, this.onAliveChanged);
+                this.props.context.socket.subscribeState(
+                    `system.adapter.cameras.${data.instanceId}.alive`,
+                    this.onAliveChanged,
+                );
                 this.subsribedOnAlive = data.instanceId;
             }
         }
@@ -204,14 +211,20 @@ class SnapshotCamera extends Generic {
             this.pollingInterval = null;
         }
         if (this.state.alive) {
-            this.pollingInterval = setInterval(this.updateImage, parseInt(this.state.full ? this.state.rxData.pollingIntervalFull : this.state.rxData.pollingInterval, 10) || 500);
+            this.pollingInterval = setInterval(
+                this.updateImage,
+                parseInt(
+                    this.state.full ? this.state.rxData.pollingIntervalFull : this.state.rxData.pollingInterval,
+                    10,
+                ) || 500,
+            );
         }
     }
 
     onAliveChanged = (id, state) => {
         const data = SnapshotCamera.getNameAndInstance(this.state.rxData.camera);
         if (data && id === `system.adapter.cameras.${data.instanceId}.alive`) {
-            const alive = !!(state?.val);
+            const alive = !!state?.val;
             if (alive !== this.state.alive) {
                 this.setState({ alive }, () => this.restartPollingInterval());
             }
@@ -234,7 +247,10 @@ class SnapshotCamera extends Generic {
         this.pollingInterval = null;
 
         if (this.subsribedOnAlive) {
-            this.props.context.socket.unsubscribeState(`system.adapter.cameras.${this.subsribedOnAlive}.alive`, this.onAliveChanged);
+            this.props.context.socket.unsubscribeState(
+                `system.adapter.cameras.${this.subsribedOnAlive}.alive`,
+                this.onAliveChanged,
+            );
             this.subsribedOnAlive = null;
         }
     }
@@ -244,38 +260,40 @@ class SnapshotCamera extends Generic {
             url = this.getUrl(true) || url;
         }
 
-        return this.state.full ? <Dialog
-            fullWidth
-            maxWidth="lg"
-            open={!0}
-            onClose={() => this.setState({ full: false }, () => this.restartPollingInterval())}
-        >
-            <DialogTitle>{this.state.rxData.widgetTitle}</DialogTitle>
-            <DialogContent>
-                <div style={styles.imageContainer}>
-                    <img
-                        src={url}
-                        ref={this.fullVideoRef}
-                        style={styles.fullCamera}
-                        alt={this.state.rxData.camera}
-                    />
-                </div>
-            </DialogContent>
-            <DialogActions>
-                <Button
-                    onClick={e => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        this.setState({ full: false }, () => this.restartPollingInterval());
-                    }}
-                    startIcon={<Close />}
-                    color="primary"
-                    variant="contained"
-                >
-                    {Generic.t('Close')}
-                </Button>
-            </DialogActions>
-        </Dialog> : null;
+        return this.state.full ? (
+            <Dialog
+                fullWidth
+                maxWidth="lg"
+                open={!0}
+                onClose={() => this.setState({ full: false }, () => this.restartPollingInterval())}
+            >
+                <DialogTitle>{this.state.rxData.widgetTitle}</DialogTitle>
+                <DialogContent>
+                    <div style={styles.imageContainer}>
+                        <img
+                            src={url}
+                            ref={this.fullVideoRef}
+                            style={styles.fullCamera}
+                            alt={this.state.rxData.camera}
+                        />
+                    </div>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={e => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            this.setState({ full: false }, () => this.restartPollingInterval());
+                        }}
+                        startIcon={<Close />}
+                        color="primary"
+                        variant="contained"
+                    >
+                        {Generic.t('Close')}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        ) : null;
     }
 
     getUrl(isFull) {
@@ -308,36 +326,41 @@ class SnapshotCamera extends Generic {
 
         const url = this.getUrl();
 
-        const content = <div
-            style={styles.imageContainer}
-            onClick={() => !this.state.error && this.setState({ full: true }, () => this.restartPollingInterval())}
-        >
-            {!this.state.alive ? <div
-                style={{ position: 'absolute', top: 20, left: 0 }}
+        const content = (
+            <div
+                style={styles.imageContainer}
+                onClick={() => !this.state.error && this.setState({ full: true }, () => this.restartPollingInterval())}
             >
-                {Generic.t('Camera instance %s inactive', (this.state.rxData.camera || '').split('/')[0])}
-            </div> : null}
-            {url ? <img
-                src={url}
-                ref={this.videoRef}
-                style={styles.camera}
-                alt={this.state.rxData.camera}
-            /> : Generic.t('No camera selected')}
-            {this.state.alive && this.state.error ? <div
-                style={{
-                    position: 'absolute',
-                    top: 20,
-                    left: 0,
-                }}
-            >
-                <div style={{ color: 'red' }}>
-                    {Generic.t('Cannot load URL')}
-                    :
-                </div>
-                <div>{this.getUrl(true)}</div>
-            </div> : null}
-            {this.renderDialog(url)}
-        </div>;
+                {!this.state.alive ? (
+                    <div style={{ position: 'absolute', top: 20, left: 0 }}>
+                        {Generic.t('Camera instance %s inactive', (this.state.rxData.camera || '').split('/')[0])}
+                    </div>
+                ) : null}
+                {url ? (
+                    <img
+                        src={url}
+                        ref={this.videoRef}
+                        style={styles.camera}
+                        alt={this.state.rxData.camera}
+                    />
+                ) : (
+                    Generic.t('No camera selected')
+                )}
+                {this.state.alive && this.state.error ? (
+                    <div
+                        style={{
+                            position: 'absolute',
+                            top: 20,
+                            left: 0,
+                        }}
+                    >
+                        <div style={{ color: 'red' }}>{Generic.t('Cannot load URL')}:</div>
+                        <div>{this.getUrl(true)}</div>
+                    </div>
+                ) : null}
+                {this.renderDialog(url)}
+            </div>
+        );
 
         if (this.state.rxData.noCard || props.widget.usedInWidget) {
             return content;

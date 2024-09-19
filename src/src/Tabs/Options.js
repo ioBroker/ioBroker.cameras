@@ -1,28 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import {
-    TextField,
-    Snackbar,
-    IconButton,
-    FormControl,
-    Select,
-    Button,
-    MenuItem,
-    InputLabel,
-} from '@mui/material';
+import { TextField, Snackbar, IconButton, FormControl, Select, Button, MenuItem, InputLabel } from '@mui/material';
 
-import {
-    MdClose as IconClose,
-    MdCheck as IconTest,
-} from 'react-icons/md';
+import { MdClose as IconClose, MdCheck as IconTest } from 'react-icons/md';
 
-import {
-    I18n,
-    Logo,
-    Message,
-    Error as DialogError,
-} from '@iobroker/adapter-react-v5';
+import { I18n, Logo, Message, Error as DialogError } from '@iobroker/adapter-react-v5';
 
 const styles = {
     tab: {
@@ -45,7 +28,7 @@ const styles = {
     },
     link: {
         color: 'inherit',
-    }
+    },
 };
 
 class Options extends Component {
@@ -63,12 +46,17 @@ class Options extends Component {
 
     componentDidMount() {
         let ips;
-        this.props.getIpAddresses()
-            .then(_ips => ips = _ips)
+        this.props
+            .getIpAddresses()
+            .then(_ips => (ips = _ips))
             .then(() => this.props.getExtendableInstances())
             .then(webInstances =>
-                this.setState({ requesting: false, ips, webInstances: webInstances.map(item =>
-                        item._id.replace('system.adapter.', '')) }));
+                this.setState({
+                    requesting: false,
+                    ips,
+                    webInstances: webInstances.map(item => item._id.replace('system.adapter.', '')),
+                }),
+            );
     }
 
     showError(text) {
@@ -79,45 +67,55 @@ class Options extends Component {
         if (!this.state.errorText) {
             return null;
         }
-        return <DialogError text={this.state.errorText} title={I18n.t('Error')} onClose={() => this.setState({ errorText: '' })}/>;
+        return (
+            <DialogError
+                text={this.state.errorText}
+                title={I18n.t('Error')}
+                onClose={() => this.setState({ errorText: '' })}
+            />
+        );
     }
 
     renderToast() {
         if (!this.state.toast) {
             return null;
         }
-        return <Snackbar
-            anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-            }}
-            open={true}
-            autoHideDuration={6000}
-            onClose={() => this.setState({ toast: '' })}
-            ContentProps={{
-                'aria-describedby': 'message-id',
-            }}
-            message={<span id="message-id">{this.state.toast}</span>}
-            action={[
-                <IconButton
-                    key="close"
-                    aria-label="Close"
-                    color="inherit"
-                    style={styles.close}
-                    onClick={() => this.setState({ toast: '' })}
-                >
-                    <IconClose />
-                </IconButton>,
-            ]}
-        />;
+        return (
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                open={true}
+                autoHideDuration={6000}
+                onClose={() => this.setState({ toast: '' })}
+                ContentProps={{
+                    'aria-describedby': 'message-id',
+                }}
+                message={<span id="message-id">{this.state.toast}</span>}
+                action={[
+                    <IconButton
+                        key="close"
+                        aria-label="Close"
+                        color="inherit"
+                        style={styles.close}
+                        onClick={() => this.setState({ toast: '' })}
+                    >
+                        <IconClose />
+                    </IconButton>,
+                ]}
+            />
+        );
     }
 
     renderHint() {
         if (this.state.showHint) {
-            return <Message
-                text={I18n.t('Click now Get new connection certificates to request new temporary password')}
-                onClose={() => this.setState({ showHint: false })}
-            />;
+            return (
+                <Message
+                    text={I18n.t('Click now Get new connection certificates to request new temporary password')}
+                    onClose={() => this.setState({ showHint: false })}
+                />
+            );
         } else {
             return null;
         }
@@ -127,10 +125,13 @@ class Options extends Component {
         let timeout = setTimeout(() => {
             timeout = null;
             this.setState({ toast: 'Timeout', requesting: false });
-        },  30000);
+        }, 30000);
 
         this.setState({ requesting: true }, () => {
-            this.props.socket.sendTo(`${this.props.adapterName}.${this.props.instance}`, 'ffmpeg', { path: this.props.native.ffmpegPath })
+            this.props.socket
+                .sendTo(`${this.props.adapterName}.${this.props.instance}`, 'ffmpeg', {
+                    path: this.props.native.ffmpegPath,
+                })
                 .then(result => {
                     timeout && clearTimeout(timeout);
                     if (!result?.version || result.error) {
@@ -148,18 +149,31 @@ class Options extends Component {
 
     renderSettings() {
         return [
-            this.state.ips && this.state.ips.length ?
-                <FormControl key="bindSelect" style={styles.bind} variant="standard">
+            this.state.ips && this.state.ips.length ? (
+                <FormControl
+                    key="bindSelect"
+                    style={styles.bind}
+                    variant="standard"
+                >
                     <InputLabel>{I18n.t('Local IP address')}</InputLabel>
                     <Select
                         variant="standard"
-                         disabled={this.state.requesting }
-                         value={this.props.native.bind || ''}
-                         onChange={e => this.props.onChange('bind', e.target.value)}
+                        disabled={this.state.requesting}
+                        value={this.props.native.bind || ''}
+                        onChange={e => this.props.onChange('bind', e.target.value)}
                     >
                         <MenuItem value="127.0.0.1">127.0.0.1</MenuItem>
-                        { this.state.ips.map(ip => <MenuItem key={ip} value={ip}>{ip}</MenuItem>) }
-                    </Select></FormControl> :
+                        {this.state.ips.map(ip => (
+                            <MenuItem
+                                key={ip}
+                                value={ip}
+                            >
+                                {ip}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            ) : (
                 <TextField
                     variant="standard"
                     disabled={this.state.requesting}
@@ -168,14 +182,15 @@ class Options extends Component {
                     label={I18n.t('Local IP address')}
                     value={this.props.native.bind}
                     onChange={e => this.props.onChange('bind', e.target.value)}
-                />,
+                />
+            ),
             <TextField
                 variant="standard"
                 disabled={this.state.requesting}
                 key="port"
                 type="number"
                 min={1}
-                max={0xFFFF}
+                max={0xffff}
                 style={styles.port}
                 label={I18n.t('Local port')}
                 value={this.props.native.port}
@@ -195,7 +210,11 @@ class Options extends Component {
                 onChange={e => this.props.onChange('defaultTimeout', e.target.value)}
             />,
             <br key="br2" />,
-            <FormControl key="webInstanceSelect"  style={styles.bind} variant="standard">
+            <FormControl
+                key="webInstanceSelect"
+                style={styles.bind}
+                variant="standard"
+            >
                 <InputLabel>{I18n.t('WEB Instance')}</InputLabel>
                 <Select
                     variant="standard"
@@ -204,7 +223,16 @@ class Options extends Component {
                     onChange={e => this.props.onChange('webInstance', e.target.value)}
                 >
                     <MenuItem value="*">{I18n.t('All')}</MenuItem>
-                    {this.state.webInstances ? this.state.webInstances.map(instance => <MenuItem key={instance} value={instance}>{instance}</MenuItem>) : null}
+                    {this.state.webInstances
+                        ? this.state.webInstances.map(instance => (
+                              <MenuItem
+                                  key={instance}
+                                  value={instance}
+                              >
+                                  {instance}
+                              </MenuItem>
+                          ))
+                        : null}
                 </Select>
             </FormControl>,
             <br key="br3" />,
@@ -225,7 +253,9 @@ class Options extends Component {
                 onClick={() => this.onTestFfmpeg()}
                 disabled={!this.props.instanceAlive || this.state.requesting}
                 startIcon={<IconTest />}
-            >{I18n.t('Test path')}</Button>,
+            >
+                {I18n.t('Test path')}
+            </Button>,
             <br key="br4" />,
             <TextField
                 variant="standard"
@@ -249,7 +279,9 @@ class Options extends Component {
                 type="number"
                 value={this.props.native.defaultCacheTimeout || ''}
                 onChange={e => this.props.onChange('defaultCacheTimeout', e.target.value)}
-                helperText={I18n.t('How often the cameras will be ascked for new snapshot. If 0, then by every request')}
+                helperText={I18n.t(
+                    'How often the cameras will be ascked for new snapshot. If 0, then by every request',
+                )}
             />,
             <br key="br6" />,
             <TextField
@@ -260,7 +292,19 @@ class Options extends Component {
                 label={I18n.t('Time format')}
                 value={this.props.native.dateFormat || ''}
                 onChange={e => this.props.onChange('dateFormat', e.target.value)}
-                helperText={<span>{I18n.t('See here:')} <a href="https://momentjs.com/docs/#/displaying/" rel="noreferrer" target="_blank" style={styles.link}>https://momentjs.com/</a></span>}
+                helperText={
+                    <span>
+                        {I18n.t('See here:')}{' '}
+                        <a
+                            href="https://momentjs.com/docs/#/displaying/"
+                            rel="noreferrer"
+                            target="_blank"
+                            style={styles.link}
+                        >
+                            https://momentjs.com/
+                        </a>
+                    </span>
+                }
             />,
         ];
     }
@@ -269,25 +313,37 @@ class Options extends Component {
         if (!this.state.messageText) {
             return null;
         }
-        return <Message title={I18n.t('Success')} onClose={() => this.setState({ messageText: '' })}>{this.state.messageText}</Message>
+        return (
+            <Message
+                title={I18n.t('Success')}
+                onClose={() => this.setState({ messageText: '' })}
+            >
+                {this.state.messageText}
+            </Message>
+        );
     }
 
     render() {
-        return <form key="option" style={styles.tab}>
-            <Logo
-                instance={this.props.instance}
-                common={this.props.common}
-                native={this.props.native}
-                onError={text => this.setState({ errorText: text })}
-                onLoad={this.props.onLoad}
-            />
-            {this.renderSettings()}
-            <br />
-            {this.renderHint()}
-            {this.renderToast()}
-            {this.renderMessage()}
-            {this.renderError()}
-        </form>;
+        return (
+            <form
+                key="option"
+                style={styles.tab}
+            >
+                <Logo
+                    instance={this.props.instance}
+                    common={this.props.common}
+                    native={this.props.native}
+                    onError={text => this.setState({ errorText: text })}
+                    onLoad={this.props.onLoad}
+                />
+                {this.renderSettings()}
+                <br />
+                {this.renderHint()}
+                {this.renderToast()}
+                {this.renderMessage()}
+                {this.renderError()}
+            </form>
+        );
     }
 }
 

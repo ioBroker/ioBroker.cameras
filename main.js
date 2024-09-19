@@ -442,7 +442,7 @@ function startWebServer(adapter) {
             res.statusCode = 401;
             res.write('Invalid key');
             res.end();
-            adapter.log.debug(`Invalid key from ${clientIp}. Expected ${adapter.config.key}`);
+            adapter.log.debug(`Invalid key from ${clientIp}. Expected "${adapter.config.key}", Received "${query.key}"`);
             return;
         }
 
