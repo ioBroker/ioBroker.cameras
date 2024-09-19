@@ -33,6 +33,8 @@ jobs:
       - name: Install Dependencies
         run: npm i
 
+      - name: build
+        run: npm run build
 #      - name: Perform a type check
 #        run: npm run check:ts
 #        env:
@@ -51,7 +53,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [18.x, 20.x, 22.x]
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
@@ -63,6 +65,9 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
+
+      - name: build
+        run: npm run build
 
       - name: Run local tests
         #         npm downgrade to 6 (mainly for node.js 16) is needed because else testing fails
@@ -94,10 +99,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Use Node.js 18.x
+      - name: Use Node.js 20.x
         uses: actions/setup-node@v4.0.0
         with:
-          node-version: 18.x
+          node-version: 20.x
 
       - name: Extract the version and commit body from the tag
         id: extract_release
