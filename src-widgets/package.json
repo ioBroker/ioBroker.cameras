@@ -3,6 +3,7 @@
     "private": true,
     "version": "2.1.2",
     "dependencies": {
+        "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
         "@craco/craco": "^7.1.0",
         "@iobroker/adapter-react-v5": "^7.1.4",
         "@iobroker/vis-2-widgets-react-dev": "^4.0.3",
@@ -10,9 +11,9 @@
         "@mui/material": "^6.1.1",
         "craco-esbuild": "^0.6.1",
         "craco-module-federation": "^1.1.0",
-        "eslint-config-react-app": "^7.0.1",
         "eslint": "^8.57.0",
         "eslint-config-airbnb": "^19.0.4",
+        "eslint-config-react-app": "^7.0.1",
         "eslint-plugin-eqeqeq-fix": "^1.0.3",
         "eslint-plugin-import": "^2.29.1",
         "eslint-plugin-jsx-a11y": "^6.9.0",
