@@ -32,7 +32,7 @@
   "Path to store temporary images": "存放临时图片的路径",
   "If empty then in adapter folder": "如果为空则在适配器文件夹中",
   "Default cache timeout (ms)": "默认缓存超时（毫秒）",
-  "How often the cameras will be ascked for new snapshot. If 0, then by every request": "相机被要求拍摄新快照的频率。如果为 0，则按每个请求",
+  "How often the cameras will be asked for new snapshot. If 0, then by every request": "相机被要求拍摄新快照的频率。如果为 0，则按每个请求",
   "URL": "网址",
   "URL with basic auth": "具有基本身份验证的 URL",
   "RTSP Snapshot": "RTSP 快照",

@@ -32,7 +32,7 @@
   "Path to store temporary images": "Path to store temporary images",
   "If empty then in adapter folder": "If empty then in adapter folder",
   "Default cache timeout (ms)": "Default cache timeout (ms)",
-  "How often the cameras will be ascked for new snapshot. If 0, then by every request": "How often the cameras will be ascked for new snapshot. If 0, then by every request",
+  "How often the cameras will be asked for new snapshot. If 0, then by every request": "How often the cameras will be asked for new snapshot. If 0, then by every request",
   "URL": "URL",
   "URL with basic auth": "URL with basic auth",
   "RTSP Snapshot": "RTSP Snapshot",

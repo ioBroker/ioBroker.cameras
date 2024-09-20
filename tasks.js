@@ -8,7 +8,14 @@
 
 const fs= require('node:fs');
 const adapterName = require('./package.json').name.replace('iobroker.', '');
-const { deleteFoldersRecursive, npmInstall, buildReact, copyFiles, collectFiles, patchHtmlFile } = require('@iobroker/build-tools');
+const {
+    deleteFoldersRecursive,
+    npmInstall,
+    buildReact,
+    copyFiles,
+    collectFiles,
+    patchHtmlFile,
+} = require('@iobroker/build-tools');
 
 function clean() {
     deleteFoldersRecursive(`${__dirname}/admin`);
@@ -66,7 +73,7 @@ if (process.argv.includes('--0-clean')) {
             .catch(e => console.error(e));
     }
 } else if (process.argv.includes('--2-build')) {
-    buildReact(`${__dirname}/src/`, { rootDir: __dirname })
+    buildReact(`${__dirname}/src/`, { rootDir: __dirname, vite: true, tsc: true })
         .catch(e => console.error(e));
 } else if (process.argv.includes('--3-copy')) {
     copyAllFiles();
@@ -83,7 +90,7 @@ if (process.argv.includes('--0-clean')) {
         npmPromise = Promise.resolve();
     }
     npmPromise
-        .then(() => buildReact(`${__dirname}/src/`, { rootDir: __dirname }))
+        .then(() => buildReact(`${__dirname}/src/`, { rootDir: __dirname, vite: true, tsc: true }))
         .then(() => copyAllFiles())
         .then(() => patchHtmlFile(`${__dirname}/admin/index_m.html`))
         .catch(e => console.error(e));
@@ -112,8 +119,9 @@ if (process.argv.includes('--0-clean')) {
     } else {
         npmPromise = Promise.resolve();
     }
+
     npmPromise
-        .then(() => buildReact(`${__dirname}/src/`, { rootDir: __dirname }))
+        .then(() => buildReact(`${__dirname}/src/`, { rootDir: __dirname, vite: true, tsc: true }))
         .then(() => copyAllFiles())
         .then(() => patchHtmlFile(`${__dirname}/admin/index_m.html`))
         .then(() => cleanWidgets())

@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { type JSX } from 'react';
 
 import { TextField, Checkbox, FormControlLabel, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
 import { I18n } from '@iobroker/adapter-react-v5';
+import GenericConfig, { type GenericCameraSettings, type GenericConfigProps } from '../Types/GenericConfig';
 
-const styles = {
+const styles: Record<string, React.CSSProperties> = {
     page: {
         width: '100%',
     },
@@ -31,7 +31,7 @@ const styles = {
     },
     urlPath: {
         marginTop: 16,
-        marginBotton: `24px !important`,
+        marginBottom: `24px !important`,
         width: 408,
     },
     width: {
@@ -68,37 +68,50 @@ const styles = {
     },
 };
 
-class RTSPImageConfig extends Component {
-    constructor(props) {
+export interface RTSPImageSettings extends GenericCameraSettings {
+    ip: string;
+    port: string;
+    urlPath: string;
+    password: string;
+    username: string;
+    url: string;
+    originalWidth: string;
+    originalHeight: string;
+    prefix: string;
+    suffix: string;
+    protocol: 'tcp' | 'udp';
+}
+
+interface RTSPImageConfigState extends RTSPImageSettings {
+    expertMode: boolean;
+}
+
+class RTSPImageConfig extends GenericConfig<RTSPImageConfigState> {
+    constructor(props: GenericConfigProps) {
         super(props);
 
-        const state = JSON.parse(JSON.stringify(this.props.settings));
-
         // set default values
-        state.ip = state.ip || '';
-        state.port = state.port || '554';
-        state.urlPath = state.urlPath || '';
-        state.password = state.password || '';
-        state.username = state.username === undefined ? 'admin' : state.username || '';
-        state.url = `rtsp://${state.username ? `${state.username}:***@` : ''}${state.ip}:${state.port}${state.urlPath ? (state.urlPath.startsWith('/') ? state.urlPath : `/${state.urlPath}`) : ''}`;
-        state.originalWidth = state.originalWidth || '';
-        state.originalHeight = state.originalHeight || '';
-        state.prefix = state.prefix || '';
-        state.suffix = state.suffix || '';
-        state.protocol = state.protocol || 'udp';
-
-        this.state = state;
+        Object.assign(this.state, {
+            ip: this.state.ip || '',
+            port: this.state.port || '554',
+            urlPath: this.state.urlPath || '',
+            password: this.state.password || '',
+            username: this.state.username === undefined ? 'admin' : this.state.username || '',
+            url: `rtsp://${this.state.username ? `${this.state.username}:***@` : ''}${this.state.ip}:${this.state.port}${this.state.urlPath ? (this.state.urlPath.startsWith('/') ? this.state.urlPath : `/${this.state.urlPath}`) : ''}`,
+            originalWidth: this.state.originalWidth || '',
+            originalHeight: this.state.originalHeight || '',
+            prefix: this.state.prefix || '',
+            suffix: this.state.suffix || '',
+            protocol: this.state.protocol || 'udp',
+            expertMode: false,
+        });
     }
 
-    static getRtsp() {
-        return true; // this camera can be used in RTSP snapshot
-    }
-
-    componentDidMount() {
+    componentDidMount(): void {
         this.props.decrypt(this.state.password, password => this.setState({ password }));
     }
 
-    reportSettings() {
+    reportSettings(): void {
         this.props.encrypt(this.state.password, password => {
             this.props.onChange({
                 ip: this.state.ip,
@@ -115,7 +128,7 @@ class RTSPImageConfig extends Component {
         });
     }
 
-    buildCommand(options) {
+    buildCommand(options: RTSPImageSettings): string[] {
         const parameters = ['-y'];
         options.prefix && parameters.push(options.prefix);
         parameters.push('-rtsp_transport');
@@ -138,7 +151,7 @@ class RTSPImageConfig extends Component {
         return parameters;
     }
 
-    render() {
+    render(): JSX.Element {
         return (
             <div style={styles.page}>
                 <form>
@@ -159,13 +172,17 @@ class RTSPImageConfig extends Component {
                     />
                     <FormControl
                         style={styles.protocol}
-                        variant="standart"
+                        variant="standard"
                     >
                         <InputLabel>{I18n.t('Protocol')}</InputLabel>
                         <Select
                             variant="standard"
                             value={this.state.protocol || 'udp'}
-                            onChange={e => this.setState({ protocol: e.target.value }, () => this.reportSettings())}
+                            onChange={e =>
+                                this.setState({ protocol: e.target.value as 'tcp' | 'udp' }, () =>
+                                    this.reportSettings(),
+                                )
+                            }
                         >
                             <MenuItem value="udp">UDP</MenuItem>
                             <MenuItem value="tcp">TCP</MenuItem>
@@ -203,7 +220,7 @@ class RTSPImageConfig extends Component {
                         style={styles.expertMode}
                         control={
                             <Checkbox
-                                checked={!!this.state.expertMode}
+                                checked={this.state.expertMode}
                                 onChange={e => this.setState({ expertMode: e.target.checked })}
                             />
                         }
@@ -216,7 +233,7 @@ class RTSPImageConfig extends Component {
                             style={styles.width}
                             label={I18n.t('Width')}
                             helperText={I18n.t('in pixels')}
-                            error={this.state.originalHeight && !this.state.originalWidth}
+                            error={!!(this.state.originalHeight && !this.state.originalWidth)}
                             value={this.state.originalWidth}
                             onChange={e =>
                                 this.setState({ originalWidth: e.target.value }, () => this.reportSettings())
@@ -231,7 +248,7 @@ class RTSPImageConfig extends Component {
                             variant="standard"
                             style={styles.height}
                             label={I18n.t('Height')}
-                            error={!this.state.originalHeight && this.state.originalWidth}
+                            error={!!(!this.state.originalHeight && this.state.originalWidth)}
                             helperText={I18n.t('in pixels')}
                             value={this.state.originalHeight}
                             onChange={e =>
@@ -271,13 +288,5 @@ class RTSPImageConfig extends Component {
         );
     }
 }
-
-RTSPImageConfig.propTypes = {
-    onChange: PropTypes.func,
-    native: PropTypes.object,
-    defaultTimeout: PropTypes.number,
-    decode: PropTypes.func,
-    encode: PropTypes.func,
-};
 
 export default RTSPImageConfig;

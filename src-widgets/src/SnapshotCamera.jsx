@@ -1,5 +1,11 @@
 import React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+} from '@mui/material';
 
 import { Close } from '@mui/icons-material';
 
@@ -354,7 +360,10 @@ class SnapshotCamera extends Generic {
                             left: 0,
                         }}
                     >
-                        <div style={{ color: 'red' }}>{Generic.t('Cannot load URL')}:</div>
+                        <div style={{ color: 'red' }}>
+                            {Generic.t('Cannot load URL')}
+                            :
+                        </div>
                         <div>{this.getUrl(true)}</div>
                     </div>
                 ) : null}

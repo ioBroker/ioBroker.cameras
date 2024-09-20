@@ -32,7 +32,7 @@
   "Path to store temporary images": "Путь для хранения временных изображений",
   "If empty then in adapter folder": "Если пусто, то в папке адаптера",
   "Default cache timeout (ms)": "Время ожидания кэша по умолчанию (мс)",
-  "How often the cameras will be ascked for new snapshot. If 0, then by every request": "Как часто камеры будут запрашивать новый снимок. Если 0, то при каждом запросе",
+  "How often the cameras will be asked for new snapshot. If 0, then by every request": "Как часто камеры будут запрашивать новый снимок. Если 0, то при каждом запросе",
   "URL": "URL-адрес",
   "URL with basic auth": "URL с базовой авторизацией",
   "RTSP Snapshot": "Снимок RTSP",

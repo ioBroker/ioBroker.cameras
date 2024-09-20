@@ -1,13 +1,21 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, type JSX } from 'react';
 
 import { TextField, Snackbar, IconButton, FormControl, Select, Button, MenuItem, InputLabel } from '@mui/material';
 
 import { MdClose as IconClose, MdCheck as IconTest } from 'react-icons/md';
 
-import { I18n, Logo, Message, Error as DialogError } from '@iobroker/adapter-react-v5';
+import {
+    I18n,
+    Logo,
+    Message,
+    Error as DialogError,
+    type AdminConnection,
+    type ThemeType,
+    type IobTheme,
+} from '@iobroker/adapter-react-v5';
+import type { CamerasInstanceNative } from '../types';
 
-const styles = {
+const styles: Record<string, React.CSSProperties> = {
     tab: {
         width: '100%',
         minHeight: '100%',
@@ -31,8 +39,34 @@ const styles = {
     },
 };
 
-class Options extends Component {
-    constructor(props) {
+interface OptionsProps {
+    common: ioBroker.InstanceCommon | null;
+    native: CamerasInstanceNative;
+    instanceAlive: boolean;
+    instance: number;
+    adapterName: string;
+    onError: (text: string) => void;
+    onLoad: (native: Record<string, any>) => void;
+    onChange: (attr: string, value: any, cb?: () => void) => void;
+    socket: AdminConnection;
+    themeType: ThemeType;
+    theme: IobTheme;
+    getIpAddresses: (host?: string, update?: boolean) => Promise<string[]>;
+    getExtendableInstances: () => Promise<ioBroker.InstanceObject[]>;
+}
+
+interface OptionsState {
+    showHint: boolean;
+    toast: string;
+    ips: string[];
+    requesting: boolean;
+    webInstances: string[];
+    errorText: string;
+    messageText: string;
+}
+
+class Options extends Component<OptionsProps, OptionsState> {
+    constructor(props: OptionsProps) {
         super(props);
 
         this.state = {
@@ -41,29 +75,22 @@ class Options extends Component {
             ips: [],
             requesting: true,
             webInstances: [],
+            errorText: '',
+            messageText: '',
         };
     }
 
-    componentDidMount() {
-        let ips;
-        this.props
-            .getIpAddresses()
-            .then(_ips => (ips = _ips))
-            .then(() => this.props.getExtendableInstances())
-            .then(webInstances =>
-                this.setState({
-                    requesting: false,
-                    ips,
-                    webInstances: webInstances.map(item => item._id.replace('system.adapter.', '')),
-                }),
-            );
+    async componentDidMount(): Promise<void> {
+        const ips = await this.props.getIpAddresses();
+        const webInstances: ioBroker.InstanceObject[] = await this.props.getExtendableInstances();
+        this.setState({
+            requesting: false,
+            ips,
+            webInstances: webInstances.map(item => item._id.replace('system.adapter.', '')),
+        });
     }
 
-    showError(text) {
-        this.setState({ errorText: text });
-    }
-
-    renderError() {
+    renderError(): JSX.Element | null {
         if (!this.state.errorText) {
             return null;
         }
@@ -76,7 +103,7 @@ class Options extends Component {
         );
     }
 
-    renderToast() {
+    renderToast(): JSX.Element | null {
         if (!this.state.toast) {
             return null;
         }
@@ -108,7 +135,7 @@ class Options extends Component {
         );
     }
 
-    renderHint() {
+    renderHint(): JSX.Element | null {
         if (this.state.showHint) {
             return (
                 <Message
@@ -116,23 +143,22 @@ class Options extends Component {
                     onClose={() => this.setState({ showHint: false })}
                 />
             );
-        } else {
-            return null;
         }
+        return null;
     }
 
-    onTestFfmpeg() {
-        let timeout = setTimeout(() => {
+    onTestFfmpeg(): void {
+        let timeout: ReturnType<typeof setTimeout> | null = setTimeout(() => {
             timeout = null;
             this.setState({ toast: 'Timeout', requesting: false });
         }, 30000);
 
         this.setState({ requesting: true }, () => {
-            this.props.socket
+            void this.props.socket
                 .sendTo(`${this.props.adapterName}.${this.props.instance}`, 'ffmpeg', {
                     path: this.props.native.ffmpegPath,
                 })
-                .then(result => {
+                .then((result: { version?: string; error?: string }) => {
                     timeout && clearTimeout(timeout);
                     if (!result?.version || result.error) {
                         let error = result?.error ? result.error : I18n.t('No answer');
@@ -147,7 +173,7 @@ class Options extends Component {
         });
     }
 
-    renderSettings() {
+    renderSettings(): JSX.Element[] {
         return [
             this.state.ips && this.state.ips.length ? (
                 <FormControl
@@ -189,8 +215,12 @@ class Options extends Component {
                 disabled={this.state.requesting}
                 key="port"
                 type="number"
-                min={1}
-                max={0xffff}
+                slotProps={{
+                    htmlInput: {
+                        min: 1,
+                        max: 0xffff,
+                    },
+                }}
                 style={styles.port}
                 label={I18n.t('Local port')}
                 value={this.props.native.port}
@@ -202,8 +232,12 @@ class Options extends Component {
                 disabled={this.state.requesting}
                 key="defaultTimeout"
                 type="number"
-                min={0}
-                max={10000}
+                slotProps={{
+                    htmlInput: {
+                        min: 0,
+                        max: 10000,
+                    },
+                }}
                 style={styles.defaultTimeout}
                 label={I18n.t('Default timeout (ms)')}
                 value={this.props.native.defaultTimeout}
@@ -274,14 +308,16 @@ class Options extends Component {
                 key="defaultCacheTimeout"
                 style={styles.ffmpegPath}
                 label={I18n.t('Default cache timeout (ms)')}
-                min={0}
-                max={60000}
+                slotProps={{
+                    htmlInput: {
+                        min: 0,
+                        max: 60000,
+                    },
+                }}
                 type="number"
                 value={this.props.native.defaultCacheTimeout || ''}
                 onChange={e => this.props.onChange('defaultCacheTimeout', e.target.value)}
-                helperText={I18n.t(
-                    'How often the cameras will be ascked for new snapshot. If 0, then by every request',
-                )}
+                helperText={I18n.t('How often the cameras will be asked for new snapshot. If 0, then by every request')}
             />,
             <br key="br6" />,
             <TextField
@@ -309,21 +345,20 @@ class Options extends Component {
         ];
     }
 
-    renderMessage() {
+    renderMessage(): JSX.Element | null {
         if (!this.state.messageText) {
             return null;
         }
         return (
             <Message
                 title={I18n.t('Success')}
+                text={this.state.messageText}
                 onClose={() => this.setState({ messageText: '' })}
-            >
-                {this.state.messageText}
-            </Message>
+            />
         );
     }
 
-    render() {
+    render(): JSX.Element {
         return (
             <form
                 key="option"
@@ -346,21 +381,5 @@ class Options extends Component {
         );
     }
 }
-
-Options.propTypes = {
-    common: PropTypes.object.isRequired,
-    native: PropTypes.object.isRequired,
-    instanceAlive: PropTypes.bool,
-    instance: PropTypes.number.isRequired,
-    adapterName: PropTypes.string.isRequired,
-    onError: PropTypes.func,
-    onConfigError: PropTypes.func,
-    onLoad: PropTypes.func,
-    onChange: PropTypes.func,
-    getIpAddresses: PropTypes.func,
-    getExtendableInstances: PropTypes.func,
-    socket: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
-};
 
 export default Options;

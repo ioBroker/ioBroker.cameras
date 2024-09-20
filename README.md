@@ -58,7 +58,7 @@ Here is an example of how to add Reolink E1:
 To add a new camera, you must create a Pull Request on GitHub with the following changes:
 - Add new file into `cameras` folder. This is a backend to read the single image from the camera. 
 - Add GUI file in the `src/src/Types/` folder. This is the configuration dialog for the camera
-- Add this dialog in `src/src/Tabs/Cameras.js` file analogical as other cameras are added. Only two lines should be added:
+- Add this dialog in `src/src/Tabs/Cameras.tsx` file analogical as other cameras are added. Only two lines should be added:
   - Import new configuration dialog like `import RTSPMyCamConfig from '../Types/RTSPMyCam';`
   - Extend `TYPES` structure with the new camera like `mycam: { Config: RTSPMyCamConfig, name: 'MyCam' },`
     The attribute name must be the same as the name of the file in the `cameras` folder.

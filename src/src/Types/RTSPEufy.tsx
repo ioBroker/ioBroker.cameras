@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { type JSX } from 'react';
 
 import { Button, Switch, TextField } from '@mui/material';
 
 import { I18n, SelectID } from '@iobroker/adapter-react-v5';
+import GenericConfig, { type GenericCameraSettings, type GenericConfigProps } from '../Types/GenericConfig';
 
-const styles = {
+const styles: Record<string, React.CSSProperties> = {
     page: {
         width: '100%',
     },
@@ -28,24 +28,30 @@ const styles = {
     },
 };
 
-class RTSPEufyConfig extends Component {
-    constructor(props) {
+export interface RTSPEufySettings extends GenericCameraSettings {
+    ip: string;
+    oid: string;
+    useOid: boolean;
+    eusecInstalled: boolean;
+    showSelectId: boolean;
+}
+
+class RTSPEufyConfig extends GenericConfig<RTSPEufySettings> {
+    constructor(props: GenericConfigProps) {
         super(props);
 
-        const state = JSON.parse(JSON.stringify(this.props.settings));
-
         // set default values
-        state.ip = state.ip || '';
-        state.oid = state.oid || '';
-        state.useOid = state.useOid || false;
-        state.eusecInstalled = false;
-
-        this.state = state;
+        Object.assign(this.state, {
+            ip: this.state.ip || '',
+            oid: this.state.oid || '',
+            useOid: this.state.useOid || false,
+            eusecInstalled: false,
+        });
     }
 
-    componentDidMount() {
+    componentDidMount(): void {
         // read if eusec adapter is installed
-        this.props.socket.getAdapterInstances('eusec').then(instances => {
+        void this.props.socket.getAdapterInstances('eusec').then(instances => {
             if (this.state.useOid && !instances.length) {
                 this.setState({ useOid: false });
             } else {
@@ -54,7 +60,7 @@ class RTSPEufyConfig extends Component {
         });
     }
 
-    reportSettings() {
+    reportSettings(): void {
         this.props.onChange({
             ip: this.state.ip,
             oid: this.state.oid,
@@ -62,28 +68,34 @@ class RTSPEufyConfig extends Component {
         });
     }
 
-    renderSelectID() {
+    renderSelectID(): JSX.Element | null {
         if (!this.state.showSelectId) {
             return null;
         }
         return (
             <SelectID
                 imagePrefix="../.."
+                theme={this.props.theme}
                 themeType={this.props.themeType}
                 dialogName="RTSPReolinkE1"
                 socket={this.props.socket}
                 selected={this.state.oid}
                 filterFunc={obj => obj._id.startsWith('eusec.') && obj._id.endsWith('.rtsp_stream_url')}
-                statesOnly={true}
                 onClose={() => this.setState({ showSelectId: false })}
-                onOk={oid => {
-                    this.setState({ oid, showSelectId: false }, () => this.reportSettings());
+                onOk={(oid: string | string[] | undefined) => {
+                    if (oid && typeof oid === 'object') {
+                        this.setState({ oid: oid[0], showSelectId: false }, () => this.reportSettings());
+                    } else if (oid) {
+                        this.setState({ oid, showSelectId: false }, () => this.reportSettings());
+                    } else {
+                        this.setState({ showSelectId: false }, () => this.reportSettings());
+                    }
                 }}
             />
         );
     }
 
-    render() {
+    render(): JSX.Element {
         return (
             <div style={styles.page}>
                 {this.renderSelectID()}
@@ -129,15 +141,5 @@ class RTSPEufyConfig extends Component {
         );
     }
 }
-
-RTSPEufyConfig.propTypes = {
-    socket: PropTypes.object,
-    onChange: PropTypes.func,
-    native: PropTypes.object,
-    defaultTimeout: PropTypes.number,
-    decode: PropTypes.func,
-    encode: PropTypes.func,
-    themeType: PropTypes.string,
-};
 
 export default RTSPEufyConfig;

@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { type JSX } from 'react';
 
 import { MenuItem, Select, TextField } from '@mui/material';
 
 import { I18n } from '@iobroker/adapter-react-v5';
+import GenericConfig, { type GenericCameraSettings, type GenericConfigProps } from '../Types/GenericConfig';
 
-const styles = {
+const styles: Record<string, React.CSSProperties> = {
     page: {
         width: '100%',
     },
@@ -28,30 +28,31 @@ const styles = {
     },
 };
 
-class RTSPHiKamConfig extends Component {
-    constructor(props) {
+export interface RTSPReolinkE1Settings extends GenericCameraSettings {
+    ip: string;
+    password: string;
+    username: string;
+    quality: 'high' | 'low';
+}
+
+class RTSPReolinkE1Config extends GenericConfig<RTSPReolinkE1Settings> {
+    constructor(props: GenericConfigProps) {
         super(props);
 
-        const state = JSON.parse(JSON.stringify(this.props.settings));
-
         // set default values
-        state.ip = state.ip || '';
-        state.password = state.password || '';
-        state.username = state.username === undefined ? 'admin' : state.username || '';
-        state.quality = state.quality || 'low';
-
-        this.state = state;
+        Object.assign(this.state, {
+            ip: this.state.ip || '',
+            password: this.state.password || '',
+            username: this.state.username === undefined ? 'admin' : this.state.username || '',
+            quality: this.state.quality || 'low',
+        });
     }
 
-    static getRtsp() {
-        return true; // this camera can be used in RTSP snapshot
-    }
-
-    componentDidMount() {
+    componentDidMount(): void {
         this.props.decrypt(this.state.password, password => this.setState({ password }));
     }
 
-    reportSettings() {
+    reportSettings(): void {
         this.props.encrypt(this.state.password, password => {
             this.props.onChange({
                 ip: this.state.ip,
@@ -62,7 +63,7 @@ class RTSPHiKamConfig extends Component {
         });
     }
 
-    render() {
+    render(): JSX.Element {
         return (
             <div style={styles.page}>
                 <form>
@@ -97,7 +98,9 @@ class RTSPHiKamConfig extends Component {
                         variant="standard"
                         value={this.state.quality}
                         label={I18n.t('Quality')}
-                        onChange={e => this.setState({ quality: e.target.value }, () => this.reportSettings())}
+                        onChange={e =>
+                            this.setState({ quality: e.target.value as 'high' | 'low' }, () => this.reportSettings())
+                        }
                     >
                         <MenuItem value="low">{I18n.t('low quality')}</MenuItem>
                         <MenuItem value="high">{I18n.t('high quality')}</MenuItem>
@@ -108,12 +111,4 @@ class RTSPHiKamConfig extends Component {
     }
 }
 
-RTSPHiKamConfig.propTypes = {
-    onChange: PropTypes.func,
-    native: PropTypes.object,
-    defaultTimeout: PropTypes.number,
-    decode: PropTypes.func,
-    encode: PropTypes.func,
-};
-
-export default RTSPHiKamConfig;
+export default RTSPReolinkE1Config;

@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { type JSX } from 'react';
 
 import { TextField } from '@mui/material';
 
 import { I18n } from '@iobroker/adapter-react-v5';
+import GenericConfig, { type GenericCameraSettings, type GenericConfigProps } from '../Types/GenericConfig';
 
-const styles = {
+const styles: Record<string, React.CSSProperties> = {
     page: {
         width: '100%',
     },
@@ -14,25 +14,31 @@ const styles = {
     },
 };
 
-class Config extends Component {
-    constructor(props) {
+export interface UrlBasicAuthImageSettings extends GenericCameraSettings {
+    ip: string;
+    password: string;
+    username: string;
+    url: string;
+}
+
+class UrlBasicAuthImageConfig extends GenericConfig<UrlBasicAuthImageSettings> {
+    constructor(props: GenericConfigProps) {
         super(props);
 
-        const state = JSON.parse(JSON.stringify(this.props.settings));
-
         // set default values
-        state.url = state.url || '';
-        state.password = state.password || '';
-        state.username = state.username || '';
-
-        this.state = state;
+        Object.assign(this.state, {
+            ip: this.state.ip || '',
+            url: this.state.url || '',
+            password: this.state.password || '',
+            username: this.state.username === undefined ? 'admin' : this.state.username || '',
+        });
     }
 
-    componentDidMount() {
+    componentDidMount(): void {
         this.props.decrypt(this.state.password, password => this.setState({ password }));
     }
 
-    reportSettings() {
+    reportSettings(): void {
         this.props.encrypt(this.state.password, password => {
             this.props.onChange({
                 url: this.state.url,
@@ -42,7 +48,7 @@ class Config extends Component {
         });
     }
 
-    render() {
+    render(): JSX.Element {
         return (
             <div style={styles.page}>
                 <TextField
@@ -79,11 +85,4 @@ class Config extends Component {
     }
 }
 
-Config.propTypes = {
-    onChange: PropTypes.func,
-    defaultTimeout: PropTypes.number,
-    decode: PropTypes.func,
-    encode: PropTypes.func,
-};
-
-export default Config;
+export default UrlBasicAuthImageConfig;

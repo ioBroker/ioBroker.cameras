@@ -1,24 +1,40 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 
-import { AppBar, Tabs, Tab } from '@mui/material';
+import { AppBar, Tabs, Tab, type Theme } from '@mui/material';
 
-import { Loader, I18n, GenericApp } from '@iobroker/adapter-react-v5';
+import {
+    Loader,
+    I18n,
+    GenericApp,
+    type GenericAppState,
+    type GenericAppProps,
+    type GenericAppSettings,
+} from '@iobroker/adapter-react-v5';
 
 import TabOptions from './Tabs/Options';
 import TabCameras from './Tabs/Cameras';
 
-import langEn from './i18n/en';
-import langDe from './i18n/de';
-import langRu from './i18n/ru';
-import langPt from './i18n/pt';
-import langNl from './i18n/nl';
-import langFr from './i18n/fr';
-import langIt from './i18n/it';
-import langEs from './i18n/es';
-import langPl from './i18n/pl';
-import langUk from './i18n/uk';
-import langZhCn from './i18n/zh-cn';
+import langEn from './i18n/en.json';
+import langDe from './i18n/de.json';
+import langRu from './i18n/ru.json';
+import langPt from './i18n/pt.json';
+import langNl from './i18n/nl.json';
+import langFr from './i18n/fr.json';
+import langIt from './i18n/it.json';
+import langEs from './i18n/es.json';
+import langPl from './i18n/pl.json';
+import langUk from './i18n/uk.json';
+import langZhCn from './i18n/zh-cn.json';
+import type { CamerasInstanceNative } from '@/types';
+
+function inIframe(): boolean {
+    try {
+        return window.self !== window.top;
+    } catch {
+        return true;
+    }
+}
 
 const styles = {
     tabContent: {
@@ -31,17 +47,25 @@ const styles = {
         height: 'calc(100% - 64px - 48px - 20px - 38px)',
         overflow: 'auto',
     },
-    selected: theme => ({
+    selected: (theme: Theme) => ({
         color: theme.palette.mode === 'dark' ? undefined : '#FFF !important',
     }),
-    indicator: theme => ({
+    indicator: (theme: Theme) => ({
         backgroundColor: theme.palette.mode === 'dark' ? theme.palette.secondary.main : '#FFF',
     }),
 };
 
-class App extends GenericApp {
-    constructor(props) {
-        const extendedProps = {};
+interface AppState extends GenericAppState {
+    alive: boolean;
+    isIFrame: boolean;
+}
+
+class App extends GenericApp<GenericAppProps, AppState> {
+    private subscribed: string = '';
+    private readonly isIFrame: boolean = inIframe();
+
+    constructor(props: GenericAppProps) {
+        const extendedProps: GenericAppSettings = {};
         extendedProps.adapterName = 'cameras';
         extendedProps.doNotLoadAllObjects = true;
         extendedProps.translations = {
@@ -69,20 +93,20 @@ class App extends GenericApp {
         super(props, extendedProps);
     }
 
-    onAliveChanged = (id, state) => {
+    onAliveChanged = (id: string, state: ioBroker.State | null | undefined): void => {
         if (id && this.state.alive !== !!state?.val) {
             this.setState({ alive: !!state?.val });
         }
     };
 
-    componentWillUnmount() {
+    componentWillUnmount(): void {
         this.subscribed && this.socket.unsubscribeState(this.subscribed, this.onAliveChanged);
         super.componentWillUnmount();
     }
 
     // called when connected with admin and loaded instance object
-    onConnectionReady() {
-        this.socket.getState(`${this.instanceId}.alive`).then(state => {
+    onConnectionReady(): void {
+        void this.socket.getState(`${this.instanceId}.alive`).then(state => {
             if (this.state.alive !== !!state?.val) {
                 this.setState({ alive: !!state?.val });
             }
@@ -94,22 +118,11 @@ class App extends GenericApp {
                 );
             }
             this.subscribed = `${this.instanceId}.alive`;
-            this.socket.subscribeState(this.subscribed, this.onAliveChanged);
+            return this.socket.subscribeState(this.subscribed, this.onAliveChanged);
         });
     }
 
-    getSelectedTab() {
-        const tab = this.state.selectedTab;
-
-        if (!tab || tab === 'options') {
-            return 0;
-        }
-        if (tab === 'cameras') {
-            return 1;
-        }
-    }
-
-    render() {
+    render(): JSX.Element {
         if (!this.state.loaded) {
             return (
                 <StyledEngineProvider injectFirst>
@@ -129,19 +142,19 @@ class App extends GenericApp {
                     >
                         <AppBar position="static">
                             <Tabs
-                                value={this.getSelectedTab()}
-                                onChange={(e, index) => this.selectTab(e.target.dataset.name, index)}
+                                value={this.state.selectedTab}
+                                onChange={(_e, selectedTab: string): void => this.setState({ selectedTab })}
                                 sx={{ '& .MuiTabs-indicator': styles.indicator }}
                             >
                                 <Tab
+                                    value="options"
                                     sx={{ '&.Mui-selected': styles.selected }}
-                                    selected={this.state.selectedTab === 'options'}
                                     label={I18n.t('Options')}
                                     data-name="options"
                                 />
                                 <Tab
+                                    value="cameras"
                                     sx={{ '&.Mui-selected': styles.selected }}
-                                    selected={this.state.selectedTab === 'cameras'}
                                     label={I18n.t('Cameras')}
                                     data-name="cameras"
                                 />
@@ -151,19 +164,20 @@ class App extends GenericApp {
                         <div style={this.isIFrame ? styles.tabContentIFrame : styles.tabContent}>
                             {(this.state.selectedTab === 'options' || !this.state.selectedTab) && (
                                 <TabOptions
-                                    key="options"
+                                    themeType={this.state.themeType}
                                     common={this.common}
                                     socket={this.socket}
-                                    native={this.state.native}
-                                    encrypt={(value, cb) => cb(this.encrypt(value))}
-                                    decrypt={(value, cb) => cb(this.decrypt(value))}
+                                    native={this.state.native as CamerasInstanceNative}
                                     onError={text => this.setState({ errorText: text })}
                                     onLoad={native => this.onLoadConfig(native)}
                                     instance={this.instance}
                                     theme={this.state.theme}
-                                    getIpAddresses={() => this.socket.getIpAddresses(this.common.host)}
+                                    getIpAddresses={() =>
+                                        this.common?.host
+                                            ? this.socket.getIpAddresses(this.common.host)
+                                            : Promise.resolve([])
+                                    }
                                     getExtendableInstances={() => this.getExtendableInstances()}
-                                    onConfigError={configError => this.setConfigurationError(configError)}
                                     adapterName={this.adapterName}
                                     onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}
                                     instanceAlive={this.state.alive}
@@ -177,10 +191,14 @@ class App extends GenericApp {
                                     themeType={this.state.themeType}
                                     adapterName={this.adapterName}
                                     instance={this.instance}
-                                    encrypt={(value, cb) => cb(this.encrypt(value))}
-                                    decrypt={(value, cb) => cb(this.decrypt(value))}
+                                    encrypt={(textToEncrypt: string, cb: (encryptedText: string) => void): void =>
+                                        cb(this.encrypt(textToEncrypt))
+                                    }
+                                    decrypt={(textToDecrypt: string, cb: (decryptedText: string) => void): void =>
+                                        cb(this.decrypt(textToDecrypt))
+                                    }
                                     instanceAlive={this.state.alive}
-                                    native={this.state.native}
+                                    native={this.state.native as CamerasInstanceNative}
                                     onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}
                                 />
                             )}

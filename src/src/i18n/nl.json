@@ -32,7 +32,7 @@
   "Path to store temporary images": "Pad om tijdelijke afbeeldingen op te slaan",
   "If empty then in adapter folder": "Indien leeg dan in adaptermap",
   "Default cache timeout (ms)": "Standaard cachetime-out (ms)",
-  "How often the cameras will be ascked for new snapshot. If 0, then by every request": "Hoe vaak de camera's worden gevraagd om een nieuwe momentopname. Indien 0, dan bij elk verzoek",
+  "How often the cameras will be asked for new snapshot. If 0, then by every request": "Hoe vaak de camera's worden gevraagd om een nieuwe momentopname. Indien 0, dan bij elk verzoek",
   "URL": "URL",
   "URL with basic auth": "URL met basisauthenticatie",
   "RTSP Snapshot": "RTSP-momentopname",

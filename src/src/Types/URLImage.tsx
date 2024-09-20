@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { type JSX } from 'react';
 
 import { TextField } from '@mui/material';
 
 import { I18n } from '@iobroker/adapter-react-v5';
+import GenericConfig, { type GenericCameraSettings, type GenericConfigProps } from '../Types/GenericConfig';
 
-const styles = {
+const styles: Record<string, React.CSSProperties> = {
     page: {
         width: '100%',
     },
@@ -14,24 +14,27 @@ const styles = {
     },
 };
 
-class Config extends Component {
-    constructor(props) {
+export interface URLImageSettings extends GenericCameraSettings {
+    url: string;
+}
+
+class URLImageConfig extends GenericConfig<URLImageSettings> {
+    constructor(props: GenericConfigProps) {
         super(props);
 
-        const state = JSON.parse(JSON.stringify(this.props.settings));
         // set default values
-        state.url = state.url || '';
-
-        this.state = state;
+        Object.assign(this.state, {
+            url: this.state.url || '',
+        });
     }
 
-    reportSettings() {
+    reportSettings(): void {
         this.props.onChange({
             url: this.state.url,
         });
     }
 
-    render() {
+    render(): JSX.Element {
         return (
             <div style={styles.page}>
                 <TextField
@@ -47,10 +50,4 @@ class Config extends Component {
     }
 }
 
-Config.propTypes = {
-    onChange: PropTypes.func.isRequired,
-    defaultTimeout: PropTypes.number,
-    settings: PropTypes.object.isRequired,
-};
-
-export default Config;
+export default URLImageConfig;

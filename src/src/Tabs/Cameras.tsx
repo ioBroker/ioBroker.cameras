@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, type JSX } from 'react';
 
 import {
     Fab,
@@ -27,25 +26,41 @@ import {
     CameraAlt as IconTest,
 } from '@mui/icons-material';
 
-import { I18n, Message as MessageDialog } from '@iobroker/adapter-react-v5';
+import {
+    type AdminConnection,
+    I18n,
+    type IobTheme,
+    Message as MessageDialog,
+    type ThemeType,
+} from '@iobroker/adapter-react-v5';
 
-import URLImage from '../Types/URLImage';
-import URLBasicAuthImage from '../Types/URLBasicAuthImage';
+import type GenericConfig from '@/Types/GenericConfig';
+import type { CameraType, GenericCameraSettings, GenericConfigProps } from '../Types/GenericConfig';
+import URLImageConfig from '../Types/URLImage';
+import URLBasicAuthImageConfig from '../Types/URLBasicAuthImage';
 import RTSPImageConfig from '../Types/RTSPImage';
 import RTSPReolinkE1Config from '../Types/RTSPReolinkE1';
 import RTSPEufyConfig from '../Types/RTSPEufy';
 import RTSPHiKamConfig from '../Types/RTSPHiKam';
+import type { CameraSettings, CamerasInstanceNative } from '../types';
 
-const TYPES = {
-    url: { Config: URLImage, name: 'URL' },
-    urlBasicAuth: { Config: URLBasicAuthImage, name: 'URL with basic auth' },
-    rtsp: { Config: RTSPImageConfig, name: 'RTSP Snapshot' },
-    reolinkE1: { Config: RTSPReolinkE1Config, name: 'Reolink E1 Snapshot' },
-    eufy: { Config: RTSPEufyConfig, name: 'Eufy Security' },
-    hikam: { Config: RTSPHiKamConfig, name: 'HiKam / WiWiCam' },
+const TYPES: Record<CameraType, { Config: any; name: string; translated?: boolean; rtsp?: boolean }> = {
+    url: { Config: URLImageConfig as any as GenericConfig<any>, name: 'URL' },
+    urlBasicAuth: {
+        Config: URLBasicAuthImageConfig as unknown as GenericConfig<any>,
+        name: 'URL with basic auth',
+    },
+    rtsp: { Config: RTSPImageConfig as unknown as GenericConfig<any>, name: 'RTSP Snapshot' },
+    reolinkE1: {
+        Config: RTSPReolinkE1Config as unknown as GenericConfig<any>,
+        name: 'Reolink E1 Snapshot',
+        rtsp: true,
+    },
+    eufy: { Config: RTSPEufyConfig as unknown as GenericConfig<any>, name: 'Eufy Security' },
+    hikam: { Config: RTSPHiKamConfig as unknown as GenericConfig<any>, name: 'HiKam / WiWiCam', rtsp: true },
 };
 
-const styles = {
+const styles: Record<string, React.CSSProperties> = {
     tab: {
         width: '100%',
         height: '100%',
@@ -148,47 +163,73 @@ const styles = {
     },
 };
 
-class Server extends Component {
-    constructor(props) {
+interface ServerProps {
+    decrypt: (textToDecrypt: string, cb: (decryptedText: string) => void) => void;
+    encrypt: (textToEncrypt: string, cb: (encryptedText: string) => void) => void;
+    native: CamerasInstanceNative;
+    instance: number;
+    adapterName: string;
+    onChange: (attr: string, value: any, cb?: () => void) => void;
+    socket: AdminConnection;
+    themeType: ThemeType;
+    instanceAlive: boolean;
+    theme: IobTheme;
+}
+
+interface ServerState {
+    editCam: string;
+    editChanged: boolean;
+    requesting: boolean;
+    instanceAlive: boolean;
+    webInstanceHost: string;
+    message: string | undefined;
+    editedSettings: string;
+    editedSettingsOld: string;
+    testImg: string | null;
+}
+
+class Server extends Component<ServerProps, ServerState> {
+    constructor(props: ServerProps) {
         super(props);
 
         this.state = {
-            editCam: false,
+            editCam: '',
             editChanged: false,
             requesting: false,
             instanceAlive: this.props.instanceAlive,
             webInstanceHost: '',
+            message: '',
+            testImg: null,
+            editedSettings: '',
+            editedSettingsOld: '',
         };
 
         // translate all names once
-        Object.keys(TYPES).forEach(type => {
-            if (TYPES[type].name && !TYPES[type].translated) {
-                TYPES[type].translated = true;
-                TYPES[type].name = I18n.t(TYPES[type].name);
-                if (TYPES[type].Config.getRtsp && TYPES[type].Config.getRtsp()) {
-                    TYPES[type].rtsp = true;
-                }
+        Object.keys(TYPES).forEach((type: string) => {
+            if (TYPES[type as CameraType].name && !TYPES[type as CameraType].translated) {
+                TYPES[type as CameraType].translated = true;
+                TYPES[type as CameraType].name = I18n.t(TYPES[type as CameraType].name);
             }
         });
     }
 
-    componentDidMount() {
+    componentDidMount(): void {
         this.getWebInstances();
     }
 
-    static ip2int(ip) {
+    static ip2int(ip: string): number {
         return ip.split('.').reduce((ipInt, octet) => (ipInt << 8) + parseInt(octet, 10), 0) >>> 0;
     }
 
-    static findNetworkAddressOfHost(obj, localIp) {
+    static findNetworkAddressOfHost(obj: ioBroker.HostObject | null | undefined, localIp: string): string | null {
         const networkInterfaces = obj?.native?.hardware?.networkInterfaces;
         if (!networkInterfaces) {
             return null;
         }
 
-        let hostIp;
+        let hostIp: string | null = null;
         Object.keys(networkInterfaces).forEach(inter => {
-            networkInterfaces[inter].forEach(ip => {
+            networkInterfaces[inter]?.forEach(ip => {
                 if (ip.internal) {
                     return;
                 } else if (localIp.includes(':') && ip.family !== 'IPv6') {
@@ -216,7 +257,7 @@ class Server extends Component {
 
         if (!hostIp) {
             Object.keys(networkInterfaces).forEach(inter => {
-                networkInterfaces[inter].forEach(ip => {
+                networkInterfaces[inter]?.forEach(ip => {
                     if (ip.internal) {
                         return;
                     } else if (localIp.includes(':') && ip.family !== 'IPv6') {
@@ -236,7 +277,7 @@ class Server extends Component {
 
         if (!hostIp) {
             Object.keys(networkInterfaces).forEach(inter => {
-                networkInterfaces[inter].forEach(ip => {
+                networkInterfaces[inter]?.forEach(ip => {
                     if (ip.internal) {
                         return;
                     }
@@ -248,8 +289,8 @@ class Server extends Component {
         return hostIp;
     }
 
-    getWebInstances() {
-        this.props.socket.getAdapterInstances('web').then(async list => {
+    getWebInstances(): void {
+        void this.props.socket.getAdapterInstances('web').then(async list => {
             let webInstance;
             if (this.props.native.webInstance === '*') {
                 webInstance = list[0];
@@ -261,7 +302,9 @@ class Server extends Component {
                 webInstance.native = webInstance.native || {};
                 if (!webInstance.native.bind || webInstance.native.bind === '0.0.0.0') {
                     // get current host
-                    const host = await this.props.socket.getObject(`system.host.${webInstance.common.host}`);
+                    const host: ioBroker.HostObject | null | undefined = await this.props.socket.getObject(
+                        `system.host.${webInstance.common.host}`,
+                    );
                     // get ips on this host
                     const ip = Server.findNetworkAddressOfHost(host, window.location.hostname);
 
@@ -275,39 +318,42 @@ class Server extends Component {
         });
     }
 
-    renderMessage() {
+    renderMessage(): JSX.Element | null {
         if (this.state.message) {
             const text = this.state.message.split('\n').map((item, i) => <p key={i}>{item}</p>);
 
             return (
                 <MessageDialog
+                    // @ts-expect-error fixed in next adapter-v5
                     text={text}
                     onClose={() => this.setState({ message: '' })}
                 />
             );
-        } else {
-            return null;
         }
+
+        return null;
     }
 
-    static getDerivedStateFromProps(props, state) {
+    static getDerivedStateFromProps(props: ServerProps, state: ServerState): Partial<ServerState> | null {
         if (state.instanceAlive !== props.instanceAlive) {
             return { instanceAlive: props.instanceAlive };
-        } else {
-            return null;
         }
+        return null;
     }
 
-    onTest() {
+    onTest(): void {
         const settings = JSON.parse(this.state.editedSettings || this.state.editedSettingsOld);
 
-        let timeout = setTimeout(() => {
-            timeout = null;
-            this.setState({ message: 'Timeout', requesting: false });
-        }, settings.timeout || this.props.native.defaultTimeout);
+        let timeout: ReturnType<typeof setTimeout> | null = setTimeout(
+            () => {
+                timeout = null;
+                this.setState({ message: 'Timeout', requesting: false });
+            },
+            parseInt(settings.timeout || this.props.native.defaultTimeout, 10) || 1000,
+        );
 
         this.setState({ requesting: true, testImg: null }, () => {
-            this.props.socket
+            void this.props.socket
                 .sendTo(`${this.props.adapterName}.${this.props.instance}`, 'test', settings)
                 .then(result => {
                     timeout && clearTimeout(timeout);
@@ -327,30 +373,30 @@ class Server extends Component {
         });
     }
 
-    onCameraSettingsChanged(settings) {
-        const oldSettings = JSON.parse(this.state.editedSettingsOld);
+    onCameraSettingsChanged(settings: CameraSettings): void {
+        const oldSettings: CameraSettings = JSON.parse(this.state.editedSettingsOld);
         // apply changes
         settings = Object.assign(oldSettings, settings);
-        const editedSettings = JSON.stringify(settings);
+        const editedSettings: string = JSON.stringify(settings);
 
         if (this.state.editedSettingsOld === editedSettings) {
-            this.setState({ editChanged: false, editedSettings: null });
+            this.setState({ editChanged: false, editedSettings: '' });
         } else if (this.state.editedSettingsOld !== editedSettings) {
             this.setState({ editChanged: true, editedSettings });
         }
     }
 
-    renderConfigDialog() {
-        if (this.state.editCam !== false) {
-            const cam = JSON.parse(this.state.editedSettings || this.state.editedSettingsOld);
-            let Config = (TYPES[cam.type] || TYPES.url).Config;
+    renderConfigDialog(): JSX.Element | null {
+        if (this.state.editCam) {
+            const cam: CameraSettings = JSON.parse(this.state.editedSettings || this.state.editedSettingsOld);
+            const Config: React.FC<GenericConfigProps> = TYPES[cam.type].Config;
 
             return (
                 <Dialog
                     maxWidth="lg"
                     fullWidth
                     open={!0}
-                    onClose={() => this.state.editCam !== null && this.setState({ editCam: false, editChanged: false })}
+                    onClose={() => this.state.editCam && this.setState({ editCam: '', editChanged: false })}
                 >
                     <DialogTitle>
                         {I18n.t('Edit camera %s [%s]', cam.name, cam.type)} - {cam.desc}
@@ -359,13 +405,20 @@ class Server extends Component {
                         <div style={{ display: 'flex', gap: 10 }}>
                             <div style={styles.divConfig}>
                                 <Config
+                                    theme={this.props.theme}
                                     native={this.props.native}
                                     socket={this.props.socket}
                                     settings={cam}
                                     themeType={this.props.themeType}
-                                    onChange={settings => this.onCameraSettingsChanged(settings)}
-                                    encrypt={(value, cb) => this.props.encrypt(value, cb)}
-                                    decrypt={(value, cb) => this.props.decrypt(value, cb)}
+                                    onChange={(settings: Record<string, any>) =>
+                                        this.onCameraSettingsChanged(settings as CameraSettings)
+                                    }
+                                    encrypt={(value: string, cb: (text: string) => void) =>
+                                        this.props.encrypt(value, cb)
+                                    }
+                                    decrypt={(value: string, cb: (text: string) => void) =>
+                                        this.props.decrypt(value, cb)
+                                    }
                                 />
                                 <br />
                                 <TextField
@@ -474,14 +527,14 @@ class Server extends Component {
                             disabled={!this.state.editChanged}
                             variant="contained"
                             onClick={() => {
-                                const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                                const cameras: CameraSettings[] = JSON.parse(JSON.stringify(this.props.native.cameras));
                                 if (this.state.editedSettings) {
-                                    cameras[this.state.editCam] = JSON.parse(this.state.editedSettings);
+                                    cameras[parseInt(this.state.editCam, 10)] = JSON.parse(this.state.editedSettings);
                                     this.props.onChange('cameras', cameras, () =>
-                                        this.setState({ editCam: false, editChanged: false }),
+                                        this.setState({ editCam: '', editChanged: false }),
                                     );
                                 } else {
-                                    this.setState({ editCam: false, editChanged: false });
+                                    this.setState({ editCam: '', editChanged: false });
                                 }
                             }}
                             color="primary"
@@ -491,28 +544,26 @@ class Server extends Component {
                         <Button
                             color="grey"
                             variant="contained"
-                            onClick={() => this.setState({ editCam: false, editChanged: false })}
+                            onClick={() => this.setState({ editCam: '', editChanged: false })}
                         >
                             {I18n.t('Cancel')}
                         </Button>
                     </DialogActions>
                 </Dialog>
             );
-        } else {
-            return null;
         }
+        return null;
     }
 
-    renderCameraButtons(cam, i) {
+    renderCameraButtons(i: number): JSX.Element[] {
         return [
             <Fab
                 size="small"
                 key="edit"
                 style={styles.lineEdit}
                 onClick={() => {
-                    let editedSettingsOld = JSON.parse(JSON.stringify(this.props.native.cameras[i]));
-                    editedSettingsOld = JSON.stringify(editedSettingsOld);
-                    this.setState({ editCam: i, editedSettingsOld, editedSettings: null, testImg: null });
+                    const editedSettingsOld = JSON.stringify(this.props.native.cameras[i]);
+                    this.setState({ editCam: i.toString(), editedSettingsOld, editedSettings: '', testImg: '' });
                 }}
             >
                 <IconEdit style={styles.buttonIcon} />
@@ -524,7 +575,7 @@ class Server extends Component {
                     key="up"
                     style={styles.lineUp}
                     onClick={() => {
-                        const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                        const cameras: CameraSettings[] = JSON.parse(JSON.stringify(this.props.native.cameras));
                         const cam = cameras[i];
                         cameras.splice(i, 1);
                         cameras.splice(i - 1, 0, cam);
@@ -548,7 +599,7 @@ class Server extends Component {
                     key="down"
                     style={styles.lineDown}
                     onClick={() => {
-                        const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                        const cameras: CameraSettings[] = JSON.parse(JSON.stringify(this.props.native.cameras));
                         const cam = cameras[i];
                         cameras.splice(i, 1);
                         cameras.splice(i + 1, 0, cam);
@@ -571,7 +622,7 @@ class Server extends Component {
                 key="delete"
                 style={styles.lineDelete}
                 onClick={() => {
-                    const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                    const cameras: CameraSettings[] = JSON.parse(JSON.stringify(this.props.native.cameras));
                     cameras.splice(i, 1);
                     this.props.onChange('cameras', cameras);
                 }}
@@ -581,9 +632,9 @@ class Server extends Component {
         ];
     }
 
-    renderCamera(cam, i) {
-        const error = this.props.native.cameras.find((c, ii) => c.name === cam.name && ii !== i);
-        this.props.native.cameras.forEach((cam, i) => {
+    renderCamera(cam: CameraSettings, i: number): JSX.Element {
+        const error = !!this.props.native.cameras.find((c, ii: number) => c.name === cam.name && ii !== i);
+        this.props.native.cameras.forEach((cam, i: number) => {
             if (!cam.id) {
                 cam.id = Date.now() + i;
             }
@@ -601,15 +652,14 @@ class Server extends Component {
         return (
             <div
                 key={`cam${cam.id}`}
-                style={styles.lineDiv}
-                style={{ opacity: cam.enabled === false ? 0.5 : 1 }}
+                style={{ ...styles.lineDiv, opacity: cam.enabled === false ? 0.5 : 1 }}
             >
                 <div style={styles.lineCheck}>
                     <Checkbox
                         style={styles.lineCheckbox}
                         checked={cam.enabled !== false}
                         onChange={() => {
-                            const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                            const cameras: CameraSettings[] = JSON.parse(JSON.stringify(this.props.native.cameras));
                             cameras[i].enabled = cameras[i].enabled === undefined ? false : !cameras[i].enabled;
                             this.props.onChange('cameras', cameras);
                         }}
@@ -624,7 +674,7 @@ class Server extends Component {
                         value={cam.name || ''}
                         helperText={error ? I18n.t('Duplicate name') : ''}
                         onChange={e => {
-                            const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                            const cameras: CameraSettings[] = JSON.parse(JSON.stringify(this.props.native.cameras));
                             cameras[i].name = e.target.value.replace(/[^-_\da-zA-Z]/g, '_');
                             this.props.onChange('cameras', cameras);
                         }}
@@ -637,7 +687,7 @@ class Server extends Component {
                         label={I18n.t('Description')}
                         value={cam.desc || ''}
                         onChange={e => {
-                            const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                            const cameras: CameraSettings[] = JSON.parse(JSON.stringify(this.props.native.cameras));
                             cameras[i].desc = e.target.value;
                             this.props.onChange('cameras', cameras);
                         }}
@@ -653,15 +703,18 @@ class Server extends Component {
                             variant="standard"
                             value={cam.type || ''}
                             onChange={e => {
-                                const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                                const cameras: GenericCameraSettings[] = JSON.parse(
+                                    JSON.stringify(this.props.native.cameras),
+                                );
                                 const camera = cameras[i];
                                 cameras[i] = {
-                                    type: e.target.value,
+                                    id: camera.id,
+                                    type: e.target.value as CameraType,
                                     desc: camera.desc,
                                     name: camera.name,
                                     enabled: camera.enabled,
                                     ip: camera.ip,
-                                    rtsp: TYPES[e.target.value].rtsp,
+                                    rtsp: TYPES[e.target.value as CameraType].rtsp,
                                 };
                                 this.props.onChange('cameras', cameras);
                             }}
@@ -671,28 +724,27 @@ class Server extends Component {
                                     key={type}
                                     value={type}
                                 >
-                                    {TYPES[type].name || type}
+                                    {TYPES[type as CameraType].name || type}
                                 </MenuItem>
                             ))}
                         </Select>
                     </FormControl>
                 </div>
-                {this.renderCameraButtons(cam, i)}
+                {this.renderCameraButtons(i)}
                 {description ? <div style={styles.lineUrl}>{description}</div> : null}
             </div>
         );
     }
 
-    render() {
+    render(): JSX.Element {
         return (
             <div style={styles.tab}>
                 <Fab
                     size="small"
                     title={I18n.t('Add new camera')}
                     onClick={() => {
-                        const cameras = JSON.parse(JSON.stringify(this.props.native.cameras));
+                        const cameras: GenericCameraSettings[] = JSON.parse(JSON.stringify(this.props.native.cameras));
                         let i = 1;
-                        // eslint-disable-next-line
                         while (cameras.find(cam => cam.name === `cam${i}`)) {
                             i++;
                         }
@@ -703,7 +755,7 @@ class Server extends Component {
                     <IconAdd />
                 </Fab>
                 {this.props.native.cameras
-                    ? this.props.native.cameras.map((cam, i) => this.renderCamera(cam, i))
+                    ? this.props.native.cameras.map((cam, i: number) => this.renderCamera(cam, i))
                     : null}
                 {this.renderConfigDialog()}
                 {this.renderMessage()}
@@ -711,18 +763,5 @@ class Server extends Component {
         );
     }
 }
-
-Server.propTypes = {
-    decrypt: PropTypes.func.isRequired,
-    encrypt: PropTypes.func.isRequired,
-    native: PropTypes.object.isRequired,
-    instance: PropTypes.number.isRequired,
-    adapterName: PropTypes.string.isRequired,
-    onError: PropTypes.func,
-    onLoad: PropTypes.func,
-    onChange: PropTypes.func,
-    socket: PropTypes.object.isRequired,
-    themeType: PropTypes.string.isRequired,
-};
 
 export default Server;

@@ -32,7 +32,7 @@
   "Path to store temporary images": "Ruta para almacenar imágenes temporales",
   "If empty then in adapter folder": "Si está vacío, entonces en la carpeta del adaptador",
   "Default cache timeout (ms)": "Tiempo de espera de caché predeterminado (ms)",
-  "How often the cameras will be ascked for new snapshot. If 0, then by every request": "Con qué frecuencia se pedirá a las cámaras una nueva instantánea. Si es 0, entonces por cada solicitud",
+  "How often the cameras will be asked for new snapshot. If 0, then by every request": "Con qué frecuencia se pedirá a las cámaras una nueva instantánea. Si es 0, entonces por cada solicitud",
   "URL": "URL",
   "URL with basic auth": "URL con autenticación básica",
   "RTSP Snapshot": "Instantánea de RTSP",
