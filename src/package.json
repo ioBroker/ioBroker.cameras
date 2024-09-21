@@ -23,7 +23,8 @@
         "build": "tsc && vite build",
         "preview": "vite preview",
         "lint": "eslint -c eslint.config.mjs src",
-        "tsc": "tsc -p tsconfig.json src"
+        "tsc": "tsc -p tsconfig.json",
+        "prettier": "prettier -c prettier.config.mjs --write src"
     },
     "eslintConfig": {
         "extends": "react-app"

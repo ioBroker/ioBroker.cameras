@@ -142,7 +142,7 @@ class App extends GenericApp<GenericAppProps, AppState> {
                     >
                         <AppBar position="static">
                             <Tabs
-                                value={this.state.selectedTab}
+                                value={this.state.selectedTab || 'options'}
                                 onChange={(_e, selectedTab: string): void => this.setState({ selectedTab })}
                                 sx={{ '& .MuiTabs-indicator': styles.indicator }}
                             >
