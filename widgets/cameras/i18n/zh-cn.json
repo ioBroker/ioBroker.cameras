@@ -1,0 +1,23 @@
+{
+  "RTSP url": "RTSP 网址",
+  "RTSP Camera": "RTSP摄像头",
+  "cameras_set_label": "RTSP摄像头",
+  "name": "姓名",
+  "without_card": "无框",
+  "Cameras": "相机",
+  "Camera": "相机",
+  "Close": "关闭",
+  "videoWidth": "视频宽度",
+  "tooltip_videoWidth": "不要将视频宽度设置得太高，以节省宽带。它适用于：小视频和完整视频。如果未设置，则将采用小部件的初始大小。",
+  "Camera instance %s inactive": "相机实例 %s 不活动",
+  "disabled": "残疾人",
+  "pollingInterval": "轮询间隔",
+  "pollingIntervalFull": "对话框中的轮询间隔",
+  "tooltip_ms": "毫秒",
+  "rotate": "旋转图像",
+  "Polling Camera": "投票摄像头",
+  "Cannot load URL": "无法加载网址",
+  "noCacheByFull": "对话框中没有缓存",
+  "camera_in_dialog": "相机对话",
+  "No camera selected": "未选择相机"
+}

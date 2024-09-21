@@ -1,0 +1,23 @@
+{
+  "RTSP url": "URL RTSP",
+  "RTSP Camera": "Kamera RTSP",
+  "cameras_set_label": "Kamera RTSP",
+  "name": "Nazwa",
+  "without_card": "Bez ramy",
+  "Cameras": "kamery",
+  "Camera": "Kamera",
+  "Close": "Zamknąć",
+  "videoWidth": "Szerokość wideo",
+  "tooltip_videoWidth": "Nie ustawiaj zbyt dużej szerokości wideo, aby zaoszczędzić łącze szerokopasmowe. Dotyczy to zarówno małych, jak i pełnych filmów. Jeśli nie ustawiono, zostanie wzięty początkowy rozmiar widżetu.",
+  "Camera instance %s inactive": "Instancja kamery %s nieaktywna",
+  "disabled": "wyłączony",
+  "pollingInterval": "Interwał odpytywania",
+  "pollingIntervalFull": "Interwał odpytywania w oknie dialogowym",
+  "tooltip_ms": "milisekundy",
+  "rotate": "Obróć obraz",
+  "Polling Camera": "Kamera wyborcza",
+  "Cannot load URL": "Nie można załadować adresu URL",
+  "noCacheByFull": "Brak pamięci podręcznej w oknie dialogowym",
+  "camera_in_dialog": "Kamera w oknie dialogowym",
+  "No camera selected": "Nie wybrano kamery"
+}

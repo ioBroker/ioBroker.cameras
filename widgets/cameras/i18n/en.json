@@ -1,0 +1,23 @@
+{
+  "RTSP Camera": "RTSP Camera",
+  "without_card": "Without frame",
+  "name": "Name",
+  "RTSP url": "RTSP url",
+  "cameras_set_label": "RTSP Camera",
+  "Cameras": "Cameras",
+  "Camera": "Camera",
+  "Close": "Close",
+  "videoWidth": "Video width",
+  "tooltip_videoWidth": "Do not set width of video too hight to save broadband. It is for both: small and full videos. If not set, the initial size of widget will be taken.",
+  "Camera instance %s inactive": "Camera instance %s inactive",
+  "disabled": "disabled",
+  "pollingInterval": "Polling interval",
+  "pollingIntervalFull": "Polling interval in dialog",
+  "tooltip_ms": "milliseconds",
+  "rotate": "Rotate image",
+  "Polling Camera": "Polling Camera",
+  "Cannot load URL": "Cannot load URL",
+  "noCacheByFull": "No cache in dialog",
+  "camera_in_dialog": "Camera in Dialog",
+  "No camera selected": "No camera selected"
+}

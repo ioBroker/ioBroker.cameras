@@ -1,0 +1,23 @@
+{
+  "RTSP url": "URL-адреса RTSP",
+  "RTSP Camera": "Камера RTSP",
+  "cameras_set_label": "Камера RTSP",
+  "name": "Ім'я",
+  "without_card": "Без рами",
+  "Cameras": "Фотоапарати",
+  "Camera": "Камера",
+  "Close": "Закрити",
+  "videoWidth": "Ширина відео",
+  "tooltip_videoWidth": "Не встановлюйте занадто високу ширину відео, щоб зберегти широкосмуговий зв’язок. Це як для маленьких, так і для повних відео. Якщо не встановлено, буде взято початковий розмір віджета.",
+  "Camera instance %s inactive": "Примірник камери %s неактивний",
+  "disabled": "вимкнено",
+  "pollingInterval": "Інтервал опитування",
+  "pollingIntervalFull": "Інтервал опитування в діалоговому вікні",
+  "tooltip_ms": "мілісекунд",
+  "rotate": "Повернути зображення",
+  "Polling Camera": "Камера опитування",
+  "Cannot load URL": "Не вдається завантажити URL",
+  "noCacheByFull": "У діалоговому вікні немає кешу",
+  "camera_in_dialog": "Камера в діалозі",
+  "No camera selected": "Камера не вибрана"
+}
