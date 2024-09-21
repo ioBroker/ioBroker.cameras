@@ -34,7 +34,7 @@ import {
     type ThemeType,
 } from '@iobroker/adapter-react-v5';
 
-import type GenericConfig from '@/Types/GenericConfig';
+import type GenericConfig from '../Types/GenericConfig';
 import type { CameraType, GenericCameraSettings, GenericConfigProps } from '../Types/GenericConfig';
 import URLImageConfig from '../Types/URLImage';
 import URLBasicAuthImageConfig from '../Types/URLBasicAuthImage';

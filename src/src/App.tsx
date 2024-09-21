@@ -26,7 +26,7 @@ import langEs from './i18n/es.json';
 import langPl from './i18n/pl.json';
 import langUk from './i18n/uk.json';
 import langZhCn from './i18n/zh-cn.json';
-import type { CamerasInstanceNative } from '@/types';
+import type { CamerasInstanceNative } from './types';
 
 function inIframe(): boolean {
     try {
