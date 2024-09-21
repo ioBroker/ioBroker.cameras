@@ -303,7 +303,7 @@ class SnapshotCamera extends Generic {
     }
 
     getUrl(isFull) {
-        if (isFull && !this.state.rxData.bigCamera) {
+        if (isFull && this.state.rxData.bigCamera) {
             const url = `../cameras.${this.state.rxData.bigCamera}?`;
             const params = [
                 `ts=${Date.now()}`,
@@ -364,7 +364,7 @@ class SnapshotCamera extends Generic {
                             {Generic.t('Cannot load URL')}
                             :
                         </div>
-                        <div>{this.getUrl(true)}</div>
+                        <div>{url}</div>
                     </div>
                 ) : null}
                 {this.renderDialog(url)}
