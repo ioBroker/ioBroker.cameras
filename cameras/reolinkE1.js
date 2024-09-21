@@ -1,5 +1,5 @@
 const { getRtspSnapshot, getRtspURL } = require('./rtsp');
-const path = require('path');
+const path = require('node:path');
 
 // documentation https://reolink.com/wp-content/uploads/2017/01/Reolink-CGI-command-v1.61.pdf
 

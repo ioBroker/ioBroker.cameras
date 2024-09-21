@@ -1,10 +1,10 @@
 'use strict';
 const utils       = require('@iobroker/adapter-core');
 const adapterName = require('./package.json').name.split('.').pop();
-const http        = require('http');
+const http        = require('node:http');
 const rtsp        = require('./cameras/rtsp');
-const fs          = require('fs');
-const path        = require('path');
+const fs          = require('node:fs');
+const path        = require('node:path');
 const moment      = require('moment');
 const decompress = require('decompress');
 
@@ -410,7 +410,7 @@ async function addTextToImage(data, dateFormat, title) {
 }
 
 function startWebServer(adapter) {
-    adapter.log.debug(`Starting web server on http://${adapter.config.bind}:${adapter.config.port}/`);
+    adapter.log.debug(`Starting web server on http://127.0.0.1:${adapter.config.port}/`);
     adapter.__server = http.createServer(async (req, res) => {
         const clientIp = req.socket.remoteAddress;
         if (!clientIp) {
@@ -510,8 +510,8 @@ function startWebServer(adapter) {
     adapter.__server.on('clientError', (err, socket) =>
         socket.end('HTTP/1.1 400 Bad Request\r\n\r\n'));
 
-    adapter.__server.listen({port: adapter.config.port || '127', host: adapter.config.bind}, () =>
-        adapter.log.info(`Server started on ${adapter.config.bind}:${adapter.config.port}`));
+    adapter.__server.listen({ port: adapter.config.port || '127', host: '127.0.0.1' }, () =>
+        adapter.log.info(`Server started on 127.0.0.1:${adapter.config.port}`));
 }
 
 async function syncConfig() {

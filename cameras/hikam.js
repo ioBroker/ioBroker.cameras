@@ -1,5 +1,5 @@
 const { getRtspSnapshot, getRtspURL } = require('./rtsp');
-const path = require('path');
+const path = require('node:path');
 
 // documentation https://www.wiwacam.com/de/mw1-minikamera-kurzanleitung-und-faq/
 // https://support.hikam.de/support/solutions/articles/16000070656-zugriff-auf-kameras-der-2-generation-via-onvif-f%C3%BCr-s6-q8-a7-2-generation-

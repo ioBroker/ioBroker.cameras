@@ -1,6 +1,6 @@
 const spawn = require('child_process').spawn;
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 const ffmpeg = require('fluent-ffmpeg');
 
 function maskPassword(str, password) {

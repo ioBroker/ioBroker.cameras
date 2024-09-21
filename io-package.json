@@ -187,7 +187,6 @@
     ]
   },
   "native": {
-    "bind": "127.0.0.1",
     "port": 8200,
     "key": "",
     "webInstance": "*",

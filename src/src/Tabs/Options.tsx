@@ -175,41 +175,6 @@ class Options extends Component<OptionsProps, OptionsState> {
 
     renderSettings(): JSX.Element[] {
         return [
-            this.state.ips && this.state.ips.length ? (
-                <FormControl
-                    key="bindSelect"
-                    style={styles.bind}
-                    variant="standard"
-                >
-                    <InputLabel>{I18n.t('Local IP address')}</InputLabel>
-                    <Select
-                        variant="standard"
-                        disabled={this.state.requesting}
-                        value={this.props.native.bind || ''}
-                        onChange={e => this.props.onChange('bind', e.target.value)}
-                    >
-                        <MenuItem value="127.0.0.1">127.0.0.1</MenuItem>
-                        {this.state.ips.map(ip => (
-                            <MenuItem
-                                key={ip}
-                                value={ip}
-                            >
-                                {ip}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            ) : (
-                <TextField
-                    variant="standard"
-                    disabled={this.state.requesting}
-                    key="bind"
-                    style={styles.bind}
-                    label={I18n.t('Local IP address')}
-                    value={this.props.native.bind}
-                    onChange={e => this.props.onChange('bind', e.target.value)}
-                />
-            ),
             <TextField
                 variant="standard"
                 disabled={this.state.requesting}

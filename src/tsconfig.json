@@ -16,10 +16,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": "./",
-    "types": ["@iobroker/types", "vite/client"],
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "types": ["@iobroker/types", "vite/client"]
   },
   "include": ["src"],
   "exclude": ["node_modules", "build"]

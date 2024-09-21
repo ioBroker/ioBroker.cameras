@@ -142,8 +142,14 @@ class App extends GenericApp<GenericAppProps, AppState> {
                     >
                         <AppBar position="static">
                             <Tabs
-                                value={this.state.selectedTab}
-                                onChange={(_e, selectedTab: string): void => this.setState({ selectedTab })}
+                                value={this.state.selectedTab || 'options'}
+                                onChange={(_e, selectedTab: string): void => {
+                                    this.setState({ selectedTab });
+                                    ((window as any)._localStorage || window.localStorage).setItem(
+                                        `${this.adapterName}-adapter`,
+                                        selectedTab,
+                                    );
+                                }}
                                 sx={{ '& .MuiTabs-indicator': styles.indicator }}
                             >
                                 <Tab

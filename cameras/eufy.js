@@ -1,6 +1,6 @@
 const { getRtspSnapshot } = require('./rtsp');
-const path = require('path');
-const URL = require('url');
+const path = require('node:path');
+const URL = require('node:url');
 
 async function init(adapter, cam) {
     adapter.__urlCameras = adapter.__urlCameras || {};
