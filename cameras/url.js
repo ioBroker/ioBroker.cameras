@@ -18,7 +18,7 @@ function unload(adapter, cam) {
     if (adapter.__urlCameras[cam.name]) {
         delete adapter.__urlCameras[cam.name];
     }
-    // after last unload, all the resources must be cleared too
+    // after last unloading, all the resources must be cleared too
     if (Object.keys(adapter.__urlCameras)) {
         // unload
     }
@@ -41,13 +41,15 @@ function process(adapter, cam) {
             cam.runningRequest = null;
             return {
                 body: response.data,
-                contentType: response.headers['Content-type'] || response.headers['content-type']
+                contentType: response.headers['Content-type'] || response.headers['content-type'],
             };
         })
         .catch(error => {
             if (error.response) {
+                adapter.log.error(`Cannot read ${cam.url}: ${error.response.data || error}`);
                 throw new Error(error.response.data || error.response.status);
             } else {
+                adapter.log.error(`Cannot read ${cam.url}: ${error}`);
                 throw new Error(error.code);
             }
         });

@@ -473,19 +473,6 @@ class Server extends Component<ServerProps, ServerState> {
                                     }}
                                 />
                                 <div style={styles.sampleUrl}>
-                                    {I18n.t('Local URL')}
-                                    :&nbsp;
-                                    <a
-                                        style={styles.link}
-                                        href={`http://${this.props.native.bind}:${this.props.native.port}/${cam.name}?key=${this.props.native.key}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        URL: http://{this.props.native.bind}:{this.props.native.port}/{cam.name}?key=
-                                        {this.props.native.key}
-                                    </a>
-                                </div>
-                                <div style={styles.sampleUrl}>
                                     {I18n.t('Web URL')}
                                     :&nbsp;
                                     <a

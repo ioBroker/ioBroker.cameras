@@ -43,8 +43,10 @@ function process(adapter, cam) {
         })
         .catch(error => {
             if (error.response) {
+                adapter.log.error(`Cannot read ${cam.url}: ${error.response.data || error}`);
                 throw new Error(error.response.data || error.response.status);
             } else {
+                adapter.log.error(`Cannot read ${cam.url}: ${error}`);
                 throw new Error(error.code);
             }
         });
