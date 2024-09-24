@@ -1,23 +1,42 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "baseUrl": "./",
-    "types": ["@iobroker/types", "vite/client"]
-  },
-  "include": ["src"],
-  "exclude": ["node_modules", "build"]
+    "compileOnSave": true,
+    "compilerOptions": {
+        "jsx": "react",
+        // do not compile anything, this file is just to configure type checking
+        "noEmit": true,
+
+        // check JS files
+        "allowJs": true,
+        "checkJs": true,
+
+        "module": "commonjs",
+        "moduleResolution": "node",
+        // this is necessary for the automatic typing of the adapter config
+        "resolveJsonModule": true,
+
+        // Set this to false if you want to disable the very strict rules (not recommended)
+        "strict": true,
+        // Or enable some of those features for more fine-grained control
+        // "strictNullChecks": true,
+        // "strictPropertyInitialization": true,
+        // "strictBindCallApply": true,
+        "noImplicitAny": false,
+        // "noUnusedLocals": true,
+        // "noUnusedParameters": true,
+
+        // Consider targeting es2017 or higher if you require the new Node.js 8+ features
+        "target": "es2017",
+        "types": ["@iobroker/types"],
+    },
+    "include": [
+        "**/*.js",
+        "**/*.d.ts"
+    ],
+    "exclude": [
+        "node_modules/**",
+        "admin/**",
+        "admin-config/**",
+        "src/**",
+        "src-widgets/**"
+    ]
 }
