@@ -1,42 +1,26 @@
+// Root tsconfig to set the settings and power editor support for all TS files
 {
-    "compileOnSave": true,
     "compilerOptions": {
-        "jsx": "react",
-        // do not compile anything, this file is just to configure type checking
-        "noEmit": true,
-
-        // check JS files
+        // do not compile anything. This file is just to configure type checking
         "allowJs": true,
-        "checkJs": true,
-
+        "checkJs": false,
+        "noEmit": false,
+        "declaration": false,
+        "skipLibCheck": true,
         "module": "commonjs",
-        "moduleResolution": "node",
-        // this is necessary for the automatic typing of the adapter config
+        "outDir": "../build-backend/",
         "resolveJsonModule": true,
-
-        // Set this to false if you want to disable the very strict rules (not recommended)
-        "strict": true,
-        // Or enable some of those features for more fine-grained control
-        // "strictNullChecks": true,
-        // "strictPropertyInitialization": true,
-        // "strictBindCallApply": true,
-        "noImplicitAny": false,
+        "target": "esnext",
+        "baseUrl": ".",
+        "jsx": "preserve",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "noImplicitAny": true,
         // "noUnusedLocals": true,
         // "noUnusedParameters": true,
-
-        // Consider targeting es2017 or higher if you require the new Node.js 8+ features
-        "target": "es2017",
-        "types": ["@iobroker/types"],
+        "useUnknownInCatchVariables": false,
+        "types": ["@iobroker/types", "@types/node"],
     },
-    "include": [
-        "**/*.js",
-        "**/*.d.ts"
-    ],
-    "exclude": [
-        "node_modules/**",
-        "admin/**",
-        "admin-config/**",
-        "src/**",
-        "src-widgets/**"
-    ]
+    "include": ["**/*.js", "**/*.ts", "**/*.d.ts",],
+    "exclude": ["node_modules/**"]
 }

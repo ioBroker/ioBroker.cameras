@@ -1,42 +1,18 @@
 {
-    "name": "cameras-admin",
-    "version": "2.1.2",
     "private": true,
     "dependencies": {
-        "@iobroker/adapter-react-v5": "^7.1.4",
-        "@iobroker/eslint-config": "^0.1.6",
         "@iobroker/types": "^6.0.11",
-        "@mui/icons-material": "^6.1.1",
-        "@mui/material": "^6.1.1",
-        "@types/react": "^18.3.7",
-        "@types/react-dom": "^18.3.0",
-        "@vitejs/plugin-react": "^4.3.1",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1",
-        "react-icons": "^5.3.0",
-        "typescript": "^5.6.2",
-        "vite": "^5.4.6",
-        "vite-tsconfig-paths": "^5.0.1"
+        "@iobroker/eslint-config": "^0.1.6",
+        "@types/decompress": "^4.2.7",
+        "@types/moment": "^2.13.0",
+        "@types/node": "^22.6.1",
+      "express": "^4.19.2",
+        "@types/fluent-ffmpeg": "^2.1.26",
+        "typescript": "^5.6.2"
     },
     "scripts": {
-        "start": "vite",
-        "build": "tsc && vite build",
-        "preview": "vite preview",
-        "lint": "eslint -c eslint.config.mjs src",
-        "tsc": "tsc -p tsconfig.json src"
+        "build": "tsc -p tsconfig.json",
+        "lint": "eslint -c eslint.config.mjs"
     },
-    "eslintConfig": {
-        "extends": "react-app"
-    },
-    "proxy": "http://127.0.0.1:8081",
-    "allowedHosts": [
-        "127.0.0.1"
-    ],
-    "homepage": ".",
-    "browserslist": [
-        ">0.2%",
-        "not dead",
-        "not ie <= 11",
-        "not op_mini all"
-    ]
+    "version": "2.1.2"
 }

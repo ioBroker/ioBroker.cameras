@@ -55,7 +55,7 @@
     "sinon-chai": "^3.7.0",
     "prettier": "^3.3.3"
   },
-  "main": "main.js",
+  "main": "build-backend/main.js",
   "files": [
     "admin/",
     "cameras/",
