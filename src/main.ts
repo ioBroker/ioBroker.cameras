@@ -106,9 +106,19 @@ class CamerasAdapter extends Adapter {
     async onReady(): Promise<void> {
         this.streamSubscribes = [];
 
-        if (!this.config.ffmpegPath && process.platform === 'win32' && !existsSync(`${__dirname}/win-ffmpeg.exe`)) {
+        // On Windows, the ffmpeg will be delivered with adapter.
+        if (
+            !this.config.ffmpegPath &&
+            process.platform === 'win32' &&
+            !existsSync(`${__dirname}/../win-ffmpeg.exe`) &&
+            !existsSync(`${__dirname}/win-ffmpeg.exe`)
+        ) {
             this.log.info('Decompress ffmpeg.exe...');
-            await decompress(`${__dirname}/win-ffmpeg.zip`, __dirname);
+            if (__dirname.endsWith('cameras')) {
+                await decompress(normalize(`${__dirname}/win-ffmpeg.zip`), __dirname);
+            } else {
+                await decompress(normalize(`${__dirname}/../win-ffmpeg.zip`), normalize(`${__dirname}/..`));
+            }
         }
 
         this.language = this.config.language || this.language || 'en';
@@ -118,7 +128,11 @@ class CamerasAdapter extends Adapter {
 
         if (!existsSync(this.config.ffmpegPath) && !existsSync(`${this.config.ffmpegPath}.exe`)) {
             if (process.platform === 'win32') {
-                this.config.ffmpegPath = `${__dirname}/win-ffmpeg.exe`;
+                if (__dirname.endsWith('cameras')) {
+                    this.config.ffmpegPath = normalize(`${__dirname}/win-ffmpeg.exe`);
+                } else {
+                    this.config.ffmpegPath = normalize(`${__dirname}/../win-ffmpeg.exe`);
+                }
             } else {
                 this.log.error(`Cannot find ffmpeg in "${this.config.ffmpegPath}"`);
             }

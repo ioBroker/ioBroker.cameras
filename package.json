@@ -34,7 +34,7 @@
     "@alcalzone/release-script": "^3.8.0",
     "@alcalzone/release-script-plugin-iobroker": "^3.7.2",
     "@alcalzone/release-script-plugin-license": "^3.7.0",
-    "@iobroker/build-tools": "^1.0.3",
+    "@iobroker/build-tools": "^1.1.0",
     "@iobroker/testing": "^5.0.0",
     "@iobroker/types": "^6.0.11",
     "@iobroker/vis-2-widgets-react-dev": "^4.0.3",

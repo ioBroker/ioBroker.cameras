@@ -32,12 +32,14 @@ sendTo('cameras.0', 'image', {
 The result is always in `jpg` format.
 
 Supported cameras:
-- Reolink E1 Pro via RTSP (important, without `Pro` it will not work)
-- Eufy via eusec adapter
-- [HiKam](https://support.hikam.de/support/solutions/articles/16000070656-zugriff-auf-kameras-der-2-generation-via-onvif-f%C3%BCr-s6-q8-a7-2-generation-) of second and third generation via ONVIF (für S6, Q8, A7 2. Generation), A7 Pro, A9
-- [WIWICam M1 via HiKam adapter](https://www.wiwacam.com/de/mw1-minikamera-kurzanleitung-und-faq/)
-- RTSP Native - if your camera supports RTSP protocol
+- `Reolink E1 Pro` via RTSP (important, without `Pro` it will not work)
+- `Eufy` via eusec adapter
+- [`HiKam`](https://support.hikam.de/support/solutions/articles/16000070656-zugriff-auf-kameras-der-2-generation-via-onvif-f%C3%BCr-s6-q8-a7-2-generation-) of second and third generation via ONVIF (für S6, Q8, A7 2. Generation), A7 Pro, A9
+- [`WIWICam M1` via `HiKam` adapter](https://www.wiwacam.com/de/mw1-minikamera-kurzanleitung-und-faq/)
+- RTSP native - if your camera supports RTSP protocol
 - Screenshots via HTTP URL - if you can get the snapshot from your camera via URL
+
+Important: the adapter starts the internal web server on `localhost:8200`, if this port is occupied on your system, you can change the port in settings.
 
 ### URL image
 This is a normal URL request, where all parameters are in URL. Like `http://mycam/snapshot.jpg`  

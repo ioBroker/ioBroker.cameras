@@ -91,16 +91,29 @@ class CamerasAdapter extends adapter_core_1.Adapter {
     }
     async onReady() {
         this.streamSubscribes = [];
-        if (!this.config.ffmpegPath && process.platform === 'win32' && !(0, node_fs_1.existsSync)(`${__dirname}/win-ffmpeg.exe`)) {
+        if (!this.config.ffmpegPath &&
+            process.platform === 'win32' &&
+            !(0, node_fs_1.existsSync)(`${__dirname}/../win-ffmpeg.exe`) &&
+            !(0, node_fs_1.existsSync)(`${__dirname}/win-ffmpeg.exe`)) {
             this.log.info('Decompress ffmpeg.exe...');
-            await (0, decompress_1.default)(`${__dirname}/win-ffmpeg.zip`, __dirname);
+            if (__dirname.endsWith('cameras')) {
+                await (0, decompress_1.default)((0, node_path_1.normalize)(`${__dirname}/win-ffmpeg.zip`), __dirname);
+            }
+            else {
+                await (0, decompress_1.default)((0, node_path_1.normalize)(`${__dirname}/../win-ffmpeg.zip`), (0, node_path_1.normalize)(`${__dirname}/..`));
+            }
         }
         this.language = this.config.language || this.language || 'en';
         this.config.tempPath = this.config.tempPath || `${__dirname}/snapshots`;
         this.config.defaultCacheTimeout = parseInt(this.config.defaultCacheTimeout, 10) || 0;
         if (!(0, node_fs_1.existsSync)(this.config.ffmpegPath) && !(0, node_fs_1.existsSync)(`${this.config.ffmpegPath}.exe`)) {
             if (process.platform === 'win32') {
-                this.config.ffmpegPath = `${__dirname}/win-ffmpeg.exe`;
+                if (__dirname.endsWith('cameras')) {
+                    this.config.ffmpegPath = (0, node_path_1.normalize)(`${__dirname}/win-ffmpeg.exe`);
+                }
+                else {
+                    this.config.ffmpegPath = (0, node_path_1.normalize)(`${__dirname}/../win-ffmpeg.exe`);
+                }
             }
             else {
                 this.log.error(`Cannot find ffmpeg in "${this.config.ffmpegPath}"`);

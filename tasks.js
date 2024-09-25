@@ -6,7 +6,7 @@
  **/
 'use strict';
 
-const fs= require('node:fs');
+const fs = require('node:fs');
 const adapterName = require('./package.json').name.replace('iobroker.', '');
 const {
     deleteFoldersRecursive,
@@ -19,32 +19,34 @@ const {
 
 function clean() {
     deleteFoldersRecursive(`${__dirname}/admin`);
-    deleteFoldersRecursive(`${__dirname}/src/build`);
+    deleteFoldersRecursive(`${__dirname}/src-admin/build`);
 }
+
 function copyAllFiles() {
     deleteFoldersRecursive(`${__dirname}/admin`);
     copyFiles([
-        'src/build/**/*',
-        '!src/build/index.html',
-        '!src/build/static/js/main.*.chunk.js',
-        '!src/build/i18n/**/*',
-        '!src/build/i18n',
+        'src-admin/build/**/*',
+        '!src-admin/build/index.html',
+        '!src-admin/build/static/js/main.*.chunk.js',
+        '!src-admin/build/i18n/**/*',
+        '!src-admin/build/i18n',
         'admin-config/*'
     ],'admin/');
 
-    let index = fs.readFileSync(`${__dirname}/src/build/index.html`).toString('utf8');
+    let index = fs.readFileSync(`${__dirname}/src-admin/build/index.html`).toString('utf8');
     index = index.replaceAll('href="/', 'href="');
     index = index.replaceAll('src="/', 'src="');
     index = index.replace('<script type="text/javascript" src="./vendor/socket.io.js"></script>', '<script type="text/javascript" src="./../../socket.io/socket.io.js"></script>');
     fs.writeFileSync(`${__dirname}/admin/index_m.html`, index);
 
-    const files = collectFiles('src/build/static/js/main.*.chunk.js');
+    const files = collectFiles('src-admin/build/static/js/main.*.chunk.js');
     for (const file of files) {
         let data = fs.readFileSync(file.base + file.name).toString('utf8');
         data = data.replaceAll('s.p+"static/media/copy-content', '"./static/media/copy-content');
         fs.writeFileSync(`${__dirname}/admin/static/js/${file.name}`, data);
     }
 }
+
 function cleanWidgets() {
     deleteFoldersRecursive(`${__dirname}/src-widgets/build`);
     deleteFoldersRecursive(`${__dirname}/widgets`);
@@ -68,12 +70,12 @@ function copyAllFilesWidgets() {
 if (process.argv.includes('--0-clean')) {
     clean();
 } else if (process.argv.includes('--1-npm')) {
-    if (!fs.existsSync(`${__dirname}/src/node_modules`)) {
+    if (!fs.existsSync(`${__dirname}/src-admin/node_modules`)) {
         npmInstall(`${__dirname.replace(/\\/g, '/')}/src/`)
             .catch(e => console.error(e));
     }
 } else if (process.argv.includes('--2-build')) {
-    buildReact(`${__dirname}/src/`, { rootDir: __dirname, vite: true, tsc: true })
+    buildReact(`${__dirname}/src-admin/`, { rootDir: __dirname, vite: true, tsc: true })
         .catch(e => console.error(e));
 } else if (process.argv.includes('--3-copy')) {
     copyAllFiles();
@@ -83,14 +85,14 @@ if (process.argv.includes('--0-clean')) {
 } else if (process.argv.includes('--build-gui')) {
     clean();
     let npmPromise = null;
-    if (!fs.existsSync(`${__dirname}/src/node_modules`)) {
+    if (!fs.existsSync(`${__dirname}/src-admin/node_modules`)) {
         npmPromise = npmInstall(`${__dirname.replace(/\\/g, '/')}/src/`)
             .catch(e => console.error(e));
     } else {
         npmPromise = Promise.resolve();
     }
     npmPromise
-        .then(() => buildReact(`${__dirname}/src/`, { rootDir: __dirname, vite: true, tsc: true }))
+        .then(() => buildReact(`${__dirname}/src-admin/`, { rootDir: __dirname, vite: true, tsc: true }))
         .then(() => copyAllFiles())
         .then(() => patchHtmlFile(`${__dirname}/admin/index_m.html`))
         .catch(e => console.error(e));
@@ -113,7 +115,7 @@ if (process.argv.includes('--0-clean')) {
 } else {
     clean();
     let npmPromise = null;
-    if (!fs.existsSync(`${__dirname}/src/node_modules`)) {
+    if (!fs.existsSync(`${__dirname}/src-admin/node_modules`)) {
         npmPromise = npmInstall(`${__dirname.replace(/\\/g, '/')}/src/`)
             .catch(e => console.error(e));
     } else {
@@ -121,7 +123,7 @@ if (process.argv.includes('--0-clean')) {
     }
 
     npmPromise
-        .then(() => buildReact(`${__dirname}/src/`, { rootDir: __dirname, vite: true, tsc: true }))
+        .then(() => buildReact(`${__dirname}/src-admin/`, { rootDir: __dirname, vite: true, tsc: true }))
         .then(() => copyAllFiles())
         .then(() => patchHtmlFile(`${__dirname}/admin/index_m.html`))
         .then(() => cleanWidgets())
