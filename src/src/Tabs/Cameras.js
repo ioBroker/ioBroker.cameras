@@ -35,6 +35,7 @@ import RTSPImageConfig from '../Types/RTSPImage';
 import RTSPReolinkE1Config from '../Types/RTSPReolinkE1';
 import RTSPEufyConfig from '../Types/RTSPEufy';
 import RTSPHiKamConfig from '../Types/RTSPHiKam';
+import RTSPSteinel from '../Types/RTSPSteinel';
 
 const TYPES = {
     url:          { Config: URLImage, name: 'URL' },
@@ -43,6 +44,7 @@ const TYPES = {
     reolinkE1:    { Config: RTSPReolinkE1Config, name: 'Reolink E1 Snapshot' },
     eufy:         { Config: RTSPEufyConfig, name: 'Eufy Security' },
     hikam:        { Config: RTSPHiKamConfig, name: 'HiKam / WiWiCam' },
+    steinel:      { Config: RTSPSteinel, name: 'Steinel Cam' },
 };
 
 const styles = {
