@@ -1,221 +1,208 @@
 {
-  "common": {
-    "name": "cameras",
-    "version": "2.1.2",
-    "news": {
-      "2.1.2": {
-        "en": "Updated packages",
-        "de": "Aktualisierte Pakete",
-        "ru": "Обновленные пакеты",
-        "pt": "Pacotes atualizados",
-        "nl": "Bijgewerkte pakketten",
-        "fr": "Paquets mis à jour",
-        "it": "Pacchetti aggiornati",
-        "es": "Paquetes actualizados",
-        "pl": "Aktualizacja pakietów",
-        "uk": "Оновлені пакети",
-        "zh-cn": "更新软件包"
-      },
-      "2.1.1": {
-        "en": "Removed withStyles package",
-        "de": "MitStyles-Paket entfernt",
-        "ru": "Удаленный пакет со Стайлз",
-        "pt": "Removido com pacote Estilos",
-        "nl": "Verwijderd metStyles pakket",
-        "fr": "Enlever avec le paquetStyles",
-        "it": "Rimosso con pacchettoStyles",
-        "es": "Retire el paquete de estilos",
-        "pl": "Usunięty z pakietem Styles",
-        "uk": "Видаліть пакет \"Стиль\"",
-        "zh-cn": "用 Styles 软件包删除"
-      },
-      "2.0.8": {
-        "en": "Packages updated\nAllowed selecting another source (with bigger resolution) for URL cameras",
-        "de": "Pakete aktualisiert\nErlaubte Auswahl einer anderen Quelle (mit größerer Auflösung) für URL-Kameras",
-        "ru": "Обновленные пакеты\nПозволяет выбрать другой источник (с большим разрешением) для камер URL",
-        "pt": "Pacotes atualizados\nPermite selecionar outra fonte (com maior resolução) para câmeras URL",
-        "nl": "Pakketten bijgewerkt\nToegestaan om een andere bron (met grotere resolutie) voor URL-camera's te selecteren",
-        "fr": "Mise à jour des paquets\nPermet de sélectionner une autre source (avec une plus grande résolution) pour les caméras URL",
-        "it": "Pacchetti aggiornati\nConsente di selezionare un'altra fonte (con risoluzione più grande) per le telecamere URL",
-        "es": "Paquetes actualizados\nPermitido seleccionar otra fuente (con mayor resolución) para las cámaras URL",
-        "pl": "Aktualizacja pakietów\nDozwolone wybranie innego źródła (o większej rozdzielczości) dla kamer URL",
-        "uk": "Пакети оновлені\nДозволяє вибрати інший джерело (з великою роздільною здатністю) для фотокамер URL",
-        "zh-cn": "更新软件包\n允许为 URL 相机选择另一个源( 分辨率更大)"
-      },
-      "2.0.5": {
-        "en": "Minimal supported NodeJS version is 18\nCorrected widgets",
-        "de": "Minimal unterstützt NodeJS-Version ist 18\nKorrigierte Widgets",
-        "ru": "Минимальная поддержка Версия NodeJS 18\nИсправленные виджеты",
-        "pt": "Minimal suportado NodeJS versão é 18\nWidgets corrigidos",
-        "nl": "Minimale ondersteuning NodeJS versie 18\nVertaling:",
-        "fr": "Support minimal NodeJS version is 18\nWidgets corrigés",
-        "it": "Minimal supportato NodeJS versione è 18\nWidget corretti",
-        "es": "Soporte mínimo NodeJS versión es 18\nWidgets corregidos",
-        "pl": "Minimalny Wersja NodeJS wynosi 18\nPoprawiony widget",
-        "uk": "Мінімалістична підтримка Версія NodeJS - 18\nВиправлені віджети",
-        "zh-cn": "明米支助 未提交法院的版本 18\n伤势"
-      },
-      "1.4.0": {
-        "en": "Changed widget set name\nAdded the caching of images with time, size and rotation\nAdded timeout for RTSP cameras",
-        "de": "Geänderter Widget-Setname\nHinzufügen des Caches von Bildern mit Zeit, Größe und Rotation\nTimeout für RTSP-Kameras hinzugefügt",
-        "ru": "Изменено имя виджета\nДобавлен кэширование изображений со временем, размером и поворотом\nДобавлена таймаут для RTSP камер",
-        "pt": "Nome do conjunto de widget alterado\nAdicionado o cache de imagens com tempo, tamanho e rotação\nAdicionado timeout para câmeras RTSP",
-        "nl": "Veranderde Widgets naam\nVoeg de beelden toe met tijd, grootte en rotatie\nVertaling:",
-        "fr": "Nom du jeu de widget modifié\nAjout du cache des images avec le temps, la taille et la rotation\nAjout du timeout pour les caméras RTSP",
-        "it": "Modificato nome del set widget\nAggiunto il caching di immagini con tempo, dimensione e rotazione\nTimeout aggiunto per telecamere RTSP",
-        "es": "Nombre del widget cambiado\nAñadido el caché de imágenes con tiempo, tamaño y rotación\nTiempo de salida adicional para las cámaras RTSP",
-        "pl": "Zmiana widget\nDodać do nich obrazy z czasem, rozmiarami i rotacją\nDodany czas na kamery RTSP",
-        "uk": "Змінено назву набір віджетів\nДодано кешування зображень з часом, розміром і обертанням\nДодано розклад для RTSP камери",
-        "zh-cn": "B. 改变目标的名称\n增加图像时、规模和轮换\n增聘了RTSP摄像时间"
-      },
-      "1.3.0": {
-        "en": "Utilized the new js-controller feature: sendToUI. RTSP Streaming works only with js-controller 5.0.13 or higher\nImplemented a second widget for simple cameras",
-        "de": "Verwenden Sie die neue js-Controller-Funktion: sendToUI. FTE Streaming funktioniert nur mit js-controller 5.0.13 oder höher\nImplementiert ein zweites Widget für einfache Kameras",
-        "ru": "Использование новой функции JS-контроллера: sendToUI. РТСП Потоковые работы только с js-controller 5.0.13 или выше\nРеализован второй виджет для простых камер",
-        "pt": "Utilizado o novo recurso js-controller: sendToUI. RT RT RT RT RT RT RT RT RT RT RT Streaming funciona apenas com js-controller 5.0.13 ou superior\nImplementado um segundo widget para câmeras simples",
-        "nl": "Gebruikte het nieuwe JS-controller kenmerk: stuur ToUI. RTP Streaming werkt alleen met Js-controller 5.013 of hoger\nEen tweede widget voor eenvoudige camera's",
-        "fr": "Utilisé la nouvelle fonction js-controller: sendToUI. RTSP Le streaming fonctionne uniquement avec js-controller 5.0.13 ou supérieur\nMise en œuvre d'un deuxième widget pour les caméras simples",
-        "it": "Utilizzato la nuova funzione js-controller: sendToUI. NT1 Streaming funziona solo con js-controller 5.0.13 o superiore\nImplementato un secondo widget per semplici telecamere",
-        "es": "Utilizó la nueva función js-controller: sendToUI. RTSP Streaming funciona sólo con js-controller 5.0.13 o superior\nImplementado un segundo widget para cámaras simples",
-        "pl": "Utilizował nowy system sterowania js: wysyła ToUI. RTSP Streaming działa tylko z kontrolerem 5.0.13 lub wyższym\nPoprawiono drugi widget dla zwykłych kamer",
-        "uk": "Утилізовано нову функцію js-controller: sendToUI. РТСП Потокові роботи тільки з js-controller 5.0.13 або вище\nРеалізовано другий віджет для простих камер",
-        "zh-cn": "利用新的控制容忍特点:派遣ToUI。 RTSP 精简工作只与控制力行5.13或更高。\n对简单的摄像器实施第二发目标"
-      },
-      "1.2.3": {
-        "en": "Added WiWiCam MW1 and HiKam cameras",
-        "de": "WiWiCam MW1 und HiKam Kameras hinzugefügt",
-        "ru": "Добавлены WiWiCam MW1 и HiKam камеры",
-        "pt": "Adicionado WiWiCam MW1 e HiKam câmeras",
-        "nl": "Vertaling:",
-        "fr": "Ajout de caméras WiWiCam MW1 et HiKam",
-        "it": "Aggiunte WiWiCam MW1 e HiKam telecamere",
-        "es": "Cámaras WiWiCam MW1 y HiKam",
-        "pl": "Added WiWiCam MW1 i HiKam camera",
-        "uk": "Додано відеокамери WiWiCam MW1 і HiKam",
-        "zh-cn": "添加WiCam MW1和HKam摄像机"
-      }
+    "common": {
+        "name": "cameras",
+        "version": "2.1.2",
+        "news": {
+            "2.1.2": {
+                "en": "Updated packages",
+                "de": "Aktualisierte Pakete",
+                "ru": "Обновленные пакеты",
+                "pt": "Pacotes atualizados",
+                "nl": "Bijgewerkte pakketten",
+                "fr": "Paquets mis à jour",
+                "it": "Pacchetti aggiornati",
+                "es": "Paquetes actualizados",
+                "pl": "Aktualizacja pakietów",
+                "uk": "Оновлені пакети",
+                "zh-cn": "更新软件包"
+            },
+            "2.1.1": {
+                "en": "Removed withStyles package",
+                "de": "MitStyles-Paket entfernt",
+                "ru": "Удаленный пакет со Стайлз",
+                "pt": "Removido com pacote Estilos",
+                "nl": "Verwijderd metStyles pakket",
+                "fr": "Enlever avec le paquetStyles",
+                "it": "Rimosso con pacchettoStyles",
+                "es": "Retire el paquete de estilos",
+                "pl": "Usunięty z pakietem Styles",
+                "uk": "Видаліть пакет \"Стиль\"",
+                "zh-cn": "用 Styles 软件包删除"
+            },
+            "2.0.8": {
+                "en": "Packages updated\nAllowed selecting another source (with bigger resolution) for URL cameras",
+                "de": "Pakete aktualisiert\nErlaubte Auswahl einer anderen Quelle (mit größerer Auflösung) für URL-Kameras",
+                "ru": "Обновленные пакеты\nПозволяет выбрать другой источник (с большим разрешением) для камер URL",
+                "pt": "Pacotes atualizados\nPermite selecionar outra fonte (com maior resolução) para câmeras URL",
+                "nl": "Pakketten bijgewerkt\nToegestaan om een andere bron (met grotere resolutie) voor URL-camera's te selecteren",
+                "fr": "Mise à jour des paquets\nPermet de sélectionner une autre source (avec une plus grande résolution) pour les caméras URL",
+                "it": "Pacchetti aggiornati\nConsente di selezionare un'altra fonte (con risoluzione più grande) per le telecamere URL",
+                "es": "Paquetes actualizados\nPermitido seleccionar otra fuente (con mayor resolución) para las cámaras URL",
+                "pl": "Aktualizacja pakietów\nDozwolone wybranie innego źródła (o większej rozdzielczości) dla kamer URL",
+                "uk": "Пакети оновлені\nДозволяє вибрати інший джерело (з великою роздільною здатністю) для фотокамер URL",
+                "zh-cn": "更新软件包\n允许为 URL 相机选择另一个源( 分辨率更大)"
+            },
+            "2.0.5": {
+                "en": "Minimal supported NodeJS version is 18\nCorrected widgets",
+                "de": "Minimal unterstützt NodeJS-Version ist 18\nKorrigierte Widgets",
+                "ru": "Минимальная поддержка Версия NodeJS 18\nИсправленные виджеты",
+                "pt": "Minimal suportado NodeJS versão é 18\nWidgets corrigidos",
+                "nl": "Minimale ondersteuning NodeJS versie 18\nVertaling:",
+                "fr": "Support minimal NodeJS version is 18\nWidgets corrigés",
+                "it": "Minimal supportato NodeJS versione è 18\nWidget corretti",
+                "es": "Soporte mínimo NodeJS versión es 18\nWidgets corregidos",
+                "pl": "Minimalny Wersja NodeJS wynosi 18\nPoprawiony widget",
+                "uk": "Мінімалістична підтримка Версія NodeJS - 18\nВиправлені віджети",
+                "zh-cn": "明米支助 未提交法院的版本 18\n伤势"
+            },
+            "1.4.0": {
+                "en": "Changed widget set name\nAdded the caching of images with time, size and rotation\nAdded timeout for RTSP cameras",
+                "de": "Geänderter Widget-Setname\nHinzufügen des Caches von Bildern mit Zeit, Größe und Rotation\nTimeout für RTSP-Kameras hinzugefügt",
+                "ru": "Изменено имя виджета\nДобавлен кэширование изображений со временем, размером и поворотом\nДобавлена таймаут для RTSP камер",
+                "pt": "Nome do conjunto de widget alterado\nAdicionado o cache de imagens com tempo, tamanho e rotação\nAdicionado timeout para câmeras RTSP",
+                "nl": "Veranderde Widgets naam\nVoeg de beelden toe met tijd, grootte en rotatie\nVertaling:",
+                "fr": "Nom du jeu de widget modifié\nAjout du cache des images avec le temps, la taille et la rotation\nAjout du timeout pour les caméras RTSP",
+                "it": "Modificato nome del set widget\nAggiunto il caching di immagini con tempo, dimensione e rotazione\nTimeout aggiunto per telecamere RTSP",
+                "es": "Nombre del widget cambiado\nAñadido el caché de imágenes con tiempo, tamaño y rotación\nTiempo de salida adicional para las cámaras RTSP",
+                "pl": "Zmiana widget\nDodać do nich obrazy z czasem, rozmiarami i rotacją\nDodany czas na kamery RTSP",
+                "uk": "Змінено назву набір віджетів\nДодано кешування зображень з часом, розміром і обертанням\nДодано розклад для RTSP камери",
+                "zh-cn": "B. 改变目标的名称\n增加图像时、规模和轮换\n增聘了RTSP摄像时间"
+            },
+            "1.3.0": {
+                "en": "Utilized the new js-controller feature: sendToUI. RTSP Streaming works only with js-controller 5.0.13 or higher\nImplemented a second widget for simple cameras",
+                "de": "Verwenden Sie die neue js-Controller-Funktion: sendToUI. FTE Streaming funktioniert nur mit js-controller 5.0.13 oder höher\nImplementiert ein zweites Widget für einfache Kameras",
+                "ru": "Использование новой функции JS-контроллера: sendToUI. РТСП Потоковые работы только с js-controller 5.0.13 или выше\nРеализован второй виджет для простых камер",
+                "pt": "Utilizado o novo recurso js-controller: sendToUI. RT RT RT RT RT RT RT RT RT RT RT Streaming funciona apenas com js-controller 5.0.13 ou superior\nImplementado um segundo widget para câmeras simples",
+                "nl": "Gebruikte het nieuwe JS-controller kenmerk: stuur ToUI. RTP Streaming werkt alleen met Js-controller 5.013 of hoger\nEen tweede widget voor eenvoudige camera's",
+                "fr": "Utilisé la nouvelle fonction js-controller: sendToUI. RTSP Le streaming fonctionne uniquement avec js-controller 5.0.13 ou supérieur\nMise en œuvre d'un deuxième widget pour les caméras simples",
+                "it": "Utilizzato la nuova funzione js-controller: sendToUI. NT1 Streaming funziona solo con js-controller 5.0.13 o superiore\nImplementato un secondo widget per semplici telecamere",
+                "es": "Utilizó la nueva función js-controller: sendToUI. RTSP Streaming funciona sólo con js-controller 5.0.13 o superior\nImplementado un segundo widget para cámaras simples",
+                "pl": "Utilizował nowy system sterowania js: wysyła ToUI. RTSP Streaming działa tylko z kontrolerem 5.0.13 lub wyższym\nPoprawiono drugi widget dla zwykłych kamer",
+                "uk": "Утилізовано нову функцію js-controller: sendToUI. РТСП Потокові роботи тільки з js-controller 5.0.13 або вище\nРеалізовано другий віджет для простих камер",
+                "zh-cn": "利用新的控制容忍特点:派遣ToUI。 RTSP 精简工作只与控制力行5.13或更高。\n对简单的摄像器实施第二发目标"
+            },
+            "1.2.3": {
+                "en": "Added WiWiCam MW1 and HiKam cameras",
+                "de": "WiWiCam MW1 und HiKam Kameras hinzugefügt",
+                "ru": "Добавлены WiWiCam MW1 и HiKam камеры",
+                "pt": "Adicionado WiWiCam MW1 e HiKam câmeras",
+                "nl": "Vertaling:",
+                "fr": "Ajout de caméras WiWiCam MW1 et HiKam",
+                "it": "Aggiunte WiWiCam MW1 e HiKam telecamere",
+                "es": "Cámaras WiWiCam MW1 y HiKam",
+                "pl": "Added WiWiCam MW1 i HiKam camera",
+                "uk": "Додано відеокамери WiWiCam MW1 і HiKam",
+                "zh-cn": "添加WiCam MW1和HKam摄像机"
+            }
+        },
+        "title": "IP-Cameras",
+        "titleLang": {
+            "en": "IP-Cameras",
+            "de": "IP-Kameras",
+            "ru": "IP-камера",
+            "pt": "Câmeras IP",
+            "nl": "IP-camera's",
+            "fr": "Caméras IP",
+            "it": "Telecamere IP",
+            "es": "Cámaras IP",
+            "pl": "Kamery IP",
+            "zh-cn": "IP摄像机"
+        },
+        "desc": {
+            "en": "Connect IP-cameras to iobroker",
+            "de": "Schließen Sie IP-Kameras an iobroker an",
+            "ru": "Подключите IP-камеры к iobroker",
+            "pt": "Conecte câmeras IP ao iobroker",
+            "nl": "Verbind IP-camera's met iobroker",
+            "fr": "Connectez des caméras IP à iobroker",
+            "it": "Collegare le telecamere IP a iobroker",
+            "es": "Conecte cámaras IP a iobroker",
+            "pl": "Podłącz kamery IP do iobroker",
+            "zh-cn": "将IP摄像机连接到iobroker"
+        },
+        "authors": ["bluefox <dogafox@gmail.com>"],
+        "keywords": ["ip-cam", "web-cam", "video"],
+        "licenseInformation": {
+            "type": "free",
+            "license": "MIT"
+        },
+        "platform": "Javascript/Node.js",
+        "icon": "cameras.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.cameras/master/admin/cameras.png",
+        "readme": "https://github.com/ioBroker/ioBroker.cameras/blob/master/README.md",
+        "loglevel": "info",
+        "webExtension": "lib/web.js",
+        "mode": "daemon",
+        "type": "multimedia",
+        "adminUI": {
+            "config": "materialize"
+        },
+        "compact": true,
+        "messagebox": true,
+        "materialize": true,
+        "subscribable": true,
+        "eraseOnUpload": true,
+        "stopBeforeUpdate": true,
+        "tier": 3,
+        "dependencies": [
+            {
+                "js-controller": ">=3.1.4",
+                "web": ">=2.0.0"
+            }
+        ],
+        "osDependencies": {
+            "linux": ["ffmpeg"]
+        },
+        "connectionType": "local",
+        "dataSource": "poll",
+        "plugins": {
+            "sentry": {
+                "dsn": "https://4559263b70ec40af801ccd777f5a79e6@sentry.iobroker.net/231"
+            }
+        },
+        "visWidgets": {
+            "vis2CameraWidgets": {
+                "i18n": "component",
+                "name": "vis2CameraWidgets",
+                "url": "cameras/customWidgets.js",
+                "color": "#508000",
+                "label": "cameras_set_label",
+                "components": ["RtspCamera", "SnapshotCamera"]
+            }
+        },
+        "restartAdapters": ["vis-2"]
     },
-    "title": "IP-Cameras",
-    "titleLang": {
-      "en": "IP-Cameras",
-      "de": "IP-Kameras",
-      "ru": "IP-камера",
-      "pt": "Câmeras IP",
-      "nl": "IP-camera's",
-      "fr": "Caméras IP",
-      "it": "Telecamere IP",
-      "es": "Cámaras IP",
-      "pl": "Kamery IP",
-      "zh-cn": "IP摄像机"
-    },
-    "desc": {
-      "en": "Connect IP-cameras to iobroker",
-      "de": "Schließen Sie IP-Kameras an iobroker an",
-      "ru": "Подключите IP-камеры к iobroker",
-      "pt": "Conecte câmeras IP ao iobroker",
-      "nl": "Verbind IP-camera's met iobroker",
-      "fr": "Connectez des caméras IP à iobroker",
-      "it": "Collegare le telecamere IP a iobroker",
-      "es": "Conecte cámaras IP a iobroker",
-      "pl": "Podłącz kamery IP do iobroker",
-      "zh-cn": "将IP摄像机连接到iobroker"
-    },
-    "authors": [
-      "bluefox <dogafox@gmail.com>"
-    ],
-    "keywords": [
-      "ip-cam",
-      "web-cam",
-      "video"
-    ],
-    "licenseInformation": {
-      "type": "free",
-      "license": "MIT"
-    },
-    "platform": "Javascript/Node.js",
-    "icon": "cameras.png",
-    "enabled": true,
-    "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.cameras/master/admin/cameras.png",
-    "readme": "https://github.com/ioBroker/ioBroker.cameras/blob/master/README.md",
-    "loglevel": "info",
-    "webExtension": "lib/web.js",
-    "mode": "daemon",
-    "type": "multimedia",
-    "adminUI": {
-      "config": "materialize"
-    },
-    "compact": true,
-    "messagebox": true,
-    "materialize": true,
-    "subscribable": true,
-    "eraseOnUpload": true,
-    "stopBeforeUpdate": true,
-    "tier": 3,
-    "dependencies": [
-      {
-        "js-controller": ">=3.1.4",
-        "web": ">=2.0.0"
-      }
-    ],
-    "osDependencies": {
-      "linux": [
-        "ffmpeg"
-      ]
-    },
-    "connectionType": "local",
-    "dataSource": "poll",
-    "plugins": {
-      "sentry": {
-        "dsn": "https://4559263b70ec40af801ccd777f5a79e6@sentry.iobroker.net/231"
-      }
-    },
-    "visWidgets": {
-      "vis2CameraWidgets": {
-        "i18n": "component",
-        "name": "vis2CameraWidgets",
-        "url": "cameras/customWidgets.js",
-        "color": "#508000",
-        "label": "cameras_set_label",
-        "components": [
-          "RtspCamera",
-          "SnapshotCamera"
+    "native": {
+        "bind": "127.0.0.1",
+        "port": 8200,
+        "key": "",
+        "webInstance": "*",
+        "defaultTimeout": 5000,
+        "defaultCacheTimeout": 100,
+        "allowIPs": "",
+        "ffmpegPath": "/usr/bin/ffmpeg",
+        "tempPath": "",
+        "dateFormat": "LTS",
+        "language": "",
+        "cameras": [
+            {
+                "name": "cam1",
+                "type": "url",
+                "url": "https://raw.githubusercontent.com/ioBroker/ioBroker.admin/master/admin/admin.png"
+            }
         ]
-      }
     },
-    "restartAdapters": [
-      "vis-2"
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "",
+            "type": "meta",
+            "common": {
+                "name": "Cameras",
+                "type": "meta.user"
+            },
+            "native": {}
+        }
     ]
-  },
-  "native": {
-    "bind": "127.0.0.1",
-    "port": 8200,
-    "key": "",
-    "webInstance": "*",
-    "defaultTimeout": 5000,
-    "defaultCacheTimeout": 100,
-    "allowIPs": "",
-    "ffmpegPath": "/usr/bin/ffmpeg",
-    "tempPath": "",
-    "dateFormat": "LTS",
-    "language": "",
-    "cameras": [
-      {
-        "name": "cam1",
-        "type": "url",
-        "url": "https://raw.githubusercontent.com/ioBroker/ioBroker.admin/master/admin/admin.png"
-      }
-    ]
-  },
-  "objects": [],
-  "instanceObjects": [
-    {
-      "_id": "",
-      "type": "meta",
-      "common": {
-        "name": "Cameras",
-        "type": "meta.user"
-      },
-      "native": {}
-    }
-  ]
 }

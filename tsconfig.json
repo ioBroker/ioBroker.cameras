@@ -24,7 +24,7 @@
         // "noUnusedLocals": true,
         // "noUnusedParameters": true,
 
-        // Consider targetting es2017 or higher if you require the new NodeJS 8+ features
+        // Consider targeting es2017 or higher if you require the new Node.js 8+ features
         "target": "es2015"
 
     },
@@ -35,7 +35,7 @@
     "exclude": [
         "node_modules/**",
         "admin/**",
-        "src/**",
+      "src-admin/**",
         "src-widgets/**"
     ]
 }
