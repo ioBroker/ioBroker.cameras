@@ -6,7 +6,7 @@
  **/
 'use strict';
 
-const fs = require('fs');
+const fs = require('node:fs');
 const adapterName = require('./package.json').name.replace('iobroker.', '');
 const buildHelper = require('@iobroker/vis-2-widgets-react-dev/buildHelper');
 const { deleteFoldersRecursive, buildReact, npmInstall, copyFiles, patchHtmlFile } = require('@iobroker/build-tools');
@@ -43,7 +43,7 @@ async function widgetsCopyAllFiles() {
         ...ignore,
     ], `widgets/${adapterName}/static`);
 
-    //copyFiles(copy, `widgets/${adapterName}/static/js`);
+    copyFiles(copy, `widgets/${adapterName}/static/js`);
     copyFiles([`${__dirname}/src-widgets/src/i18n/*.json`], `widgets/${adapterName}/i18n`);
 
     await new Promise(resolve =>

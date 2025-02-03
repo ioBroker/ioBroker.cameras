@@ -13,6 +13,7 @@ import {
     type IobTheme,
 } from '@iobroker/adapter-react-v5';
 import type { CamerasAdapterConfig } from '../types';
+import InfoBox from '../components/InfoBox';
 
 const styles: Record<string, React.CSSProperties> = {
     tab: {
@@ -31,7 +32,7 @@ const styles: Record<string, React.CSSProperties> = {
         width: 150,
     },
     ffmpegPath: {
-        width: 450,
+        width: 464,
     },
     link: {
         color: 'inherit',
@@ -174,9 +175,19 @@ class Options extends Component<OptionsProps, OptionsState> {
         });
     }
 
-    renderSettings(): React.JSX.Element[] {
-        return [
-            this.state.ips && this.state.ips.length ? (
+    renderSettings(): React.JSX.Element {
+        return (
+            <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                <InfoBox
+                    key="info1"
+                    type="info"
+                    closeable
+                    style={{ color: this.props.theme.palette.mode === 'dark' ? '#FFF' : '#000' }}
+                    storeId="cameras.port"
+                >
+                    {I18n.t('port_explanation')}
+                </InfoBox>
+                {/* this.state.ips?.length ? (
                 <FormControl
                     key="bindSelect"
                     style={styles.bind}
@@ -200,7 +211,7 @@ class Options extends Component<OptionsProps, OptionsState> {
                         ))}
                     </Select>
                 </FormControl>
-            ) : (
+                ) : (
                 <TextField
                     variant="standard"
                     disabled={this.state.requesting}
@@ -210,140 +221,150 @@ class Options extends Component<OptionsProps, OptionsState> {
                     value={this.props.native.bind}
                     onChange={e => this.props.onChange('bind', e.target.value)}
                 />
-            ),
-            <TextField
-                variant="standard"
-                disabled={this.state.requesting}
-                key="port"
-                type="number"
-                slotProps={{
-                    htmlInput: {
-                        min: 1,
-                        max: 0xffff,
-                    },
-                }}
-                style={styles.port}
-                label={I18n.t('Local port')}
-                value={this.props.native.port}
-                onChange={e => this.props.onChange('port', e.target.value)}
-            />,
-            <br key="br1" />,
-            <TextField
-                variant="standard"
-                disabled={this.state.requesting}
-                key="defaultTimeout"
-                type="number"
-                slotProps={{
-                    htmlInput: {
-                        min: 1,
-                        max: 10000,
-                    },
-                }}
-                style={styles.defaultTimeout}
-                label={I18n.t('Default timeout (ms)')}
-                value={this.props.native.defaultTimeout}
-                onChange={e => this.props.onChange('defaultTimeout', e.target.value)}
-            />,
-            <br key="br2" />,
-            <FormControl
-                key="webInstanceSelect"
-                style={styles.bind}
-                variant="standard"
-            >
-                <InputLabel>{I18n.t('WEB Instance')}</InputLabel>
-                <Select
+                )*/}
+                <div style={{ display: 'flex', gap: 8 }}>
+                    <TextField
+                        variant="standard"
+                        disabled={this.state.requesting}
+                        key="port"
+                        type="number"
+                        slotProps={{
+                            htmlInput: {
+                                min: 1,
+                                max: 0xffff,
+                            },
+                        }}
+                        style={styles.port}
+                        label={I18n.t('Local port')}
+                        value={this.props.native.port}
+                        onChange={e => this.props.onChange('port', e.target.value)}
+                    />
+                    <TextField
+                        variant="standard"
+                        disabled={this.state.requesting}
+                        key="defaultTimeout"
+                        type="number"
+                        slotProps={{
+                            htmlInput: {
+                                min: 1,
+                                max: 10000,
+                            },
+                        }}
+                        style={styles.defaultTimeout}
+                        label={I18n.t('Default timeout (ms)')}
+                        value={this.props.native.defaultTimeout}
+                        onChange={e => this.props.onChange('defaultTimeout', e.target.value)}
+                    />
+                    <FormControl
+                        key="webInstanceSelect"
+                        style={styles.bind}
+                        variant="standard"
+                    >
+                        <InputLabel>{I18n.t('WEB Instance')}</InputLabel>
+                        <Select
+                            variant="standard"
+                            disabled={this.state.requesting}
+                            value={this.props.native.webInstance}
+                            onChange={e => this.props.onChange('webInstance', e.target.value)}
+                        >
+                            <MenuItem value="*">{I18n.t('All')}</MenuItem>
+                            {this.state.webInstances
+                                ? this.state.webInstances.map(instance => (
+                                      <MenuItem
+                                          key={instance}
+                                          value={instance}
+                                      >
+                                          {instance}
+                                      </MenuItem>
+                                  ))
+                                : null}
+                        </Select>
+                    </FormControl>
+                </div>
+                <InfoBox
+                    key="info1"
+                    type="info"
+                    closeable
+                    style={{ color: this.props.theme.palette.mode === 'dark' ? '#FFF' : '#000' }}
+                    storeId="cameras.ffmpeg"
+                >
+                    {I18n.t('ffmpeg_explanation')}
+                </InfoBox>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'baseline' }}>
+                    <TextField
+                        variant="standard"
+                        disabled={this.state.requesting}
+                        key="ffmpegPath"
+                        style={styles.ffmpegPath}
+                        label={I18n.t('Path to ffpmeg executable')}
+                        value={this.props.native.ffmpegPath || ''}
+                        onChange={e => this.props.onChange('ffmpegPath', e.target.value)}
+                        helperText={I18n.t('Like /usr/bin/ffmpeg')}
+                    />
+                    <Button
+                        key="ffmpegPathButton"
+                        color="grey"
+                        variant="outlined"
+                        onClick={() => this.onTestFfmpeg()}
+                        disabled={!this.props.instanceAlive || this.state.requesting}
+                        startIcon={<IconTest />}
+                    >
+                        {I18n.t('Test path')}
+                    </Button>
+                </div>
+                <TextField
                     variant="standard"
                     disabled={this.state.requesting}
-                    value={this.props.native.webInstance}
-                    onChange={e => this.props.onChange('webInstance', e.target.value)}
-                >
-                    <MenuItem value="*">{I18n.t('All')}</MenuItem>
-                    {this.state.webInstances
-                        ? this.state.webInstances.map(instance => (
-                              <MenuItem
-                                  key={instance}
-                                  value={instance}
-                              >
-                                  {instance}
-                              </MenuItem>
-                          ))
-                        : null}
-                </Select>
-            </FormControl>,
-            <br key="br3" />,
-            <TextField
-                variant="standard"
-                disabled={this.state.requesting}
-                key="ffmpegPath"
-                style={styles.ffmpegPath}
-                label={I18n.t('Path to ffpmeg executable')}
-                value={this.props.native.ffmpegPath || ''}
-                onChange={e => this.props.onChange('ffmpegPath', e.target.value)}
-                helperText={I18n.t('Like /usr/bin/ffmpeg')}
-            />,
-            <Button
-                key="ffmpegPathButton"
-                color="grey"
-                variant="outlined"
-                onClick={() => this.onTestFfmpeg()}
-                disabled={!this.props.instanceAlive || this.state.requesting}
-                startIcon={<IconTest />}
-            >
-                {I18n.t('Test path')}
-            </Button>,
-            <br key="br4" />,
-            <TextField
-                variant="standard"
-                disabled={this.state.requesting}
-                key="tempPath"
-                style={styles.ffmpegPath}
-                label={I18n.t('Path to store temporary images')}
-                value={this.props.native.tempPath || ''}
-                onChange={e => this.props.onChange('tempPath', e.target.value)}
-                helperText={I18n.t('If empty then in adapter folder')}
-            />,
-            <br key="br5" />,
-            <TextField
-                variant="standard"
-                disabled={this.state.requesting}
-                key="defaultCacheTimeout"
-                style={styles.ffmpegPath}
-                label={I18n.t('Default cache timeout (ms)')}
-                slotProps={{
-                    htmlInput: {
-                        min: 0,
-                        max: 60000,
-                    },
-                }}
-                type="number"
-                value={this.props.native.defaultCacheTimeout || ''}
-                onChange={e => this.props.onChange('defaultCacheTimeout', e.target.value)}
-                helperText={I18n.t('How often the cameras will be asked for new snapshot. If 0, then by every request')}
-            />,
-            <br key="br6" />,
-            <TextField
-                variant="standard"
-                disabled={this.state.requesting}
-                key="dateFormat"
-                style={styles.ffmpegPath}
-                label={I18n.t('Time format')}
-                value={this.props.native.dateFormat || ''}
-                onChange={e => this.props.onChange('dateFormat', e.target.value)}
-                helperText={
-                    <span>
-                        {I18n.t('See here:')}{' '}
-                        <a
-                            href="https://momentjs.com/docs/#/displaying/"
-                            rel="noreferrer"
-                            target="_blank"
-                            style={styles.link}
-                        >
-                            https://momentjs.com/
-                        </a>
-                    </span>
-                }
-            />,
-        ];
+                    key="tempPath"
+                    style={styles.ffmpegPath}
+                    label={I18n.t('Path to store temporary images')}
+                    value={this.props.native.tempPath || ''}
+                    onChange={e => this.props.onChange('tempPath', e.target.value)}
+                    helperText={I18n.t('If empty then in adapter folder')}
+                />
+                <TextField
+                    variant="standard"
+                    disabled={this.state.requesting}
+                    key="defaultCacheTimeout"
+                    style={styles.ffmpegPath}
+                    label={I18n.t('Default cache timeout (ms)')}
+                    slotProps={{
+                        htmlInput: {
+                            min: 0,
+                            max: 60000,
+                        },
+                    }}
+                    type="number"
+                    value={this.props.native.defaultCacheTimeout || ''}
+                    onChange={e => this.props.onChange('defaultCacheTimeout', e.target.value)}
+                    helperText={I18n.t(
+                        'How often the cameras will be asked for new snapshot. If 0, then by every request',
+                    )}
+                />
+                <TextField
+                    variant="standard"
+                    disabled={this.state.requesting}
+                    key="dateFormat"
+                    style={styles.ffmpegPath}
+                    label={I18n.t('Time format')}
+                    value={this.props.native.dateFormat || ''}
+                    onChange={e => this.props.onChange('dateFormat', e.target.value)}
+                    helperText={
+                        <span>
+                            {I18n.t('See here:')}{' '}
+                            <a
+                                href="https://momentjs.com/docs/#/displaying/"
+                                rel="noreferrer"
+                                target="_blank"
+                                style={styles.link}
+                            >
+                                https://momentjs.com/
+                            </a>
+                        </span>
+                    }
+                />
+            </div>
+        );
     }
 
     renderMessage(): React.JSX.Element | null {
@@ -373,7 +394,6 @@ class Options extends Component<OptionsProps, OptionsState> {
                     onLoad={this.props.onLoad}
                 />
                 {this.renderSettings()}
-                <br />
                 {this.renderHint()}
                 {this.renderToast()}
                 {this.renderMessage()}

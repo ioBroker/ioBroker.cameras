@@ -16,12 +16,12 @@ If you configure a camera with name `cam1` it will be available on
 web server under `http(s)://iobroker-IP:8082/cameras.0/cam1`.
 
 Additionally, the image could be requested via a message:
-```
+```js
 sendTo('cameras.0', 'image', {
     name: 'cam1', 
     width: 100, // optional 
     height: 50, // optional
-    angle: 90   // optional
+    angle: 90,   // optional
     noCache: true // optional, if you want to get the image not from cache
 }, result => {
     const img = 'data:' + result.contentType + ';base64,' + result.data;
