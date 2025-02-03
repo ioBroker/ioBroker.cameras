@@ -40,12 +40,11 @@ class CamerasAdapter extends adapter_core_1.Adapter {
                 }
                 this.onClientUnsubscribe(clientId, message);
             },
+            unload: callback => this.onUnload(callback),
+            message: obj => this.onMessage(obj),
+            stateChange: (id, state) => this.onStateChange(id, state),
+            ready: () => this.main(),
         });
-        this.on('ready', () => this.main());
-        this.on('stateChange', (id, state) => this.onStateChange(id, state));
-        // this.on('objectChange', (id, object) => this.onObjectChange(id, object));
-        this.on('unload', callback => this.onUnload(callback));
-        this.on('message', this.onMessage.bind(this));
     }
     onStateChange(id, state) {
         if (state && !state.ack && id.endsWith('.running') && id.startsWith(this.namespace)) {
@@ -54,7 +53,9 @@ class CamerasAdapter extends adapter_core_1.Adapter {
             if (this.cameras[camera]) {
                 if (state.val) {
                     try {
-                        this.cameras[camera].startWebStream();
+                        this.cameras[camera]
+                            .startWebStream()
+                            .catch(e => this.log.error(`Cannot start camera ${camera}: ${e}`));
                     }
                     catch (e) {
                         this.log.error(`Cannot start camera ${camera}: ${e}`);
@@ -62,7 +63,9 @@ class CamerasAdapter extends adapter_core_1.Adapter {
                 }
                 else {
                     this.log.debug(`Stop camera ${camera}`);
-                    this.cameras[camera].stopWebStream();
+                    this.cameras[camera]
+                        .stopWebStream()
+                        .catch(e => this.log.error(`Cannot stop camera ${camera}: ${e}`));
                 }
             }
         }

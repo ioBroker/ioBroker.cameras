@@ -1,6 +1,6 @@
 import { type JSX, Component } from 'react';
 import type { AdminConnection, IobTheme, ThemeType } from '@iobroker/adapter-react-v5';
-import type { CameraAdapterConfig } from '../types';
+import type { CamerasAdapterConfig } from '../types';
 
 export interface ConfigProps<T> {
     onChange: (
@@ -13,7 +13,7 @@ export interface ConfigProps<T> {
         T,
         'name' | 'type' | 'desc' | 'timeout' | 'cacheTimeout' | 'addTime' | 'title' | 'id' | 'enabled' | 'rtsp'
     >;
-    native: CameraAdapterConfig;
+    native: CamerasAdapterConfig;
     decrypt: (text: string, callback: (decrypted: string) => void) => void;
     encrypt: (text: string, callback: (encrypted: string) => void) => void;
     theme: IobTheme;

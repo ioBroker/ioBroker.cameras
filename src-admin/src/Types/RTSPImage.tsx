@@ -112,7 +112,12 @@ export default class RTSPImageConfig extends ConfigGeneric<CameraConfigRtsp, { u
         });
     }
 
-    buildCommand(options: Omit<CameraConfigRtsp, 'type' | 'name'>): string[] {
+    buildCommand(
+        options: Omit<
+            CameraConfigRtsp,
+            'name' | 'type' | 'desc' | 'timeout' | 'cacheTimeout' | 'addTime' | 'id' | 'title' | 'enabled' | 'rtsp'
+        >,
+    ): string[] {
         const parameters = ['-y'];
         options.prefix && parameters.push(options.prefix);
         parameters.push('-rtsp_transport');

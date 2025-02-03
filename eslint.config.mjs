@@ -16,7 +16,9 @@ export default [
     {
         ignores: [
             'src-admin/**/*',
+            'src-widgets/**/*',
             'admin/**/*',
+            'widgets/**/*',
             'node_modules/**/*',
             'test/**/*',
             'build/**/*',

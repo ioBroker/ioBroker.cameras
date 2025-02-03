@@ -1,16 +1,19 @@
+export type ContentType = string;
 export type CameraType = 'url' | 'urlBasicAuth' | 'rtsp' | 'reolinkE1' | 'eufy' | 'hikam';
 
+export type CameraName = string;
+
 export interface CameraConfig {
-    name: string;
+    name: CameraName;
     type: CameraType;
     id: number;
+    rtsp: boolean;
     desc?: string;
     timeout?: number | string;
     cacheTimeout?: number | string;
     addTime?: boolean;
     title?: string;
     enabled?: boolean;
-    rtsp: boolean;
 }
 
 export interface CameraConfigUrl extends CameraConfig {
@@ -72,7 +75,7 @@ export type CameraConfigAny =
 
 export interface CamerasAdapterConfig {
     bind: string;
-    port: number;
+    port: string | number;
     key: string;
     webInstance: string;
     defaultTimeout: number | string;

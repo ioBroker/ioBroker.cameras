@@ -9,13 +9,13 @@ export interface CameraConfig {
     name: CameraName;
     type: CameraType;
     id: number;
+    rtsp: boolean;
     desc?: string;
     timeout?: number | string;
     cacheTimeout?: number | string;
     addTime?: boolean;
     title?: string;
     enabled?: boolean;
-    rtsp?: boolean;
 }
 
 export interface CameraConfigUrl extends CameraConfig {
