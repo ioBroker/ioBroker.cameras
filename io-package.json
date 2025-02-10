@@ -132,7 +132,7 @@
         "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.cameras/master/admin/cameras.png",
         "readme": "https://github.com/ioBroker/ioBroker.cameras/blob/master/README.md",
         "loglevel": "info",
-        "webExtension": "lib/web.js",
+        "webExtension": "build/lib/web.js",
         "mode": "daemon",
         "type": "multimedia",
         "adminUI": {
