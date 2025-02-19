@@ -3,7 +3,7 @@ const axios = require('axios');
 const { writeFileSync } = require('node:fs')
 const cheerio = require('cheerio');
 
-const MANUFACTURERS = ['ezviz'];
+const MANUFACTURERS = ['canon'];
 
 async function fetchCameraConfig(manufacturer) {
     const response = await axios.get(`https://www.ispyconnect.com/camera/${manufacturer}`);

@@ -30,6 +30,14 @@ export interface CameraConfigUrlBasicAuth extends CameraConfig {
     username: string;
 }
 
+export interface CameraInstarConfig extends CameraConfig {
+    type: 'instar';
+    ip: string;
+    password: string;
+    username: string;
+    quality: 'low' | 'high';
+}
+
 export interface CameraConfigEufy extends CameraConfig {
     type: 'eufy';
     ip: string;
@@ -91,6 +99,7 @@ export type CameraConfigAny =
     | CameraConfigEufy
     | CameraConfigHiKam
     | CameraConfigUniversal
+    | CameraInstarConfig
     | CameraConfigReolink;
 
 export interface CamerasAdapterConfig {

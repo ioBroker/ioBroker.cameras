@@ -41,6 +41,10 @@ export default class GenericRtspCamera extends GenericCamera {
         await super.init();
     }
 
+    getPassword(): string {
+        return this.decodedPassword;
+    }
+
     async destroy(): Promise<void> {
         await this.stopWebStream();
 
@@ -105,7 +109,7 @@ export default class GenericRtspCamera extends GenericCamera {
             throw new Error(`No settings for camera ${this.config.name}`);
         }
 
-        return `rtsp://${this.settings.username ? `${encodeURIComponent(this.settings.username)}:${this.decodedPassword}@` : ''}${this.settings.ip}:${this.settings.port || 554}${this.settings.urlPath ? (this.settings.urlPath.startsWith('/') ? this.settings.urlPath : `/${this.settings.urlPath}`) : ''}`;
+        return `rtsp://${this.settings.username ? `${encodeURIComponent(this.settings.username)}:${encodeURIComponent(this.decodedPassword)}@` : ''}${this.settings.ip}:${this.settings.port || 554}${this.settings.urlPath ? (this.settings.urlPath.startsWith('/') ? this.settings.urlPath : `/${this.settings.urlPath}`) : ''}`;
     }
 
     // ffmpeg -rtsp_transport udp -i rtsp://localhost:8090/stream -c:a aac -b:a 160000 -ac 2 -s 854x480 -c:v libx264 -b:v 800000 -hls_time 10 -hls_list_size 2 -hls_flags delete_segments -start_number 1 playlist.m3u8

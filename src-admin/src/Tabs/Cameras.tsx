@@ -47,6 +47,7 @@ import type { CamerasAdapterConfig, CameraConfig, CameraConfigAny, CameraType, C
 import type { ConfigProps } from '../Types/ConfigGeneric';
 // eslint-disable-next-line @/no-duplicate-imports,no-duplicate-imports
 import type ConfigGeneric from '../Types/ConfigGeneric';
+import InstarConfig from '../Types/Instar';
 
 interface IConfigGeneric extends ConfigGeneric<any> {
     readonly isRtsp: boolean;
@@ -68,6 +69,7 @@ const TYPES: Record<
         icon: 'ezviz.svg',
         hideName: true,
     },
+    instar: { Config: InstarConfig as unknown as IConfigGeneric, name: 'Instar' },
 };
 
 const styles: Record<string, any> = {

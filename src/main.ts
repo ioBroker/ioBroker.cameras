@@ -119,7 +119,7 @@ export class CamerasAdapter extends Adapter {
             let tempCamera: GenericCamera;
             // load camera module
             try {
-                tempCamera = await createCamera(this, item as CameraConfigAny, this.streamSubscribes, this.ffmpegPath);
+                tempCamera = await createCamera(this, item as CameraConfigAny, this.ffmpegPath);
             } catch (e) {
                 this.log.error(`Cannot load "${item.type}": ${e}`);
                 throw new Error(`Cannot load "${item.type}"`);
@@ -706,7 +706,6 @@ export class CamerasAdapter extends Adapter {
                 process.platform === 'win32' &&
                 !existsSync(`${__dirname}/../win-ffmpeg.exe`)
             ) {
-                // Todo update ffmpeg if new cameras version has newer ffmpeg file
                 this.log.info('Decompress ffmpeg.exe...');
                 await decompress(`${__dirname}/../win-ffmpeg.zip`, `${__dirname}/../`);
                 this.ffmpegPath = findFFmpegPath(this.config.ffmpegPath, this.log);
@@ -747,7 +746,7 @@ export class CamerasAdapter extends Adapter {
 
                 try {
                     promises.push(
-                        createCamera(this, item, this.streamSubscribes, this.ffmpegPath)
+                        createCamera(this, item, this.ffmpegPath, this.streamSubscribes)
                             .then(camera => {
                                 this.cameras[camera.getName()] = camera;
                             })

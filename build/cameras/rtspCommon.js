@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.findFFmpegPath = findFFmpegPath;
 exports.getFFmpegVersion = getFFmpegVersion;
 exports.executeFFmpeg = executeFFmpeg;
+exports.startFFmpeg = startFFmpeg;
 exports.getRtspSnapshot = getRtspSnapshot;
 const node_fs_1 = require("node:fs");
 const node_child_process_1 = require("node:child_process");
@@ -72,7 +73,7 @@ function getFFmpegVersion(ffmpegPath, log) {
 function maskPassword(str, password) {
     if (password) {
         password = encodeURIComponent(password)
-            .replace(/!/g, '%21')
+            //.replace(/!/g, '%21')
             .replace(/'/g, '%27')
             .replace(/\(/g, '%28')
             .replace(/\)/g, '%29')
@@ -137,6 +138,16 @@ function executeFFmpeg(params, ffmpegPath, decodedPassword, timeoutMs, log) {
             }
         });
     });
+}
+function startFFmpeg(params, ffmpegPath, decodedPassword, log) {
+    log?.debug(`Executing ${ffmpegPath} ${maskPassword(params.join(' '), decodedPassword || '')}`);
+    const proc = (0, node_child_process_1.spawn)(ffmpegPath, params || []);
+    proc.stdout.setEncoding('utf8');
+    proc.stderr.setEncoding('utf8');
+    proc.on('close', (code) => {
+        log?.debug(`FFmpeg exited with code ${code}`);
+    });
+    return proc;
 }
 async function getRtspSnapshot(config, outputFileName, ffmpegPath, decodedPassword, timeout, log) {
     const parameters = buildCommand(config, outputFileName, decodedPassword);

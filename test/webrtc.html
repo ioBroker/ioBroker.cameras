@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>RTSP to WebRTC</title>
+    </head>
+    <body>
+        <h2>RTSP to WebRTC Streaming</h2>
+        <video
+            id="video"
+            autoplay
+            playsinline
+        ></video>
+
+        <script>
+            const ws = new WebSocket(`ws://localhost:8082/cameras.0/cam4?sid=${Date.now()}`); // Change to your WebSocket server
+            const peer = new RTCPeerConnection({
+                iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+            });
+
+            peer.ontrack = event => {
+                document.getElementById('video').srcObject = event.streams[0];
+            };
+
+            ws.onopen = () => {
+                console.log('Connected to WebSocket signaling server');
+                startWebRTC();
+            };
+
+            ws.onmessage = async event => {
+                const message = JSON.parse(event.data);
+
+                if (message.type === 'offer') {
+                    await peer.setRemoteDescription(new RTCSessionDescription(message));
+                    const answer = await peer.createAnswer();
+                    await peer.setLocalDescription(answer);
+                    ws.send(JSON.stringify({ type: 'answer', sdp: answer.sdp }));
+                } else if (message.type === 'ice-candidate') {
+                    await peer.addIceCandidate(new RTCIceCandidate(message.candidate));
+                }
+            };
+
+            function startWebRTC() {
+                peer.onicecandidate = event => {
+                    if (event.candidate) {
+                        ws.send(JSON.stringify({ type: 'ice-candidate', candidate: event.candidate }));
+                    }
+                };
+
+                ws.send(JSON.stringify({ type: 'request-offer' })); // Ask server for WebRTC offer
+            }
+        </script>
+    </body>
+</html>

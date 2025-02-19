@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from 'node:fs';
-import { spawn, execSync } from 'node:child_process';
+import { spawn, execSync, ChildProcess, ChildProcessWithoutNullStreams } from 'node:child_process';
 import { normalize } from 'node:path';
 
 export interface RtspOptions {
@@ -80,7 +80,7 @@ export function getFFmpegVersion(ffmpegPath: string, log?: ioBroker.Log): string
 function maskPassword(str: string, password: string): string {
     if (password) {
         password = encodeURIComponent(password)
-            .replace(/!/g, '%21')
+            //.replace(/!/g, '%21')
             .replace(/'/g, '%27')
             .replace(/\(/g, '%28')
             .replace(/\)/g, '%29')
@@ -169,6 +169,26 @@ export function executeFFmpeg(
             }
         });
     });
+}
+
+export function startFFmpeg(
+    params: string[],
+    ffmpegPath: string,
+    decodedPassword?: string,
+    log?: ioBroker.Log,
+): ChildProcessWithoutNullStreams {
+    log?.debug(`Executing ${ffmpegPath} ${maskPassword(params.join(' '), decodedPassword || '')}`);
+
+    const proc = spawn(ffmpegPath, params || []);
+
+    proc.stdout.setEncoding('utf8');
+    proc.stderr.setEncoding('utf8');
+
+    proc.on('close', (code: number): void => {
+        log?.debug(`FFmpeg exited with code ${code}`);
+    });
+
+    return proc;
 }
 
 export async function getRtspSnapshot(

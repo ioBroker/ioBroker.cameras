@@ -1,5 +1,5 @@
 export type ContentType = string;
-export type CameraType = 'url' | 'urlBasicAuth' | 'rtsp' | 'reolinkE1' | 'eufy' | 'hikam' | 'universal';
+export type CameraType = 'url' | 'urlBasicAuth' | 'rtsp' | 'reolinkE1' | 'eufy' | 'hikam' | 'universal' | 'instar';
 
 export type CameraName = string;
 
@@ -26,6 +26,14 @@ export interface CameraConfigUrlBasicAuth extends CameraConfig {
     url: string;
     password: string;
     username: string;
+}
+
+export interface CameraInstarConfig extends CameraConfig {
+    type: 'instar';
+    ip: string;
+    password: string;
+    username: string;
+    quality: 'low' | 'high';
 }
 
 export interface CameraConfigEufy extends CameraConfig {
@@ -89,6 +97,7 @@ export type CameraConfigAny =
     | CameraConfigEufy
     | CameraConfigHiKam
     | CameraConfigUniversal
+    | CameraInstarConfig
     | CameraConfigReolink;
 
 export interface CamerasAdapterConfig {
