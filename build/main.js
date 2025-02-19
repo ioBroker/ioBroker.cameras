@@ -17,7 +17,6 @@ const WIN_FFMPEG_VERSION = '2025-02-02-git-957eb2323a-full_build-www.gyan.dev';
 class CamerasAdapter extends adapter_core_1.Adapter {
     lang = 'en';
     streamSubscribes = [];
-    camerasConfig = {};
     bForceInterval = null;
     server = null;
     cache = {};
@@ -95,7 +94,7 @@ class CamerasAdapter extends adapter_core_1.Adapter {
             let tempCamera;
             // load camera module
             try {
-                tempCamera = await (0, Factory_1.default)(this, item, this.streamSubscribes, this.ffmpegPath);
+                tempCamera = await (0, Factory_1.default)(this, item, this.ffmpegPath);
             }
             catch (e) {
                 this.log.error(`Cannot load "${item.type}": ${e}`);
@@ -106,7 +105,7 @@ class CamerasAdapter extends adapter_core_1.Adapter {
             if (data?.body) {
                 data = await this.resizeImage(data, item.width, item.height);
                 data = await this.rotateImage(data, item.angle);
-                data = await this.addTextToImage(data, item.addTime ? this.camerasConfig.dateFormat || 'LTS' : undefined, item.title);
+                data = await this.addTextToImage(data, item.addTime ? this.config.dateFormat || 'LTS' : undefined, item.title);
                 result = {
                     body: `data:${data.contentType};base64,${data.body.toString('base64')}`,
                     contentType: data.contentType,
@@ -141,7 +140,7 @@ class CamerasAdapter extends adapter_core_1.Adapter {
             if (data) {
                 data = await this.resizeImage(data, params.w, params.h);
                 data = await this.rotateImage(data, params.angle);
-                data = await this.addTextToImage(data, cam.addTime ? this.camerasConfig.dateFormat || 'LTS' : undefined, cam.title);
+                data = await this.addTextToImage(data, cam.addTime ? this.config.dateFormat || 'LTS' : undefined, cam.title);
                 if (cam.cacheTimeout) {
                     this.cache[cam.name] = {
                         data,
@@ -242,7 +241,7 @@ class CamerasAdapter extends adapter_core_1.Adapter {
             }
             case 'image': {
                 if (obj.message) {
-                    const cameraConfig = this.camerasConfig.cameras.find(cam => cam.name === obj.message.name);
+                    const cameraConfig = this.config.cameras.find(cam => cam.name === obj.message.name);
                     if (cameraConfig && obj.callback) {
                         const cam = Object.assign(JSON.parse(JSON.stringify(cameraConfig), obj.message));
                         try {
@@ -265,7 +264,7 @@ class CamerasAdapter extends adapter_core_1.Adapter {
             case 'list': {
                 obj.callback &&
                     this.sendTo(obj.from, obj.command, {
-                        list: this.camerasConfig.cameras.map(cam => ({
+                        list: this.config.cameras.map(cam => ({
                             name: cam.name,
                             desc: cam.desc,
                             id: `${this.namespace}.cameras.${cam.name}`,
@@ -289,7 +288,7 @@ class CamerasAdapter extends adapter_core_1.Adapter {
     }
     unloadCameras(cb) {
         const promises = [];
-        this.camerasConfig.cameras.forEach(item => {
+        this.config.cameras.forEach(item => {
             if (item?.type && this.cameras[item.name]) {
                 try {
                     promises.push(this.cameras[item.name]
@@ -362,7 +361,7 @@ class CamerasAdapter extends adapter_core_1.Adapter {
             .then(body => ({ body, contentType: 'image/jpeg' }));
     }
     startWebServer() {
-        this.log.debug(`Starting web server on http://${this.camerasConfig.bind}:${this.camerasConfig.port}/`);
+        this.log.debug(`Starting web server on http://${this.config.bind}:${this.config.port}/`);
         this.server = node_http_1.default.createServer(async (req, res) => {
             const clientIp = req.socket.remoteAddress;
             if (!clientIp) {
@@ -380,19 +379,19 @@ class CamerasAdapter extends adapter_core_1.Adapter {
                 query[decodeURIComponent(pp[0])] = decodeURIComponent(pp[1] || '');
             });
             const now = Date.now();
-            if (this.bForce[clientIp] && now - this.bForce[clientIp] < 5000 && query.key !== this.camerasConfig.key) {
+            if (this.bForce[clientIp] && now - this.bForce[clientIp] < 5000 && query.key !== this.config.key) {
                 this.bForce[clientIp] = now;
                 res.statusCode = 429;
                 res.write('Blocked for 5 seconds');
                 res.end();
                 return;
             }
-            if (query.key !== this.camerasConfig.key) {
+            if (query.key !== this.config.key) {
                 this.bForce[clientIp] = Date.now();
                 res.statusCode = 401;
                 res.write('Invalid key');
                 res.end();
-                this.log.debug(`Invalid key from ${clientIp}. Expected ${this.camerasConfig.key}`);
+                this.log.debug(`Invalid key from ${clientIp}. Expected ${this.config.key}`);
                 return;
             }
             if (clientIp !== '127.0.0.1' &&
@@ -402,19 +401,19 @@ class CamerasAdapter extends adapter_core_1.Adapter {
                 res.statusCode = 401;
                 res.write('Invalid key');
                 res.end();
-                this.log.debug(`Invalid key from ${clientIp}. Expected ${this.camerasConfig.key}`);
+                this.log.debug(`Invalid key from ${clientIp}. Expected ${this.config.key}`);
                 return;
             }
-            const cam = this.camerasConfig.cameras.find(c => this.cameras[c.name].path === url);
+            const cam = this.config.cameras.find(c => this.cameras[c.name].path === url);
             const ignoreCache = query.noCache === 'true' || query.noCache === '1';
             if (cam) {
                 if (this.cameras[cam.name]) {
                     let data;
                     try {
                         const params = {
-                            w: parseInt(query.w, 10) || 0,
-                            h: parseInt(query.h, 10) || 0,
-                            angle: parseInt(query.angle, 10) || 0,
+                            w: parseInt(query.w || '0', 10) || 0,
+                            h: parseInt(query.h || '0', 10) || 0,
+                            angle: parseInt(query.angle || '0', 10) || 0,
                         };
                         if (!ignoreCache &&
                             this.cache[cam.name] &&
@@ -428,7 +427,7 @@ class CamerasAdapter extends adapter_core_1.Adapter {
                             data = await this.cameras[cam.name].process();
                             data = await this.resizeImage(data, params.w, params.h);
                             data = await this.rotateImage(data, params.angle);
-                            data = await this.addTextToImage(data, cam.addTime ? this.camerasConfig.dateFormat || 'LTS' : undefined, cam.title);
+                            data = await this.addTextToImage(data, cam.addTime ? this.config.dateFormat || 'LTS' : undefined, cam.title);
                             if (cam.cacheTimeout) {
                                 this.cache[cam.name] = {
                                     data,
@@ -460,14 +459,14 @@ class CamerasAdapter extends adapter_core_1.Adapter {
             }
         });
         this.server.on('clientError', (_err, socket) => socket.end('HTTP/1.1 400 Bad Request\r\n\r\n'));
-        this.server.listen({ port: this.camerasConfig.port || '127', host: this.camerasConfig.bind }, () => this.log.info(`Server started on ${this.camerasConfig.bind}:${this.camerasConfig.port}`));
+        this.server.listen({ port: this.config.port || '127', host: this.config.bind }, () => this.log.info(`Server started on ${this.config.bind}:${this.config.port}`));
     }
     async syncConfig() {
         try {
             const files = await this.readDirAsync(this.namespace, '/');
             for (let f = 0; f < files.length; f++) {
                 const file = files[f];
-                if (!this.camerasConfig.cameras.find(item => `${item.name}.jpg` === file.file)) {
+                if (!this.config.cameras.find(item => `${item.name}.jpg` === file.file)) {
                     try {
                         await this.delFileAsync(this.namespace, file.file);
                     }
@@ -483,13 +482,13 @@ class CamerasAdapter extends adapter_core_1.Adapter {
     }
     async fillFiles() {
         // write all states with actual images one time at the start
-        const promises = this.camerasConfig.cameras.map(cam => this.getCameraImage(cam).catch((e) => this.log.error(`Cannot get image: ${e}`)));
+        const promises = this.config.cameras.map(cam => this.getCameraImage(cam).catch((e) => this.log.error(`Cannot get image: ${e}`)));
         await Promise.all(promises);
     }
     async syncData() {
         const states = await this.getStatesOfAsync('');
         // create new states
-        for (const cam of this.camerasConfig.cameras) {
+        for (const cam of this.config.cameras) {
             let running;
             try {
                 running = await this.getObjectAsync(`${cam.name}.running`);
@@ -559,7 +558,7 @@ class CamerasAdapter extends adapter_core_1.Adapter {
                 const parts = states[s]._id.split('.');
                 parts.pop();
                 const name = parts.pop();
-                if (!this.camerasConfig.cameras.find(cam => cam.name === name)) {
+                if (!this.config.cameras.find(cam => cam.name === name)) {
                     try {
                         await this.delObjectAsync(states[s]._id);
                     }
@@ -572,26 +571,24 @@ class CamerasAdapter extends adapter_core_1.Adapter {
     }
     async main() {
         this.streamSubscribes = [];
-        this.camerasConfig = this.config;
         // read secret key
         const systemConfig = await this.getForeignObjectAsync('system.config');
         // store system secret
-        this.lang = this.camerasConfig.language || systemConfig?.common.language || 'en';
+        this.lang = this.config.language || systemConfig?.common.language || 'en';
         const promises = [];
-        this.camerasConfig.tempPath = this.camerasConfig.tempPath || `${__dirname}/../snapshots`;
-        this.camerasConfig.defaultCacheTimeout = parseInt(this.camerasConfig.defaultCacheTimeout, 10) || 0;
-        const isAnyRtsp = this.camerasConfig.cameras.find(it => it.enabled !== false && it.ip && (it.type === 'rtsp' || it.rtsp));
+        this.config.tempPath = (0, node_path_1.normalize)(this.config.tempPath || `${__dirname}/../snapshots`).replace(/\\/g, '/');
+        this.config.defaultCacheTimeout = parseInt(this.config.defaultCacheTimeout, 10) || 0;
+        const isAnyRtsp = this.config.cameras.find(it => it.enabled !== false && it.ip && (it.type === 'rtsp' || it.rtsp));
         if (isAnyRtsp) {
-            if (!this.camerasConfig.ffmpegPath &&
+            if (!this.config.ffmpegPath &&
                 process.platform === 'win32' &&
                 !(0, node_fs_1.existsSync)(`${__dirname}/../win-ffmpeg.exe`)) {
-                // Todo update ffmpeg if new cameras version has newer ffmpeg file
                 this.log.info('Decompress ffmpeg.exe...');
                 await (0, decompress_1.default)(`${__dirname}/../win-ffmpeg.zip`, `${__dirname}/../`);
-                this.ffmpegPath = (0, rtspCommon_1.findFFmpegPath)(this.camerasConfig.ffmpegPath, this.log);
+                this.ffmpegPath = (0, rtspCommon_1.findFFmpegPath)(this.config.ffmpegPath, this.log);
             }
             else {
-                this.ffmpegPath = (0, rtspCommon_1.findFFmpegPath)(this.camerasConfig.ffmpegPath, this.log);
+                this.ffmpegPath = (0, rtspCommon_1.findFFmpegPath)(this.config.ffmpegPath, this.log);
                 const version = (0, rtspCommon_1.getFFmpegVersion)(this.ffmpegPath, this.log);
                 if (version !== WIN_FFMPEG_VERSION) {
                     // extract
@@ -600,30 +597,30 @@ class CamerasAdapter extends adapter_core_1.Adapter {
                 }
             }
             if (!(0, node_fs_1.existsSync)(this.ffmpegPath) && !(0, node_fs_1.existsSync)(`${this.ffmpegPath}.exe`)) {
-                this.log.error(`Cannot find ffmpeg in "${this.camerasConfig.ffmpegPath}"`);
+                this.log.error(`Cannot find ffmpeg in "${this.config.ffmpegPath}"`);
             }
         }
         try {
-            if (!(0, node_fs_1.existsSync)(this.camerasConfig.tempPath)) {
-                (0, node_fs_1.mkdirSync)(this.camerasConfig.tempPath);
-                this.log.debug(`Create snapshots directory: ${(0, node_path_1.normalize)(this.camerasConfig.tempPath)}`);
+            if (!(0, node_fs_1.existsSync)(this.config.tempPath)) {
+                (0, node_fs_1.mkdirSync)(this.config.tempPath);
+                this.log.debug(`Create snapshots directory: ${(0, node_path_1.normalize)(this.config.tempPath)}`);
             }
         }
         catch (e) {
             this.log.error(`Cannot create snapshots directory: ${e}`);
         }
-        this.camerasConfig.cameras = this.camerasConfig.cameras.filter(cam => cam.enabled !== false);
+        this.config.cameras = this.config.cameras.filter(cam => cam.enabled !== false);
         // init all required camera providers
-        this.camerasConfig.cameras.forEach(item => {
+        this.config.cameras.forEach(item => {
             if (item?.type) {
                 if (item.cacheTimeout === undefined || item.cacheTimeout === null || item.cacheTimeout === '') {
-                    item.cacheTimeout = this.camerasConfig.defaultCacheTimeout;
+                    item.cacheTimeout = this.config.defaultCacheTimeout;
                 }
                 else {
                     item.cacheTimeout = parseInt(item.cacheTimeout, 10) || 0;
                 }
                 try {
-                    promises.push((0, Factory_1.default)(this, item, this.streamSubscribes, this.ffmpegPath)
+                    promises.push((0, Factory_1.default)(this, item, this.ffmpegPath, this.streamSubscribes)
                         .then(camera => {
                         this.cameras[camera.getName()] = camera;
                     })
@@ -634,8 +631,8 @@ class CamerasAdapter extends adapter_core_1.Adapter {
                 }
             }
         });
-        if (typeof this.camerasConfig.allowIPs === 'string') {
-            this.allowIPs = this.camerasConfig.allowIPs
+        if (typeof this.config.allowIPs === 'string') {
+            this.allowIPs = this.config.allowIPs
                 .split(/,;/)
                 .map(i => i.trim())
                 .filter(i => i);

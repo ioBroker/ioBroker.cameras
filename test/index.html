@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>MJPEG WebSocket Stream</title>
+    </head>
+    <body>
+        <h2>RTSP to MJPEG via WebSocket</h2>
+        <canvas id="canvas" style="width: 100%; box-sizing: border-box"></canvas>
+
+        <script>
+            const socket = new WebSocket(`ws://localhost:8082/cameras.0/cam4?sid=${Date.now()}`);
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            canvas.style.border = '2px solid red';
+
+            socket.onopen = () => {
+                canvas.style.border = '2px solid green';
+                console.log('Connected to WebSocket signaling server');
+            };
+            socket.onclose = () => {
+                canvas.style.border = '2px solid orange';
+                console.log('Disconnected from WebSocket signaling server');
+            };
+
+            socket.binaryType = 'blob';
+
+            socket.onmessage = event => {
+                const blob = new Blob([event.data], { type: 'image/jpeg' });
+                img.src = URL.createObjectURL(blob);
+
+                img.onload = () => {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    URL.revokeObjectURL(img.src);
+                };
+            };
+
+            socket.onerror = error => console.error('WebSocket Error:', error);
+        </script>
+    </body>
+</html>

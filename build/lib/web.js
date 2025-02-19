@@ -32,12 +32,20 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
- * This file is a web extension for a global server, and it runs in a context of ioBroker.web
+ * This file is a web extension for a global server, and it runs in the context of ioBroker.web.
  * It will be started by ioBroker.web and called by it
  */
 const http = __importStar(require("node:http"));
+const wrtc_1 = require("@roamhq/wrtc");
+const rtspCommon_1 = require("../cameras/rtspCommon");
+const Factory_1 = __importDefault(require("../cameras/Factory"));
+const node_fs_1 = require("node:fs");
+const fluent_ffmpeg_1 = __importDefault(require("fluent-ffmpeg"));
 /**
  * Read image by request from global web server
  *
@@ -81,7 +89,11 @@ class ProxyCameras {
     config;
     namespace;
     adapter;
-    constructor(server, webSettings, adapter, instanceSettings, app) {
+    /** Socket io server */
+    ioServer;
+    ffmpegPath = '';
+    procs = {};
+    constructor(server, webSettings, adapter, instanceSettings, app, io) {
         this.app = app;
         this.config = instanceSettings
             ? instanceSettings.native
@@ -91,10 +103,293 @@ class ProxyCameras {
         this.config.port = parseInt(this.config.port, 10) || 80;
         // remove leading slash
         if (this.config.route[0] === '/') {
-            this.config.route = this.config.route.substr(1);
+            this.config.route = this.config.route.substring(1);
         }
         this.adapter = adapter;
+        this.ioServer = io?.ioServer || null;
         this.config.cameras.forEach(cam => this.oneCamera(cam));
+    }
+    unload() {
+        for (const camera in this.procs) {
+            try {
+                this.procs[camera].proc?.kill('SIGKILL');
+            }
+            catch {
+                // ignore
+            }
+        }
+        this.procs = {};
+        return Promise.resolve();
+    }
+    getFfmpegPath() {
+        if (this.ffmpegPath) {
+            return this.ffmpegPath;
+        }
+        this.ffmpegPath = (0, rtspCommon_1.findFFmpegPath)(this.config.ffmpegPath, this.adapter.log);
+        if (!(0, node_fs_1.existsSync)(this.ffmpegPath) && !(0, node_fs_1.existsSync)(`${this.ffmpegPath}.exe`)) {
+            this.adapter.log.error(`Cannot find ffmpeg in "${this.config.ffmpegPath}"`);
+        }
+        return this.ffmpegPath;
+    }
+    async getRtspURL(rule) {
+        let tempCamera = null;
+        // load camera module
+        try {
+            tempCamera = (await (0, Factory_1.default)(this.adapter, rule, this.ffmpegPath));
+            await tempCamera.init();
+            const url = tempCamera.getRtspURL();
+            const password = tempCamera.getPassword();
+            await tempCamera.destroy();
+            tempCamera = null;
+            return { password, url };
+        }
+        catch (e) {
+            this.adapter.log.error(`Cannot load "${rule.type}": ${e}`);
+            throw new Error(`Cannot load "${rule.type}"`);
+        }
+    }
+    async rtsp2WebRTC(rule, ws, cb) {
+        // Does not work!.
+        // Request for connection
+        const { url, password } = await this.getRtspURL(rule);
+        this.getFfmpegPath();
+        const socket = ws.ws;
+        let proc = null;
+        const peer = new wrtc_1.RTCPeerConnection({
+            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+        });
+        const onSocketClose = () => {
+            if (proc) {
+                proc.kill();
+                proc = null;
+            }
+        };
+        peer.onicecandidate = (event) => {
+            console.log('onicecandidate:', JSON.stringify(event));
+            if (event.candidate) {
+                socket.send(JSON.stringify({ type: 'ice-candidate', candidate: event.candidate }));
+            }
+        };
+        peer.onconnectionstatechange = () => {
+            console.log('Connection state:', peer.connectionState);
+            if (peer.connectionState === 'disconnected') {
+                onSocketClose();
+            }
+        };
+        // Inform the web socket that we will handle everything ourselves
+        if (ws.enableCustomHandler) {
+            // The socket was closed by web instance
+            ws.enableCustomHandler(onSocketClose);
+        }
+        socket?.on('message', async (message) => {
+            const data = JSON.parse(message);
+            console.log(`Received: ${JSON.stringify(data)}`);
+            if (data.type === 'request-offer') {
+                const offer = await peer.createOffer();
+                await peer.setLocalDescription(offer);
+                socket.send(JSON.stringify({ type: 'offer', sdp: offer.sdp }));
+            }
+            else if (data.type === 'answer') {
+                await peer.setRemoteDescription(new wrtc_1.RTCSessionDescription({ type: 'answer', sdp: data.sdp }));
+            }
+            else if (data.type === 'ice-candidate') {
+                console.log('🔹 Received ICE candidate:', data.candidate);
+                await peer.addIceCandidate(new wrtc_1.RTCIceCandidate(data.candidate));
+            }
+        });
+        // Client closed the socket
+        socket?.on('close', onSocketClose);
+        socket?.on('error', () => {
+            this.adapter.log.warn(`Error in web socket for ${rule.name}`);
+            onSocketClose();
+        });
+        socket.on('disconnect', () => {
+            onSocketClose();
+        });
+        const params = [
+            '-rtsp_transport',
+            'tcp',
+            '-i',
+            url,
+            '-c:v',
+            'libx265',
+            '-preset',
+            'ultrafast',
+            '-tune',
+            'zerolatency',
+            '-b:v',
+            '800k',
+            '-bufsize',
+            '800k',
+            '-vf',
+            'format=yuv420p',
+            '-c:a',
+            'aac',
+            '-f',
+            'rtp',
+            'rtp://127.0.0.1:5004',
+        ];
+        /*params = [
+            '-rtsp_transport',
+            'tcp',
+            '-i',
+            url,
+            '-map',
+            '0:v:0',
+            '-c:v',
+            'libx264',
+            '-preset',
+            'ultrafast',
+            '-tune',
+            'zerolatency',
+            '-b:v',
+            '800k',
+            '-bufsize',
+            '800k',
+            '-vf',
+            'format=yuv420p',
+            '-f',
+            'rtp',
+            'rtp://127.0.0.1:5004',
+        ];*/
+        // Start WebRTC server
+        proc = (0, rtspCommon_1.startFFmpeg)(params, this.ffmpegPath, password, this.adapter.log);
+        proc.stderr.on('data', data => {
+            console.error(`FFmpeg Log: ${data}`);
+        });
+        if (cb) {
+            // inform the caller that we will process all messages
+            cb(true);
+        }
+    }
+    onSocketClose(rule, socket, reason) {
+        if (this.procs[rule.name]) {
+            const pos = this.procs[rule.name].sockets.indexOf(socket);
+            if (pos !== -1) {
+                this.procs[rule.name].sockets.splice(pos, 1);
+                if (!this.procs[rule.name].sockets.length) {
+                    if (this.procs[rule.name].proc) {
+                        if (this.procs[rule.name].timer) {
+                            this.adapter.clearTimeout(this.procs[rule.name].timer);
+                        }
+                        if (reason !== 'ffmpeg error' && reason !== 'ffmpeg end') {
+                            this.adapter.log.debug(`Stop ffmpeg for "${rule.name}" in 3s, because of "${reason}"`);
+                            this.procs[rule.name].timer = this.adapter.setTimeout(() => {
+                                this.procs[rule.name].timer = undefined;
+                                // Check if there are still no sockets
+                                if (!this.procs[rule.name].sockets.length) {
+                                    this.adapter.log.debug(`Stop ffmpeg for "${rule.name}" after 3s timeout`);
+                                    try {
+                                        this.procs[rule.name].proc?.kill('SIGKILL');
+                                    }
+                                    catch {
+                                        // ignore
+                                    }
+                                    delete this.procs[rule.name];
+                                }
+                                else {
+                                    this.adapter.log.debug(`Do not stop ffmpeg for "${rule.name}" because of new socket`);
+                                }
+                            }, 3000);
+                        }
+                        else {
+                            this.adapter.log.debug(`Stop ffmpeg for "${rule.name}", because of "${reason}"`);
+                            try {
+                                this.procs[rule.name].proc?.kill('SIGKILL');
+                            }
+                            catch {
+                                // ignore
+                            }
+                            delete this.procs[rule.name];
+                            // restart ffmpeg
+                            void this.startFFmpeg(rule, socket);
+                        }
+                    }
+                    else {
+                        delete this.procs[rule.name];
+                    }
+                }
+            }
+        }
+    }
+    async startFFmpeg(rule, socket) {
+        this.getFfmpegPath();
+        const name = rule.name;
+        if (!this.procs[name]) {
+            const { url } = await this.getRtspURL(rule);
+            this.procs[name] = { proc: null, sockets: [], timer: undefined };
+            this.adapter.log.debug(`Starting ffmpeg for "${name}"`);
+            // Start ffmpeg server
+            this.procs[name].proc = (0, fluent_ffmpeg_1.default)(url)
+                .setFfmpegPath(this.ffmpegPath)
+                .addInputOption('-rtsp_transport', 'tcp')
+                .addInputOption('-re')
+                .addInputOption('-hide_banner')
+                // .addInputOption('-timeout 1000000')
+                .addInputOption('-loglevel error')
+                .outputFormat('mjpeg')
+                .fps(3)
+                .addOptions('-update 1')
+                .addOptions('-q:v 5');
+            this.procs[name].sockets.push(socket);
+            this.procs[name].proc?.on('end', (stdout, stderr) => {
+                this.adapter.log.debug(`Streaming for ${name} stopped: ${stderr}`);
+                this.onSocketClose(rule, socket, 'ffmpeg end');
+            });
+            this.procs[name].proc?.on('error', (err, stdout, stderr) => {
+                this.adapter.log.debug(`Cannot process video for "${name}": ${err.message} ${stderr}`);
+                this.onSocketClose(rule, socket, 'ffmpeg error');
+            });
+            const ffStream = this.procs[name].proc.pipe();
+            let chunks = Buffer.from([]);
+            let count = 0;
+            ffStream.on('data', (chunk) => {
+                if (chunk.length > 2 && chunk[0] === 0xff && chunk[1] === 0xd8) {
+                    count++;
+                    console.log(`Send chunk ${chunks.byteLength} (${count})`);
+                    this.procs[name].sockets.forEach(s => s.send(chunks, { binary: true }));
+                    chunks = chunk;
+                }
+                else {
+                    console.log(`Received chunk ${chunk.byteLength} of ${count}`);
+                    chunks = Buffer.concat([chunks, chunk]);
+                }
+            });
+        }
+        else if (this.procs[name].timer) {
+            // Disable stop timer
+            this.adapter.log.debug(`Do not stop ffmpeg for "${name}" because of new socket!`);
+            this.adapter.clearTimeout(this.procs[name].timer);
+            this.procs[name].timer = undefined;
+        }
+    }
+    async rtsp2mjpeg(rule, ws, cb) {
+        // Request for connection
+        this.adapter.log.debug(`New socket connection for "${rule.name}"`);
+        const socket = ws.ws;
+        await this.startFFmpeg(rule, socket);
+        // Inform the web socket that we will handle everything ourselves
+        if (ws.enableCustomHandler) {
+            // The socket was closed by web instance
+            ws.enableCustomHandler(() => this.onSocketClose(rule, socket, 'web server stopping'));
+        }
+        // Client closed the socket
+        socket?.on('close', () => {
+            this.adapter.log.warn(`Socket connection was closed for ${rule.name}`);
+            this.onSocketClose(rule, socket, 'socket connection closed');
+        });
+        socket?.on('error', (error) => {
+            this.adapter.log.warn(`Error in web socket for ${rule.name}: ${error.toString()}`);
+            this.onSocketClose(rule, socket, 'socket connection error');
+        });
+        socket.on('disconnect', () => {
+            this.adapter.log.warn(`Socket disconnection for ${rule.name}`);
+            this.onSocketClose(rule, socket, 'socket disconnection');
+        });
+        if (cb) {
+            // inform the caller that we will process all messages
+            cb(true);
+        }
     }
     oneCamera(rule) {
         this.adapter.log.info(`Install extension on /${this.config.route}${rule.name}`);
@@ -136,6 +431,13 @@ class ProxyCameras {
             })
                 .catch(error => res.status(500).send(typeof error !== 'string' ? JSON.stringify(error) : error));
         });
+        // Install web socket route
+        if (this.ioServer?.addWsRoute && rule.rtsp && rule.enabled !== false) {
+            this.adapter.log.info(`Install web socket extension on /${this.config.route}${rule.name}`);
+            this.ioServer.addWsRoute(`/${this.config.route}${rule.name}`, (ws, cb) => {
+                void this.rtsp2mjpeg(rule, ws, cb);
+            });
+        }
     }
 }
 exports.default = ProxyCameras;

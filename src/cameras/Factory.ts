@@ -11,8 +11,8 @@ import UniversalCamera from './UniversalCamera';
 export default async function createCamera(
     adapter: ioBroker.Adapter,
     config: CameraConfigAny,
-    streamSubscribes: { camera: string; clientId: string }[],
     ffmpegPath: string,
+    streamSubscribes?: { camera: string; clientId: string }[],
 ): Promise<GenericCamera> {
     let camera: GenericCamera;
     switch (config.type) {
@@ -44,7 +44,7 @@ export default async function createCamera(
 
     await camera.init();
 
-    if (camera.isRtsp) {
+    if (camera.isRtsp && streamSubscribes) {
         camera.registerRtspStreams(streamSubscribes);
     }
 
