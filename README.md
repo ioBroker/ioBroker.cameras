@@ -88,6 +88,7 @@ To add a new camera, you must create a Pull Request on GitHub with the following
 
 ## Changelog
 ### **WORK IN PROGRESS**
+- (iobroker-bot) Adapter requires node.js >= 20 now.
 * (@GermanBluefox) Completely rewritten in TypeScript
 * (@GermanBluefox) Added Ezviz cameras
 
