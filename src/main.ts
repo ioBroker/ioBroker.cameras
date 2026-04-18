@@ -594,7 +594,9 @@ export class CamerasAdapter extends Adapter {
     async fillFiles(): Promise<void> {
         // write all states with actual images one time at the start
         const promises = this.config.cameras.map(cam =>
-            this.getCameraImage(cam).catch((e: Error) => this.log.error(`Cannot get image: ${e}`)),
+            this.getCameraImage(cam as CameraRequestInternal).catch((e: Error) =>
+                this.log.error(`Cannot get image: ${e}`),
+            ),
         );
 
         await Promise.all(promises);
@@ -629,7 +631,7 @@ export class CamerasAdapter extends Adapter {
             }
 
             const stateRunning = await this.getStateAsync(`${cam.name}.running`);
-            // Start web stream if desired, e.g. after adapter restart
+            // Start a web stream if desired, e.g. after adapter restart
             if (stateRunning?.val && !stateRunning.ack) {
                 this.log.debug(`Start camera ${cam.name}`);
                 try {

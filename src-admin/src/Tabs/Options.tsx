@@ -6,6 +6,7 @@ import { MdClose as IconClose, MdCheck as IconTest } from 'react-icons/md';
 
 import {
     I18n,
+    InfoBox,
     Logo,
     DialogMessage,
     DialogError,
@@ -13,7 +14,6 @@ import {
     type IobTheme,
 } from '@iobroker/adapter-react-v5';
 import type { CamerasAdapterConfig } from '../types';
-import InfoBox from '../components/InfoBox';
 
 const styles: Record<string, React.CSSProperties> = {
     tab: {

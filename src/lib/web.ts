@@ -385,7 +385,7 @@ export default class ProxyCameras {
                     count++;
                     console.log(`Send chunk ${chunks.byteLength} (${count})`);
                     this.procs[name].sockets.forEach(s => s.send(chunks, { binary: true }));
-                    chunks = chunk;
+                    chunks = chunk as Buffer<ArrayBuffer>;
                 } else {
                     console.log(`Received chunk ${chunk.byteLength} of ${count}`);
                     chunks = Buffer.concat([chunks, chunk]);
