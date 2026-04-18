@@ -167,6 +167,7 @@
                 "name": "vis2CameraWidgets",
                 "url": "cameras/customWidgets.js",
                 "color": "#508000",
+                "bundlerType": "module",
                 "label": "cameras_set_label",
                 "components": ["RtspCamera", "SnapshotCamera"]
             }

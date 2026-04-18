@@ -46,18 +46,8 @@ interface AppState extends GenericAppState {
     tab: string;
 }
 
-function isIFrame(): boolean {
-    try {
-        return window.self !== window.top;
-    } catch {
-        return true;
-    }
-}
-
 class App extends GenericApp<GenericAppProps, AppState> {
     private subscribed: string | null = null;
-
-    private isIFrame = isIFrame();
 
     constructor(props: GenericAppProps) {
         const extendedProps: GenericAppSettings = {};

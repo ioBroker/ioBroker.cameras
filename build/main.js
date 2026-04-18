@@ -515,7 +515,7 @@ class CamerasAdapter extends adapter_core_1.Adapter {
                 }
             }
             const stateRunning = await this.getStateAsync(`${cam.name}.running`);
-            // Start web stream if desired, e.g. after adapter restart
+            // Start a web stream if desired, e.g. after adapter restart
             if (stateRunning?.val && !stateRunning.ack) {
                 this.log.debug(`Start camera ${cam.name}`);
                 try {

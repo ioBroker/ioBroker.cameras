@@ -14,7 +14,7 @@ export default async function createCamera(
     ffmpegPath: string,
     streamSubscribes?: { camera: string; clientId: string }[],
 ): Promise<GenericCamera> {
-    let camera: GenericCamera;
+    let camera: GenericCamera | undefined;
     switch (config.type) {
         case 'url':
             camera = new UrlCamera(adapter, config);

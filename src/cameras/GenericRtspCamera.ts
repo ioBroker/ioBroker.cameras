@@ -261,7 +261,7 @@ export default class GenericRtspCamera extends GenericCamera {
                     } else {
                         console.log(`skip frame ${frame.length}`);
                     }
-                    chunks = chunk;
+                    chunks = chunk as Buffer<ArrayBuffer>;
                 } else {
                     chunks = Buffer.concat([chunks, chunk]);
                 }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2018-2025 bluefox <dogafox@gmail.com>
+ * Copyright 2018-2026 bluefox <dogafox@gmail.com>
  *
  * MIT License
  *
@@ -8,7 +8,6 @@
 
 const fs = require('node:fs');
 const adapterName = require('./package.json').name.replace('iobroker.', '');
-const buildHelper = require('@iobroker/vis-2-widgets-react-dev/buildHelper');
 const { deleteFoldersRecursive, buildReact, npmInstall, copyFiles, patchHtmlFile } = require('@iobroker/build-tools');
 const { copyFileSync } = require('node:fs');
 
@@ -31,33 +30,37 @@ function widgetsClean() {
 }
 
 async function widgetsCopyAllFiles() {
-    copyFiles([`${__dirname}/src-widgets/build/*.js`], `widgets/${adapterName}`);
-    copyFiles([`${__dirname}/src-widgets/build/img/*`], `widgets/${adapterName}/img`);
-    copyFiles([`${__dirname}/src-widgets/build/*.map`], `widgets/${adapterName}`);
+    copyFiles(
+        ['src-widgets/build/**/*', '!src-widgets/build/index.html', '!src-widgets/build/mf-manifest.json'],
+        'widgets/cameras/',
+        {
+            process: (fileData, fileName) => {
+                if (fileName.includes('installSVGRenderer')) {
+                    // zrender has an error. It uses isFunction before it is defined
+                    // here is a code:
+                    //    bind = protoFunction && isFunction(protoFunction.bind) ? protoFunction.call.bind(protoFunction.bind) : bindPolyfill;
+                    // and later comes the definition of isFunction:
+                    //   isFunction = function(value) {
+                    //     return typeof value === "function";
+                    //   };
 
-    const ignore = buildHelper.ignoreFiles(`${__dirname}/src-widgets/`);
-    const copy = buildHelper.copyFiles(`${__dirname}/src-widgets/`);
-
-    copyFiles([
-        `${__dirname}/src-widgets/build/static/**/*`,
-        ...ignore,
-    ], `widgets/${adapterName}/static`);
-
-    copyFiles(copy, `widgets/${adapterName}/static/js`);
-    copyFiles([`${__dirname}/src-widgets/src/i18n/*.json`], `widgets/${adapterName}/i18n`);
-
-    await new Promise(resolve =>
-        setTimeout(() => {
-            if (
-                fs.existsSync(`widgets/${adapterName}/static/media`) &&
-                !fs.readdirSync(`widgets/${adapterName}/static/media`).length
-            ) {
-                fs.rmdirSync(`widgets/${adapterName}/static/media`);
-            }
-            resolve(null);
-        }, 500),
-    );
-}
+                    // Minified code looks like:
+                    //   ut = ra && Y(ra.bind)
+                    // Where Y is isFunction and ra is protoFunction
+                    fileData = fileData.toString();
+                    const match = fileData.match(/\w+\s*=\s*\w+\s*&&\s*(\w)\(\w+.bind\)/);
+                    if (match) {
+                        // place before match[0] the definition of isFunction
+                        fileData = fileData.replace(
+                            match[0],
+                            `${match[1]}=value=>typeof value === "function";${match[0]}`,
+                        ); // prevent error
+                    }
+                    return fileData;
+                }
+            },
+        },
+    );}
 
 if (process.argv.includes('--0-clean')) {
     clean();
@@ -93,7 +96,7 @@ if (process.argv.includes('--0-clean')) {
         });
     }
 } else if (process.argv.includes('--widget-2-build')) {
-    buildReact(`${__dirname}/src-widgets`, { rootDir: `${__dirname}/src-widgets`, craco: true }).catch(e => {
+    buildReact(`${__dirname}/src-widgets`, { rootDir: `${__dirname}/src-widgets`, vite: true }).catch(e => {
         console.error(`Cannot build: ${e}`);
         process.exit(2);
     });
@@ -105,7 +108,7 @@ if (process.argv.includes('--0-clean')) {
 } else if (process.argv.includes('--widget-build')) {
     widgetsClean();
     npmInstall('src-widgets')
-        .then(() => buildReact(`${__dirname}/src-widgets`, { rootDir: `${__dirname}/src-widgets`, craco: true }))
+        .then(() => buildReact(`${__dirname}/src-widgets`, { rootDir: `${__dirname}/src-widgets`, vite: true }))
         .then(() => widgetsCopyAllFiles())
         .catch(e => {
             console.error(`Cannot build: ${e}`);
@@ -118,7 +121,7 @@ if (process.argv.includes('--0-clean')) {
         .then(() => copyAllFiles())
         .then(() => widgetsClean())
         .then(() => npmInstall('src-widgets'))
-        .then(() => buildReact(`${__dirname}/src-widgets`, { rootDir: `${__dirname}/src-widgets`, craco: true }))
+        .then(() => buildReact(`${__dirname}/src-widgets`, { rootDir: `${__dirname}/src-widgets`, vite: true }))
         .then(() => widgetsCopyAllFiles())
         .catch(e => {
             console.error(`Cannot build: ${e}`);

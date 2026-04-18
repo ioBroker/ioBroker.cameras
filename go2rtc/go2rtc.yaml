@@ -1,8 +1,8 @@
 streams:
   ezviz:
-    - rtsp://admin:EUTOWAt71!@192.168.1.65/11
+    - rtsp://admin:EUTOWAt71!@192.168.1.164/11
 ffmpeg:
-  bin: "C:/pWork/ioBroker.cameras/win-ffmpeg1.exe"
+  bin: "C:/pWork/ioBroker.cameras/win-ffmpeg.exe"
 log:
   format: text
   level: "debug"
