@@ -1,0 +1,197 @@
+[
+    {
+        "models": [
+            "200",
+            "MS-c5372",
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/h264_stream",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi?camera=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/SnapshotJPEG?Resolution=320x240",
+        "port": 0
+    },
+    {
+        "models": [
+            "C2672-P",
+            "C3366-FP",
+            "C3366-FPH",
+            "C3581-P",
+            "C3672",
+            "c3687",
+            "C8477",
+            "c-ms3672",
+            "MS-2672C",
+            "ms-2681",
+            "MS-2972-FPB",
+            "MS-3366-FPH",
+            "MS-3567-FPN",
+            "ms-3672",
+            "MS-3689-P",
+            "MS-C2163",
+            "MS-C2173",
+            "MS-C2191",
+            "MS-C2363",
+            "ms-c2681",
+            "MS-C2682",
+            "MS-C2961-EB",
+            "MS-C2961-EPB",
+            "MS-C2961-REB",
+            "MS-C2962-FIPB",
+            "MS-C2963-EB",
+            "MS-C2973-PB",
+            "MS-C3567-PN",
+            "MS-C3587-PA",
+            "MS-C3662",
+            "ms-c3672",
+            "MS-C4461-E(P)B",
+            "MS-C4462-FIPB",
+            "MS-C4473-PB",
+            "MS-C4482-PB",
+            "MS-C5361",
+            "MS-C5375-PD",
+            "MS-C8164-PD",
+            "MS-C8175-PD/BJ",
+            "MS-C8176-PA",
+            "NC2971",
+            "MS-C5361-X12PE",
+            "MS-C5376-PE"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/main",
+        "port": 0
+    },
+    {
+        "models": [
+            "C2972",
+            "MS-C3577-PNA",
+            "MS-C3742-B"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "C2972",
+            "MS-C2173"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi?usr=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "C2982",
+            "MS-C2163",
+            "MS-C5361",
+            "MS-C2961-EPB"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/sub",
+        "port": 0
+    },
+    {
+        "models": [
+            "MS-3366-FPH",
+            "ms-3672",
+            "MS-C2163",
+            "MS-C3263",
+            "MS-C3263-PN",
+            "MS-C3687"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "",
+        "port": 0
+    },
+    {
+        "models": [
+            "ms-c2682",
+            "ms-c3291pw",
+            "MS-C3366-FPN"
+        ],
+        "variant": "VLC",
+        "protocol": "http://",
+        "path": "/ipcam/avc.cgi?audiostream=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "MS-C2963-EB",
+            "MS-C2973-PB"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/",
+        "port": 554
+    },
+    {
+        "models": [
+            "MS-C2972-FPB",
+            "MS-C2973-PB"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/ipcam/mjpeg.cgi?ch=0",
+        "port": 80
+    },
+    {
+        "models": [
+            "MS-C3263"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/?action=stream",
+        "port": 0
+    },
+    {
+        "models": [
+            "ms-c3582-pa",
+            "MS-C5361"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi?user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "MS-N1008-UPC"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/ch_101",
+        "port": 554
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/ipcam/mjpeg.cgi?ch=[CHANNEL]",
+        "port": 0
+    }
+]

@@ -46,6 +46,8 @@ const rtspCommon_1 = require("../cameras/rtspCommon");
 const Factory_1 = __importDefault(require("../cameras/Factory"));
 const node_fs_1 = require("node:fs");
 const fluent_ffmpeg_1 = __importDefault(require("fluent-ffmpeg"));
+const ws_1 = require("ws");
+const Go2RtcClient_1 = __importStar(require("./Go2RtcClient"));
 /**
  * Read image by request from global web server
  *
@@ -93,6 +95,12 @@ class ProxyCameras {
     ioServer;
     ffmpegPath = '';
     procs = {};
+    /**
+     * Client for the go2rtc instance started by the adapter. go2rtc binds its API to localhost
+     * only, so the browser must never talk to it directly - everything goes through the routes
+     * installed here, which inherit the authentication and the http/https scheme of ioBroker.web.
+     */
+    go2rtc = null;
     constructor(server, webSettings, adapter, instanceSettings, app, io) {
         this.app = app;
         this.config = instanceSettings
@@ -107,18 +115,24 @@ class ProxyCameras {
         }
         this.adapter = adapter;
         this.ioServer = io?.ioServer || null;
+        if (this.config.useGo2rtc) {
+            this.go2rtc = new Go2RtcClient_1.default({
+                apiPort: this.config.go2rtcApiPort,
+                log: this.adapter.log,
+            });
+            this.adapter.log.info(`Cameras web extension will use go2rtc on ${this.go2rtc.url}`);
+        }
         this.config.cameras.forEach(cam => this.oneCamera(cam));
     }
     unload() {
         for (const camera in this.procs) {
-            try {
-                this.procs[camera].proc?.kill('SIGKILL');
+            if (this.procs[camera].timer) {
+                this.adapter.clearTimeout(this.procs[camera].timer);
             }
-            catch {
-                // ignore
-            }
+            this.stopSource(camera);
         }
         this.procs = {};
+        this.go2rtc?.forgetAll();
         return Promise.resolve();
     }
     getFfmpegPath() {
@@ -263,54 +277,143 @@ class ProxyCameras {
         }
     }
     onSocketClose(rule, socket, reason) {
-        if (this.procs[rule.name]) {
-            const pos = this.procs[rule.name].sockets.indexOf(socket);
-            if (pos !== -1) {
-                this.procs[rule.name].sockets.splice(pos, 1);
-                if (!this.procs[rule.name].sockets.length) {
-                    if (this.procs[rule.name].proc) {
-                        if (this.procs[rule.name].timer) {
-                            this.adapter.clearTimeout(this.procs[rule.name].timer);
-                        }
-                        if (reason !== 'ffmpeg error' && reason !== 'ffmpeg end') {
-                            this.adapter.log.debug(`Stop ffmpeg for "${rule.name}" in 3s, because of "${reason}"`);
-                            this.procs[rule.name].timer = this.adapter.setTimeout(() => {
-                                this.procs[rule.name].timer = undefined;
-                                // Check if there are still no sockets
-                                if (!this.procs[rule.name].sockets.length) {
-                                    this.adapter.log.debug(`Stop ffmpeg for "${rule.name}" after 3s timeout`);
-                                    try {
-                                        this.procs[rule.name].proc?.kill('SIGKILL');
-                                    }
-                                    catch {
-                                        // ignore
-                                    }
-                                    delete this.procs[rule.name];
-                                }
-                                else {
-                                    this.adapter.log.debug(`Do not stop ffmpeg for "${rule.name}" because of new socket`);
-                                }
-                            }, 3000);
-                        }
-                        else {
-                            this.adapter.log.debug(`Stop ffmpeg for "${rule.name}", because of "${reason}"`);
-                            try {
-                                this.procs[rule.name].proc?.kill('SIGKILL');
-                            }
-                            catch {
-                                // ignore
-                            }
-                            delete this.procs[rule.name];
-                            // restart ffmpeg
-                            void this.startFFmpeg(rule, socket);
-                        }
-                    }
-                    else {
-                        delete this.procs[rule.name];
-                    }
-                }
+        const name = rule.name;
+        const entry = this.procs[name];
+        if (!entry) {
+            return;
+        }
+        const pos = entry.sockets.indexOf(socket);
+        if (pos !== -1) {
+            entry.sockets.splice(pos, 1);
+        }
+        // The source itself died - there is nothing to keep alive
+        const sourceDied = reason === 'ffmpeg error' ||
+            reason === 'ffmpeg end' ||
+            reason === 'go2rtc error' ||
+            reason === 'go2rtc end';
+        if (entry.sockets.length && !sourceDied) {
+            return;
+        }
+        if (entry.timer) {
+            this.adapter.clearTimeout(entry.timer);
+            entry.timer = undefined;
+        }
+        if (sourceDied) {
+            this.adapter.log.debug(`Stop source for "${name}", because of "${reason}"`);
+            this.stopSource(name);
+            delete this.procs[name];
+            return;
+        }
+        // Keep the source alive for a moment so that a page reload does not restart it
+        this.adapter.log.debug(`Stop source for "${name}" in 3s, because of "${reason}"`);
+        entry.timer = this.adapter.setTimeout(() => {
+            const current = this.procs[name];
+            if (!current) {
+                return;
+            }
+            current.timer = undefined;
+            if (current.sockets.length) {
+                this.adapter.log.debug(`Do not stop source for "${name}" because of new socket`);
+                return;
+            }
+            this.adapter.log.debug(`Stop source for "${name}" after 3s timeout`);
+            this.stopSource(name);
+            delete this.procs[name];
+        }, 3000);
+    }
+    /**
+     * Attach a socket to an already running source.
+     *
+     * Returns false if there is no source yet. Without this the second viewer of the same camera
+     * was never added to the list and therefore never received a frame.
+     */
+    attachSocket(name, socket) {
+        if (!this.procs[name]) {
+            return false;
+        }
+        if (!this.procs[name].sockets.includes(socket)) {
+            this.procs[name].sockets.push(socket);
+        }
+        if (this.procs[name].timer) {
+            this.adapter.log.debug(`Do not stop source for "${name}" because of new socket!`);
+            this.adapter.clearTimeout(this.procs[name].timer);
+            this.procs[name].timer = undefined;
+        }
+        return true;
+    }
+    /** Stop whichever source is feeding this camera */
+    stopSource(name) {
+        const entry = this.procs[name];
+        if (!entry) {
+            return;
+        }
+        try {
+            entry.proc?.kill('SIGKILL');
+        }
+        catch {
+            // ignore
+        }
+        try {
+            entry.go2rtcStream?.destroy();
+        }
+        catch {
+            // ignore
+        }
+        entry.proc = null;
+        entry.go2rtcStream = null;
+    }
+    /** Pick the frame source: go2rtc if it is configured and reachable, otherwise a local ffmpeg */
+    async startSource(rule, socket) {
+        if (this.go2rtc) {
+            try {
+                await this.startGo2Rtc(rule, socket);
+                return;
+            }
+            catch (e) {
+                this.adapter.log.warn(`go2rtc stream for "${rule.name}" failed, using ffmpeg instead: ${e}`);
+                delete this.procs[rule.name];
             }
         }
+        await this.startFFmpeg(rule, socket);
+    }
+    /**
+     * Feed the browser sockets from go2rtc. The frames leave this process in exactly the same
+     * shape as with ffmpeg, so the existing vis widget keeps working unchanged.
+     */
+    async startGo2Rtc(rule, socket) {
+        const name = rule.name;
+        if (this.attachSocket(name, socket)) {
+            return;
+        }
+        const { url } = await this.getRtspURL(rule);
+        this.procs[name] = { proc: null, go2rtcStream: null, sockets: [socket], timer: undefined };
+        this.adapter.log.debug(`Starting go2rtc stream for "${name}"`);
+        await this.go2rtc.ensureStream(name, url);
+        const { stream } = await this.go2rtc.openMjpegStream(name);
+        // The camera may have been dropped while we were connecting
+        if (!this.procs[name]) {
+            stream.destroy();
+            return;
+        }
+        this.procs[name].go2rtcStream = stream;
+        const extractor = new Go2RtcClient_1.JpegFrameExtractor();
+        stream.on('data', (chunk) => {
+            const frames = extractor.push(chunk);
+            if (!frames.length || !this.procs[name]) {
+                return;
+            }
+            for (const frame of frames) {
+                this.procs[name].sockets.forEach(s => s.send(frame, { binary: true }));
+            }
+        });
+        stream.on('error', (e) => {
+            this.adapter.log.debug(`go2rtc stream for "${name}" failed: ${e.message}`);
+            this.onSocketClose(rule, socket, 'go2rtc error');
+        });
+        stream.on('end', () => {
+            this.adapter.log.debug(`go2rtc stream for "${name}" ended`);
+            this.onSocketClose(rule, socket, 'go2rtc end');
+        });
     }
     async startFFmpeg(rule, socket) {
         this.getFfmpegPath();
@@ -341,33 +444,94 @@ class ProxyCameras {
                 this.onSocketClose(rule, socket, 'ffmpeg error');
             });
             const ffStream = this.procs[name].proc.pipe();
-            let chunks = Buffer.from([]);
-            let count = 0;
+            const extractor = new Go2RtcClient_1.JpegFrameExtractor();
             ffStream.on('data', (chunk) => {
-                if (chunk.length > 2 && chunk[0] === 0xff && chunk[1] === 0xd8) {
-                    count++;
-                    console.log(`Send chunk ${chunks.byteLength} (${count})`);
-                    this.procs[name].sockets.forEach(s => s.send(chunks, { binary: true }));
-                    chunks = chunk;
+                const frames = extractor.push(chunk);
+                if (!frames.length || !this.procs[name]) {
+                    return;
                 }
-                else {
-                    console.log(`Received chunk ${chunk.byteLength} of ${count}`);
-                    chunks = Buffer.concat([chunks, chunk]);
+                for (const frame of frames) {
+                    this.procs[name].sockets.forEach(s => s.send(frame, { binary: true }));
                 }
             });
         }
-        else if (this.procs[name].timer) {
-            // Disable stop timer
-            this.adapter.log.debug(`Do not stop ffmpeg for "${name}" because of new socket!`);
-            this.adapter.clearTimeout(this.procs[name].timer);
-            this.procs[name].timer = undefined;
+        else {
+            this.attachSocket(name, socket);
         }
+    }
+    /**
+     * Relay the go2rtc signalling WebSocket.
+     *
+     * The browser must not talk to go2rtc directly: its API is bound to localhost, and a page
+     * served over https may not open a ws:// connection. Going through this route means the
+     * connection inherits the scheme (ws/wss) and the authentication of ioBroker.web.
+     *
+     * The payload is passed through untouched, so offer/answer/candidate handling stays entirely
+     * between the browser and go2rtc.
+     */
+    async webrtcSignalling(rule, ws, cb) {
+        const client = this.go2rtc;
+        const socket = ws.ws;
+        if (!client) {
+            this.adapter.log.warn(`WebRTC requested for "${rule.name}" but go2rtc is not enabled`);
+            socket?.close();
+            cb?.(true);
+            return;
+        }
+        const { url } = await this.getRtspURL(rule);
+        await client.ensureStream(rule.name, url);
+        const upstream = new ws_1.WebSocket(client.getWsUrl(rule.name));
+        const pending = [];
+        let closed = false;
+        const closeBoth = (reason) => {
+            if (closed) {
+                return;
+            }
+            closed = true;
+            this.adapter.log.debug(`WebRTC relay for "${rule.name}" closed: ${reason}`);
+            try {
+                upstream.close();
+            }
+            catch {
+                // ignore
+            }
+            try {
+                socket?.close();
+            }
+            catch {
+                // ignore
+            }
+        };
+        upstream.on('open', () => {
+            while (pending.length) {
+                upstream.send(pending.shift());
+            }
+        });
+        upstream.on('message', (data, isBinary) => socket?.send(isBinary ? data : data.toString()));
+        upstream.on('error', (e) => closeBoth(`go2rtc error: ${e.message}`));
+        upstream.on('close', () => closeBoth('go2rtc closed'));
+        socket?.on('message', (data, isBinary) => {
+            const payload = isBinary ? data : data.toString();
+            if (upstream.readyState === ws_1.WebSocket.OPEN) {
+                upstream.send(payload);
+            }
+            else {
+                pending.push(payload);
+            }
+        });
+        socket?.on('close', () => closeBoth('browser closed'));
+        socket?.on('error', (e) => closeBoth(`browser error: ${e.message}`));
+        if (ws.enableCustomHandler) {
+            ws.enableCustomHandler(() => closeBoth('web server stopping'));
+        }
+        // We handle every message on this socket ourselves
+        cb?.(true);
     }
     async rtsp2mjpeg(rule, ws, cb) {
         // Request for connection
         this.adapter.log.debug(`New socket connection for "${rule.name}"`);
         const socket = ws.ws;
-        await this.startFFmpeg(rule, socket);
+        await this.startSource(rule, socket);
         // Inform the web socket that we will handle everything ourselves
         if (ws.enableCustomHandler) {
             // The socket was closed by web instance
@@ -391,6 +555,19 @@ class ProxyCameras {
             cb(true);
         }
     }
+    /** Pipe the go2rtc MJPEG stream to an express response */
+    async streamMjpeg(rule, res) {
+        const client = this.go2rtc;
+        const { url } = await this.getRtspURL(rule);
+        await client.ensureStream(rule.name, url);
+        const { stream, contentType } = await client.openMjpegStream(rule.name);
+        res.setHeader('Content-Type', contentType);
+        res.setHeader('Cache-Control', 'no-store, private');
+        // Stop pulling from the camera as soon as the browser goes away
+        res.on('close', () => stream.destroy());
+        stream.on('error', () => res.end());
+        stream.pipe(res);
+    }
     oneCamera(rule) {
         this.adapter.log.info(`Install extension on /${this.config.route}${rule.name}`);
         this.app.use(`/${this.config.route}${rule.name}`, (req, res) => {
@@ -403,6 +580,12 @@ class ProxyCameras {
                 }
             });
             query.key = this.config.key;
+            // Continuous MJPEG straight from go2rtc, usable in a plain <img src="...">.
+            // Proxied on purpose - the go2rtc API stays bound to localhost.
+            if (this.go2rtc && req.path.match(/^\/stream\.mjpeg/)) {
+                this.streamMjpeg(rule, res).catch(error => this.adapter.log.debug(`MJPEG stream for "${rule.name}" ended: ${error}`));
+                return;
+            }
             if (req.path.match(/^\/streaming/)) {
                 getUrl(rule.name + req.path, query, this.config.port)
                     .then(file => {
@@ -437,6 +620,16 @@ class ProxyCameras {
             this.ioServer.addWsRoute(`/${this.config.route}${rule.name}`, (ws, cb) => {
                 void this.rtsp2mjpeg(rule, ws, cb);
             });
+            // Separate exact path - the route table matches the pathname exactly, no wildcards
+            if (this.go2rtc) {
+                this.adapter.log.info(`Install WebRTC signalling on /${this.config.route}${rule.name}/webrtc`);
+                this.ioServer.addWsRoute(`/${this.config.route}${rule.name}/webrtc`, (ws, cb) => {
+                    this.webrtcSignalling(rule, ws, cb).catch(e => {
+                        this.adapter.log.warn(`Cannot start WebRTC for "${rule.name}": ${e}`);
+                        cb?.(true);
+                    });
+                });
+            }
         }
     }
 }

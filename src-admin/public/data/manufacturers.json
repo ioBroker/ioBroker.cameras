@@ -1,0 +1,198 @@
+[
+    {
+        "id": "abus",
+        "name": "ABUS"
+    },
+    {
+        "id": "acti",
+        "name": "ACTi"
+    },
+    {
+        "id": "amcrest",
+        "name": "Amcrest"
+    },
+    {
+        "id": "annke",
+        "name": "ANNKE"
+    },
+    {
+        "id": "arecont",
+        "name": "Arecont Vision"
+    },
+    {
+        "id": "avtech",
+        "name": "AVTECH"
+    },
+    {
+        "id": "axis",
+        "name": "Axis"
+    },
+    {
+        "id": "bosch",
+        "name": "Bosch"
+    },
+    {
+        "id": "canon",
+        "name": "Canon"
+    },
+    {
+        "id": "d-link",
+        "name": "D-Link"
+    },
+    {
+        "id": "dahua",
+        "name": "Dahua"
+    },
+    {
+        "id": "edimax",
+        "name": "Edimax"
+    },
+    {
+        "id": "eufy",
+        "name": "Eufy"
+    },
+    {
+        "id": "ezviz",
+        "name": "EZVIZ"
+    },
+    {
+        "id": "foscam",
+        "name": "Foscam"
+    },
+    {
+        "id": "geovision",
+        "name": "GeoVision"
+    },
+    {
+        "id": "grandstream",
+        "name": "Grandstream"
+    },
+    {
+        "id": "hanwha",
+        "name": "Hanwha Techwin"
+    },
+    {
+        "id": "hikvision",
+        "name": "Hikvision"
+    },
+    {
+        "id": "honeywell",
+        "name": "Honeywell"
+    },
+    {
+        "id": "imou",
+        "name": "Imou"
+    },
+    {
+        "id": "instar",
+        "name": "INSTAR"
+    },
+    {
+        "id": "lorex",
+        "name": "Lorex"
+    },
+    {
+        "id": "milesight",
+        "name": "Milesight"
+    },
+    {
+        "id": "mobotix",
+        "name": "MOBOTIX"
+    },
+    {
+        "id": "panasonic",
+        "name": "Panasonic"
+    },
+    {
+        "id": "pelco",
+        "name": "Pelco"
+    },
+    {
+        "id": "planet",
+        "name": "PLANET"
+    },
+    {
+        "id": "reolink",
+        "name": "Reolink"
+    },
+    {
+        "id": "samsung",
+        "name": "Samsung"
+    },
+    {
+        "id": "sannce",
+        "name": "SANNCE"
+    },
+    {
+        "id": "sony",
+        "name": "Sony"
+    },
+    {
+        "id": "sricam",
+        "name": "Sricam"
+    },
+    {
+        "id": "swann",
+        "name": "Swann"
+    },
+    {
+        "id": "tenvis",
+        "name": "TENVIS"
+    },
+    {
+        "id": "toshiba",
+        "name": "Toshiba"
+    },
+    {
+        "id": "tp-link",
+        "name": "TP-Link"
+    },
+    {
+        "id": "tapo",
+        "name": "TP-Link Tapo"
+    },
+    {
+        "id": "trendnet",
+        "name": "TRENDnet"
+    },
+    {
+        "id": "ubiquiti",
+        "name": "Ubiquiti"
+    },
+    {
+        "id": "uniview",
+        "name": "Uniview"
+    },
+    {
+        "id": "vivotek",
+        "name": "VIVOTEK"
+    },
+    {
+        "id": "vstarcam",
+        "name": "VStarcam"
+    },
+    {
+        "id": "wanscam",
+        "name": "Wanscam"
+    },
+    {
+        "id": "wansview",
+        "name": "Wansview"
+    },
+    {
+        "id": "xiaomi",
+        "name": "Xiaomi"
+    },
+    {
+        "id": "yi",
+        "name": "YI"
+    },
+    {
+        "id": "zavio",
+        "name": "Zavio"
+    },
+    {
+        "id": "zmodo",
+        "name": "Zmodo"
+    }
+]

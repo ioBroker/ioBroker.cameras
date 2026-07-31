@@ -17,6 +17,8 @@ admin/i18n/*/flat.txt
 /src-widgets/build/
 /win-ffmpeg.exe
 /src-widgets/.__mf__temp/
+/src-devices/build/
+/src-devices/.__mf__temp/
 
 #ignore .commitinfo created by ioBroker release script
 .commitinfo

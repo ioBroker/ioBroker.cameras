@@ -1,0 +1,229 @@
+[
+    {
+        "models": [
+            "740",
+            "CRN-300",
+            "VB-M50B"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/stream/profile2=r",
+        "port": 0
+    },
+    {
+        "models": [
+            "CN-R500",
+            "CR-N500",
+            "M42",
+            "m44",
+            "vb-610",
+            "VB-C10",
+            "VB-C300",
+            "VB-C50i/C50iR",
+            "VB-C60",
+            "VB-H41",
+            "VB-H43",
+            "VB-H45",
+            "VB-h610",
+            "VB-H610VE",
+            "VB-H630VE",
+            "VB-H710F",
+            "VB-H730F",
+            "VB-M40",
+            "VB-M42",
+            "VB-M44",
+            "VB-M50B",
+            "VB-M600D",
+            "VB-M620VE",
+            "VB-M700F",
+            "VB-M720F",
+            "VBS30D",
+            "VB-S30D",
+            "VB-S30VE",
+            "VB-S805D",
+            "VB-S900F",
+            "VB-S905F",
+            "VB-M46",
+            "CR-N100"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/-wvhttp-01-/video.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "CRN-300",
+            "VB-M720F"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/-wvhttp-01-/GetOneShot?image_size=320x240&frame_count=0",
+        "port": 80
+    },
+    {
+        "models": [
+            "DC210"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/?&AUDIO=YES&CHOPIMAGE=YES&STREAM=YES&WANTIMAGE=[CHANNEL].JPG&SENDEMPTYIMAGES=NO",
+        "port": 0
+    },
+    {
+        "models": [
+            "i50",
+            "VB300",
+            "VB-C10",
+            "VB-C300",
+            "VB-C500D",
+            "VB-C50FSi",
+            "vb-c50i",
+            "VB-C50i/C50iR",
+            "VB-C60",
+            "vb-h41",
+            "VB-H43",
+            "VB-H630",
+            "VB-H630VE",
+            "VB-M40",
+            "VB-M42",
+            "VB-M50B",
+            "VBS30D",
+            "VB-S900F"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/-wvhttp-01-/GetOneShot?image_size=[WIDTH]x[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/cam[CHANNEL]/h264",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "VLC",
+        "protocol": "http://",
+        "path": "/vdata.v",
+        "port": 0
+    },
+    {
+        "models": [
+            "vb150",
+            "VB-C10",
+            "vb-c10r",
+            "VB-C300",
+            "VB-C50Fi",
+            "VB-C50FSi",
+            "vb-c50i",
+            "VB-C50i/C50iR",
+            "VB-C60",
+            "VB-M40",
+            "VB-M42",
+            "VB-M600D"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/-wvhttp-01-/GetOneShot?image_size=[WIDTH]x[HEIGHT]&frame_count=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "VB-C10",
+            "VB-C300",
+            "VB-M40"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/-wvhttp-01-/GetLiveImage",
+        "port": 0
+    },
+    {
+        "models": [
+            "VB-C300"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "",
+        "port": 0
+    },
+    {
+        "models": [
+            "vb-h41",
+            "vb-h630",
+            "VB-H710F",
+            "VB-M42",
+            "VB-M50B",
+            "VB-M720F",
+            "VB-S900F",
+            "VB-S905F"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/stream/profile1=r",
+        "port": 0
+    },
+    {
+        "models": [
+            "VB-H43",
+            "VB-S800D"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/stream/profile0=r",
+        "port": 0
+    },
+    {
+        "models": [
+            "VB-M40"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/profile1=u",
+        "port": 0
+    },
+    {
+        "models": [
+            "VB-M600D"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/profile1=r",
+        "port": 0
+    },
+    {
+        "models": [
+            "VB-M720F",
+            "VB-R12VE"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/-wvhttp-01-/GetOneShot?image_size=320x240",
+        "port": 80
+    },
+    {
+        "models": [
+            "VB-S900F"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/viewer/admin/index.html?lang=en",
+        "port": 80
+    },
+    {
+        "models": [
+            "VB-S900F"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/",
+        "port": 554
+    }
+]

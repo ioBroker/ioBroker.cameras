@@ -1,6 +1,17 @@
 import React, { Component } from 'react';
 
-import { TextField, Snackbar, IconButton, FormControl, Select, Button, MenuItem, InputLabel } from '@mui/material';
+import {
+    TextField,
+    Snackbar,
+    IconButton,
+    FormControl,
+    Select,
+    Button,
+    MenuItem,
+    InputLabel,
+    Checkbox,
+    FormControlLabel,
+} from '@mui/material';
 
 import { MdClose as IconClose, MdCheck as IconTest } from 'react-icons/md';
 
@@ -48,7 +59,7 @@ interface OptionsProps {
     onError: (error: string) => void;
     onConfigError: (error: string) => void;
     onLoad: (config: CamerasAdapterConfig) => void;
-    onChange: (attr: string, value: number | string) => void;
+    onChange: (attr: string, value: number | string | boolean) => void;
     getIpAddresses: () => Promise<string[]>;
     getExtendableInstances: () => Promise<ioBroker.InstanceObject[]>;
     socket: AdminConnection;
@@ -114,8 +125,8 @@ class Options extends Component<OptionsProps, OptionsState> {
                 open={true}
                 autoHideDuration={6000}
                 onClose={() => this.setState({ toast: '' })}
-                ContentProps={{
-                    'aria-describedby': 'message-id',
+                slotProps={{
+                    content: { 'aria-describedby': 'message-id' },
                 }}
                 message={<span id="message-id">{this.state.toast}</span>}
                 action={[
@@ -322,6 +333,52 @@ class Options extends Component<OptionsProps, OptionsState> {
                     onChange={e => this.props.onChange('tempPath', e.target.value)}
                     helperText={I18n.t('If empty then in adapter folder')}
                 />
+                <div>
+                    <FormControlLabel
+                        key="useGo2rtc"
+                        control={
+                            <Checkbox
+                                disabled={this.state.requesting}
+                                checked={!!this.props.native.useGo2rtc}
+                                onChange={e => this.props.onChange('useGo2rtc', e.target.checked)}
+                            />
+                        }
+                        label={I18n.t('Use go2rtc for RTSP cameras')}
+                    />
+                </div>
+                {this.props.native.useGo2rtc ? (
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'baseline' }}>
+                        <TextField
+                            variant="standard"
+                            disabled={this.state.requesting}
+                            key="go2rtcPath"
+                            style={styles.ffmpegPath}
+                            label={I18n.t('Path to go2rtc executable')}
+                            value={this.props.native.go2rtcPath || ''}
+                            onChange={e => this.props.onChange('go2rtcPath', e.target.value)}
+                            helperText={I18n.t('If empty then searched automatically')}
+                        />
+                        <TextField
+                            variant="standard"
+                            disabled={this.state.requesting}
+                            key="go2rtcApiPort"
+                            type="number"
+                            label={I18n.t('go2rtc API port')}
+                            value={this.props.native.go2rtcApiPort || 1984}
+                            onChange={e => this.props.onChange('go2rtcApiPort', e.target.value)}
+                        />
+                        <TextField
+                            variant="standard"
+                            disabled={this.state.requesting}
+                            key="go2rtcRtspPort"
+                            type="number"
+                            label={I18n.t('go2rtc RTSP port')}
+                            value={this.props.native.go2rtcRtspPort || 8554}
+                            onChange={e => this.props.onChange('go2rtcRtspPort', e.target.value)}
+                            helperText={I18n.t('Only on localhost')}
+                        />
+                    </div>
+                ) : null}
                 <TextField
                     variant="standard"
                     disabled={this.state.requesting}

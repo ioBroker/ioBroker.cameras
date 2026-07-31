@@ -1,0 +1,676 @@
+[
+    {
+        "models": [
+            "101",
+            "107",
+            "ICA-107",
+            "ICA-108",
+            "ICA-108W",
+            "ICA-150",
+            "ICA-350",
+            "ICA-HM100",
+            "ICA-HM132/136/316",
+            "ICA-HM230",
+            "IVS-H125"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/ipcam.sdp",
+        "port": 0
+    },
+    {
+        "models": [
+            "107",
+            "ICA-108",
+            "ICA-108W",
+            "ICA-4200V",
+            "ICA-510",
+            "ICA-5250V",
+            "ICA-M220"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/jpg/image.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "107",
+            "IC-107",
+            "ICA-107",
+            "ICA-108w"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpg/video.mjpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "210",
+            "H-625",
+            "H-652",
+            "HM-126",
+            "HM-131",
+            "ICA-HM351",
+            "ICA-1200",
+            "ICA-150",
+            "ICA-210",
+            "ICA-651",
+            "ICA-HC652",
+            "ICA-HM312",
+            "ICA-HM100",
+            "ICA-HM126",
+            "ICA-HM132",
+            "ICA-HM132/136/316",
+            "ICA-HM136",
+            "ICA-HM210",
+            "ICA-HM620",
+            "ICA-HM718",
+            "IVS-H125",
+            "IVS-H125p"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/jpg/image.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "211",
+            "H-652",
+            "HM-126",
+            "HM-351",
+            "ICA-100C",
+            "ICA-108",
+            "ICA-108W",
+            "ICA-1200",
+            "ICA-150",
+            "ICA-210",
+            "ICA-2200",
+            "ICA-4480",
+            "ICA-500",
+            "ICA-510",
+            "ICA-HM100",
+            "ICA-HM101",
+            "ICA-HM120",
+            "ICA-HM130",
+            "ICA-HM132",
+            "ICA-HM132/136/316",
+            "ICA-HM230",
+            "ICA-HM620",
+            "ICA-M220"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/h264",
+        "port": 0
+    },
+    {
+        "models": [
+            "3250",
+            "ICA-3150",
+            "ICA-3250",
+            "ICA-4250"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/stander/livestream/0/0",
+        "port": 0
+    },
+    {
+        "models": [
+            "500",
+            "ICA-300",
+            "ICA-500",
+            "ICA-500-MAG",
+            "ICA-500-PA",
+            "ICA-HM100"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/GetData.cgi?Status=false",
+        "port": 0
+    },
+    {
+        "models": [
+            "550",
+            "Unknown",
+            "ICA-HM132",
+            "ICA-HM132/136/316",
+            "IVS-H125"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/v2",
+        "port": 0
+    },
+    {
+        "models": [
+            "BC-5010",
+            "HM-227W",
+            "ICA-107",
+            "ICA-108",
+            "ICA-2200",
+            "ICA-700",
+            "ICA-E5550V",
+            "ICA-HM101",
+            "ICA-HM132/136/316",
+            "ICA-HM230",
+            "ICA-HM317",
+            "ICA-HM350",
+            "ICA-M227",
+            "ICA-4200",
+            "ICA-4200V"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/stream1",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown",
+            "ICA-3250",
+            "ICA-HM-130",
+            "ICA-4500v",
+            "ICA-HM350"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/stander/livestream/0/1",
+        "port": 554
+    },
+    {
+        "models": [
+            "CS-32C65E",
+            "ICA-100C",
+            "ICS-100"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/VIDEO.CGI",
+        "port": 0
+    },
+    {
+        "models": [
+            "HM-130",
+            "ICA-100C",
+            "ICA-108",
+            "ICA-108W",
+            "ICA-210",
+            "ICA-500",
+            "ICA-HM100",
+            "ICA-HM120",
+            "ICA-HM132/136/316",
+            "ICA-HM230",
+            "ICA-M220"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/jpeg",
+        "port": 0
+    },
+    {
+        "models": [
+            "HM-1126",
+            "ICA-HM120",
+            "ICA-HM125"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/admin/snapshot.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "HM-126",
+            "HM610",
+            "ICA-108W",
+            "ICA-210",
+            "ICA-220-nr1",
+            "ICA-4200V",
+            "ICA-530",
+            "ICA-8350",
+            "ICA-HM126",
+            "ICA-HM312",
+            "IVS-H125"
+        ],
+        "variant": "VLC",
+        "protocol": "http://",
+        "path": "/cgi-bin/net_video.cgi?channel=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "HM-126"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/axis-media/media.amp?videocodec=h264&resolution=640x480",
+        "port": 0
+    },
+    {
+        "models": [
+            "HM-126",
+            "ICA-3350",
+            "ICA-107",
+            "ICA-2200",
+            "ICA-510",
+            "ICA-530n",
+            "ICA-5350V",
+            "ICA-8350",
+            "ICA-HM126",
+            "ICA-W1200"
+        ],
+        "variant": "VLC",
+        "protocol": "http://",
+        "path": "/axis-cgi/mjpg/video.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "HM-126",
+            "HM-131",
+            "HM-31",
+            "ICA-HM126",
+            "ICA-H652"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/cam[CHANNEL]/h264",
+        "port": 0
+    },
+    {
+        "models": [
+            "HM-131",
+            "HM-316w",
+            "ICA-5250",
+            "ICA-HM136"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/",
+        "port": 5544
+    },
+    {
+        "models": [
+            "HM-132",
+            "ICA-302",
+            "ICA-500",
+            "ICA-HM132",
+            "ICA-HM132/136/316",
+            "ICA-HM136",
+            "ICA-MS8350"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/GetData.cgi?CH=2",
+        "port": 0
+    },
+    {
+        "models": [
+            "HM-227W",
+            "ICA-HM132/136/316",
+            "ICA-HM317"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/cgi/mjpg/mjpeg.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-550W"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/img/snapshot.cgi?size=2",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA100",
+            "ICA-110",
+            "ICA-210W",
+            "ICA300"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/goform/video",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-100C"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/image.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-100C",
+            "ICA-108",
+            "ICA-HM100",
+            "ICA-HM101",
+            "ICA-HM132/136/316"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/img/video.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-100C",
+            "ICA-100pe",
+            "ICA-110"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/IMAGE.JPG",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-100C",
+            "ICA-108",
+            "ICA-108W",
+            "ICA-750",
+            "ICA-750-PA"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/img/mjpeg.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-100C",
+            "ICA-108W",
+            "ICA-HM100",
+            "ICA-HM100W",
+            "ICA-HM230"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/video.cgi?resolution=[WIDTH]x[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-106",
+            "ICA-150",
+            "ICA-510",
+            "ICA-550",
+            "ICA-700"
+        ],
+        "variant": "VLC",
+        "protocol": "http://",
+        "path": "/img/video.asf",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-107",
+            "ICA-108",
+            "ICA-510",
+            "ICA-700",
+            "ICA-HC652"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/jpg/image.jpg?size=3",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-107",
+            "ICA-107P",
+            "ICA-107W",
+            "ICA-108p"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpg/1/video.mjpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-108",
+            "ICA-HM100"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/GetData.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-108",
+            "ICA-210",
+            "ICA-HM100"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/goform/capture",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-108",
+            "ICA-120",
+            "ICA-510",
+            "ICA-5350v",
+            "ICA-8350",
+            "ICA-HM312",
+            "ICA-M4320P",
+            "ICA-H652"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpg/video.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-108",
+            "ICA-108W",
+            "ICA-HM100",
+            "ICA-HM230",
+            "IVS-H125"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/image.cgi?resolution=[WIDTH]x[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-110",
+            "ICA-110W",
+            "ICA-210"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/goform/video2",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-150",
+            "ICA-550",
+            "ICA-700",
+            "ICA-HM101",
+            "ICA-HM132/136/316"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/img/mjpeg.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-3350V",
+            "IVS-H125P"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/11",
+        "port": 5544
+    },
+    {
+        "models": [
+            "ICA-500",
+            "ICA-500-PA",
+            "ICA-HM100",
+            "ICA-HM101"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/Jpeg/CamImg.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-510"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/img/media.sav",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-510"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/ipcam_h264.sdp",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-510",
+            "ICA-5350V"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/video.mjpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-HM100"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/live.sdp",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-HM120"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/media/media.amp",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-HM132",
+            "ICA-HM132/136/316",
+            "ICA-HM718"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-HM132/136/316",
+            "ICA-M220"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-HM132/136/316"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/h264/ch1/sub/",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-HM-220W"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpg/video.mjpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-M220"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICA-W8100",
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live1.sdp",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/tmp/snap.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/video",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/onvif-stream2",
+        "port": 7070
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/user=[USERNAME]_password=[PASSWORD]_channel=1_stream=0.sdp",
+        "port": 0
+    }
+]

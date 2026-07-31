@@ -16,12 +16,15 @@ export default [
         ignores: [
             'src-admin/**/*',
             'src-widgets/**/*',
+            'src-devices/**/*',
             'admin/**/*',
             'widgets/**/*',
             'node_modules/**/*',
             'test/**/*',
             'build/**/*',
             'tasks.js',
+            // Build/maintenance scripts, not part of the compiled adapter
+            'tools/**/*.js',
             'tmp/**/*',
             '.**/*',
         ],

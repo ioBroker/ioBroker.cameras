@@ -160,6 +160,46 @@
                 "dsn": "https://4559263b70ec40af801ccd777f5a79e6@sentry.iobroker.net/231"
             }
         },
+        "deviceWidgets": {
+            "components": [
+                {
+                    "name": "RtspCameraComponent",
+                    "label": "RTSP Camera",
+                    "description": {
+                        "en": "Live picture of an RTSP camera",
+                        "de": "Livebild einer RTSP-Kamera",
+                        "ru": "Живое изображение с RTSP-камеры",
+                        "pt": "Imagem ao vivo de uma câmera RTSP",
+                        "nl": "Livebeeld van een RTSP-camera",
+                        "fr": "Image en direct d'une caméra RTSP",
+                        "it": "Immagine dal vivo di una telecamera RTSP",
+                        "es": "Imagen en vivo de una cámara RTSP",
+                        "pl": "Obraz na żywo z kamery RTSP",
+                        "uk": "Живе зображення з RTSP-камери",
+                        "zh-cn": "RTSP 摄像机的实时图像"
+                    },
+                    "icon": "cameras.png"
+                },
+                {
+                    "name": "SnapshotCameraComponent",
+                    "label": "Snapshot Camera",
+                    "description": {
+                        "en": "Periodically updated snapshot of a camera",
+                        "de": "Regelmäßig aktualisiertes Standbild einer Kamera",
+                        "ru": "Периодически обновляемый снимок камеры",
+                        "pt": "Snapshot da câmera atualizado periodicamente",
+                        "nl": "Periodiek vernieuwde momentopname van een camera",
+                        "fr": "Instantané d'une caméra mis à jour périodiquement",
+                        "it": "Istantanea della telecamera aggiornata periodicamente",
+                        "es": "Instantánea de una cámara actualizada periódicamente",
+                        "pl": "Okresowo odświeżane zdjęcie z kamery",
+                        "uk": "Періодично оновлюваний знімок камери",
+                        "zh-cn": "定期更新的摄像机快照"
+                    },
+                    "icon": "cameras.png"
+                }
+            ]
+        },
         "visWidgets": {
             "vis2CameraWidgets": {
                 "i18n": "component",
@@ -183,6 +223,10 @@
         "allowIPs": "",
         "ffmpegPath": "/usr/bin/ffmpeg",
         "tempPath": "",
+        "useGo2rtc": false,
+        "go2rtcPath": "",
+        "go2rtcApiPort": 1984,
+        "go2rtcRtspPort": 8554,
         "dateFormat": "LTS",
         "language": "",
         "cameras": [

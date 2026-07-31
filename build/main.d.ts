@@ -11,6 +11,7 @@ export declare class CamerasAdapter extends Adapter {
     private cameras;
     private bForce;
     private ffmpegPath;
+    private go2rtc;
     constructor(options?: Partial<AdapterOptions>);
     onStateChange(id: string, state: ioBroker.State | null | undefined): void;
     onUnload(cb: () => void): void;

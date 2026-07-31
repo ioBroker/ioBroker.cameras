@@ -1,0 +1,15 @@
+{
+  "cameras_RtspCamera": "RTSP-camera",
+  "cameras_SnapshotCamera": "Snapshotcamera",
+  "cameras_cameraStateId": "Camera",
+  "cameras_cameraStateId_help": "Kies een state van de camera, bijv. cameras.0.cam1.running",
+  "cameras_instance_inactive": "Camera-instantie draait niet",
+  "cameras_loading": "Laden…",
+  "cameras_noCache": "Cache omzeilen",
+  "cameras_no_camera": "Geen camera geselecteerd",
+  "cameras_pollingInterval": "Pollinginterval (ms)",
+  "cameras_pollingInterval_help": "Hoe vaak een nieuwe afbeelding wordt opgevraagd",
+  "cameras_rotate": "Rotatie",
+  "cameras_snapshotWhenOffline": "Toon stilstaand beeld tot de stream start",
+  "cameras_snapshotWhenOffline_help": "Voorkomt een lege tegel terwijl de stream start"
+}

@@ -1,0 +1,985 @@
+[
+    {
+        "models": [
+            "C38S-P",
+            "12345",
+            "12345678",
+            "202",
+            "7204",
+            "7337",
+            "7824",
+            "7824WIP",
+            "7833",
+            "7837",
+            "7837WIP",
+            "888",
+            "af81",
+            "bl2602",
+            "C15S",
+            "C16S",
+            "C17s",
+            "c22q",
+            "C23",
+            "C23s",
+            "c24s",
+            "C25",
+            "C26S",
+            "C29S",
+            "C33-X4",
+            "C37A",
+            "C38S",
+            "C38S-YG",
+            "C43s",
+            "c50s",
+            "c63s",
+            "C662DR",
+            "C7248",
+            "C7284",
+            "C7388WIP-X4",
+            "C78",
+            "C7815WIP",
+            "c7816",
+            "C7816w",
+            "C7816WIP",
+            "C7823WIP",
+            "c7824",
+            "C7824w",
+            "C7824WIP",
+            "C-7824WIP",
+            "C7824WIP ONV",
+            "C782WIP",
+            "C783",
+            "C-7833",
+            "C7833WIP",
+            "C7833WIPx4",
+            "C-7835wip",
+            "C7837",
+            "C-7837WIP",
+            "C7838",
+            "C7838W",
+            "C-7838WIP",
+            "C7862",
+            "C78833WIP-X4",
+            "C7893WIP",
+            "c7983wip",
+            "C82",
+            "C8733WIP-X4",
+            "C8737",
+            "C8892",
+            "C996DR",
+            "C99S Pro-X5 AI",
+            "CS-1",
+            "CS611Q-X5",
+            "CS621SR",
+            "e38s",
+            "Unknown",
+            "Icam-608",
+            "ip001",
+            "pt 737",
+            "QF100",
+            "T-7815WIP",
+            "T-7838WIP",
+            "v21s",
+            "V61S",
+            "vp-373",
+            "W7815WIP",
+            "cs26q",
+            "KS26Q",
+            "CS621ZR",
+            "C622"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/tcp/av0_0",
+        "port": 10554
+    },
+    {
+        "models": [
+            "100",
+            "29S",
+            "720",
+            "7824",
+            "Af81",
+            "C-16s",
+            "C18S",
+            "C23",
+            "C26S",
+            "C320",
+            "c33",
+            "C33-X4",
+            "C46S",
+            "C61S",
+            "C662DR",
+            "C7388WIP-X4",
+            "c7815wip",
+            "c7816wip",
+            "C7823",
+            "C7824",
+            "c7824wip",
+            "C7833WIP-X4",
+            "C7837",
+            "C7837WIP",
+            "C7837WIP_101",
+            "c789",
+            "c7983wip",
+            "C82R",
+            "c991",
+            "CP782WIP",
+            "CS52Q",
+            "CS55",
+            "cs58q-uv",
+            "Unknown",
+            "PT3538",
+            "V3683",
+            "C24s",
+            "vx25",
+            "C55s",
+            "QW2"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/tcp/av0_1",
+        "port": 10554
+    },
+    {
+        "models": [
+            "100",
+            "7816WIP",
+            "c16s",
+            "C18S",
+            "C19",
+            "c19s",
+            "c24s",
+            "C26S",
+            "C29",
+            "C29S",
+            "c34s",
+            "C37S",
+            "C50S",
+            "C53S",
+            "C58HD",
+            "c63s",
+            "C7815WIP",
+            "C-7816WIP",
+            "C7824WIP",
+            "C-7833WIP-X4",
+            "C7837WIP",
+            "C7842WIP",
+            "C82R",
+            "C8817WIP",
+            "C8873B",
+            "C-8892",
+            "C90S",
+            "Cam360 T720PWIP",
+            "cs64",
+            "H-6837WIP",
+            "PTZ1",
+            "T-6835WIP",
+            "T-7833WIP",
+            "T-7837WIP",
+            "c21s",
+            "C98S Plus"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?rate=0&user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 81
+    },
+    {
+        "models": [
+            "100A",
+            "222",
+            "7281",
+            "7816WIP",
+            "7824WIP",
+            "7837WIP",
+            "C16",
+            "C16S",
+            "C17S",
+            "C18S",
+            "C22S",
+            "C24",
+            "c24s",
+            "C24S",
+            "C24Stg",
+            "C29",
+            "C29S",
+            "C320",
+            "c32s-x4",
+            "C58HD",
+            "c63s",
+            "C-7816WIP",
+            "C7823WIP",
+            "C7824",
+            "C7824WIP",
+            "C7824WIP ONV",
+            "C782WIP",
+            "C7833WiP-X4",
+            "C7837WIP",
+            "C-7837WIP",
+            "C7837WIP(B)",
+            "C7838",
+            "C82R",
+            "C-8716WIP",
+            "C88S-PLUS",
+            "C95",
+            "f24s",
+            "F-6836W",
+            "G43S",
+            "C37S",
+            "T6836WP",
+            "T6836WTP",
+            "T-7815WIP",
+            "T7835WIP",
+            "T-7837WIP",
+            "T-7838WIP"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]&resolution=32&rate=0",
+        "port": 81
+    },
+    {
+        "models": [
+            "1234",
+            "7816wip",
+            "7837",
+            "c16s",
+            "C22S",
+            "C34",
+            "C7428",
+            "C-7837WIP",
+            "C-7838WIP",
+            "C-8716WIP",
+            "CS58",
+            "CW34S-X4",
+            "Kar1315",
+            "T-6835WIP",
+            "T6836WP",
+            "T-6892wp",
+            "T-7815WIP",
+            "T-7833wip",
+            "T-7837WIP",
+            "T-7838WIP",
+            "T-7892WIP",
+            "C58HD"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/img/snapshot.cgi?size=2",
+        "port": 81
+    },
+    {
+        "models": [
+            "6868",
+            "C7824WIP",
+            "Unknown",
+            "F-6836W",
+            "H-6837WI",
+            "H-6850WIP",
+            "T-7837WIP"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?usr=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "720",
+            "7824WIP",
+            "7837",
+            "7837WIP",
+            "C7824WIP",
+            "c16s",
+            "C17S",
+            "C24S",
+            "C25",
+            "C50S",
+            "C7812WIP",
+            "C7815WIP",
+            "C7816",
+            "C7816WIP",
+            "C-7816WIP",
+            "C7823WIP",
+            "c7824",
+            "c7824wip",
+            "C-7824WIP",
+            "C-7837WIP",
+            "C7837WIP(B)",
+            "c-8716wip",
+            "c90s",
+            "CB73",
+            "H6837WIP",
+            "s18",
+            "T-6835WIP",
+            "T6836WP",
+            "T-6836WTP",
+            "T-7833wip",
+            "T-7838WIP",
+            "v18",
+            "v18s",
+            "C92S",
+            "c88s-plus"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi?user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 10554
+    },
+    {
+        "models": [
+            "7816WIP",
+            "7824",
+            "7837",
+            "C16S",
+            "C25",
+            "C29S",
+            "c32s-x4",
+            "C34S",
+            "C35S",
+            "C37A",
+            "C38",
+            "C38S",
+            "C58HD",
+            "C63S",
+            "C7816WIP",
+            "C-7816WIP",
+            "c7824wip",
+            "C7824WIP",
+            "c7833wip",
+            "c7833wip-x4",
+            "C7837WIP",
+            "C7837WIP(B)",
+            "C7842WIP",
+            "C93",
+            "F-6836W",
+            "H-6837WI",
+            "H-6837WIP",
+            "H-6850wip",
+            "ICAM-608",
+            "T-6835WIP",
+            "T-6836WTP",
+            "T-6892wp",
+            "T-7815WIP",
+            "T-7833wip",
+            "T7835WIP",
+            "T7837WIP",
+            "T-7838WIP",
+            "T-7892WIP"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 10554
+    },
+    {
+        "models": [
+            "7823",
+            "C7824WIP",
+            "C16S",
+            "C24S",
+            "c37a",
+            "C63S",
+            "c7815wip",
+            "C7816W",
+            "C7816wip",
+            "C7823WIP",
+            "C-7833wip",
+            "C7837WIP",
+            "C7838WIP",
+            "C7842WIP",
+            "C93",
+            "f6815WI",
+            "C37S",
+            "T-6892wp",
+            "T7812IP",
+            "T-7833WIP",
+            "T-7838WIP"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]&resolution=32&rate=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "7824",
+            "7824WIP",
+            "C7824WIP",
+            "C16S",
+            "C17S",
+            "C25",
+            "C29S",
+            "C38S",
+            "C38S-JS",
+            "C7812WIP",
+            "c7815wap",
+            "C7815WIP",
+            "C7816",
+            "C-7816WIP",
+            "C7823WIP",
+            "C-7833WIP-X4",
+            "C7837",
+            "C-7837WIP",
+            "C7837WIP",
+            "C7842WIP",
+            "H-6837WI",
+            "s18",
+            "T-6836W",
+            "T6836WP",
+            "T-7815WIP",
+            "T-7833wip",
+            "T-7838WIP",
+            "T-7892WIP",
+            "v18"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi/snapshot.cgi?action=getdata&channel.[CHANNEL].capture=true&channel.[CHANNEL].resolution=1",
+        "port": 10554
+    },
+    {
+        "models": [
+            "7824",
+            "7824WIP",
+            "7833",
+            "c16s",
+            "C24S",
+            "C7815WIP",
+            "C7823WIP",
+            "C7824WIP",
+            "C7833WIPX4",
+            "C7837WIP",
+            "C7838WIP",
+            "C7842WIP",
+            "T-6835WIP",
+            "T6836WTP",
+            "T-7833WIP",
+            "T-7892WIP"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/img/snapshot.cgi?size=3",
+        "port": 81
+    },
+    {
+        "models": [
+            "7837WIP",
+            "C7837WIP"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi?usr=[USERNAME]&pwd=[PASSWORD]",
+        "port": 10554
+    },
+    {
+        "models": [
+            "7837WIP",
+            "C16S",
+            "C17S",
+            "C29S",
+            "c32s-x4",
+            "c7824wip",
+            "C-7833wip",
+            "C-7837WIP",
+            "C-7838WIP",
+            "c7850wip",
+            "H-6850",
+            "H-6850WIP",
+            "T-7833wip",
+            "T7835WIP",
+            "T-7838WIP",
+            "C7824WIP"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]&resolution=32",
+        "port": 10554
+    },
+    {
+        "models": [
+            "C7824WIP",
+            "C-7838WIP",
+            "T-7833WIP",
+            "T7835WIP",
+            "T-7837WIP",
+            "T-7838WIP",
+            "T-7892WIP"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi",
+        "port": 81
+    },
+    {
+        "models": [
+            "C16S",
+            "C18s",
+            "C320",
+            "C38S",
+            "c63s",
+            "C-7824WIP"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/tmpfs/auto.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "c19s",
+            "F-6836W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?usr=[USERNAME]&pwd=[PASSWORD]",
+        "port": 80
+    },
+    {
+        "models": [
+            "C22S",
+            "Unknown",
+            "KS26Q"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/cgi/mjpg/mjpeg.cgi",
+        "port": 18028
+    },
+    {
+        "models": [
+            "C25",
+            "C26S",
+            "CS55"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?rate=10&user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 8001
+    },
+    {
+        "models": [
+            "c25s",
+            "CS621SR"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/",
+        "port": 80
+    },
+    {
+        "models": [
+            "C26S",
+            "C38S",
+            "c7815wip",
+            "c-7816win",
+            "C7816WIP",
+            "C-7816WIP",
+            "c-8716wip",
+            "F-6836W",
+            "T-6835WIP",
+            "T-6836W",
+            "T6836WTP",
+            "T-7833wip",
+            "T-7837WIP"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi",
+        "port": 10554
+    },
+    {
+        "models": [
+            "C26S",
+            "C76824",
+            "c7824wip",
+            "C-7838WIP",
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/udp/av0_0",
+        "port": 10554
+    },
+    {
+        "models": [
+            "C26S",
+            "C7823WIP",
+            "C7824WIp",
+            "C8892",
+            "W7815WIP",
+            "cs26q"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/udp/av0_1",
+        "port": 10554
+    },
+    {
+        "models": [
+            "c32s-x4",
+            "c34s",
+            "C63S"
+        ],
+        "variant": "MJPEG",
+        "protocol": "rtsp://",
+        "path": "/11",
+        "port": 8484
+    },
+    {
+        "models": [
+            "c32s-x4"
+        ],
+        "variant": "MJPEG",
+        "protocol": "rtsp://",
+        "path": "/12",
+        "port": 8484
+    },
+    {
+        "models": [
+            "c34s"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/?action=stream",
+        "port": 8004
+    },
+    {
+        "models": [
+            "C63s",
+            "H-6812IP",
+            "H-6837WI",
+            "H-6837WIP"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/H264",
+        "port": 554
+    },
+    {
+        "models": [
+            "C7815WIP"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpeg.cgi?user=[USERNAME]&password=[PASSWORD]&channel=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "C-7816WIP"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/view/image?pro_[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "C7824WIP",
+            "H6515WI",
+            "H-6837WI",
+            "H-6837WIP",
+            "hi6815wi_2"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/snapshot.cgi?loginuse=[USERNAME]&loginpas=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "C-7824WIP",
+            "C7838WIP",
+            "T-7892WIP",
+            "T-9872WIP"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/img/snapshot.cgi?img=vga",
+        "port": 10554
+    },
+    {
+        "models": [
+            "C7833-X4"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/livestream.cgi?user=[USERNAME]&pwd=[PASSWORD]&streamid=0&filename=",
+        "port": 80
+    },
+    {
+        "models": [
+            "C7837WIP",
+            "C8873B",
+            "c55s"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?&user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 80
+    },
+    {
+        "models": [
+            "C7837WIP",
+            "H-6837WIP",
+            "T-7815WIP",
+            "T-7837WIP",
+            "T-7838WIP"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?rate=11",
+        "port": 10554
+    },
+    {
+        "models": [
+            "C8873B",
+            "T7835WIP",
+            "KS26Q"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]&resolution=1280&rate=1",
+        "port": 65337
+    },
+    {
+        "models": [
+            "CS55",
+            "C7824WIP"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]&resolution=64",
+        "port": 8484
+    },
+    {
+        "models": [
+            "f628",
+            "f6836w",
+            "H-6837WIP"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf",
+        "port": 0
+    },
+    {
+        "models": [
+            "F628",
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam1/mpeg4",
+        "port": 0
+    },
+    {
+        "models": [
+            "F-6836W",
+            "H-6837WI",
+            "H-6837WIP"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=64&rate=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "F-6836W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=[WIDTH]x[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "F-6836W",
+            "T-6836W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=32&rate=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "F-6836W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?resolution=8&rate=13",
+        "port": 0
+    },
+    {
+        "models": [
+            "F-6836W"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/video.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "F-6836W",
+            "T-6835WIP",
+            "T6836WTP",
+            "T-6892wp",
+            "T-7833wip"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?user=[USERNAME]&password=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "F8815W"
+        ],
+        "variant": "VLC",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "H-6837WIP"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/snapshot.cgi?1",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/user=[USERNAME]_password=[PASSWORD]_channel=1_stream=0.sdp",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown",
+            "T-6835WIP",
+            "T6836WTP"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/user/videostream.cgi",
+        "port": 10554
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.jpg?user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/sf.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=[CHANNEL]&subtype=00",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?rate=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/onvif1",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/video.mjpg?q=30&fps=33&id=0.5",
+        "port": 8090
+    },
+    {
+        "models": [
+            "T7835WIP"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]&resolution=1280",
+        "port": 80
+    },
+    {
+        "models": [
+            "C7824WIP"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]19",
+        "port": 8888
+    },
+    {
+        "models": [
+            "KS26Q"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]&resolution=256",
+        "port": 81
+    },
+    {
+        "models": [
+            "KS26Q"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]&resolution=1920&rate=1",
+        "port": 81
+    },
+    {
+        "models": [
+            "KS26Q"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/monitor2.htm",
+        "port": 81
+    },
+    {
+        "models": [
+            "KS26Q"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?rate=1&user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 81
+    }
+]

@@ -1,0 +1,158 @@
+[
+    {
+        "models": [
+            "aircam",
+            "Air-Cam",
+            "Air-vision",
+            "AIR-VISION",
+            "UVC"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live/ch00_0",
+        "port": 0
+    },
+    {
+        "models": [
+            "aircam",
+            "G4 Pro"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/",
+        "port": 80
+    },
+    {
+        "models": [
+            "Aircam",
+            "Air-Cam",
+            "Air-vision"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi?user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Air-Cam",
+            "Air-vision"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi?user=[USERNAME]&pwd=[PASSWORD]&count=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "Air-Cam",
+            "Air-Cam Mini",
+            "aircam2"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "Air-Cam"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/ch0[CHANNEL]_0",
+        "port": 0
+    },
+    {
+        "models": [
+            "Air-Cam"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/axis-cgi/mjpg/video.cgi?camera=1&resolution=320x240",
+        "port": 80
+    },
+    {
+        "models": [
+            "AIR-CAM"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/axis-cgi/mjpg/video.cgi?camera=1&resolution=[WIDTH]x[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "G3 Bullet",
+            "G3 Flex",
+            "UniFi G3",
+            "UVC G3",
+            "UVC G3 Pro",
+            "UVC G4"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/s1",
+        "port": 554
+    },
+    {
+        "models": [
+            "G3 Bullet",
+            "G3 Dome",
+            "G3 Flex",
+            "G4 Pro",
+            "UniFi G3",
+            "UVC",
+            "UVC G3",
+            "UVC G3 Flex",
+            "UVC G3 Pro",
+            "UVC G4 Pro",
+            "UVC-Pro"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/s0",
+        "port": 554
+    },
+    {
+        "models": [
+            "G3 Bullet",
+            "G3 Dome",
+            "G4 Pro",
+            "UVC",
+            "UVC G3",
+            "UVC G3 Flex"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/s2",
+        "port": 554
+    },
+    {
+        "models": [
+            "G3 Flex"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/5e254c28900822014a06053a_0",
+        "port": 7447
+    },
+    {
+        "models": [
+            "G3 Flex"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/ch00_0",
+        "port": 554
+    },
+    {
+        "models": [
+            "G4 Pro"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/DRELXB66JxT9T4XW",
+        "port": 7447
+    }
+]

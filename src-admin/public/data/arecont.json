@@ -1,0 +1,665 @@
+[
+    {
+        "models": [
+            "10115DNv1",
+            "1305",
+            "1310M",
+            "20175DN",
+            "2100",
+            "2105DN",
+            "2155",
+            "2155DN",
+            "3100",
+            "3115DN",
+            "3116DN",
+            "3130",
+            "3130HD",
+            "3280",
+            "3455DN",
+            "5105DN",
+            "5115dn",
+            "5115DN",
+            "5115dn-13",
+            "5115dn-17",
+            "av10115dn-07",
+            "av2000",
+            "AV20175DN28",
+            "AV20185DN",
+            "AV2105",
+            "AV2105dn",
+            "AV2110",
+            "AV2155",
+            "AV2155dn",
+            "AV2155DN",
+            "av2246",
+            "AV2255",
+            "AV3100M",
+            "AV3105DN",
+            "av3110dn",
+            "AV3130",
+            "AV3135",
+            "AV5105DN",
+            "av5115dn",
+            "av5115dn-13",
+            "av5255pmir",
+            "AV8180",
+            "av8185",
+            "AV8360",
+            "AV8365DN"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/image?res=half&x0=0&y0=0&x1=1600&y1=1200&quality=15&doublescan=0&ssn=1340443365044&id=1340443379230",
+        "port": 8080
+    },
+    {
+        "models": [
+            "10115DNv1",
+            "2110DN",
+            "3225PMIR-S",
+            "av2115dn",
+            "AV2556"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpeg?res=full&x0=0&y0=0&x1=100%25&y1=100%25&quality=12&doublescan=0",
+        "port": 8080
+    },
+    {
+        "models": [
+            "10115DNv1",
+            "11455DN",
+            "1325ir",
+            "20275DN",
+            "2805",
+            "3256PMIR-S",
+            "5115DN",
+            "AV 8365DN",
+            "AV10005",
+            "AV10005DN",
+            "av10225PMIR",
+            "AV10655DN",
+            "AV12176",
+            "AV12366",
+            "AV1255PMIR-S",
+            "AV2105DN",
+            "AV2146DN",
+            "av2216dn",
+            "AV2216PM-S",
+            "AV3115DN",
+            "av5115dn",
+            "AV8185"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/PSIA/Streaming/channels/0?videoCodecType=H.264",
+        "port": 0
+    },
+    {
+        "models": [
+            "10115DNV1",
+            "1310dn",
+            "2110DN",
+            "2115DN",
+            "2115DNv1",
+            "2125IR",
+            "2145DN",
+            "2155DN",
+            "2465DN",
+            "3100",
+            "3225PMIR-S",
+            "3245",
+            "32453245PM",
+            "3256PM",
+            "5115DN",
+            "5125",
+            "5155DN",
+            "AV5105DN",
+            "AV 2256",
+            "AV 8365DN",
+            "Unknown",
+            "AV10005",
+            "AV10255AMIR",
+            "AV1115DN",
+            "AV2105dn",
+            "av2110d",
+            "av2115dn",
+            "av2216dn",
+            "AV2255",
+            "AV2256PM",
+            "AV2556",
+            "AV3100",
+            "AV3115DNv1",
+            "AV3130",
+            "AV3146DN",
+            "AV3155",
+            "AV3256",
+            "av5115",
+            "AV8180",
+            "AV8185",
+            "5225PMIR"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpeg",
+        "port": 8080
+    },
+    {
+        "models": [
+            "10115DNV1",
+            "1305",
+            "1325",
+            "2115",
+            "2145DN",
+            "2155DN",
+            "3115dn",
+            "3130",
+            "3155DN",
+            "5100",
+            "5105DN",
+            "5125",
+            "av10255amir",
+            "AV1300",
+            "AV20185DN",
+            "av2100",
+            "av2100m",
+            "av2115dn",
+            "av2216dn",
+            "AV3105DN",
+            "AV3130",
+            "AV3155",
+            "AV5100",
+            "AV5100M",
+            "AV5255PMIR",
+            "AV8365"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpeg?res=full&x0=0&y0=0&x1=100%&y1=100%&quality=12&doublescan=0",
+        "port": 8080
+    },
+    {
+        "models": [
+            "10355PMIR",
+            "20175DN",
+            "20185dn",
+            "2115DN",
+            "2176DN",
+            "2216DN",
+            "2255pmir",
+            "2456dn",
+            "3355DN3455DN",
+            "5115DN",
+            "5225PMIR",
+            "5255AM",
+            "AV 12366",
+            "AV10215PM-S-30-120",
+            "AV10255AMIR",
+            "av10255pmir-sh",
+            "AV1125IRV1X",
+            "AV12366",
+            "AV1305",
+            "AV20185dn",
+            "AV2110d/n",
+            "AV2216PM-S",
+            "AV2246M-W",
+            "AV2255",
+            "AV2255AM",
+            "AV2256PM",
+            "AV2455DN-AB",
+            "AV2556",
+            "AV3115DNv1",
+            "AV3155",
+            "AV5245",
+            "AV5245DN",
+            "AV5245PM",
+            "av5456D",
+            "AV5525",
+            "AV8185DN-HB"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/h264.sdp",
+        "port": 0
+    },
+    {
+        "models": [
+            "11455DN",
+            "3100",
+            "av3130"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/image?res=full&x0=0%25&y0=[object%20Window]%25&x1=100%25&y1=100%25&quality=21&doublescan=0",
+        "port": 80
+    },
+    {
+        "models": [
+            "12366DN",
+            "AV 365",
+            "AV12176dn",
+            "AV12186dn",
+            "AV20185DN"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpeg[CHANNEL]?res=half&x1=0&y1=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "12585PM",
+            "2105DN",
+            "2110DN",
+            "AV20185dn",
+            "AV8365"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/h264_stream",
+        "port": 0
+    },
+    {
+        "models": [
+            "12586PM",
+            "20175DN",
+            "2105DN",
+            "3100",
+            "3225PMIR-S",
+            "AV16F0833",
+            "AV20185dn",
+            "av2115dn",
+            "AV2556"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/",
+        "port": 554
+    },
+    {
+        "models": [
+            "1305",
+            "1355",
+            "2105DN",
+            "2155",
+            "2155M",
+            "AV12176dn",
+            "AV12186dn",
+            "AV1355DN",
+            "AV2110d/n",
+            "av2115dn",
+            "AV5245PM",
+            "AV8185",
+            "AV8185DN"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/ch0.h264",
+        "port": 0
+    },
+    {
+        "models": [
+            "1305DN",
+            "1355",
+            "20175DN",
+            "2115DN",
+            "2155DN",
+            "3155DN",
+            "AV 12366",
+            "av2100",
+            "AV5105DN",
+            "AV8185",
+            "AV8185DN"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/cam1/mpeg4",
+        "port": 0
+    },
+    {
+        "models": [
+            "1355",
+            "20275",
+            "2115DN",
+            "3100",
+            "3125IR",
+            "3135",
+            "3255AMIR-H",
+            "5105DN",
+            "5125DN",
+            "AV10005",
+            "av10225IR",
+            "AV10255AMIR",
+            "av1115dv",
+            "AV12186dn",
+            "AV12276DN",
+            "AV1300",
+            "av2100",
+            "AV2105dn",
+            "AV2155",
+            "AV2255",
+            "AV2255AM",
+            "AV3100",
+            "AV3105DN",
+            "AV3115",
+            "AV3115DN",
+            "AV3130",
+            "AV5100M",
+            "AV5115DN",
+            "AV5115DNAIv1",
+            "AV5115DNv1",
+            "AV8360",
+            "AV8365DN"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/img.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "1555DN",
+            "5105DN",
+            "AV12186"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/ch0_0.h264",
+        "port": 0
+    },
+    {
+        "models": [
+            "20175DN",
+            "2105DN",
+            "2115",
+            "AV10655DN-28"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/user=[USERNAME]_password=[PASSWORD]_channel=1_stream=0.sdp",
+        "port": 554
+    },
+    {
+        "models": [
+            "20175DN",
+            "2456",
+            "3155DN",
+            "3246",
+            "5125",
+            "5225PMIR",
+            "av10115dn-07",
+            "av10255amir",
+            "AV20185dn",
+            "AV20185DN",
+            "AV2216PM-S",
+            "av2246m-w",
+            "av5115dn-2",
+            "AV5215PM-S",
+            "AV8185",
+            "AV8185DN",
+            "AV3556DN-S"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/h264.sdp?res=half&x0=0&y0=0&x1=1600&y1=1200&quality=15&doublescan=0&ssn=1340443365044&id=1340443379230",
+        "port": 0
+    },
+    {
+        "models": [
+            "20175DN"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam5/mpeg4",
+        "port": 554
+    },
+    {
+        "models": [
+            "20365DN"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/h264.sdp1?res=half&doublescan=0&ssn=901",
+        "port": 554
+    },
+    {
+        "models": [
+            "2116dnv1",
+            "2225PMIR-S",
+            "AV10655DN",
+            "av12276dn-28",
+            "AV2216PM-S",
+            "AV2256PM",
+            "AV2825IR",
+            "AV3255DN-H"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/0",
+        "port": 554
+    },
+    {
+        "models": [
+            "3100",
+            "3115DN",
+            "3155DN",
+            "AV3105DN",
+            "AV3130",
+            "AV5115DN",
+            "AV8360"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/Jpeg/CamImg.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "3100",
+            "AV12186"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/onvif-media/media.amp",
+        "port": 0
+    },
+    {
+        "models": [
+            "3225PMIR-S"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/h264.sdp?res=full&x0=0&y0=0&x1=2048&y1=1536&qp=20&ratelimit=10000&doublescan=0&ssn=7329",
+        "port": 0
+    },
+    {
+        "models": [
+            "5105DN",
+            "AV20365DN"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/[CHANNEL]/[USERNAME]:[PASSWORD]/main",
+        "port": 0
+    },
+    {
+        "models": [
+            "8185dn",
+            "AV12276DN",
+            "AV20365DN",
+            "AV8185DN"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam1/onvif-h264",
+        "port": 0
+    },
+    {
+        "models": [
+            "8185DN"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/h264.sdp3?res=half&doublescan=0&ssn=603",
+        "port": 554
+    },
+    {
+        "models": [
+            "8185DN"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/h264.sdp1?res=half&doublescan=0&ssn=601",
+        "port": 554
+    },
+    {
+        "models": [
+            "AV 8365DN",
+            "AV12186",
+            "AV20185DN",
+            "AV8185DN"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/image[CHANNEL]?res=half&x1=0&y1=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "AV12176DN-08",
+            "AV12276DN",
+            "AV20185DN"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/h264.sdp1",
+        "port": 0
+    },
+    {
+        "models": [
+            "av12376RS",
+            "AV3105DN",
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live/ch00_0",
+        "port": 554
+    },
+    {
+        "models": [
+            "AV12586DN",
+            "AV129294",
+            "av1355dn",
+            "AV4655dn-28"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/11",
+        "port": 554
+    },
+    {
+        "models": [
+            "AV12586DN",
+            "AV20185DN",
+            "AV8185DN",
+            "av8515dn"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpeg.cgi?user=[USERNAME]&password=[PASSWORD]&channel=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "AV20175DN28"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpeg1?res=half&x1=0&y1=0",
+        "port": 80
+    },
+    {
+        "models": [
+            "AV20185dn"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live/h264.sdp3",
+        "port": 0
+    },
+    {
+        "models": [
+            "AV20185dn"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/h264.sdp3",
+        "port": 554
+    },
+    {
+        "models": [
+            "AV20375RS"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpeg4?res=half&x1=0&y1=0",
+        "port": 8080
+    },
+    {
+        "models": [
+            "AV2110"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/video.mjpg?q=30&fps=33&id=0.5",
+        "port": 8080
+    },
+    {
+        "models": [
+            "AV3100"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/img/snapshot.cgi?size=2",
+        "port": 0
+    },
+    {
+        "models": [
+            "AV4655dn-28"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/ONVIF/channel2",
+        "port": 5544
+    },
+    {
+        "models": [
+            "AV8185"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/live/mpeg4",
+        "port": 1935
+    },
+    {
+        "models": [
+            "AV8185",
+            "AV8365",
+            "AV8365DN"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/cam4/mpeg4",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/tmpfs/auto.jpg",
+        "port": 0
+    }
+]

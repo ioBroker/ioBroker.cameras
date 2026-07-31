@@ -1,0 +1,567 @@
+[
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/jpeg/qvga.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "cm111623gy",
+            "ZMD14G"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/snapshot.cgi?loginuse=[USERNAME]&loginpas=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "CM111623GY",
+            "CMI-11123BK",
+            "CMI-12316gy"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?rate=11",
+        "port": 0
+    },
+    {
+        "models": [
+            "CMI-11123BK",
+            "CMI-12316GY",
+            "zh-ixy10"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?usr=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "CMI-11123BK",
+            "CMI-11133WT",
+            "CMI-12316gy",
+            "CNI-11123BK",
+            "ZH-IXA15-WC"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=[WIDTH]x[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "CMI-11123BK",
+            "CMI-11123BK R",
+            "ZMD14GIDA231708",
+            "ZP-IGH13-W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf",
+        "port": 0
+    },
+    {
+        "models": [
+            "CMI-11123BK",
+            "ZHIBH-13W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=64&rate=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "CMI-11123BK",
+            "ZMD-IDV-BFS"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=32&rate=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "CMI-11123BK"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi?camera=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "CMI-11123BK",
+            "CMI-12316GY",
+            "CNI-11123BK"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi?user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "CMI-11123BK"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "CMI-11123BK",
+            "CMI-12316gy"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "CMI-11123BK",
+            "IP-900"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "CMI-11123BK",
+            "CNI-11123BK"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/video.cgi?resolution=VGA",
+        "port": 0
+    },
+    {
+        "models": [
+            "CMI-11123BK",
+            "CMI-12316gy"
+        ],
+        "variant": "VLC",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "CMI-11123BK",
+            "CMI-12316GY",
+            "ZH-IXA15-WC",
+            "ZMD-IDV-BFS"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/VideoInput/[CHANNEL]/h264/1",
+        "port": 0
+    },
+    {
+        "models": [
+            "CMI-11123BK",
+            "CMI-12316GY",
+            "ZMD-IDV-BFS"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "CS-S1T-S",
+            "IBH15-S1",
+            "IBI-13",
+            "IXA15-WAC",
+            "IXA15-WC",
+            "ZHIBH-13W",
+            "ZH-IBH13-W",
+            "ZH-IDP15-W",
+            "ZH-IXA15-WC",
+            "ZH-IXB15-WC",
+            "ZH-IXC15-WC",
+            "ZH-IXD15-WAC",
+            "ZH-IXD15-WC",
+            "ZH-IXU1D-WAC",
+            "ZM-SH721",
+            "ZP-IBH13-P",
+            "ZP-IBH13-W",
+            "ZP-IBH15-S",
+            "ZP-IBH15-S1",
+            "ZP-IBI13W",
+            "ZP-IBI13-W",
+            "ZP-IBT15-S",
+            "ZP-IGH13-W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/tcp/av0_0",
+        "port": 0
+    },
+    {
+        "models": [
+            "CS-S1T-S"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/cam[CHANNEL]/mpeg4",
+        "port": 0
+    },
+    {
+        "models": [
+            "CS-S1T-S",
+            "IBH15-S1",
+            "ZH-IBH13-W",
+            "ZH-IXA15-WC",
+            "ZH-IXB15-WC",
+            "ZH-IXC15-WC",
+            "ZH-IXD15-WC",
+            "ZP-IBH13-W",
+            "ZP-KEH104",
+            "ZP-NE14S",
+            "zp-ne14s1"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/tcp/av0_1",
+        "port": 10554
+    },
+    {
+        "models": [
+            "I202W-95-NC8-2T-1"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/000100",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/stream.asf",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpeg",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/live.sdp",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/image.mpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/mpeg4/[CHANNEL]/media.amp",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "VLC",
+        "protocol": "http://",
+        "path": "/cgi-bin/view.cgi?chn=[CHANNEL]&u=[USERNAME]&p=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "rtsp://",
+        "path": "/cam[CHANNEL]/mjpeg",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/mpg4/rtsp.amp",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/mpeg4",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/video.mp4",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/[CHANNEL]/1:1/main",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown",
+            "ZH-IXD1D-WAC"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/0/[USERNAME]:[PASSWORD]/main",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/onvif1",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/video.jpg?cam=2&quality=3&size=2",
+        "port": 80
+    },
+    {
+        "models": [
+            "PKD-DK40107"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/video.jpg?cam=[CHANNEL]&quality=3&size=2",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.jpg?user=[USERNAME]&pwd=[PASSWORD]&strm=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/jpg/image.jpg?size=3",
+        "port": 0
+    },
+    {
+        "models": [
+            "ZH-IXA15-WAC",
+            "ZH-IXA15-WC",
+            "ZP-IBH13-W",
+            "ZP-IBH15-S1",
+            "ZP-IHB13-W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/udp/av0_0",
+        "port": 0
+    },
+    {
+        "models": [
+            "ZH-IXA15-WC",
+            "ZH-IXD1D-WAC",
+            "ZP-IBH15-S",
+            "ZP-IBH15-S1"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/udp/av0_1",
+        "port": 0
+    },
+    {
+        "models": [
+            "ZH-IXA1D-WAC",
+            "ZH-IXB1D-WAC",
+            "ZH-IXC1D-WAC",
+            "zp-ibt15-s"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/user=[USERNAME]_password=[PASSWORD]_channel=1_stream=0.sdp",
+        "port": 0
+    },
+    {
+        "models": [
+            "ZH-IXD15-WAC",
+            "ZM-SS718"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/h264",
+        "port": 0
+    },
+    {
+        "models": [
+            "zhixy1d"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/0/Duane:tittus/main",
+        "port": 554
+    },
+    {
+        "models": [
+            "ZMD14G",
+            "ZM-SS7009D8-S"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/streaming/mjpeg",
+        "port": 554
+    },
+    {
+        "models": [
+            "ZMD14GIDA231708"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/11",
+        "port": 5544
+    },
+    {
+        "models": [
+            "ZMD-IDV-BFS"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/img/video.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "ZMD-IDV-BFS"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/stillimg[CHANNEL].jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "ZMD-IDV-BFS"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/image/[CHANNEL].jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "ZMD-IDV-BFS"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/cgi/mjpg/mjpeg.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "ZMD-IDV-BFS"
+        ],
+        "variant": "VLC",
+        "protocol": "http://",
+        "path": "/control/faststream.jpg?stream=MxPEG&needlength&fps=6",
+        "port": 0
+    },
+    {
+        "models": [
+            "ZP-IBH15-W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/img/video.mjpeg?channel=2",
+        "port": 80
+    },
+    {
+        "models": [
+            "ZP-IBI15-W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "//tcp/av0_0",
+        "port": 10554
+    },
+    {
+        "models": [
+            "ZP-IBT15-S"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/cam[CHANNEL]/h264",
+        "port": 0
+    },
+    {
+        "models": [
+            "ZK8-{BH27-W"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videofeed",
+        "port": 0
+    }
+]

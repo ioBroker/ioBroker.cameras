@@ -1,0 +1,663 @@
+[
+    {
+        "models": [
+            "C16B",
+            "D71",
+            "M25",
+            "M12D-Sec",
+            "M-15D",
+            "M16",
+            "M73",
+            "i26B-6D",
+            "Mx-VH1A-12-IR-VA",
+            "P71",
+            "Q26B-6D",
+            "Q71",
+            "S74",
+            "M-15"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/api/mjpegvideo.cgi?InputNumber=1&StreamNumber=0",
+        "port": 80
+    },
+    {
+        "models": [
+            "c25",
+            "C25 D016-AUD",
+            "c26B-6D",
+            "D12",
+            "D-14",
+            "d14d",
+            "D24M",
+            "D25",
+            "DM-25M",
+            "DM-26",
+            "M10",
+            "M-10",
+            "M12",
+            "M12D-SEC",
+            "M-15",
+            "m15d",
+            "M-15D",
+            "M16",
+            "m-24",
+            "M24",
+            "M25",
+            "M73",
+            "MX10",
+            "Mx-Q26B",
+            "Unknown",
+            "Q-24",
+            "Q24M",
+            "Q24m-Sec",
+            "Q24M-Sec",
+            "q25",
+            "Q26B-6D",
+            "S14",
+            "S15",
+            "S-15",
+            "S16",
+            "S26",
+            "t24",
+            "T24M-Sec-Night",
+            "T25",
+            "T-25",
+            "V16 PLBN",
+            "V25"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/control/faststream.jpg?stream=MxPEG&needlength&fps=6",
+        "port": 0
+    },
+    {
+        "models": [
+            "C25",
+            "C25-2",
+            "D-12",
+            "D-14",
+            "D15",
+            "D22",
+            "D-22M",
+            "D-24",
+            "D25",
+            "i25",
+            "M12",
+            "M-10",
+            "m12",
+            "M-12",
+            "M12D-SEC",
+            "M-15",
+            "M-15D",
+            "M-22",
+            "m-24",
+            "M25",
+            "P25",
+            "p25-Night",
+            "Q-24",
+            "Q24M",
+            "Q-25",
+            "s-15",
+            "s16",
+            "T-25",
+            "T25M"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/record/current.jpg?sync=-99",
+        "port": 0
+    },
+    {
+        "models": [
+            "C25",
+            "C25 D016-AUD",
+            "C26",
+            "D12",
+            "D-12",
+            "D-14",
+            "D15",
+            "D16",
+            "D-22M",
+            "D24",
+            "D-24",
+            "D24M-Night",
+            "DM-25M",
+            "i25",
+            "I25",
+            "M12",
+            "M25",
+            "M10",
+            "M-10",
+            "m12",
+            "M12D-Sec",
+            "M12D-SEC",
+            "M15",
+            "M-15",
+            "M-15D",
+            "M16",
+            "M-22",
+            "m22d",
+            "M24",
+            "M-24",
+            "M26",
+            "M73",
+            "i26B-6D",
+            "MQ24",
+            "p25",
+            "Q22",
+            "Q-24",
+            "Q24M",
+            "Q-25",
+            "Q25M",
+            "Q71",
+            "S16",
+            "S16b",
+            "t24",
+            "T-24",
+            "T24M-Sec-Night",
+            "T25",
+            "T-25",
+            "T25M",
+            "T26",
+            "V25",
+            "S14"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/control/faststream.jpg?stream=full",
+        "port": 0
+    },
+    {
+        "models": [
+            "C25 D016-AUD",
+            "m12",
+            "M-15",
+            "M-15D",
+            "M-22",
+            "M22M",
+            "M-24",
+            "Q-24",
+            "q25m",
+            "t25"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/image.jpg?size=[WIDTH]x[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "C26B-D06",
+            "D12",
+            "M16",
+            "sd1a"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/api/mjpegvideo.cgi?InputNumber=1&StreamNumber=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "c26B-6D",
+            "Q24M"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/control/faststream.jpg?stream=MxPEG&preview&previewsize=1280x960&quality=70&fps=24&camera=auto",
+        "port": 80
+    },
+    {
+        "models": [
+            "D12"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live/ch00_0",
+        "port": 554
+    },
+    {
+        "models": [
+            "D-12",
+            "D-14",
+            "d-15",
+            "D15",
+            "D16",
+            "D-22M",
+            "D24",
+            "DM-26",
+            "M25",
+            "M-12",
+            "M12D-Sec",
+            "M-15",
+            "M1M",
+            "M-22",
+            "M22M",
+            "M-24",
+            "Q-22",
+            "Q-24",
+            "Q-25",
+            "S-15",
+            "s16",
+            "T-24",
+            "T26",
+            "MX10",
+            "MX70",
+            "M12"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/record/current.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "D-12",
+            "D22M-Sec",
+            "M-12",
+            "M-15",
+            "M-22",
+            "M25",
+            "Q-22",
+            "Q-24",
+            "T-24"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/image.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "D-14",
+            "M24M",
+            "M25",
+            "Q-24",
+            "Q26"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/faststream.jpg?stream=full&fps=10.0",
+        "port": 80
+    },
+    {
+        "models": [
+            "D16",
+            "V25",
+            "AG16",
+            "T25"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/stream0/mobotix.mjpeg",
+        "port": 554
+    },
+    {
+        "models": [
+            "D26",
+            "M26B"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/mobotix.h264",
+        "port": 554
+    },
+    {
+        "models": [
+            "i25"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/",
+        "port": 0
+    },
+    {
+        "models": [
+            "M12"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/axis-cgi/mjpg/video.cgi?camera=1&resolution=320x240",
+        "port": 80
+    },
+    {
+        "models": [
+            "M25",
+            "M-15D"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/image.jpg?imgprof=VGA-L",
+        "port": 80
+    },
+    {
+        "models": [
+            "M10",
+            "M16",
+            "Q24M"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/control/faststream.jpg?stream=MxPEG&needlength&fps=24",
+        "port": 80
+    },
+    {
+        "models": [
+            "m12",
+            "M-22"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/image.jpg?size=320x240",
+        "port": 20001
+    },
+    {
+        "models": [
+            "M12D-Sec"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/control/userimage.html",
+        "port": 20004
+    },
+    {
+        "models": [
+            "M-15D",
+            "M72",
+            "c26B-AU-6D",
+            "i26B-6D",
+            "Q24M"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/onvif/mobotix.h264",
+        "port": 554
+    },
+    {
+        "models": [
+            "M-15D"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/image.jpg?imgprof=CIF",
+        "port": 80
+    },
+    {
+        "models": [
+            "M-15D"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/image.jpg?imgprof=MEGA",
+        "port": 80
+    },
+    {
+        "models": [
+            "M-15D"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/image.jpg?imgprof=VGA",
+        "port": 80
+    },
+    {
+        "models": [
+            "M-15D"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/image.jpg?imgprof=CIF-R",
+        "port": 80
+    },
+    {
+        "models": [
+            "M-15D"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/image.jpg?imgprof=CIF-L",
+        "port": 80
+    },
+    {
+        "models": [
+            "M-15D"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/image.jpg?imgprof=VGA-R",
+        "port": 80
+    },
+    {
+        "models": [
+            "M-15D"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/image.jpg?imgprof=CIF-2",
+        "port": 8011
+    },
+    {
+        "models": [
+            "M-15D"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/image.jpg?imgprof=CIF-1",
+        "port": 8011
+    },
+    {
+        "models": [
+            "M-15D"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/control/event.jpg",
+        "port": 8011
+    },
+    {
+        "models": [
+            "M-22"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/faststream.jpg?stream=full&fps=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "M25",
+            "V25"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/control/faststream.jpg?stream=full&preview&previewsize=640x480&quality=40&fps=20.0",
+        "port": 80
+    },
+    {
+        "models": [
+            "M25"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/control/faststream.jpg?stream=full&preview&previewsize=800x600&quality=80&fps=30.0",
+        "port": 80
+    },
+    {
+        "models": [
+            "M72",
+            "T26",
+            "mx574"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/stream/profile0",
+        "port": 554
+    },
+    {
+        "models": [
+            "c26B-6D",
+            "i26B-6D"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/onvif/stream3/mobotix.mjpeg",
+        "port": 0
+    },
+    {
+        "models": [
+            "MQ24",
+            "Q24M"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/guestimage.html",
+        "port": 8038
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/jpg/image.jpg?size=3",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/snapshot.cgi?1",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/guest/Video.cgi?media=JPEG",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/-wvhttp-01-/GetOneShot?image_size=[WIDTH]x[HEIGHT]&frame_count=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/jpeg/vga.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "Q24M"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/control/faststream.jpg?stream=MxPEG&needlength&fps=0",
+        "port": 80
+    },
+    {
+        "models": [
+            "q24m-sec",
+            "Q24M-Sec"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/control/faststream.jpg?stream=MxPEG&preview&previewsize=2048x1536&quality=100&fps=20&camera=auto",
+        "port": 80
+    },
+    {
+        "models": [
+            "Q26"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/image.jpg?display_mode=simple&size=3072x2048",
+        "port": 80
+    },
+    {
+        "models": [
+            "Q26"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/image.jpg?display_mode=simple&size=3072x2048&textdisplay=datetime&displayfontsize=24&rotate=180",
+        "port": 80
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpeg",
+        "port": 0
+    },
+    {
+        "models": [
+            "S-15"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/video.mjpg?q=30&fps=33&id=0.5",
+        "port": 0
+    },
+    {
+        "models": [
+            "S16b"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/image.jpg?imgprof=CIF-B",
+        "port": 80
+    },
+    {
+        "models": [
+            "V25",
+            "T25"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/stream1/mobotix.mjpeg",
+        "port": 0
+    },
+    {
+        "models": [
+            "V25"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/stream1/mobotix.mxg",
+        "port": 0
+    },
+    {
+        "models": [
+            "V25"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/stream0/mobotix.mxg",
+        "port": 0
+    },
+    {
+        "models": [
+            "D12"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/faststream.jpg?stream=full&fps=10",
+        "port": 80
+    }
+]

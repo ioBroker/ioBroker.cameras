@@ -1,0 +1,321 @@
+[
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/net_jpeg.cgi?ch=0",
+        "port": 8088
+    },
+    {
+        "models": [
+            "IK-WB15A",
+            "IKWB-15",
+            "ikwb21",
+            "IK-WB21A"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/admin/cgi-bin/getstream.cgi?10&&&&&0&0&0&0",
+        "port": 0
+    },
+    {
+        "models": [
+            "IK-6420A",
+            "ik-wb16",
+            "IK-WB16A-W",
+            "IKWB-30A",
+            "IK-WB80A",
+            "IKWD-14A",
+            "ik-WP41A"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live3.sdp",
+        "port": 0
+    },
+    {
+        "models": [
+            "IK-WB01A",
+            "IK-WB16a",
+            "IK-WB16A-W",
+            "ik-wb70a",
+            "IKWB-80A",
+            "IKWB-81A",
+            "IKWD-01A",
+            "IKWD05A",
+            "IK-WD31A",
+            "IK-WR12A",
+            "TD05W"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/viewer/video.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "IK-WB01A",
+            "IK-WB11A",
+            "IK-WB15A",
+            "IK-WB21A"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/GetData.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "IK-WB01A",
+            "IK-WB11A",
+            "IK-WB15A",
+            "IK-WB16A-W",
+            "IK-WB21A"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/__live.jpg?&&&",
+        "port": 0
+    },
+    {
+        "models": [
+            "IK-WB01A",
+            "IK-WB11A"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/__live.jpg?&&[USERNAME]&[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "IK-WB01A",
+            "IK-WB11A",
+            "IK-WB15A",
+            "IK-WB16A-W",
+            "IK-WB21A"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/getstream.cgi?10&10&&&10&0&0&0&0",
+        "port": 0
+    },
+    {
+        "models": [
+            "IK-WB01A",
+            "ikwb15a",
+            "IK-WB21A"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/user/cgi-bin/getstream.cgi?10&&&&0&0&0&0&0",
+        "port": 0
+    },
+    {
+        "models": [
+            "IK-WB02A",
+            "IKWR-01A"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/Jpeg/CamImg.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "IK-WB02A",
+            "IKWR-01A"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/GetData.cgi?Status=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "IK-WB15A",
+            "IK-WB16A",
+            "IK-WB16A-W",
+            "IK-WB21A",
+            "IKWB-30A",
+            "IKWB-70A",
+            "IK-WB80A",
+            "IKWB-81A",
+            "IKWD-01A",
+            "IKWD-14A",
+            "IK-WR14A"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/viewer/video.jpg?resolution=[WIDTH]x[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "IK-WB15A",
+            "IK-WB161A",
+            "IK-WB16A",
+            "IKWB-80A",
+            "IK-WD31A",
+            "IK-WR04A",
+            "IK-WR12A",
+            "IK-WR14A"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/viewer/video.jpg?resolution=640x480",
+        "port": 0
+    },
+    {
+        "models": [
+            "IK-WB16",
+            "ik-wb16a",
+            "IK-WB16A",
+            "IK-WB16A-W",
+            "IK-WB21A",
+            "IKWB-70A",
+            "IKWB-80A",
+            "IKWD-01A",
+            "IK-WD04A",
+            "IKWD-12A",
+            "IKWD-14A",
+            "IKWP-41A",
+            "IKWR-01A",
+            "IKWR-04A",
+            "IKWR-05",
+            "IK-WR12A",
+            "IK-WR14A"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live.sdp",
+        "port": 0
+    },
+    {
+        "models": [
+            "IK-WB16A",
+            "IKWB-80A",
+            "IK-WR12A"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/video.mjpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "IK-WB16A-W",
+            "IKWB-70A",
+            "IKWD-12A",
+            "IKWD-14A"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live2.sdp",
+        "port": 0
+    },
+    {
+        "models": [
+            "IK-WB21A"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/GetData.cgi?CH=[CHANNEL]&Codec=jpeg&Size=[WIDTH]x[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "IKWB-70A",
+            "IKWD-01A"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/video[USERNAME].mjpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "IKWB-81A",
+            "IK-WR14A",
+            "WD04A"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live4.sdp",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=64&rate=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/image/jpeg.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?usr=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/video.mjpg?q=30&fps=33&id=0.5",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videofeed",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/mjpeg?stream=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/mjpeg?stream=0",
+        "port": 80
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/nphMotionJpeg?Resolution=1280x720&Quality=Standard",
+        "port": 80
+    }
+]

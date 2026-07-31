@@ -1,0 +1,343 @@
+[
+    {
+        "models": [
+            "ADC2W",
+            "bullet",
+            "Bullet lite",
+            "Bullet Lite",
+            "Cell Pro",
+            "Cue",
+            "Cue2",
+            "G22P",
+            "G26E",
+            "G26EP",
+            "IPC-G22",
+            "IPC-A12",
+            "IPC-A22",
+            "IPC-C26EP",
+            "ipc-c26ep",
+            "IPC-D42",
+            "ipc-g42",
+            "IPC-S3D-5M0WJ",
+            "Lite",
+            "looc",
+            "ranger",
+            "RANGER 2C",
+            "Ranger IQ-B6E4",
+            "ranger pro",
+            "Ranger Pro",
+            "Ranger pro z",
+            "IPC-C32SP",
+            "IPC-G26P"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]",
+        "port": 554
+    },
+    {
+        "models": [
+            "bullet",
+            "BULLET LITE",
+            "ipc-g26ep",
+            "IPC-T26EP",
+            "Looc",
+            "LOOC2",
+            "TURRET"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/snapshot.cgi?chn=[CHANNEL]&u=[USERNAME]&p=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Bullet",
+            "Bullet 4MP lite",
+            "Bullet Lite",
+            "Floodlight",
+            "G22P",
+            "IPC-G22",
+            "IPC-A26HI",
+            "IPC-C26EP",
+            "IPC-D22",
+            "IPC-D42",
+            "ipc-g26ep",
+            "ipc-g42",
+            "IPC-T26EP",
+            "Knight",
+            "LITE",
+            "Looc",
+            "LOOC2",
+            "ranger",
+            "Ranger IQ",
+            "RANGER IQ",
+            "ranger pro",
+            "Ranger pro",
+            "Ranger Pro V2",
+            "rangeriq",
+            "TURRET",
+            "DB61I"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/snapshot.cgi?loginuse=[USERNAME]&loginpas=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Bullet",
+            "BULLET LITE",
+            "Bullet Lite",
+            "G26EP",
+            "IPC-C26EP",
+            "IPC-D22",
+            "ipc-g42",
+            "Ranger 2",
+            "ranger pro",
+            "T-26E",
+            "Turret"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/snapshot.cgi?1",
+        "port": 0
+    },
+    {
+        "models": [
+            "bullet 2c",
+            "Bullet 2C",
+            "Cue2",
+            "IPC-S42F",
+            "IPC-S7XEN-10M0WED",
+            "Looc2",
+            "Ranger 2",
+            "Rex",
+            "TP2",
+            "Ranger eC 2MP",
+            "RANGER 2C 3MP"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&subtype=0",
+        "port": 554
+    },
+    {
+        "models": [
+            "bullet 2c"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/view.cgi?chn=0&u=[USERNAME]&p=[PASSWORD]",
+        "port": 80
+    },
+    {
+        "models": [
+            "bullet 2c",
+            "IPC-F42",
+            "IPC-F42F-D",
+            "IPC-F42FN",
+            "RANGER",
+            "RANGER 2C 4MP-D"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/video.mjpg?oids=1&username=[USERNAME]&password=[USERNAME]",
+        "port": 8090
+    },
+    {
+        "models": [
+            "Bullet 2c 4mp",
+            "Bullet 3C",
+            "BULLET LITE",
+            "clue 2",
+            "IPC-S42-FP",
+            "IPC-S21FE",
+            "Cue2",
+            "DB61i",
+            "IPC-G22",
+            "IPC-A42-L",
+            "IPC-C22F-C",
+            "IPC-C26E",
+            "IPC-C26E-V2",
+            "IPC-F22FE",
+            "IPC-F42",
+            "IPC-G26EP",
+            "IPC-T22A",
+            "IPC-TA32CP-L",
+            "looc",
+            "Ranger 2",
+            "Ranger 2C",
+            "Ranger Dual 6MP",
+            "Ranger SE 4MP"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif",
+        "port": 554
+    },
+    {
+        "models": [
+            "Bullet lite",
+            "IPC-K3C",
+            "Ranger 2"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/",
+        "port": 80
+    },
+    {
+        "models": [
+            "Bullet Lite",
+            "Looc",
+            "ranger",
+            "ranger pro"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=[CHANNEL]&subtype=1&authBasic=[AUTH]",
+        "port": 0
+    },
+    {
+        "models": [
+            "cell c3",
+            "IPC-F42FE"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/video.mjpg?oids=1&username=[USERNAME]&password=[PASSWORD]",
+        "port": 8090
+    },
+    {
+        "models": [
+            "Cruiser 2"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&amp;subtype=1",
+        "port": 554
+    },
+    {
+        "models": [
+            "Cruiser 2C",
+            "T42EA",
+            "Ranger eC 2MP",
+            "RANGER 2C 3MP"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&subtype=1",
+        "port": 554
+    },
+    {
+        "models": [
+            "Cue2"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&amp;subtype=00&amp;authbasic=[AUTH]",
+        "port": 0
+    },
+    {
+        "models": [
+            "DB61i",
+            "IPC-A42-L",
+            "IPC-T22A",
+            "Ranger 2",
+            "Ranger 2C"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&subtype=1&unicast=true&proto=Onvif",
+        "port": 554
+    },
+    {
+        "models": [
+            "F22AP",
+            "IPC-A43P"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&subtype=0&resolution=2560x1440",
+        "port": 554
+    },
+    {
+        "models": [
+            "IPC-A43P",
+            "IPC-F22P"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/11",
+        "port": 554
+    },
+    {
+        "models": [
+            "IPC-C26E"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live",
+        "port": 554
+    },
+    {
+        "models": [
+            "IPC-G22"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/h264_stream",
+        "port": 1935
+    },
+    {
+        "models": [
+            "IPC-K42P",
+            "looc",
+            "Looc-v2"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/snapshot.cgi?chn=0&u=[USERNAME]&p=[PASSWORD]",
+        "port": 80
+    },
+    {
+        "models": [
+            "IPC-S6D",
+            "RANGER DUAL 6MP",
+            "IPC-S7XEN-10M0WED"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/onvifsnapshot/media_service/snapshot?channel=1&subtype=0",
+        "port": 80
+    },
+    {
+        "models": [
+            "Ranger 2",
+            "T42EA"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&subtype=00",
+        "port": 554
+    },
+    {
+        "models": [
+            "Ranger A22E"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/onvif/stream2",
+        "port": 554
+    },
+    {
+        "models": [
+            "GC42"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/stream1",
+        "port": 554
+    }
+]

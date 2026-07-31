@@ -6,12 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = createCamera;
 const UrlCamera_1 = __importDefault(require("./UrlCamera"));
 const HiKamCamera_1 = __importDefault(require("./HiKamCamera"));
+const InstarCamera_1 = __importDefault(require("./InstarCamera"));
 const UrlBasicAuthCamera_1 = __importDefault(require("./UrlBasicAuthCamera"));
 const RtspCamera_1 = __importDefault(require("./RtspCamera"));
 const ReolinkE1Camera_1 = __importDefault(require("./ReolinkE1Camera"));
 const EufyCamera_1 = __importDefault(require("./EufyCamera"));
 const UniversalCamera_1 = __importDefault(require("./UniversalCamera"));
-async function createCamera(adapter, config, ffmpegPath, streamSubscribes) {
+async function createCamera(adapter, config, ffmpegPath, streamSubscribes, go2rtc) {
     let camera;
     switch (config.type) {
         case 'url':
@@ -22,6 +23,9 @@ async function createCamera(adapter, config, ffmpegPath, streamSubscribes) {
             break;
         case 'hikam':
             camera = new HiKamCamera_1.default(adapter, config, ffmpegPath);
+            break;
+        case 'instar':
+            camera = new InstarCamera_1.default(adapter, config);
             break;
         case 'rtsp':
             camera = new RtspCamera_1.default(adapter, config, ffmpegPath);
@@ -42,6 +46,9 @@ async function createCamera(adapter, config, ffmpegPath, streamSubscribes) {
     await camera.init();
     if (camera.isRtsp && streamSubscribes) {
         camera.registerRtspStreams(streamSubscribes);
+    }
+    if (camera.isRtsp && go2rtc) {
+        camera.setGo2Rtc(go2rtc);
     }
     return camera;
 }

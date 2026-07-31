@@ -13,6 +13,7 @@ const moment_1 = __importDefault(require("moment"));
 const decompress_1 = __importDefault(require("decompress"));
 const Factory_1 = __importDefault(require("./cameras/Factory"));
 const rtspCommon_1 = require("./cameras/rtspCommon");
+const Go2RtcServer_1 = __importDefault(require("./lib/Go2RtcServer"));
 const WIN_FFMPEG_VERSION = '2025-02-02-git-957eb2323a-full_build-www.gyan.dev';
 class CamerasAdapter extends adapter_core_1.Adapter {
     lang = 'en';
@@ -24,6 +25,7 @@ class CamerasAdapter extends adapter_core_1.Adapter {
     cameras = {};
     bForce = {};
     ffmpegPath = '';
+    go2rtc = null;
     constructor(options = {}) {
         super({
             ...options,
@@ -50,7 +52,7 @@ class CamerasAdapter extends adapter_core_1.Adapter {
     onStateChange(id, state) {
         if (state && !state.ack && id.endsWith('.running') && id.startsWith(this.namespace)) {
             const parts = id.split('.');
-            const camera = parts[id.length - 2];
+            const camera = parts[parts.length - 2];
             if (this.cameras[camera]) {
                 if (state.val) {
                     try {
@@ -243,7 +245,9 @@ class CamerasAdapter extends adapter_core_1.Adapter {
                 if (obj.message) {
                     const cameraConfig = this.config.cameras.find(cam => cam.name === obj.message.name);
                     if (cameraConfig && obj.callback) {
-                        const cam = Object.assign(JSON.parse(JSON.stringify(cameraConfig), obj.message));
+                        // Take the stored camera configuration and let the request override
+                        // width/height/angle/noCache
+                        const cam = Object.assign(JSON.parse(JSON.stringify(cameraConfig)), obj.message);
                         try {
                             const data = await this.getCameraImage(cam);
                             this.sendTo(obj.from, obj.command, { data: Buffer.from(data).toString('base64'), contentType: 'image/jpeg' }, obj.callback);
@@ -288,6 +292,11 @@ class CamerasAdapter extends adapter_core_1.Adapter {
     }
     unloadCameras(cb) {
         const promises = [];
+        if (this.go2rtc) {
+            const server = this.go2rtc;
+            this.go2rtc = null;
+            promises.push(server.stop().catch(e => this.log.error(`Cannot stop go2rtc: ${e}`)));
+        }
         this.config.cameras.forEach(item => {
             if (item?.type && this.cameras[item.name]) {
                 try {
@@ -404,7 +413,8 @@ class CamerasAdapter extends adapter_core_1.Adapter {
                 this.log.debug(`Invalid key from ${clientIp}. Expected ${this.config.key}`);
                 return;
             }
-            const cam = this.config.cameras.find(c => this.cameras[c.name].path === url);
+            // A camera that failed to initialize has no entry in this.cameras
+            const cam = this.config.cameras.find(c => this.cameras[c.name]?.path === url);
             const ignoreCache = query.noCache === 'true' || query.noCache === '1';
             if (cam) {
                 if (this.cameras[cam.name]) {
@@ -459,7 +469,7 @@ class CamerasAdapter extends adapter_core_1.Adapter {
             }
         });
         this.server.on('clientError', (_err, socket) => socket.end('HTTP/1.1 400 Bad Request\r\n\r\n'));
-        this.server.listen({ port: this.config.port || '127', host: this.config.bind }, () => this.log.info(`Server started on ${this.config.bind}:${this.config.port}`));
+        this.server.listen({ port: this.config.port || 8200, host: this.config.bind }, () => this.log.info(`Server started on ${this.config.bind}:${this.config.port}`));
     }
     async syncConfig() {
         try {
@@ -610,6 +620,24 @@ class CamerasAdapter extends adapter_core_1.Adapter {
             this.log.error(`Cannot create snapshots directory: ${e}`);
         }
         this.config.cameras = this.config.cameras.filter(cam => cam.enabled !== false);
+        // Optional: one go2rtc process for all RTSP cameras instead of one ffmpeg per snapshot.
+        // If it does not come up, the cameras silently keep using ffmpeg.
+        if (this.config.useGo2rtc && isAnyRtsp) {
+            const server = new Go2RtcServer_1.default(this, {
+                binaryPath: this.config.go2rtcPath,
+                apiPort: this.config.go2rtcApiPort,
+                rtspPort: this.config.go2rtcRtspPort,
+                tempPath: this.config.tempPath,
+                ffmpegPath: this.ffmpegPath,
+            });
+            try {
+                this.go2rtc = (await server.start()) ? server : null;
+            }
+            catch (e) {
+                this.log.warn(`Cannot start go2rtc: ${e}`);
+                this.go2rtc = null;
+            }
+        }
         // init all required camera providers
         this.config.cameras.forEach(item => {
             if (item?.type) {
@@ -620,7 +648,7 @@ class CamerasAdapter extends adapter_core_1.Adapter {
                     item.cacheTimeout = parseInt(item.cacheTimeout, 10) || 0;
                 }
                 try {
-                    promises.push((0, Factory_1.default)(this, item, this.ffmpegPath, this.streamSubscribes)
+                    promises.push((0, Factory_1.default)(this, item, this.ffmpegPath, this.streamSubscribes, this.go2rtc)
                         .then(camera => {
                         this.cameras[camera.getName()] = camera;
                     })

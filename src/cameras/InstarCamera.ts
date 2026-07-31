@@ -20,9 +20,10 @@ export default class InstarCamera extends GenericCamera {
             throw new Error(`Invalid URL: "${this.config.ip}"`);
         }
 
-        this.config.password = this.config.password || '';
+        // The password is stored encrypted and must be decrypted before it goes into the URL
+        const password = this.config.password ? this.adapter.decrypt(this.config.password) : '';
 
-        this.link = `http://${this.config.ip}:80/tmpfs/${this.config.quality === 'low' ? 'auto' : 'snap'}.jpg?usr=${this.config.username}&pwd=${this.config.password}`;
+        this.link = `http://${this.config.ip}:80/tmpfs/${this.config.quality === 'low' ? 'auto' : 'snap'}.jpg?usr=${encodeURIComponent(this.config.username || '')}&pwd=${encodeURIComponent(password)}`;
 
         return super.init();
     }

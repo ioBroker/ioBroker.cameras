@@ -12,6 +12,7 @@ builds in one repo:
 | `src/`        | `tsc`                | `build/`            | js-controller (`main` = `build/main.js`)        |
 | `src-admin/`  | vite (React 19)      | `admin/`            | ioBroker admin (`admin/index_m.html`)           |
 | `src-widgets/`| vite + module fed.   | `widgets/cameras/`  | vis-2 (`common.visWidgets` in io-package.json)  |
+| `src-devices/`| vite + module fed.   | `admin/dm-widgets/` | ioBroker.devices (`common.deviceWidgets`)      |
 
 `admin/` and `widgets/` are generated but **committed** — they are listed in package.json `files`.
 
@@ -77,6 +78,43 @@ Note there are **two independent ffmpeg stream implementations** (`GenericRtspCa
 the message/state path, `ProxyCameras.startFFmpeg` for the websocket path). Changes to streaming
 behaviour usually need to be made in both.
 
+### go2rtc — optional, off by default (`config.useGo2rtc`)
+
+Split in two because the two consumers live in **different processes**:
+
+- `lib/Go2RtcServer.ts` — process management, used by the adapter (`main.ts`). Binary lookup via
+  `findBinary`: config path → `<adapterDir>/go2rtc/` → PATH. Writes a generated config into `tempPath`;
+  streams are registered at runtime through the API, so **no camera credentials are written to disk**.
+- `lib/Go2RtcClient.ts` — pure HTTP client. `lib/web.ts` runs inside the ioBroker.web process and
+  cannot see the `Go2RtcServer` object, so it talks to the same local API through this client.
+
+**The browser never reaches go2rtc directly.** Its API is bound to `127.0.0.1`; everything is proxied
+by the web extension, which means the routes inherit ioBroker.web's authentication and its http/https
+scheme (no mixed-content problem, no extra open port):
+
+| Route | Source |
+| --- | --- |
+| WS `/<ns>/<cam>` | MJPEG frames, from go2rtc if enabled, else a local ffmpeg |
+| GET `/<ns>/<cam>/stream.mjpeg` | passthrough of `/api/stream.mjpeg`, usable in a plain `<img>` |
+| WS `/<ns>/<cam>/webrtc` | relay of go2rtc's `/api/ws` signalling |
+
+Three things that are easy to get wrong and cost real debugging time:
+
+1. **The RTSP module must stay enabled.** go2rtc pipes the output of `ffmpeg:`/`exec:` sources back
+   through its own RTSP server; `rtsp: listen: ""` breaks every transcoded source with
+   `streams: exec: rtsp module disabled`. It is bound to `127.0.0.1:<go2rtcRtspPort>`.
+2. **`ensureStream` registers two producers**: the camera plus `ffmpeg:<name>#video=mjpeg`. Without the
+   second one `/api/stream.mjpeg` rejects an H264 camera with `codecs not matched: video:H264 =>
+   video:JPEG`. Producers only start once a consumer attaches, so this is free while nobody watches.
+3. **go2rtc logs to stdout**, not stderr.
+
+`GenericRtspCamera.process()` and `ProxyCameras.startSource()` both fall back to ffmpeg on any error,
+so enabling go2rtc cannot break a working installation.
+
+Caveat: only the **signalling** of WebRTC can be proxied — the media flows directly between browser and
+go2rtc, so it needs `webrtcListen` set and that port reachable. The MJPEG path is the one that runs
+fully behind ioBroker.web.
+
 ### `src/cameras/` — one class per camera type
 
 - `GenericCamera` (abstract): `init()` / `destroy()` / `process(): Promise<ProcessData>`, HTTP path `/<name>`.
@@ -104,13 +142,30 @@ The README's "How to add a new camera" section refers to the old pre-TypeScript 
    identical to the backend `config.type`.**
 6. Add label keys to all `src-admin/src/i18n/*.json`.
 
-`instar` is currently half-wired: `src/cameras/InstarCamera.ts`, `CameraInstarConfig` and
-`src-admin/src/Types/Instar.tsx` exist, but it is missing from the `CameraType` union and from
-`Factory.ts`, so the backend cannot instantiate it.
+**Prefer the `universal` type over a new dedicated type.** It is data-driven and covers ~49
+manufacturers / ~13 000 models without any backend code:
+`src-admin/src/Types/Universal.tsx` reads `./data/manufacturers.json` to fill its manufacturer
+dropdown, then `./data/<id>.json` for that manufacturer's model→URL table, and stores the choice as
+`manufacturer` + `model` + `urlPath` + `urlProtocol` in the camera config. `UniversalCamera` builds
+either an RTSP or an HTTP URL from it. **Adding a manufacturer means adding a data file, nothing else.**
 
-The `universal` type is data-driven: `src-admin/src/Types/Universal.tsx` fetches
-`./data/<manufacturer>.json` from `src-admin/public/data/`, which is scraped from ispyconnect.com by
-`tools/parser.js` (run manually; edit `MANUFACTURERS` there).
+Logos live next to the data as `data/<id>.svg` and are produced by `node tools/logos.js`
+(`--force` also overwrites existing ones — careful, that includes hand-made logos). Two sources:
+brand marks from `simple-icons` (CC0) for the nine manufacturers it actually carries, and a generated
+monogram for the rest, because most IP camera brands have no freely licensed logo and copying
+trademarked artwork into an MIT repo is not an option. **To use a real logo, just drop
+`<id>.svg`/`.png`/`.jpg` into `src-admin/public/data/`** — `Universal.tsx` probes those three
+extensions and `tools/logos.js` skips ids that already have a file.
+
+Regenerate the model data with `node tools/parser.js` (all) or `node tools/parser.js hikvision dahua`
+(selected). New manufacturers go into the `MANUFACTURERS` map at the top of the script; it writes
+straight into `src-admin/public/data/` and rebuilds `manufacturers.json`. The scraper reads the
+`data-protocol` / `data-path` / `data-port` / `data-conn` attributes of the `<tr>` elements on
+ispyconnect.com — do not go back to reading column positions, that is what broke the previous version.
+Rows with protocols `UniversalCamera` cannot build (`mms://`, `rtmp://`, …) are dropped.
+
+A dedicated type is only worth it when the camera needs its own logic (Eufy reads the URL from another
+adapter's state, Reolink/HiKam have fixed quality paths, Instar has a bespoke snapshot URL).
 
 ## Admin UI (`src-admin/`)
 
@@ -133,6 +188,29 @@ JPEG frames onto a canvas using the two-path subscription described above.
 
 `tasks.js` post-processes the copied bundle to patch a zrender minification bug (`isFunction` used before
 definition) — don't remove that `process` callback in `widgetsCopyAllFiles`.
+
+## Device Manager widgets (`src-devices/`)
+
+A second module-federation remote (`DevicesWidgetCamerasSet`, `customDevices.js`) that
+**ioBroker.devices** loads, registered under `common.deviceWidgets` in io-package.json. Built with
+`npm run devices-build` (granular: `devices-0-clean` … `devices-3-copy`); output goes to
+`admin/dm-widgets/`, which ships because `admin/` is already in package.json `files`.
+The pattern is taken from ioBroker.echarts' `src-devices/`.
+
+Both components extend `CameraWidgetBase` → `WidgetGeneric` from `@iobroker/dm-widgets`. Note that
+`WidgetGeneric` is only a *compilable mirror* — the host injects the real implementation at runtime via
+federation, so React and MUI must be imported **from `@iobroker/dm-widgets`**, not directly.
+
+- `RtspCameraComponent` — subscribes with `subscribeOnInstance(instance, 'startCamera/<name>')`, the
+  same push channel the vis widget uses.
+- `SnapshotCameraComponent` — polls the adapter's `image` message.
+
+Both go over the **socket**, not over an HTTP route of the web adapter, because the Devices UI usually
+runs inside admin (port 8081) where `/<instance>/<camera>` is not served.
+
+The camera is picked as a plain `objectId` below the `cameras` namespace (e.g. `cameras.0.cam1.running`);
+`parseCameraId()` derives instance and camera name from it. That avoids needing a dynamic list in the
+JSON-config schema.
 
 ## Conventions
 

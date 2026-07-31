@@ -1,0 +1,15 @@
+{
+  "cameras_RtspCamera": "Câmera RTSP",
+  "cameras_SnapshotCamera": "Câmera de snapshot",
+  "cameras_cameraStateId": "Câmera",
+  "cameras_cameraStateId_help": "Selecione um estado da câmera, ex. cameras.0.cam1.running",
+  "cameras_instance_inactive": "A instância da câmera não está em execução",
+  "cameras_loading": "Carregando…",
+  "cameras_noCache": "Ignorar cache",
+  "cameras_no_camera": "Nenhuma câmera selecionada",
+  "cameras_pollingInterval": "Intervalo de consulta (ms)",
+  "cameras_pollingInterval_help": "Com que frequência uma nova imagem é solicitada",
+  "cameras_rotate": "Rotação",
+  "cameras_snapshotWhenOffline": "Mostrar snapshot até o stream iniciar",
+  "cameras_snapshotWhenOffline_help": "Evita um bloco vazio enquanto o stream inicia"
+}

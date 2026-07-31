@@ -65,9 +65,8 @@ const TYPES: Record<
     hikam: { Config: RTSPHiKamConfig as unknown as IConfigGeneric, name: 'HiKam / WiWiCam' },
     universal: {
         Config: UniversalConfig as unknown as IConfigGeneric,
-        name: 'ezviz',
-        icon: 'ezviz.svg',
-        hideName: true,
+        // The concrete manufacturer is chosen inside the dialog, see Types/Universal.tsx
+        name: 'By manufacturer',
     },
     instar: { Config: InstarConfig as unknown as IConfigGeneric, name: 'Instar' },
 };
@@ -742,7 +741,6 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
                                         // @ts-expect-error try to keep the ip address
                                         ip: (camera as any).ip,
                                         rtsp: !!TYPES[e.target.value].rtsp,
-                                        manufacturer: TYPES[e.target.value].name,
                                     };
                                     this.props.onChange('cameras', cameras);
                                 }}

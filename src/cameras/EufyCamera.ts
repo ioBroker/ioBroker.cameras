@@ -35,7 +35,7 @@ export default class EufyCamera extends GenericRtspCamera {
                 await this.adapter.setForeignStateAsync(parts.join('.'), true);
             }
             if (url?.val) {
-                const u = new URL(url.val as string);
+                const u = new URL(url.val);
                 this.settings.ip = u.hostname;
                 this.settings.port = u.port;
                 this.settings.urlPath = u.pathname;

@@ -1,0 +1,15 @@
+{
+  "cameras_RtspCamera": "RTSP камера",
+  "cameras_SnapshotCamera": "Камера знімків",
+  "cameras_cameraStateId": "Камера",
+  "cameras_cameraStateId_help": "Виберіть стан камери, напр. cameras.0.cam1.running",
+  "cameras_instance_inactive": "Екземпляр камери не запущено",
+  "cameras_loading": "Завантаження…",
+  "cameras_noCache": "Обходити кеш",
+  "cameras_no_camera": "Камеру не вибрано",
+  "cameras_pollingInterval": "Інтервал опитування (мс)",
+  "cameras_pollingInterval_help": "Як часто запитується нове зображення",
+  "cameras_rotate": "Обертання",
+  "cameras_snapshotWhenOffline": "Показувати знімок до старту потоку",
+  "cameras_snapshotWhenOffline_help": "Уникає порожньої плитки під час запуску потоку"
+}
