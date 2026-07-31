@@ -3,7 +3,7 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 
 import { AppBar, Tabs, Tab } from '@mui/material';
 
-import { Loader, I18n, GenericApp, type IobTheme, type GenericAppState } from '@iobroker/adapter-react-v5';
+import { Loader, I18n, GenericApp, type IobTheme, type GenericAppState } from '@iobroker/gui-components';
 
 import TabOptions from './Tabs/Options';
 import TabCameras from './Tabs/Cameras';
@@ -19,7 +19,7 @@ import esLang from './i18n/es.json';
 import plLang from './i18n/pl.json';
 import ukLang from './i18n/uk.json';
 import zhCnLang from './i18n/zh-cn.json';
-import type { GenericAppProps, GenericAppSettings } from '@iobroker/adapter-react-v5/build/types';
+import type { GenericAppProps, GenericAppSettings } from '@iobroker/gui-components/build/types';
 import type { CamerasAdapterConfig } from './types';
 
 const styles: Record<string, any> = {

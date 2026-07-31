@@ -3,10 +3,12 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/
 
 import { Close } from '@mui/icons-material';
 
-import Generic from './Generic';
+import type { RxRenderWidgetProps, RxWidgetInfo, VisRxWidgetProps, VisRxWidgetState } from '@iobroker/types-vis-2';
+import type VisRxWidget from '@iobroker/types-vis-2/visRxWidget';
+
 import { CameraField } from './RtspCamera';
 
-const styles = {
+const styles: Record<string, React.CSSProperties> = {
     camera: {
         width: '100%',
         height: '100%',
@@ -27,19 +29,50 @@ const styles = {
     },
 };
 
-class SnapshotCamera extends Generic {
-    constructor(props) {
+interface SnapshotCameraRxData {
+    noCard: boolean;
+    widgetTitle: string;
+    pollingInterval: number;
+    pollingIntervalFull: number;
+    noCacheByFull: boolean;
+    rotate: number;
+    camera: string;
+    bigCamera: string;
+}
+
+interface SnapshotCameraState extends VisRxWidgetState {
+    full: boolean;
+    alive: boolean;
+    error: boolean;
+}
+
+export default class SnapshotCamera extends (window.visRxWidget as typeof VisRxWidget)<
+    SnapshotCameraRxData,
+    SnapshotCameraState
+> {
+    private pollingInterval: ReturnType<typeof setInterval> | null = null;
+    private readonly videoRef: React.RefObject<HTMLImageElement | null>;
+    private readonly fullVideoRef: React.RefObject<HTMLImageElement | null>;
+    private subscribedOnAlive: string | null = null;
+    private loading = false;
+
+    constructor(props: VisRxWidgetProps) {
         super(props);
-        this.videoInterval = null;
-        this.videoRef = React.createRef();
-        this.fullVideoRef = React.createRef();
-        this.currentCam = null;
-        this.state.full = false;
-        this.state.alive = false;
-        this.state.error = false;
+        this.videoRef = React.createRef<HTMLImageElement | null>();
+        this.fullVideoRef = React.createRef<HTMLImageElement | null>();
+        this.state = {
+            ...this.state,
+            full: false,
+            alive: false,
+            error: false,
+        };
     }
 
-    static getWidgetInfo() {
+    static getI18nPrefix(): string {
+        return 'cameras_';
+    }
+
+    static getWidgetInfo(): RxWidgetInfo {
         return {
             id: 'tplCameras2SnapshotCamera',
             visSet: 'cameras',
@@ -130,11 +163,11 @@ class SnapshotCamera extends Generic {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    getWidgetInfo() {
+    getWidgetInfo(): RxWidgetInfo {
         return SnapshotCamera.getWidgetInfo();
     }
 
-    static getNameAndInstance(value) {
+    static getNameAndInstance(value: string | null | undefined): { instanceId: string; name: string } | null {
         if (!value) {
             return null;
         }
@@ -148,80 +181,84 @@ class SnapshotCamera extends Generic {
         };
     }
 
-    getImageWidth(isFull) {
+    getImageWidth(isFull?: boolean): number {
         isFull = isFull === undefined ? this.state.full : isFull;
-        if (isFull && this.fullVideoRef.current) {
-            return this.fullVideoRef.current?.parentElement.clientWidth || 0;
+        if (isFull && this.fullVideoRef.current?.parentElement) {
+            return this.fullVideoRef.current.parentElement.clientWidth || 0;
         }
 
-        return this.videoRef.current?.parentElement.clientWidth || 0;
+        return this.videoRef.current?.parentElement?.clientWidth || 0;
     }
 
-    async subscribeOnAlive() {
+    async subscribeOnAlive(): Promise<void> {
         const data = SnapshotCamera.getNameAndInstance(this.state.rxData.camera);
 
-        if (this.subsribedOnAlive !== (data ? data.instanceId : null)) {
-            if (this.subsribedOnAlive) {
+        if (this.subscribedOnAlive !== (data ? data.instanceId : null)) {
+            if (this.subscribedOnAlive) {
                 this.props.context.socket.unsubscribeState(
-                    `system.adapter.cameras.${this.subsribedOnAlive}.alive`,
+                    `system.adapter.cameras.${this.subscribedOnAlive}.alive`,
                     this.onAliveChanged,
                 );
-                this.subsribedOnAlive = '';
+                this.subscribedOnAlive = '';
             }
             if (data) {
-                this.props.context.socket.subscribeState(
+                await this.props.context.socket.subscribeState(
                     `system.adapter.cameras.${data.instanceId}.alive`,
                     this.onAliveChanged,
                 );
-                this.subsribedOnAlive = data.instanceId;
+                this.subscribedOnAlive = data.instanceId;
             }
         }
     }
 
-    updateImage = () => {
-        if (!this.loading) {
-            this.loading = true;
-            if (this.videoRef.current) {
-                this.videoRef.current.src = this.getUrl();
-                this.videoRef.current.onload = e => {
-                    if (e.target && !e.target.style.opacity !== '1') {
-                        e.target.style.opacity = '1';
-                    }
-                    this.state.error && this.setState({ error: false });
-                    this.loading = false;
-                };
-                this.videoRef.current.onerror = e => {
-                    if (e.target && e.target.style.opacity !== '0') {
-                        e.target.style.opacity = '0';
-                    }
-                    !this.state.error && this.setState({ error: true });
+    updateImage = (): void => {
+        if (this.loading) {
+            return;
+        }
+        this.loading = true;
 
-                    this.loading = false;
-                };
-            }
-            if (this.fullVideoRef.current && this.state.full) {
-                this.fullVideoRef.current.src = this.getUrl(true);
-            }
+        const image = this.videoRef.current;
+        if (image) {
+            image.src = this.getUrl();
+            image.onload = (): void => {
+                if (image.style.opacity !== '1') {
+                    image.style.opacity = '1';
+                }
+                if (this.state.error) {
+                    this.setState({ error: false });
+                }
+                this.loading = false;
+            };
+            image.onerror = (): void => {
+                if (image.style.opacity !== '0') {
+                    image.style.opacity = '0';
+                }
+                if (!this.state.error) {
+                    this.setState({ error: true });
+                }
+                this.loading = false;
+            };
+        }
+        if (this.fullVideoRef.current && this.state.full) {
+            this.fullVideoRef.current.src = this.getUrl(true);
         }
     };
 
-    restartPollingInterval() {
+    restartPollingInterval(): void {
         if (this.pollingInterval) {
             clearInterval(this.pollingInterval);
             this.pollingInterval = null;
         }
         if (this.state.alive) {
-            this.pollingInterval = setInterval(
-                this.updateImage,
-                parseInt(
-                    this.state.full ? this.state.rxData.pollingIntervalFull : this.state.rxData.pollingInterval,
-                    10,
-                ) || 500,
-            );
+            const interval = this.state.full
+                ? this.state.rxData.pollingIntervalFull
+                : this.state.rxData.pollingInterval;
+
+            this.pollingInterval = setInterval(this.updateImage, parseInt(String(interval), 10) || 500);
         }
     }
 
-    onAliveChanged = (id, state) => {
+    onAliveChanged = (id: string, state: ioBroker.State | null | undefined): void => {
         const data = SnapshotCamera.getNameAndInstance(this.state.rxData.camera);
         if (data && id === `system.adapter.cameras.${data.instanceId}.alive`) {
             const alive = !!state?.val;
@@ -231,31 +268,33 @@ class SnapshotCamera extends Generic {
         }
     };
 
-    componentDidMount() {
+    async componentDidMount(): Promise<void> {
         super.componentDidMount();
 
-        this.subscribeOnAlive();
-    }
-
-    async onRxDataChanged(/* prevRxData */) {
         await this.subscribeOnAlive();
     }
 
-    componentWillUnmount() {
-        super.componentWillUnmount();
-        this.pollingInterval && clearInterval(this.pollingInterval);
-        this.pollingInterval = null;
+    async onRxDataChanged(/* prevRxData */): Promise<void> {
+        await this.subscribeOnAlive();
+    }
 
-        if (this.subsribedOnAlive) {
+    componentWillUnmount(): void {
+        super.componentWillUnmount();
+        if (this.pollingInterval) {
+            clearInterval(this.pollingInterval);
+            this.pollingInterval = null;
+        }
+
+        if (this.subscribedOnAlive) {
             this.props.context.socket.unsubscribeState(
-                `system.adapter.cameras.${this.subsribedOnAlive}.alive`,
+                `system.adapter.cameras.${this.subscribedOnAlive}.alive`,
                 this.onAliveChanged,
             );
-            this.subsribedOnAlive = null;
+            this.subscribedOnAlive = null;
         }
     }
 
-    renderDialog(url) {
+    renderDialog(url: string): React.JSX.Element | null {
         if (this.state.full && this.state.rxData.bigCamera) {
             url = this.getUrl(true) || url;
         }
@@ -289,14 +328,14 @@ class SnapshotCamera extends Generic {
                         color="primary"
                         variant="contained"
                     >
-                        {Generic.t('Close')}
+                        {SnapshotCamera.t('Close')}
                     </Button>
                 </DialogActions>
             </Dialog>
         ) : null;
     }
 
-    getUrl(isFull) {
+    getUrl(isFull?: boolean): string {
         if (isFull && !this.state.rxData.bigCamera) {
             const url = `../cameras.${this.state.rxData.bigCamera}?`;
             const params = [
@@ -321,7 +360,7 @@ class SnapshotCamera extends Generic {
         return '';
     }
 
-    renderWidgetBody(props) {
+    renderWidgetBody(props: RxRenderWidgetProps): React.JSX.Element | React.JSX.Element[] | null {
         super.renderWidgetBody(props);
 
         const url = this.getUrl();
@@ -333,7 +372,10 @@ class SnapshotCamera extends Generic {
             >
                 {!this.state.alive ? (
                     <div style={{ position: 'absolute', top: 20, left: 0 }}>
-                        {Generic.t('Camera instance %s inactive', (this.state.rxData.camera || '').split('/')[0])}
+                        {SnapshotCamera.t(
+                            'Camera instance %s inactive',
+                            (this.state.rxData.camera || '').split('/')[0],
+                        )}
                     </div>
                 ) : null}
                 {url ? (
@@ -344,7 +386,7 @@ class SnapshotCamera extends Generic {
                         alt={this.state.rxData.camera}
                     />
                 ) : (
-                    Generic.t('No camera selected')
+                    SnapshotCamera.t('No camera selected')
                 )}
                 {this.state.alive && this.state.error ? (
                     <div
@@ -354,7 +396,7 @@ class SnapshotCamera extends Generic {
                             left: 0,
                         }}
                     >
-                        <div style={{ color: 'red' }}>{Generic.t('Cannot load URL')}:</div>
+                        <div style={{ color: 'red' }}>{SnapshotCamera.t('Cannot load URL')}:</div>
                         <div>{this.getUrl(true)}</div>
                     </div>
                 ) : null}
@@ -373,5 +415,3 @@ class SnapshotCamera extends Generic {
         });
     }
 }
-
-export default SnapshotCamera;

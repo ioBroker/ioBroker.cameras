@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Button, Switch, TextField } from '@mui/material';
 
-import { I18n, DialogSelectID } from '@iobroker/adapter-react-v5';
+import { I18n, DialogSelectID } from '@iobroker/gui-components';
 import type { CameraConfigEufy } from '../types';
 import ConfigGeneric, { type ConfigProps } from './ConfigGeneric';
 

@@ -1,4 +1,6 @@
-import { g as T } from "./_commonjsHelpers-Cpj98o6Y.js";
+function T(e) {
+  return e && e.__esModule && Object.prototype.hasOwnProperty.call(e, "default") ? e.default : e;
+}
 function V(e, t) {
   for (var n = 0; n < t.length; n++) {
     const u = t[n];

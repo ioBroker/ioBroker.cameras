@@ -3,7 +3,8 @@ import { createRoot } from 'react-dom/client';
 import pack from '../package.json';
 import * as serviceWorker from './serviceWorker';
 
-import '@iobroker/adapter-react-v5/index.css';
+// @ts-expect-error no types
+import '@iobroker/gui-components/index.css';
 import App from './App';
 
 declare global {

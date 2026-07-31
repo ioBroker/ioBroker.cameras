@@ -2,7 +2,7 @@ import React from 'react';
 
 import { TextField, Checkbox, FormControlLabel, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
-import { I18n } from '@iobroker/adapter-react-v5';
+import { I18n } from '@iobroker/gui-components';
 import type { CameraConfigRtsp } from '../types';
 import ConfigGeneric, { type ConfigProps } from './ConfigGeneric';
 

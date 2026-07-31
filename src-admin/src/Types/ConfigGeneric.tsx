@@ -1,5 +1,5 @@
 import { type JSX, Component } from 'react';
-import type { AdminConnection, IobTheme, ThemeType } from '@iobroker/adapter-react-v5';
+import type { AdminConnection, IobTheme, ThemeType } from '@iobroker/gui-components';
 import type { CamerasAdapterConfig } from '../types';
 
 export interface ConfigProps<T> {

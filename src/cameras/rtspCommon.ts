@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from 'node:fs';
-import { spawn, execSync, ChildProcess, ChildProcessWithoutNullStreams } from 'node:child_process';
+import { spawn, execSync, type ChildProcessWithoutNullStreams } from 'node:child_process';
 import { normalize } from 'node:path';
 
 export interface RtspOptions {

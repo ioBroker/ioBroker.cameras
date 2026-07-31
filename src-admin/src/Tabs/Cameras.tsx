@@ -34,7 +34,7 @@ import {
     type IobTheme,
     Message as MessageDialog,
     type ThemeType,
-} from '@iobroker/adapter-react-v5';
+} from '@iobroker/gui-components';
 
 import URLImage from '../Types/URLImage';
 import URLBasicAuthImage from '../Types/URLBasicAuthImage';
@@ -204,12 +204,12 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
         };
 
         // translate all names once
-        Object.keys(TYPES).forEach((type: CameraType): void => {
-            if (TYPES[type].name && !TYPES[type].translated) {
-                TYPES[type].translated = true;
-                TYPES[type].name = I18n.t(TYPES[type].name);
-                if (TYPES[type].Config.isRtsp) {
-                    TYPES[type].rtsp = true;
+        Object.keys(TYPES).forEach(type => {
+            if (TYPES[type as CameraType].name && !TYPES[type as CameraType].translated) {
+                TYPES[type as CameraType].translated = true;
+                TYPES[type as CameraType].name = I18n.t(TYPES[type as CameraType].name);
+                if (TYPES[type as CameraType].Config.isRtsp) {
+                    TYPES[type as CameraType].rtsp = true;
                 }
             }
         });
@@ -425,7 +425,7 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
                                     settings={cam}
                                     themeType={this.props.themeType}
                                     theme={this.props.theme}
-                                    onChange={(settings: CameraConfig): void => this.onCameraSettingsChanged(settings)}
+                                    onChange={settings => this.onCameraSettingsChanged(settings as CameraConfig)}
                                     encrypt={(value: string, cb: (encrypted: string) => void) =>
                                         this.props.encrypt(value, cb)
                                     }
@@ -735,14 +735,14 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
                                     );
                                     const camera = cameras[i];
                                     cameras[i] = {
-                                        type: e.target.value as CameraType,
+                                        type: e.target.value,
                                         desc: camera.desc,
                                         name: camera.name,
                                         enabled: camera.enabled,
                                         // @ts-expect-error try to keep the ip address
                                         ip: (camera as any).ip,
-                                        rtsp: !!TYPES[e.target.value as CameraType].rtsp,
-                                        manufacturer: TYPES[e.target.value as CameraType].name,
+                                        rtsp: !!TYPES[e.target.value].rtsp,
+                                        manufacturer: TYPES[e.target.value].name,
                                     };
                                     this.props.onChange('cameras', cameras);
                                 }}
@@ -761,26 +761,24 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
                                     </div>
                                 )}
                             >
-                                {Object.keys(TYPES).map(
-                                    (type: CameraType): React.JSX.Element => (
-                                        <MenuItem
-                                            key={type}
-                                            value={type}
-                                            style={{ display: 'flex', gap: 8, alignItems: 'center' }}
-                                        >
-                                            {TYPES[type].icon ? (
-                                                <img
-                                                    src={`./data/${TYPES[type].icon}`}
-                                                    style={{ height: 20, width: 'auto' }}
-                                                    alt={type}
-                                                />
-                                            ) : null}
-                                            {TYPES[type].icon && TYPES[type].hideName ? null : (
-                                                <div>{TYPES[type].name || type}</div>
-                                            )}
-                                        </MenuItem>
-                                    ),
-                                )}
+                                {Object.keys(TYPES).map(type => (
+                                    <MenuItem
+                                        key={type}
+                                        value={type}
+                                        style={{ display: 'flex', gap: 8, alignItems: 'center' }}
+                                    >
+                                        {TYPES[type as CameraType].icon ? (
+                                            <img
+                                                src={`./data/${TYPES[type as CameraType].icon}`}
+                                                style={{ height: 20, width: 'auto' }}
+                                                alt={type}
+                                            />
+                                        ) : null}
+                                        {TYPES[type as CameraType].icon && TYPES[type as CameraType].hideName ? null : (
+                                            <div>{TYPES[type as CameraType].name || type}</div>
+                                        )}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                     </div>
