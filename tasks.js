@@ -72,7 +72,7 @@ if (process.argv.includes('--0-clean')) {
         });
     }
 } else if (process.argv.includes('--2-build')) {
-    buildReact(`${__dirname}/src-admin`, { rootDir: `${__dirname}/src-admin`, tsc: true, vite: true }).catch(e => {
+    buildReact(`${__dirname}/src-admin`, { rootDir: `${__dirname}/src-admin`, vite: true }).catch(e => {
         console.error(`Cannot build: ${e}`);
         process.exit(2);
     });
@@ -84,7 +84,7 @@ if (process.argv.includes('--0-clean')) {
 } else if (process.argv.includes('--build-admin')) {
     clean();
     npmInstall('src-admin')
-        .then(() => buildReact(`${__dirname}/src-admin`, { rootDir: `${__dirname}/src-admin`, tsc: true, vite: true }))
+        .then(() => buildReact(`${__dirname}/src-admin`, { rootDir: `${__dirname}/src-admin`, vite: true }))
         .then(() => copyAllFiles());
 } else if (process.argv.includes('--widget-0-clean')) {
     widgetsClean();
@@ -117,7 +117,7 @@ if (process.argv.includes('--0-clean')) {
 } else {
     clean();
     npmInstall('src-admin')
-        .then(() => buildReact(`${__dirname}/src-admin`, { rootDir: `${__dirname}/src-admin`, tsc: true, vite: true }))
+        .then(() => buildReact(`${__dirname}/src-admin`, { rootDir: `${__dirname}/src-admin`, vite: true }))
         .then(() => copyAllFiles())
         .then(() => widgetsClean())
         .then(() => npmInstall('src-widgets'))

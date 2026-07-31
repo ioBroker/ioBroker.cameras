@@ -12,7 +12,7 @@ import {
     DialogError,
     type AdminConnection,
     type IobTheme,
-} from '@iobroker/adapter-react-v5';
+} from '@iobroker/gui-components';
 import type { CamerasAdapterConfig } from '../types';
 
 const styles: Record<string, React.CSSProperties> = {

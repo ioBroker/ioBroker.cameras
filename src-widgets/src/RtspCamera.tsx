@@ -12,9 +12,19 @@ import {
 
 import { Close } from '@mui/icons-material';
 
-import Generic from './Generic';
+import type {
+    RxRenderWidgetProps,
+    RxWidgetInfo,
+    RxWidgetInfoAttributesField,
+    RxWidgetInfoCustomComponentContext,
+    VisRxWidgetProps,
+    VisRxWidgetState,
+    WidgetData,
+} from '@iobroker/types-vis-2';
+import type VisRxWidget from '@iobroker/types-vis-2/visRxWidget';
+import { CameraConfigAny, CameraInstarConfig } from '../../src/types';
 
-const styles = {
+const styles: Record<string, React.CSSProperties> = {
     camera: {
         width: '100%',
         height: '100%',
@@ -35,24 +45,49 @@ const styles = {
     },
 };
 
-export const CameraField = props => {
-    const [cameras, setCameras] = React.useState(null);
-    const [camera, setCamera] = React.useState(props.data[props.field.name] || '');
+interface RtspCameraRxData {
+    noCard: boolean;
+    widgetTitle: string;
+    width: number;
+    camera: string;
+}
+/** Camera selector, shared by the RTSP and the snapshot widget */
+export const CameraField = (props: {
+    data: WidgetData;
+    field: RxWidgetInfoAttributesField;
+    context: RxWidgetInfoCustomComponentContext;
+    rtsp?: boolean;
+    setData: (newData: WidgetData) => void;
+}) => {
+    const [cameras, setCameras] = React.useState<null | Array<{
+        enabled: boolean;
+        value: string;
+        label: string;
+        subLabel: string;
+    }>>(null);
+    const [camera, setCamera] = React.useState<string>((props.data[props.field.name || 'camera'] as string) || '');
 
     useEffect(() => {
         (async () => {
-            const _cameras = [];
+            const _cameras: {
+                enabled: boolean;
+                value: string;
+                label: string;
+                subLabel: string;
+            }[] = [];
             const instances = await props.context.socket.getAdapterInstances('cameras');
             instances.forEach(instance => {
                 const instanceId = instance._id.split('.').pop();
-                instance.native.cameras
+                (instance.native.cameras as CameraConfigAny[])
                     .filter(iCamera => !props.rtsp || iCamera.type === 'rtsp' || iCamera.rtsp)
                     .forEach(iCamera => {
                         _cameras.push({
                             enabled: iCamera.enabled !== false,
                             value: `${instanceId}/${iCamera.name}`,
                             label: `cameras.${instanceId}/${iCamera.name}`,
-                            subLabel: iCamera.desc ? `${iCamera.desc}/${iCamera.ip}` : iCamera.ip || '',
+                            subLabel: iCamera.desc
+                                ? `${iCamera.desc}/${(iCamera as CameraInstarConfig).ip || (iCamera as CameraInstarConfig).type || ''}`
+                                : (iCamera as CameraInstarConfig).ip || (iCamera as CameraInstarConfig).type || '',
                         });
                     });
             });
@@ -66,7 +101,7 @@ export const CameraField = props => {
             variant="standard"
             value={camera}
             onChange={e => {
-                props.setData({ [props.field.name]: e.target.value });
+                props.setData({ [props.field.name || 'camera']: e.target.value });
                 setCamera(e.target.value);
             }}
         >
@@ -87,7 +122,7 @@ export const CameraField = props => {
                                 color: 'red',
                             }}
                         >
-                            {Generic.t('disabled')}
+                            {RtspCamera.t('disabled')}
                         </div>
                     ) : null}
                 </MenuItem>
@@ -98,24 +133,42 @@ export const CameraField = props => {
     );
 };
 
-class RtspCamera extends Generic {
-    constructor(props) {
+interface RtspCameraState extends VisRxWidgetState {
+    full: boolean;
+    alive: boolean;
+    loading: boolean;
+}
+
+export default class RtspCamera extends (window.visRxWidget as typeof VisRxWidget)<RtspCameraRxData, RtspCameraState> {
+    private videoInterval: null | ReturnType<typeof setInterval> = null;
+    private readonly videoRef: React.RefObject<HTMLCanvasElement | null>;
+    private readonly fullVideoRef: React.RefObject<HTMLCanvasElement | null>;
+    private currentCam: null | string = null;
+    private subscribedOnAlive: null | string = null;
+    private useMessages: boolean | undefined;
+
+    constructor(props: VisRxWidgetProps) {
         super(props);
-        this.videoInterval = null;
-        this.videoRef = React.createRef();
-        this.fullVideoRef = React.createRef();
-        this.currentCam = null;
-        this.state.full = false;
-        this.state.alive = false;
+        this.videoRef = React.createRef<HTMLCanvasElement | null>();
+        this.fullVideoRef = React.createRef<HTMLCanvasElement | null>();
+        this.state = {
+            ...this.state,
+            full: false,
+            alive: false,
+            loading: false,
+        };
     }
 
-    static getWidgetInfo() {
+    static getI18nPrefix() {
+        return 'cameras_';
+    }
+
+    static getWidgetInfo(): RxWidgetInfo {
         return {
             id: 'tplCameras2RtspCamera',
             visSet: 'cameras',
             visName: 'RTSP Camera',
             visWidgetLabel: 'RTSP Camera',
-            visWidgetSetLabel: 'Cameras',
             visSetLabel: 'Cameras',
             visSetColor: '#9f0026',
             visAttrs: [
@@ -165,11 +218,11 @@ class RtspCamera extends Generic {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    getWidgetInfo() {
+    getWidgetInfo(): RxWidgetInfo {
         return RtspCamera.getWidgetInfo();
     }
 
-    static drawCamera(ref, data) {
+    static drawCamera(ref: React.RefObject<HTMLCanvasElement | null>, data: string) {
         const canvas = ref.current;
         if (!canvas) {
             return;
@@ -187,7 +240,7 @@ class RtspCamera extends Generic {
                 // const centerShiftX = (canvas.width - imageObj.width * ratio) / 2;
                 // const centerShiftY = (canvas.height - imageObj.height * ratio) / 2;
                 // context.clearRect(0, 0, canvas.width, canvas.height);
-                context.drawImage(
+                context?.drawImage(
                     imageObj,
                     0,
                     0,
@@ -199,29 +252,27 @@ class RtspCamera extends Generic {
                     // imageObj.height * ratio,
                 );
             };
-            imageObj.onerror = e => {
-                console.error(e);
-            };
+            imageObj.onerror = e => console.error(e);
         } catch (e) {
             console.error(e);
         }
     }
 
-    updateStream = (id, state) => {
+    updateStream = (id: string, state: ioBroker.State | null | undefined): void => {
         if (state?.val) {
             if (this.state.loading) {
                 this.setState({ loading: false });
             }
 
-            RtspCamera.drawCamera(this.videoRef, state.val);
+            RtspCamera.drawCamera(this.videoRef, state.val as string);
 
             if (this.state.full) {
-                RtspCamera.drawCamera(this.fullVideoRef, state.val);
+                RtspCamera.drawCamera(this.fullVideoRef, state.val as string);
             }
         }
     };
 
-    static getNameAndInstance(value) {
+    static getNameAndInstance(value: string | null | undefined): { instanceId: string; name: string } | null {
         if (!value) {
             return null;
         }
@@ -235,7 +286,7 @@ class RtspCamera extends Generic {
         };
     }
 
-    onCameras = data => {
+    onCameras = (data: { accepted?: boolean; error?: string } | string | null | undefined): void => {
         if (data) {
             // if it is success or error object
             if (typeof data === 'object' && (data.accepted || data.error)) {
@@ -249,15 +300,17 @@ class RtspCamera extends Generic {
                 this.setState({ loading: false });
             }
 
-            RtspCamera.drawCamera(this.videoRef, data);
+            if (typeof data === 'string') {
+                RtspCamera.drawCamera(this.videoRef, data);
 
-            if (this.state.full) {
-                RtspCamera.drawCamera(this.fullVideoRef, data);
+                if (this.state.full) {
+                    RtspCamera.drawCamera(this.fullVideoRef, data);
+                }
             }
         }
     };
 
-    async propertiesUpdate() {
+    async propertiesUpdate(): Promise<void> {
         if (this.useMessages === undefined) {
             this.useMessages = await this.props.context.socket.checkFeatureSupported('INSTANCE_MESSAGES');
         }
@@ -267,7 +320,11 @@ class RtspCamera extends Generic {
                 // this.width = this.getImageWidth();
                 // if we were subscribed, unsubscribe
                 if (this.currentCam) {
-                    const { instanceId, name } = RtspCamera.getNameAndInstance(this.currentCam);
+                    const result = RtspCamera.getNameAndInstance(this.currentCam);
+                    if (!result) {
+                        return;
+                    }
+                    const { instanceId, name } = result;
                     if (this.useMessages) {
                         await this.props.context.socket.unsubscribeFromInstance(
                             `cameras.${instanceId}`,
@@ -279,7 +336,7 @@ class RtspCamera extends Generic {
                         await this.props.context.socket.setState(`cameras.${instanceId}.${name}.running`, {
                             val: false,
                         });
-                        await this.props.context.socket.unsubscribeState(
+                        this.props.context.socket.unsubscribeState(
                             `cameras.${instanceId}.${name}.stream`,
                             this.updateStream,
                         );
@@ -289,7 +346,11 @@ class RtspCamera extends Generic {
                 // subscribe on new camera
                 if (this.state.rxData.camera) {
                     this.setState({ loading: true });
-                    const { instanceId, name } = RtspCamera.getNameAndInstance(this.state.rxData.camera);
+                    const result = RtspCamera.getNameAndInstance(this.state.rxData.camera);
+                    if (!result) {
+                        return;
+                    }
+                    const { instanceId, name } = result;
                     if (this.useMessages) {
                         await this.props.context.socket.subscribeOnInstance(
                             `cameras.${instanceId}`,
@@ -307,16 +368,20 @@ class RtspCamera extends Generic {
                     const canvas = this.videoRef.current;
                     if (canvas) {
                         const context = canvas.getContext('2d');
-                        context.clearRect(0, 0, canvas.width, canvas.height);
+                        context?.clearRect(0, 0, canvas.width, canvas.height);
                     }
                 }
                 this.currentCam = this.state.rxData.camera;
             } else if (this.currentCam) {
                 // not alive
-                const { instanceId, name } = RtspCamera.getNameAndInstance(this.currentCam);
+                const result = RtspCamera.getNameAndInstance(this.currentCam);
+                if (!result) {
+                    return;
+                }
+                const { instanceId, name } = result;
                 if (!this.useMessages) {
                     await this.props.context.socket.setState(`cameras.${instanceId}.${name}.running`, { val: false });
-                    await this.props.context.socket.unsubscribeState(
+                    this.props.context.socket.unsubscribeState(
                         `cameras.${instanceId}.${name}.stream`,
                         this.updateStream,
                     );
@@ -325,7 +390,11 @@ class RtspCamera extends Generic {
             }
         } else if (this.currentCam && this.state.alive) {
             // refresh stream
-            const { instanceId, name } = RtspCamera.getNameAndInstance(this.currentCam);
+            const result = RtspCamera.getNameAndInstance(this.currentCam);
+            if (!result) {
+                return;
+            }
+            const { instanceId, name } = result;
             if (this.useMessages) {
                 await this.props.context.socket.subscribeOnInstance(
                     `cameras.${instanceId}`,
@@ -341,52 +410,53 @@ class RtspCamera extends Generic {
             }
         } else if (this.currentCam && !this.state.alive) {
             // not alive
-            const { instanceId, name } = RtspCamera.getNameAndInstance(this.currentCam);
+            const result = RtspCamera.getNameAndInstance(this.currentCam);
+            if (!result) {
+                return;
+            }
+            const { instanceId, name } = result;
             if (!this.useMessages) {
                 await this.props.context.socket.setState(`cameras.${instanceId}.${name}.running`, { val: false });
-                await this.props.context.socket.unsubscribeState(
-                    `cameras.${instanceId}.${name}.stream`,
-                    this.updateStream,
-                );
+                this.props.context.socket.unsubscribeState(`cameras.${instanceId}.${name}.stream`, this.updateStream);
             }
             this.currentCam = null;
         }
     }
 
-    getImageWidth(isFull) {
+    getImageWidth(isFull?: boolean): number {
         isFull = isFull === undefined ? this.state.full : isFull;
         // if (parseInt(this.state.rxData.width, 10)) {
         //    return parseInt(this.state.rxData.width, 10);
         // }
-        if (isFull && this.fullVideoRef.current) {
+        if (isFull && this.fullVideoRef.current?.parentElement) {
             return this.fullVideoRef.current.parentElement.clientWidth || 0;
         }
 
-        return this.videoRef.current?.parentElement.clientWidth || 0;
+        return this.videoRef.current?.parentElement?.clientWidth || 0;
     }
 
-    async subscribeOnAlive() {
+    async subscribeOnAlive(): Promise<void> {
         const data = RtspCamera.getNameAndInstance(this.state.rxData.camera);
 
-        if (this.subsribedOnAlive !== (data ? data.instanceId : null)) {
-            if (this.subsribedOnAlive) {
+        if (this.subscribedOnAlive !== (data ? data.instanceId : null)) {
+            if (this.subscribedOnAlive) {
                 this.props.context.socket.unsubscribeState(
-                    `system.adapter.cameras.${this.subsribedOnAlive}.alive`,
+                    `system.adapter.cameras.${this.subscribedOnAlive}.alive`,
                     this.onAliveChanged,
                 );
-                this.subsribedOnAlive = '';
+                this.subscribedOnAlive = '';
             }
             if (data) {
-                this.props.context.socket.subscribeState(
+                await this.props.context.socket.subscribeState(
                     `system.adapter.cameras.${data.instanceId}.alive`,
                     this.onAliveChanged,
                 );
-                this.subsribedOnAlive = data.instanceId;
+                this.subscribedOnAlive = data.instanceId;
             }
         }
     }
 
-    onAliveChanged = (id, state) => {
+    onAliveChanged = (id: string, state: any): void => {
         const data = RtspCamera.getNameAndInstance(this.state.rxData.camera);
         if (data && id === `system.adapter.cameras.${data.instanceId}.alive`) {
             const alive = !!state?.val;
@@ -396,35 +466,41 @@ class RtspCamera extends Generic {
         }
     };
 
-    componentDidMount() {
+    async componentDidMount(): Promise<void> {
         super.componentDidMount();
         setTimeout(() => this.propertiesUpdate(), 100);
 
-        this.subscribeOnAlive();
+        await this.subscribeOnAlive();
 
         this.videoInterval = setInterval(() => this.propertiesUpdate(), 14000);
     }
 
-    async onRxDataChanged(/* prevRxData */) {
+    async onRxDataChanged(/* prevRxData */): Promise<void> {
         await this.subscribeOnAlive();
         await this.propertiesUpdate();
     }
 
-    componentWillUnmount() {
+    async componentWillUnmount(): Promise<void> {
         super.componentWillUnmount();
-        this.videoInterval && clearInterval(this.videoInterval);
-        this.videoInterval = null;
+        if (this.videoInterval) {
+            clearInterval(this.videoInterval);
+            this.videoInterval = null;
+        }
 
-        if (this.subsribedOnAlive) {
+        if (this.subscribedOnAlive) {
             this.props.context.socket.unsubscribeState(
-                `system.adapter.cameras.${this.subsribedOnAlive}.alive`,
+                `system.adapter.cameras.${this.subscribedOnAlive}.alive`,
                 this.onAliveChanged,
             );
-            this.subsribedOnAlive = null;
+            this.subscribedOnAlive = null;
         }
 
         if (this.currentCam) {
-            const { instanceId, name } = RtspCamera.getNameAndInstance(this.currentCam);
+            const result = RtspCamera.getNameAndInstance(this.currentCam);
+            if (!result) {
+                return;
+            }
+            const { instanceId, name } = result;
             if (this.useMessages) {
                 this.props.context.socket
                     .unsubscribeFromInstance(`cameras.${instanceId}`, `startCamera/${name}`, this.onCameras)
@@ -433,7 +509,7 @@ class RtspCamera extends Generic {
         }
     }
 
-    renderDialog() {
+    renderDialog(): React.JSX.Element | null {
         return this.state.full ? (
             <Dialog
                 fullWidth
@@ -461,14 +537,14 @@ class RtspCamera extends Generic {
                         color="primary"
                         variant="contained"
                     >
-                        {Generic.t('Close')}
+                        {RtspCamera.t('Close')}
                     </Button>
                 </DialogActions>
             </Dialog>
         ) : null;
     }
 
-    renderWidgetBody(props) {
+    renderWidgetBody(props: RxRenderWidgetProps): React.JSX.Element | React.JSX.Element[] | null {
         super.renderWidgetBody(props);
 
         const content = (
@@ -479,7 +555,7 @@ class RtspCamera extends Generic {
                 {this.state.loading && this.state.alive && <CircularProgress style={styles.progress} />}
                 {!this.state.alive ? (
                     <div style={{ position: 'absolute', top: 0, left: 0 }}>
-                        {Generic.t('Camera instance %s inactive', (this.state.rxData.camera || '').split('/')[0])}
+                        {RtspCamera.t('Camera instance %s inactive', (this.state.rxData.camera || '').split('/')[0])}
                     </div>
                 ) : null}
                 <canvas
@@ -501,5 +577,3 @@ class RtspCamera extends Generic {
         });
     }
 }
-
-export default RtspCamera;

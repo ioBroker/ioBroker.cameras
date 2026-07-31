@@ -1,4 +1,4 @@
-import { ChildProcessWithoutNullStreams } from 'node:child_process';
+import { type ChildProcessWithoutNullStreams } from 'node:child_process';
 export interface RtspOptions {
     ip: string;
     port: number | string;

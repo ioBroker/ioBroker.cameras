@@ -2,7 +2,7 @@ import React from 'react';
 
 import { TextField, Autocomplete, Box, LinearProgress } from '@mui/material';
 
-import { I18n } from '@iobroker/adapter-react-v5';
+import { I18n } from '@iobroker/gui-components';
 import type { CameraConfigUniversal } from '../types';
 import ConfigGeneric, { type ConfigProps } from './ConfigGeneric';
 
