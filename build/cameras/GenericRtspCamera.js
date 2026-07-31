@@ -20,6 +20,7 @@ class GenericRtspCamera extends GenericCamera_1.default {
     isRtsp = true;
     settings = null;
     ffmpegPath;
+    go2rtc = null;
     constructor(adapter, config, ffmpegPath) {
         super(adapter, config);
         this.ffmpegPath = ffmpegPath;
@@ -40,6 +41,28 @@ class GenericRtspCamera extends GenericCamera_1.default {
     }
     getPassword() {
         return this.decodedPassword;
+    }
+    /** Hand over a running go2rtc instance. If set, snapshots are taken from it instead of ffmpeg */
+    setGo2Rtc(server) {
+        this.go2rtc = server;
+    }
+    /**
+     * Snapshot via go2rtc. Returns null if go2rtc is unavailable or fails, so the caller can
+     * fall back to the ffmpeg path.
+     */
+    async processViaGo2Rtc() {
+        if (!this.go2rtc?.isRunning()) {
+            return null;
+        }
+        try {
+            await this.go2rtc.ensureStream(this.config.name, this.getRtspURL());
+            const body = await this.go2rtc.getSnapshot(this.config.name, this.config.timeout);
+            return { body, contentType: 'image/jpeg' };
+        }
+        catch (e) {
+            this.adapter.log.warn(`go2rtc snapshot for "${this.config.name}" failed, using ffmpeg instead: ${e}`);
+            return null;
+        }
     }
     async destroy() {
         await this.stopWebStream();
@@ -62,6 +85,10 @@ class GenericRtspCamera extends GenericCamera_1.default {
                 body: Buffer.from(this.lastBase64Frame, 'base64'),
                 contentType: 'image/jpeg',
             };
+        }
+        const viaGo2Rtc = await this.processViaGo2Rtc();
+        if (viaGo2Rtc) {
+            return viaGo2Rtc;
         }
         const outputFileName = node_path_1.default.normalize(`${this.adapter.config.tempPath}/${this.settings.ip.replace(/[.:]/g, '_')}.jpg`);
         this.runningRequest = (0, rtspCommon_1.getRtspSnapshot)(this.settings, outputFileName, this.ffmpegPath, this.decodedPassword, this.config.timeout, this.adapter.log).then(async (body) => {
@@ -123,7 +150,7 @@ class GenericRtspCamera extends GenericCamera_1.default {
                 // first try to find the best scale
                 if (!this.ratio) {
                     const outputFileName = node_path_1.default.normalize(`${this.adapter.config.tempPath}/${this.settings.ip.replace(/[.:]/g, '_')}.jpg`);
-                    const body = await (0, rtspCommon_1.getRtspSnapshot)(this.settings, this.ffmpegPath, outputFileName, this.decodedPassword, this.config.timeout, this.adapter.log);
+                    const body = await (0, rtspCommon_1.getRtspSnapshot)(this.settings, outputFileName, this.ffmpegPath, this.decodedPassword, this.config.timeout, this.adapter.log);
                     // try to get width and height
                     const image = (0, sharp_1.default)(body);
                     const metadata = await image.metadata();
@@ -194,9 +221,12 @@ class GenericRtspCamera extends GenericCamera_1.default {
                                     }
                                 }
                             });
-                            if (clientsToDelete.length) {
-                                for (let i = clientsToDelete.length - 1; i >= 0; i--) {
-                                    this.streamSubscribes.splice(i, 1);
+                            // Forget the clients that are no longer registered. Remove them by
+                            // identity - the index in clientsToDelete is unrelated to streamSubscribes
+                            for (const clientId of clientsToDelete) {
+                                const pos = this.streamSubscribes.findIndex(s => s.clientId === clientId && s.camera === this.config.name);
+                                if (pos !== -1) {
+                                    this.streamSubscribes.splice(pos, 1);
                                 }
                             }
                         }

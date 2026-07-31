@@ -1,0 +1,320 @@
+[
+    {
+        "models": [
+            "1234",
+            "12345",
+            "IPC1112060880",
+            "IPC2121RS3",
+            "IPC2122SR3-PF36",
+            "IPC2123LR3-PF28M-F",
+            "IPC2124ER3-DPF40",
+            "IPC2124LR3-PF40",
+            "IPC2124SR3-DPF36",
+            "IPC2125SR3-ADUPF40",
+            "IPC2222ER5-DUPF40-C",
+            "IPC2224SR5-DPF40-B",
+            "IPC2322EBR-P",
+            "IPC2324EBR-DP",
+            "IPC2324EBR-DPZ28",
+            "IPC2333",
+            "IPC242ER5-DL",
+            "IPC252ERA-X22",
+            "IPC322LR-MLP28-RU",
+            "IPC322SB",
+            "IPC3232ER3-DVZ28-C",
+            "IPC3235ER3-DUVZ",
+            "IPC3611SR3",
+            "IPC3614SR3-DPF28M",
+            "IPC3614SR3-DPF36",
+            "IPC3615SE-ADF28KM-WL-IO",
+            "IPC3615SR3-ADF28K-G",
+            "IPC6252SL-X33UP",
+            "IPC642E-X22-IN",
+            "IPC-B112-PF28",
+            "IPC-B114-P28",
+            "IPC-B114-PF28",
+            "IPC-B114-PF40",
+            "UN-IPC3611SR3",
+            "6415SR",
+            "IPC2122SR3-F40W-D",
+            "IPC2324LB-ADZK-G",
+            "IPC3605SB-ADF16KM",
+            "IPC3612ER3-PF28-B",
+            "IPC3612LR3-PF28"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/media/video1",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown",
+            "IPC2122SR3-PF40",
+            "IPC312SB-ADF28K-I0",
+            "IPC675LFW",
+            "IPC-B114-P28",
+            "NVR201-04LP",
+            "NVR301-04 P4",
+            "IPC2122LR3-PF40-C"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/unicast/c1/s1/live",
+        "port": 85
+    },
+    {
+        "models": [
+            "IPC322LR3-VSPF28",
+            "IPC2122CR3-PF40-A",
+            "IPC2122SR3-PF36",
+            "IPC2123LR3-PF28M-F",
+            "IPC2224ER6-DSC40-C",
+            "IPC3612ER3-PF28",
+            "IPC322SR3-DVPF28-MX",
+            "IPC2122LB-SF-40-A"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/11",
+        "port": 554
+    },
+    {
+        "models": [
+            "DVZ28",
+            "IPC2124SR3-DPF36",
+            "IPC6252SL-X33-VF",
+            "IPC2122SR3-F40W-D"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/media/video3",
+        "port": 0
+    },
+    {
+        "models": [
+            "ip1200",
+            "IPC2122SR3-PF40",
+            "IPC2125SR3-ADUPF40",
+            "IPC312SR-VPF28-C",
+            "IPC322ER3-DUVPF28-B",
+            "IPC322LR3-VSPF28-D",
+            "IPC3234SR3-DVZ28",
+            "IPC324ER3-DVPF28",
+            "IPC324LR3-VSPF28-D",
+            "IPC3612LR-MLP28-RU",
+            "IPC3638SR3-DPZ",
+            "IPC3F12P-RU3"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/h264_stream",
+        "port": 0
+    },
+    {
+        "models": [
+            "IPB4212M",
+            "IPC2324LBR3-SPZ28-D",
+            "IPC322SR3-DVPF28-MX",
+            "IPC2325LBR3"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/1",
+        "port": 554
+    },
+    {
+        "models": [
+            "IPC2121SR3-PF36",
+            "IPC2122LB-SF40-A",
+            "IPC2122LR-MLP40-RU",
+            "IPC2122SR3-PF36",
+            "IPC2122SR3-PF40",
+            "IPC2122SR3-UPF40-C-RU",
+            "IPC2124SR3-DPF36",
+            "IPC2125SR3-ADUPF40",
+            "IPC222ER-F36",
+            "IPC2321",
+            "IPC2322EBR-P",
+            "IPC2323S-IR3-F36-DT",
+            "IPC232S-IR3-HF40-C-D",
+            "IPC314SR-DVPF28",
+            "IPC322SB",
+            "IPC322SR",
+            "IPC325ER3-DUVPF28",
+            "IPC3611ER3-PF28",
+            "IPC3612",
+            "IPC3612ER3-PF28",
+            "IPC3612SR3-PF36",
+            "IPC3614SR3-ADF28K-G",
+            "IPC3614SR3-DPF28M",
+            "C1L-2WN",
+            "IPC2122LR3-PF28M-D",
+            "IPC2325SB-DZK-I0",
+            "IPC3235ER3-DUVZ",
+            "IPC3612LB-ADF28K",
+            "IPC3612LR3-PF28"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/videoMain",
+        "port": 85
+    },
+    {
+        "models": [
+            "IPC2122SR3-UPF40-C-RU",
+            "IPC2124SR3-DPF36",
+            "IPC2324EBR-DPZ28",
+            "IPC325LR3-VSPF28-D",
+            "IPC6221ER-X20",
+            "IPC328LE-ADF28K-G",
+            "IPC2122LB-SF-40-A"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/media/video2",
+        "port": 554
+    },
+    {
+        "models": [
+            "IPC2124LB-SF28KM-G",
+            "IPC-D114-PF40"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/media/video0/",
+        "port": 554
+    },
+    {
+        "models": [
+            "IPC2124LR5-DUPF40M-F",
+            "IPC3614SB-ADF28KM-I0",
+            "IPC3618LE-ADF40K-G",
+            "IPC3634SB-ADZK-I0",
+            "IPC2122SR3-F40W",
+            "IPC3615SR3-ADF28K-G"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/0",
+        "port": 554
+    },
+    {
+        "models": [
+            "IPC2324LBR3-SPZ28-D"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/onvif1",
+        "port": 554
+    },
+    {
+        "models": [
+            "IPC322LR3-VSPF40-D"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/unicast/c1/s0/live",
+        "port": 554
+    },
+    {
+        "models": [
+            "IPC3232ER3-DVZ28-C"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/mediavideo",
+        "port": 0
+    },
+    {
+        "models": [
+            "IPC3232ER-VS",
+            "IPC2314LE-ADF28KM-WP"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/user=[USERNAME]_password=[PASSWORD]_channel=1_stream=0.sdp",
+        "port": 554
+    },
+    {
+        "models": [
+            "IPC3638SE"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/video1",
+        "port": 554
+    },
+    {
+        "models": [
+            "NVR304-32E"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/unicast/c2/s1/live",
+        "port": 554
+    },
+    {
+        "models": [
+            "PVR08H1"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/snapshot.cgi?loginuse=[USERNAME]&loginpas=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "DPF36"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam1/mpeg4",
+        "port": 0
+    },
+    {
+        "models": [
+            "IPC2124SR3-DPF36"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/cam[CHANNEL]/h264",
+        "port": 554
+    },
+    {
+        "models": [
+            "IPC2124SR3-DPF36"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/ch0_0.h264",
+        "port": 554
+    },
+    {
+        "models": [
+            "IPC328SB-ADF28K-I0"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live/mpeg4",
+        "port": 554
+    },
+    {
+        "models": [
+            "IPC3614LE"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live",
+        "port": 554
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/unicast/c9/s0/live",
+        "port": 554
+    }
+]

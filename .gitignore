@@ -17,3 +17,5 @@ admin/i18n/*/flat.txt
 /src-widgets/build/
 /win-ffmpeg.exe
 /src-widgets/.__mf__temp/
+/src-devices/build/
+/src-devices/.__mf__temp/

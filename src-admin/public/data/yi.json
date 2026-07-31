@@ -1,0 +1,78 @@
+[
+    {
+        "models": [
+            "Home 2K Pro",
+            "YI ANT",
+            "Yi Dome 1080p",
+            "Yi home",
+            "Yi Home",
+            "Yi Home 1080p",
+            "Yi Home 2k PRO",
+            "Yi Home 1080"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/ch0_0.h264",
+        "port": 554
+    },
+    {
+        "models": [
+            "Yi Ant",
+            "Yi Home"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/ch0.h264",
+        "port": 0
+    },
+    {
+        "models": [
+            "Yi Dome 1080p",
+            "Yi Home",
+            "YI Home 1080",
+            "Yi Home 1080p",
+            "Yi Home 1080",
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/ch0_1.h264",
+        "port": 554
+    },
+    {
+        "models": [
+            "YI HOME"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/live/ch00_0",
+        "port": 5544
+    },
+    {
+        "models": [
+            "Yi Home 1080"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videofeed",
+        "port": 80
+    },
+    {
+        "models": [
+            "Yi Home 1080"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/video?profile=0",
+        "port": 80
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/ch1.h264",
+        "port": 554
+    }
+]

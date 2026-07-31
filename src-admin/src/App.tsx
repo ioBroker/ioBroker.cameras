@@ -3,7 +3,16 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 
 import { AppBar, Tabs, Tab } from '@mui/material';
 
-import { Loader, I18n, GenericApp, type IobTheme, type GenericAppState } from '@iobroker/gui-components';
+import {
+    Loader,
+    I18n,
+    GenericApp,
+    ScrollbarStyles,
+    type IobTheme,
+    type GenericAppState,
+    type GenericAppProps,
+    type GenericAppSettings,
+} from '@iobroker/gui-components';
 
 import TabOptions from './Tabs/Options';
 import TabCameras from './Tabs/Cameras';
@@ -19,7 +28,6 @@ import esLang from './i18n/es.json';
 import plLang from './i18n/pl.json';
 import ukLang from './i18n/uk.json';
 import zhCnLang from './i18n/zh-cn.json';
-import type { GenericAppProps, GenericAppSettings } from '@iobroker/gui-components/build/types';
 import type { CamerasAdapterConfig } from './types';
 
 const styles: Record<string, any> = {
@@ -46,7 +54,7 @@ interface AppState extends GenericAppState {
     tab: string;
 }
 
-class App extends GenericApp<GenericAppProps, AppState> {
+export default class App extends GenericApp<GenericAppProps, AppState> {
     private subscribed: string | null = null;
 
     constructor(props: GenericAppProps) {
@@ -126,9 +134,10 @@ class App extends GenericApp<GenericAppProps, AppState> {
         return (
             <StyledEngineProvider injectFirst>
                 <ThemeProvider theme={this.state.theme}>
+                    <ScrollbarStyles theme={this.state.theme} />
                     <div
                         className="App"
-                        style={{ background: this.state.themeType === 'dark' ? 'black' : 'white' }}
+                        style={{ background: this.state.theme.palette.background.default }}
                     >
                         <AppBar position="static">
                             <Tabs
@@ -197,5 +206,3 @@ class App extends GenericApp<GenericAppProps, AppState> {
         );
     }
 }
-
-export default App;

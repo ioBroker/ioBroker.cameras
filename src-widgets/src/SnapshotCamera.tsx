@@ -336,7 +336,8 @@ export default class SnapshotCamera extends (window.visRxWidget as typeof VisRxW
     }
 
     getUrl(isFull?: boolean): string {
-        if (isFull && !this.state.rxData.bigCamera) {
+        // In the dialog a different (normally higher resolution) camera can be shown
+        if (isFull && this.state.rxData.bigCamera) {
             const url = `../cameras.${this.state.rxData.bigCamera}?`;
             const params = [
                 `ts=${Date.now()}`,

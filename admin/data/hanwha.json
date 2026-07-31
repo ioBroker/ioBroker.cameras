@@ -1,0 +1,89 @@
+[
+    {
+        "models": [
+            "8003",
+            "ANV-L6082R",
+            "ANV-L7012R",
+            "XNB-6000",
+            "XNV-C9083R"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/profile02/media.smp",
+        "port": 0
+    },
+    {
+        "models": [
+            "IP-2000HW"
+        ],
+        "variant": "VLC",
+        "protocol": "http://",
+        "path": "/axis-cgi/mjpg/video.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "IP-2000HW",
+            "QND-7010R",
+            "SNV-6013"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/video.cgi?msubmenu=mjpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "QNO-6070-R"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/video.cgi?msubmenu=jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "QNV-7082R"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/stw-cgi/video.cgi?msubmenu=stream&action=view&Profile=1&CodecType=MJPEG&Resolution=1920x1080",
+        "port": 80
+    },
+    {
+        "models": [
+            "QNV-7082R"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/stw-cgi/video.cgi?msubmenu=snapshot&action=view",
+        "port": 10001
+    },
+    {
+        "models": [
+            "QNV-7082R"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/stw-cgi/video.cgi?msubmenu=mjpg",
+        "port": 10001
+    },
+    {
+        "models": [
+            "QNV-8080R"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/0/profile4/media.smp",
+        "port": 554
+    },
+    {
+        "models": [
+            "PND-A6081RV"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/profile2/media.smp",
+        "port": 554
+    }
+]

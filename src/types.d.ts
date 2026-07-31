@@ -1,7 +1,7 @@
 import type { Metadata } from 'sharp';
 
 export type ContentType = string;
-export type CameraType = 'url' | 'urlBasicAuth' | 'rtsp' | 'reolinkE1' | 'eufy' | 'hikam' | 'universal';
+export type CameraType = 'url' | 'urlBasicAuth' | 'rtsp' | 'reolinkE1' | 'eufy' | 'hikam' | 'instar' | 'universal';
 
 export type CameraName = string;
 
@@ -112,6 +112,14 @@ export interface CamerasAdapterConfig {
     allowIPs: string;
     ffmpegPath: string;
     tempPath: string;
+    /** Use a local go2rtc process for RTSP snapshots instead of spawning ffmpeg per request */
+    useGo2rtc: boolean;
+    /** Explicit path to the go2rtc binary. Empty = search the usual locations */
+    go2rtcPath: string;
+    /** Port of the local go2rtc HTTP API */
+    go2rtcApiPort: number | string;
+    /** Port of the go2rtc internal RTSP server (localhost only, required for transcoding) */
+    go2rtcRtspPort: number | string;
     dateFormat: 'LTS';
     language: ioBroker.Languages;
     cameras: CameraConfigAny[];

@@ -1,0 +1,1418 @@
+[
+    {
+        "models": [
+            "000",
+            "01046",
+            "10518",
+            "Unknown",
+            "1P2M-841B",
+            "4kv1",
+            "4m1051",
+            "5IP5M-1176EB",
+            "IPM-721S",
+            "841",
+            "841b",
+            "842",
+            "852EW",
+            "960H",
+            "960HBC",
+            "AD110",
+            "ADC2W",
+            "AMC4KBC28-W",
+            "AMDV8m16",
+            "AMDV8M16-H5",
+            "ASH21-w",
+            "ASH21-W",
+            "ASH26",
+            "ASH26-W",
+            "ASH42",
+            "ASH42-B",
+            "ASH42-B -JP",
+            "ASH42-W",
+            "IMP-HX1B",
+            "IP2-841M",
+            "ip2m-841b",
+            "ip2m-852ew",
+            "IP2M-752EW",
+            "ip2m-841",
+            "IP2M-841",
+            "IP2M-841B",
+            "ip2m-841b-v3",
+            "ip2m-841EB",
+            "IP2M-841EB",
+            "IP2M-841EW",
+            "IP2M-841S",
+            "IP2M-841W",
+            "IP2M-841W-v3",
+            "IP2M-842",
+            "IP2M-842EW",
+            "IP2M-842W",
+            "IP2M-844E",
+            "IP2M-844EW",
+            "IP2M-846B",
+            "IP2M-846E",
+            "IP2M-851",
+            "IP2M-851B",
+            "ip2m-851w",
+            "IP2M-851W",
+            "ip2m-852",
+            "IP2M-852 V2",
+            "IP2M-852B",
+            "IP2M-853E",
+            "ip2m-858w",
+            "IP2M-858W",
+            "IP2M-866",
+            "IP2M-866E",
+            "ip2m-958w",
+            "IP2M-PH822",
+            "IP3M-941",
+            "IP3M-941B",
+            "IP3M-941S",
+            "IP3M-941W",
+            "IP3M-954E",
+            "IP3M-956",
+            "IP3M-956W",
+            "IP3M-HX2B",
+            "IP3M-HX2W",
+            "IP4M-1026B",
+            "ip4m-1024e",
+            "IP4M-1025EB",
+            "IP4M-1026",
+            "IP4M-1026E",
+            "IP4M-1026EB",
+            "ip4m-1026w",
+            "ip4m-1026W",
+            "IP4M-1026W",
+            "IP4M-1028",
+            "ip4m-1028b",
+            "IP4M-1028E",
+            "IP4M-1028EB",
+            "IP4M-1028EW",
+            "IP4M-1028W",
+            "IP4M-1046E-AI",
+            "IP4M-1051",
+            "ip4m-1051B",
+            "IP4M-1051B",
+            "IP4M-1051W",
+            "IP4M-1053E",
+            "IP4M-1054EW",
+            "IP4M-1055E",
+            "IP4M-1055EW",
+            "IP4M-841B",
+            "IP4M-SN2110EW-AI",
+            "IP5M-T1179EW",
+            "IP5M-1173E",
+            "IP5M-1173EB",
+            "IP5M-1173EW",
+            "IP5M-1176E",
+            "IP5M-1179EW",
+            "IP5M-B1186-28mm",
+            "IP5M-B1186EB-28MM",
+            "IP5M-B1276EW",
+            "IP5M-D1188E",
+            "IP5M-T1179EW-28MM",
+            "IP67",
+            "ip721",
+            "IP8M-2454EW",
+            "IP8M-2493",
+            "IP8M-2493E",
+            "IP8M-2493EB",
+            "IP8M-2493EW",
+            "IP8M-2493W",
+            "IP8M-2496E",
+            "IP8M-2496EB",
+            "IP8M-2496EW",
+            "IP8M-2499",
+            "IP8M-2499EB",
+            "IP8M-2499ew",
+            "IP8M-2597E",
+            "IP8M-2597EB-28MM",
+            "ip8m-2597eb-6mm",
+            "IP8M-2597EW",
+            "IP8M-2599",
+            "ip8m-2599e",
+            "IP8M-2779EW-AI",
+            "ip8m-t2499",
+            "IP8M-T2499E",
+            "IP8M-T2499EB",
+            "IP8M-T2499EW",
+            "ip8m-t25",
+            "IP8M-T2599EW",
+            "IP2M-843",
+            "IPM-721W",
+            "IPM-743E",
+            "IPM-941W",
+            "IPM-HX1B",
+            "IP3M-843",
+            "IPZ-841",
+            "NV2104E",
+            "nv2108e",
+            "AMDV5M16",
+            "IPM-721B",
+            "IP8M-2496EW-AI-V3"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]",
+        "port": 0
+    },
+    {
+        "models": [
+            "001B",
+            "01482_9TC335",
+            "1080",
+            "1P2M-841B",
+            "1P2M-841W",
+            "5000L",
+            "720",
+            "IPM-721B",
+            "IPM-721S",
+            "IPM-723S",
+            "721",
+            "722-IP",
+            "722S",
+            "723",
+            "723es",
+            "841w",
+            "AD110",
+            "AD410",
+            "ADC2W",
+            "AMC000DJ27SPS2C2QY",
+            "AMC1080",
+            "IP2M-841EB",
+            "AMDV10804-4b-w",
+            "ASH42-W",
+            "DC2W",
+            "IMP722S",
+            "IMP-723",
+            "IPM-743",
+            "IPM-751W",
+            "IMP-HX1B",
+            "IP2-841M",
+            "IP2M-841B",
+            "IP2M-841",
+            "IP2M-841B-V3",
+            "IP2M-841e",
+            "IP2M-841EW",
+            "IP2M-842",
+            "IP2M-842B",
+            "IP2M-842E",
+            "IP2M-842W",
+            "ip2M-843EB",
+            "IP2M-844E",
+            "IP2M-844EB",
+            "IP2M-844EW",
+            "IP2M-846B",
+            "ip2m-851",
+            "IP2M-851EB",
+            "IP2M-851EW",
+            "IP2M-851W",
+            "IP2M-852",
+            "IP2M-853E",
+            "ip2m-853ew",
+            "IP2M-866",
+            "IP396ew",
+            "IP3M-941",
+            "IP3M-941B",
+            "IP3M-941W",
+            "IP3M-943",
+            "IP3M-943B",
+            "IP3M-943S",
+            "IP3M-943W",
+            "IP3M-952E",
+            "IP3M-954",
+            "IP3M-954E",
+            "IP3M-954EB",
+            "IP3M-954EW",
+            "IP3M-956",
+            "IP3M-956B",
+            "IP3M-956E",
+            "IP3M-956EB",
+            "IP3M-956EW",
+            "IP3M-956W",
+            "IP3M-HX2",
+            "IP3M-HX2B",
+            "IP3M-HX2W",
+            "IP4M-1024EW",
+            "IP4M-1025E",
+            "IP4M-1025EB",
+            "IP4M-1025EW",
+            "IP4M-1026",
+            "IP4M-1026B",
+            "IP4M-1026E",
+            "IP4M-1026EB",
+            "ip4m-1026w",
+            "IP4M-1028B",
+            "ip4m-1028e",
+            "IP4M-1028W",
+            "IP4M-1051",
+            "ip4m-1055em",
+            "ip4m-1055EW",
+            "IP4M-1098EW-AI",
+            "IP5M-1173E",
+            "IP5M-1173EB",
+            "ip5m-1179ew",
+            "IP5M-B1186E",
+            "IP5M-B1186EB",
+            "IP5M-B1186EW",
+            "ip5m-b1186ew-28mm",
+            "IP5M-D1188E",
+            "IP5M-D1188EW",
+            "IP5M-D1188EW-22MM",
+            "IP5M-T1179E",
+            "IP5M-T1179EB-28MM",
+            "IP5M-T1179EW",
+            "IP5M-T1179EW-28MM",
+            "IP5M-T1277EW-AI",
+            "IP67",
+            "IP8M-2493EB",
+            "IP8M-2493EW",
+            "IP8M-2493EW-V2",
+            "IP8M-2496EW",
+            "IP8M-2496EW-V2",
+            "IP8M-26963EW",
+            "IP8M-2779EW-AI",
+            "IP8M-2796EW-AI",
+            "IP8M-T2499EB",
+            "IP8M-T2499EW",
+            "IP8M-T2599EW",
+            "IP8M-T2669",
+            "IP8M-T2669E-AI",
+            "IP8M-T2669EW-AI",
+            "IP8M-VB2796EW",
+            "IPM-22S",
+            "ipm2-841",
+            "ipm2-851",
+            "IPM-721",
+            "IPM-721P",
+            "IPM-721W",
+            "ipm-723",
+            "IPM-723B",
+            "IPM-723W",
+            "IPM-743ESJP",
+            "IPM-751B",
+            "IPM-HX1",
+            "IPM-HX1B",
+            "IPM-HX1W",
+            "IP5M-T1277",
+            "841B",
+            "IP5M-B1276EW-AI",
+            "IP4M-1041B",
+            "POE AI"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/snapshot.cgi?1",
+        "port": 0
+    },
+    {
+        "models": [
+            "01046",
+            "AD110",
+            "ASH21",
+            "IP3M-941",
+            "ip4m-1025",
+            "IP4M-1028EB",
+            "IP5M-T1179EW",
+            "IP4M-1028E"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&subtype=0&authbasic=[AUTH]",
+        "port": 554
+    },
+    {
+        "models": [
+            "01046",
+            "AD110",
+            "AS21-B-V3",
+            "ASH21-w",
+            "ASH22-w",
+            "ASH42",
+            "ASH42-B",
+            "ASH47-W",
+            "ip2m-841b",
+            "IP2M-841B-V3",
+            "IP2M-841W",
+            "ip4m-1025",
+            "IP4M-1025EB",
+            "IP4M-1041W",
+            "IP4M-1051",
+            "ip4m-1051B",
+            "IP5M-T1179EB",
+            "IP5M-T1179EW",
+            "IP5M-B1186EB",
+            "IP5M-B1276EW-AI",
+            "IP5M-F1180EW-V2",
+            "IP5M-T1179EW-28MM",
+            "IP8M-2496E",
+            "IP8M-2496EB-V2",
+            "IP8M-2496EW",
+            "IP8M-2496EW-V2",
+            "IP8M-2696E-AI",
+            "IP8M-T2499E",
+            "IP8M-T2599EW",
+            "IP8M-VB2796EW",
+            "IP4M-1041B"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&subtype=0",
+        "port": 554
+    },
+    {
+        "models": [
+            "1080",
+            "IPM-721S",
+            "722",
+            "842",
+            "IMP-743",
+            "ip2m-841b",
+            "IP2M-841B",
+            "IP2M-841EW",
+            "IP2M-844E",
+            "IP2M-844EW",
+            "ip2m-846e",
+            "IP2M-846EB",
+            "IP3M-954E",
+            "IP3M-956EW",
+            "IP4M-1041W",
+            "IP-842M",
+            "IP8M-T2499E",
+            "IPM-722S",
+            "IPM-723S",
+            "ipm-743es",
+            "IPM-743ES",
+            "IPM-841B"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live",
+        "port": 0
+    },
+    {
+        "models": [
+            "1080",
+            "1P2M-841B",
+            "IPM-721S",
+            "IPM-723S",
+            "722S",
+            "841BIMI",
+            "842",
+            "AMC000DJ27SPS2C2QY",
+            "AMC1080",
+            "IP2M-841W",
+            "IMP-722S",
+            "IMP-723",
+            "IP2M-841",
+            "ip2m-841b",
+            "IP2M-841E",
+            "ip2m-842",
+            "IP2M-842",
+            "IP2M-842B",
+            "IP2M-842E",
+            "IP2M-842W",
+            "IP2M-844E",
+            "ip2m-844e",
+            "IP2M-846",
+            "IP2M-854EW",
+            "ip3-951",
+            "IP3M-943",
+            "IP3M-943B",
+            "IP3M-943S",
+            "IP3M-954E",
+            "IP3M-954EW",
+            "IP3M-956B",
+            "ip3m-956e",
+            "IP3M-956E",
+            "IP3M-956EB",
+            "IP3M-956EW",
+            "ip4m-1025e",
+            "IP4M-1025EB",
+            "IP4M-1026B",
+            "IP5M-T1179EW",
+            "IP67",
+            "ip721",
+            "IPM-721",
+            "IPM-722S",
+            "IPM-723",
+            "ipm-723w",
+            "IPM-723W",
+            "IPM-743ES",
+            "IPM-751",
+            "Unknown"
+        ],
+        "variant": "VLC",
+        "protocol": "http://",
+        "path": "/axis-cgi/mjpg/video.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "1080",
+            "IPM-721S",
+            "841",
+            "AMC000DJ27SPS2C2QY",
+            "AMC1080",
+            "IP2-841M",
+            "IP2M-841",
+            "IP2M-841B",
+            "IP2M-842",
+            "IP2M-842B",
+            "IP2M-842E",
+            "IP2M-846B",
+            "IP3M-943B",
+            "IP3M-943W",
+            "IP3M-954E",
+            "IP3M-956E",
+            "IP4M-1025EB",
+            "IP-842M",
+            "IPM-721",
+            "IPM-722S",
+            "IPM-743ES"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/axis-cgi/mjpg/video.cgi?camera=1&resolution=[WIDTH]x[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "1080",
+            "1190 W",
+            "13p",
+            "180",
+            "193",
+            "1P2M-841B",
+            "360",
+            "481",
+            "IPM-721B",
+            "IPM-721ES",
+            "IPM-721S",
+            "IPM-723S",
+            "722-IP",
+            "722s",
+            "841",
+            "841bimi",
+            "841W",
+            "850E",
+            "AD110",
+            "AMC1080",
+            "IP2M-841W",
+            "IPM-722S",
+            "IPM-723B",
+            "IP2M-841",
+            "IP2M-841B",
+            "IP2M-841B-V3",
+            "IP2M-841EB",
+            "IP2M-841S",
+            "IP2M-842B",
+            "IP2M-842E",
+            "IP2M-843EB",
+            "IP2M-844E",
+            "IP2M-844EW",
+            "IP2M-851EB",
+            "IP2M-853EW",
+            "IP3M-941",
+            "IP3M-941B",
+            "IP3M-941W",
+            "IP3M-943",
+            "IP3M-943B",
+            "IP3M-943W",
+            "IP3M-956B",
+            "IP3M-HX2B",
+            "IP4M-1024E",
+            "IP4M-1025E",
+            "IP4M-1025EB",
+            "IP4M-1025EW",
+            "IP4M-1026",
+            "IP4M-1026EB",
+            "ip4m-1028b",
+            "IP5M-B1186EW",
+            "IP5M-B1186EW-28MM",
+            "IP5M-D1188E",
+            "IP5M-T1179EW",
+            "IP8M-2493EW",
+            "IP8M-2496EW",
+            "IP8M-2943EW",
+            "IP8M-T2599EW",
+            "IP8M-T2669EW-AI",
+            "IP8M-2496EW-V2",
+            "ipm-723w",
+            "ipm2-852",
+            "IP3M-956W",
+            "IPM-721",
+            "ipm-721w",
+            "IPM-743",
+            "ipm-743es",
+            "IPM-751W",
+            "IPM-HX1",
+            "IPM-HX1W"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/snapshot.cgi?chn=[CHANNEL]&u=[USERNAME]&p=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "1080",
+            "IPM-721S",
+            "841",
+            "841BIMI",
+            "842",
+            "IP2-841M",
+            "IP2M-841",
+            "IP2M-841B",
+            "IP2M-842",
+            "IP2M-842B",
+            "IP2M-842E",
+            "IP2M-842W",
+            "IP2M-844E",
+            "IP3M-943B",
+            "IP3M-943W",
+            "IP3M-954E",
+            "IP3M-954EW",
+            "IP3M-956",
+            "IP3M-956E",
+            "IP3M-956EB",
+            "IP3M-956EW",
+            "IP4M-1025EB",
+            "IPM-722"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/axis-cgi/mjpg/video.cgi?camera=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "1080",
+            "IP2-841M",
+            "IP2M-841",
+            "ip2m-841b",
+            "IP2M-842E",
+            "IP2M-844E",
+            "IP3E-956",
+            "IP3M-941B",
+            "ip3m-943w",
+            "IP3M-954EW",
+            "IP3M-956E",
+            "IP4M-1025EB",
+            "ip4m-1026w",
+            "ipm-723w",
+            "IPM-723B",
+            "IPM-743ES",
+            "IPM-751W"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/video.cgi?msubmenu=mjpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "1080",
+            "1P2M-841B",
+            "IPM-721S",
+            "IPM-723S",
+            "721",
+            "7225",
+            "741",
+            "821",
+            "841",
+            "841w",
+            "842",
+            "852EW",
+            "AD110",
+            "AD410",
+            "AMC000DJ27SPS2C2QY",
+            "AMDV7204",
+            "IP2M-841B",
+            "IP2-841M",
+            "IP2-851EB",
+            "IP2M-814B",
+            "IP2M-841",
+            "IP2M-841B-V3",
+            "IP2M-841E",
+            "IP2M-841EB",
+            "IP2M-841W",
+            "IP2M-842",
+            "IP2M-842B",
+            "IP2M-842E",
+            "IP2M-842W",
+            "IP2M-843EB",
+            "IP2M-844E",
+            "IP2M-844E_JL",
+            "ip2m-846b",
+            "IP2M-851EB",
+            "ip2m-851ew",
+            "ip2m-851w",
+            "IP2M-852 V2",
+            "IP2M-853EW",
+            "ip2m-854ew",
+            "IP2M-863EW-AI",
+            "IP3M-941",
+            "IP3M-941B",
+            "IP3M-941W",
+            "ip3m-943b",
+            "IP3M-954E",
+            "IP3M-954EB",
+            "IP3M-956",
+            "IP3M-HX2B",
+            "IP3M-HX2W",
+            "ip4m-1024e",
+            "IP4M-1024EW",
+            "IP4M-1025E",
+            "IP4M-1025EW",
+            "IP4M-1026",
+            "IP4M-1026B",
+            "IP4M-1026W",
+            "IP4M-1028B",
+            "IP4M-1028E",
+            "ip4m-1041b",
+            "IP4M-1051",
+            "IP4M-1051B",
+            "IP4M-SN2110EW-AI",
+            "IP5M-T1179EW",
+            "IP5M-1173EB",
+            "ip5m-b1186e",
+            "IP5M-T1179EW-28MM",
+            "IP8M-T2499EB",
+            "IP8M-2493EW",
+            "IP8M-2496E",
+            "IP8M-2496EB",
+            "IP8M-2496EW",
+            "IP8M-2496EW-V2",
+            "IP8M-2496EW-V3",
+            "IP8M-2499",
+            "IP8M-2599E",
+            "IP8M-T2499EW",
+            "IP8M-T2669E-AI",
+            "IP8M-VT2679EW-AI",
+            "IPM-723W",
+            "ipm2-841w",
+            "IPM-721P",
+            "IPM-722S",
+            "IPM-723B",
+            "IPM-743",
+            "IPM-751",
+            "ipm-841",
+            "IPM-HX1B",
+            "IPM-HX1W"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/snapshot.cgi?loginuse=[USERNAME]&loginpas=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "1080"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?usr=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "1P2M-841W",
+            "5m1179",
+            "AD410",
+            "IMP-723",
+            "IPM-723B",
+            "IP2M-841w-v3",
+            "IP5M-T1179EB",
+            "IP5M-T1179EW",
+            "IP5M-B1186EB-28MM",
+            "IP5M-T1179E",
+            "IP8M-T2669EW-AI",
+            "IP8M-VB2796EW"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/snapshot.cgi?chn=0&u=[USERNAME]&p=[PASSWORD]",
+        "port": 80
+    },
+    {
+        "models": [
+            "1P2M-841W",
+            "841W",
+            "ASH26-W",
+            "IP2M-841",
+            "IP2M-841W-v3",
+            "IP2M-858W",
+            "IP3M-941",
+            "ip4m-1051B",
+            "IP5M-1173E",
+            "IP5M-T1179EW"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&subtype=1&authbasic=[AUTH]",
+        "port": 554
+    },
+    {
+        "models": [
+            "1P2m-844",
+            "741",
+            "AMDV7204",
+            "IP2M-841EW",
+            "IP5M-B1186-28mm",
+            "IP5M-T1179EW",
+            "IP5M-T1179EW-28MM",
+            "IP8M-2597EW-AI",
+            "IP8M-2696E-AI",
+            "IP8M-T2599EW",
+            "IP8M-VT2779EW"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif",
+        "port": 554
+    },
+    {
+        "models": [
+            "IPM-721S",
+            "IP2M-841EB",
+            "ASH26-W",
+            "IP2M-846B",
+            "IP3M-941B",
+            "IP3M-941W",
+            "ip4m-1026w",
+            "ip4m-1028e",
+            "IP4M-1051W",
+            "IP5M-T1179EW",
+            "IP8M-2493EW-V2",
+            "AMDV5M16"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&subtype=01&authbasic=[AUTH]",
+        "port": 554
+    },
+    {
+        "models": [
+            "IPM-721S",
+            "IPM-723S",
+            "IMP722S",
+            "IP2-841M",
+            "IP2M-841",
+            "IP2M-841B",
+            "IP2M-841W",
+            "IP2M-842",
+            "IP2M-842B",
+            "IP2M-842W",
+            "IP3M-943W",
+            "IP3M-952E",
+            "IP3M-954E",
+            "IP3M-956EB",
+            "IPM-721W",
+            "IPM-722S",
+            "IPM-723B",
+            "IPM-743ES",
+            "IPM-751W"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/axis-cgi/mjpg/video.cgi?date=1&clock=1&camera=[CHANNEL]&resolution=[WIDTH]x[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "IPM-723S",
+            "842",
+            "AMC1080",
+            "IP2-841M",
+            "IP2M-841",
+            "ip2m-841b",
+            "IP2M-842B",
+            "IP2M-844E",
+            "IP3M-943B",
+            "IP3M-952E",
+            "IP3M-954E",
+            "IP3M-956E",
+            "IP3M-956EB",
+            "IPM-722S"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/axis-cgi/mjpg/video.cgi?date=1&clock=1&resolution=[WIDTH]x[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "722",
+            "722-IP",
+            "AMC041EC14",
+            "IP2M-841B",
+            "IP2M-841EW",
+            "IP3M-943B",
+            "IP4M-1051W",
+            "IP8M-2496E",
+            "IPM-722S"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor",
+        "port": 0
+    },
+    {
+        "models": [
+            "722",
+            "AMDH10808",
+            "IP2M-841",
+            "IP2M-842",
+            "IP2M-842EW",
+            "IP3M-956EW",
+            "IP4M-1025EB",
+            "IPM-722S",
+            "IPM-743ES",
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=[CHANNEL]&subtype=1",
+        "port": 0
+    },
+    {
+        "models": [
+            "841w"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=[WIDTH]*[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "960H"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/user=[USERNAME]_password=[PASSWORD]_channel=1_stream=0.sdp",
+        "port": 554
+    },
+    {
+        "models": [
+            "960H"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/user=[USERNAME]_password=[PASSWORD]_channel=1_stream=1sdp",
+        "port": 554
+    },
+    {
+        "models": [
+            "960H"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=6?subtype=0",
+        "port": 554
+    },
+    {
+        "models": [
+            "960H"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/h264Preview_05_main",
+        "port": 554
+    },
+    {
+        "models": [
+            "960H"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/h264Preview_06_main",
+        "port": 554
+    },
+    {
+        "models": [
+            "960HP"
+        ],
+        "variant": "MJPEG",
+        "protocol": "rtsp://",
+        "path": "/h264Preview_02_main",
+        "port": 555
+    },
+    {
+        "models": [
+            "960HP8",
+            "AMDV7204",
+            "IP2M-842E",
+            "IP3M-956E",
+            "IP3M-952E"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/h264Preview_01_main",
+        "port": 555
+    },
+    {
+        "models": [
+            "AD110"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&amp;subtype=1",
+        "port": 554
+    },
+    {
+        "models": [
+            "AD110"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&amp;subtype=0",
+        "port": 554
+    },
+    {
+        "models": [
+            "AD110",
+            "AD410",
+            "E2B",
+            "ip2m-841b",
+            "ip3m-943b",
+            "IP4M-1024EB",
+            "ip4m-1051B",
+            "IP4M-1063EW-AI",
+            "IP5M-T1179EW",
+            "IP5M-T1179EW-AI-V3",
+            "IP8M-2493EW-V2",
+            "IP8M-2496EB",
+            "IP8M-2496EW",
+            "IP8M-249EB-28MM",
+            "IP8M-25",
+            "IP8M-2696E-AI",
+            "IP2M-841B",
+            "IPM-721",
+            "IPM-841B"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/",
+        "port": 554
+    },
+    {
+        "models": [
+            "AD110",
+            "AS21-B-V3",
+            "ip2m-841b",
+            "IP2M-841B-V3",
+            "IP2M-841W",
+            "ip4m-1025",
+            "IP4M-1041W",
+            "IP4M-1051B",
+            "IP5M-T1179EB",
+            "IP5M-1179EW",
+            "IP5M-B1276EW-AI",
+            "IP5M-T1179EW",
+            "IP5M-T1179EW-28MM",
+            "IP8M-2493EW",
+            "IP8M-2496EB",
+            "IP8M-2496EB-V2",
+            "IP8M-2496EW-V2"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&subtype=1",
+        "port": 554
+    },
+    {
+        "models": [
+            "AD110",
+            "AD410",
+            "IP4M-1051B",
+            "ip2m-841",
+            "IP3M-943B",
+            "IP3M-956B",
+            "IP4M-1028B",
+            "IP5M-T1179EW",
+            "IP5M-1173E",
+            "IP5M-B1186EW",
+            "ip5m-b1186ew-28mm",
+            "IP5M-D1188E",
+            "IP5M-T1179E",
+            "IP2M-841B",
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/?action=stream",
+        "port": 80
+    },
+    {
+        "models": [
+            "AD410",
+            "ASH21-w"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1?subtype=0",
+        "port": 554
+    },
+    {
+        "models": [
+            "AD410",
+            "ip2m-841b-v3",
+            "IP4M-1041B",
+            "IP4M-S2112EW-AI",
+            "IP5M-T1179EW",
+            "IP5M-B1186EW-28MM",
+            "IP5M-T1179EW-AI-V3",
+            "IP8M-2496E",
+            "IP8M-2496EB-V2",
+            "IP8M-2499",
+            "IPM-751B",
+            "IP8M-2943EW",
+            "IP5M-T1179E",
+            "IP5M-B1188E"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/mjpg/video.cgi?channel=1&subtype=1",
+        "port": 80
+    },
+    {
+        "models": [
+            "ADC2W",
+            "ASH22-W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&subtype=00",
+        "port": 554
+    },
+    {
+        "models": [
+            "AMDV108116-H"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=13&subtype=00&authbasic=[AUTH]",
+        "port": 554
+    },
+    {
+        "models": [
+            "AMDV108116-H"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=13&subtype=01&authbasic=[AUTH]",
+        "port": 554
+    },
+    {
+        "models": [
+            "AMDV8M16-H5"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=4&subtype=0",
+        "port": 554
+    },
+    {
+        "models": [
+            "AMDV8M16-H5"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=6&subtype=0",
+        "port": 554
+    },
+    {
+        "models": [
+            "AMDV8M16-H5"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=10&subtype=0",
+        "port": 554
+    },
+    {
+        "models": [
+            "AMDV8M16-H5"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=11&subtype=0",
+        "port": 554
+    },
+    {
+        "models": [
+            "AMDV8M16-H5"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=13&subtype=0",
+        "port": 554
+    },
+    {
+        "models": [
+            "AMDV8M16-H5"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=12&subtype=0",
+        "port": 554
+    },
+    {
+        "models": [
+            "AMDV8M16-H5"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=14&subtype=0",
+        "port": 554
+    },
+    {
+        "models": [
+            "AMDV8M16-H5"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=15&subtype=0",
+        "port": 554
+    },
+    {
+        "models": [
+            "AMDV8M16-H5"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=16&subtype=0",
+        "port": 554
+    },
+    {
+        "models": [
+            "ASH26-W",
+            "ASH42-B",
+            "ASH42-W",
+            "IP2M-846B",
+            "IP2M-853E",
+            "IP8M-2493E",
+            "IP8M-2496EB"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=01&subtype=00&authbasic=[AUTH]",
+        "port": 554
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/realmonitor",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?usr=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "IMP-HX1B"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/tmpfs/auto.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "IP2-841M",
+            "IP2M-841E"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/11",
+        "port": 0
+    },
+    {
+        "models": [
+            "IP2M-841"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/image/jpeg.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "IP2M-841B"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=32&rate=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "ip2m-846b",
+            "ipm-743es"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/axis-cgi/mjpg/video.cgi?camera=0",
+        "port": 6004
+    },
+    {
+        "models": [
+            "IP3M-941B",
+            "IP8M-2493E",
+            "IPM-743ES"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=01&subtype=01&authbasic=[AUTH]",
+        "port": 554
+    },
+    {
+        "models": [
+            "IP3M-941B"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpeg.cgi?user=[USERNAME]&password=[PASSWORD]&channel=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "IP4M-1026E"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=0&subtype=1&authbasic=[AUTH]",
+        "port": 554
+    },
+    {
+        "models": [
+            "IP5M-B1186EB",
+            "IP4M-1041W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&subtype=01",
+        "port": 554
+    },
+    {
+        "models": [
+            "IP5M-B1186EB"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&subtype=main",
+        "port": 554
+    },
+    {
+        "models": [
+            "IP5M-T1179EW-28MM"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/rtsp",
+        "port": 554
+    },
+    {
+        "models": [
+            "IP8M-2496EB"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&subtype=02&authbasic=[AUTH]",
+        "port": 554
+    },
+    {
+        "models": [
+            "IP8M-2496EB"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.jpg?user=[USERNAME]&pwd=[PASSWORD]&strm=0",
+        "port": 80
+    },
+    {
+        "models": [
+            "IP8M-2597EW-AI",
+            "IP8M-2796EW-AI",
+            "IP8M-T2599EW"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=1&subtype=1&unicast=true&proto=Onvif",
+        "port": 554
+    },
+    {
+        "models": [
+            "IP8M-T2599EW"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=0&subtype=0",
+        "port": 554
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=2&subtype=0",
+        "port": 554
+    },
+    {
+        "models": [
+            "nv2108e"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=4&subtype=1&authbasic=[AUTH]",
+        "port": 554
+    },
+    {
+        "models": [
+            "nv2108e"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=4&subtype=0&authbasic=[AUTH]",
+        "port": 554
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=31&subtype=0",
+        "port": 554
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.jpg?user=[USERNAME]&pwd=[PASSWORD]&strm=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.jpg?user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    }
+]

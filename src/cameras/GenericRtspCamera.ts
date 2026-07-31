@@ -5,6 +5,7 @@ import sharp from 'sharp';
 import GenericCamera from './GenericCamera';
 import type { ContentType, CamerasAdapterConfig, ProcessData, CameraConfigAny } from '../types';
 import { getRtspSnapshot, type RtspOptions } from './rtspCommon';
+import type Go2RtcServer from '../lib/Go2RtcServer';
 
 export default class GenericRtspCamera extends GenericCamera {
     private width = 0;
@@ -18,6 +19,7 @@ export default class GenericRtspCamera extends GenericCamera {
     public isRtsp = true;
     protected settings: RtspOptions | null = null;
     private readonly ffmpegPath: string;
+    private go2rtc: Go2RtcServer | null = null;
 
     constructor(adapter: ioBroker.Adapter, config: CameraConfigAny, ffmpegPath: string) {
         super(adapter, config);
@@ -43,6 +45,32 @@ export default class GenericRtspCamera extends GenericCamera {
 
     getPassword(): string {
         return this.decodedPassword;
+    }
+
+    /** Hand over a running go2rtc instance. If set, snapshots are taken from it instead of ffmpeg */
+    setGo2Rtc(server: Go2RtcServer | null): void {
+        this.go2rtc = server;
+    }
+
+    /**
+     * Snapshot via go2rtc. Returns null if go2rtc is unavailable or fails, so the caller can
+     * fall back to the ffmpeg path.
+     */
+    private async processViaGo2Rtc(): Promise<ProcessData | null> {
+        if (!this.go2rtc?.isRunning()) {
+            return null;
+        }
+
+        try {
+            await this.go2rtc.ensureStream(this.config.name, this.getRtspURL());
+            const body = await this.go2rtc.getSnapshot(this.config.name, this.config.timeout as number);
+            return { body, contentType: 'image/jpeg' };
+        } catch (e) {
+            this.adapter.log.warn(
+                `go2rtc snapshot for "${this.config.name}" failed, using ffmpeg instead: ${e as Error}`,
+            );
+            return null;
+        }
     }
 
     async destroy(): Promise<void> {
@@ -72,6 +100,11 @@ export default class GenericRtspCamera extends GenericCamera {
                 body: Buffer.from(this.lastBase64Frame, 'base64'),
                 contentType: 'image/jpeg',
             };
+        }
+
+        const viaGo2Rtc = await this.processViaGo2Rtc();
+        if (viaGo2Rtc) {
+            return viaGo2Rtc;
         }
 
         const outputFileName = path.normalize(
@@ -166,8 +199,8 @@ export default class GenericRtspCamera extends GenericCamera {
                     );
                     const body = await getRtspSnapshot(
                         this.settings!,
-                        this.ffmpegPath,
                         outputFileName,
+                        this.ffmpegPath,
                         this.decodedPassword,
                         this.config.timeout as number,
                         this.adapter.log,
@@ -224,7 +257,7 @@ export default class GenericRtspCamera extends GenericCamera {
                         this.lastBase64Frame = frame;
 
                         if (this.streamSubscribes) {
-                            const clientsToDelete = [];
+                            const clientsToDelete: string[] = [];
                             this.streamSubscribes.forEach(sub => {
                                 if (sub.camera === this.config.name) {
                                     found = true;
@@ -248,9 +281,14 @@ export default class GenericRtspCamera extends GenericCamera {
                                 }
                             });
 
-                            if (clientsToDelete.length) {
-                                for (let i = clientsToDelete.length - 1; i >= 0; i--) {
-                                    this.streamSubscribes.splice(i, 1);
+                            // Forget the clients that are no longer registered. Remove them by
+                            // identity - the index in clientsToDelete is unrelated to streamSubscribes
+                            for (const clientId of clientsToDelete) {
+                                const pos = this.streamSubscribes.findIndex(
+                                    s => s.clientId === clientId && s.camera === this.config.name,
+                                );
+                                if (pos !== -1) {
+                                    this.streamSubscribes.splice(pos, 1);
                                 }
                             }
                         }

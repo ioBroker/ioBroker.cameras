@@ -1,0 +1,15 @@
+{
+  "cameras_RtspCamera": "RTSP 摄像机",
+  "cameras_SnapshotCamera": "快照摄像机",
+  "cameras_cameraStateId": "摄像机",
+  "cameras_cameraStateId_help": "选择摄像机的状态，例如 cameras.0.cam1.running",
+  "cameras_instance_inactive": "摄像机实例未运行",
+  "cameras_loading": "加载中…",
+  "cameras_noCache": "绕过缓存",
+  "cameras_no_camera": "未选择摄像机",
+  "cameras_pollingInterval": "轮询间隔 (毫秒)",
+  "cameras_pollingInterval_help": "请求新图像的频率",
+  "cameras_rotate": "旋转",
+  "cameras_snapshotWhenOffline": "在视频流启动前显示快照",
+  "cameras_snapshotWhenOffline_help": "避免视频流启动时出现空白磁贴"
+}

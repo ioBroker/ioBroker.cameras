@@ -1,0 +1,1137 @@
+[
+    {
+        "models": [
+            "10 MINI",
+            "C6603",
+            "f3111",
+            "F3111",
+            "SNC-RZ25N",
+            "ST25I",
+            "U20I"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videofeed",
+        "port": 0
+    },
+    {
+        "models": [
+            "110",
+            "210T",
+            "CH-110",
+            "ch-120",
+            "CH160",
+            "CH180",
+            "ch210",
+            "CH-220",
+            "CH-240",
+            "CH-260",
+            "CH-280",
+            "DH-110",
+            "DH-120",
+            "DH-140",
+            "DH-160",
+            "DH-180",
+            "DH-210",
+            "DH-210T",
+            "SNC-DM110",
+            "MueCH-120",
+            "SNC-CH140",
+            "SNC-ER580",
+            "SNC-580",
+            "SNC-CH110",
+            "SNC-CH120",
+            "SNC-CH160",
+            "SNC-CH210",
+            "SNC-CH260",
+            "SNC-CM120",
+            "SNC-CS50P",
+            "SNC-DF50N",
+            "SNC-DF80N",
+            "SNC-DH110",
+            "SNC-DH110T",
+            "SNC-DH120",
+            "SNC-DH120T",
+            "SNC-DH140",
+            "SNC-DH160",
+            "SNC-DH180",
+            "SNC-DH210T",
+            "SNC-DH220",
+            "SNC-DH240",
+            "SNC-DH240T",
+            "SNC-DH260",
+            "SNC-DH280",
+            "SNC-DM160",
+            "SNC-DS10",
+            "SNC-DS60",
+            "SNC-EP520",
+            "SNC-EP550",
+            "SNC-EP580",
+            "SNC-ER550",
+            "SNC-RX550N",
+            "SNC-RX550P",
+            "SNC-RX570N",
+            "SNC-RX570P",
+            "SNC-RZ25",
+            "SNC-RZ50N",
+            "SNC-RZ50P",
+            "SNC-VB600",
+            "dh280",
+            "DM110",
+            "SNC-RX530"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/jpeg/vga.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "210",
+            "300se",
+            "BRC-X400",
+            "C6603",
+            "CH-120",
+            "CH-140",
+            "CH-160",
+            "CH180",
+            "CH-180",
+            "CH-210",
+            "CH-220",
+            "CH-240",
+            "CH-260",
+            "CH280",
+            "CH-280",
+            "DH110",
+            "DH-110",
+            "DH-120",
+            "DH-140",
+            "DH-160",
+            "DH-180",
+            "DH-210",
+            "DH-220",
+            "DH-240",
+            "DH-260",
+            "DH-280",
+            "DM-110",
+            "EM600",
+            "EMC-EM642R",
+            "ER-6032-VAP-B",
+            "SNC-EB600",
+            "SNC-EM632R",
+            "SNC-EP580",
+            "Unknown",
+            "RH-124",
+            "RH-164",
+            "SG300se",
+            "SNC-CH110",
+            "SNC-RZ25N",
+            "SNC-VM601",
+            "SNC-VB770",
+            "SNC-580",
+            "SNC-630N",
+            "SNC-CH120",
+            "SNC-CH140",
+            "SNC-CH160",
+            "SNC-CH180",
+            "SNC-CH1810",
+            "SNC-CH210",
+            "SNC-CH220",
+            "SNC-CH240",
+            "SNC-CH280",
+            "SNC-CM120",
+            "SNC-CX600W",
+            "SNC-DH110T",
+            "SNC-DH120",
+            "SNC-DH120T",
+            "SNC-DH140",
+            "SNC-DH160",
+            "SNC-DH180",
+            "SNC-DH210T",
+            "SNC-DH220",
+            "SNC-DH260",
+            "SNC-DH280",
+            "SNC-DS60",
+            "SNC-EB602R",
+            "SNC-EB630",
+            "SNC-EB630B",
+            "SNC-EB640",
+            "SNC-EM601",
+            "SNC-EM602R",
+            "SNC-EM602RC",
+            "SNC-EM630",
+            "SNC-EM631",
+            "SNC-EM632",
+            "SNC-EP550",
+            "SNC-EP520",
+            "SNC-EP521",
+            "SNC-ER521",
+            "SNC-ER550",
+            "SNC-ER580",
+            "SNC-ER585",
+            "SNC-RH164",
+            "SNC-RX550P",
+            "SNC-VB600",
+            "SNC-VB600B",
+            "SNC-VB630",
+            "SNC-VB632D",
+            "SNC-VM600",
+            "SNC-VM601B",
+            "SNC-VM630",
+            "SNC-VM632R",
+            "SNC-WR600",
+            "SNC-WR630",
+            "SNC-XM631",
+            "SNC-XM632",
+            "SNC-Z25N",
+            "SNC-ZP550",
+            "SNT-EX104",
+            "SRG300SE",
+            "SRG-X120",
+            "SRG-X400",
+            "VB-630",
+            "WR-630",
+            "XM-632"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/media/video1",
+        "port": 0
+    },
+    {
+        "models": [
+            "210",
+            "DH-120",
+            "DH-140",
+            "RH-124",
+            "SNC-CX600W",
+            "SNC-EM602R",
+            "SNC-WR632",
+            "SNC-XM632",
+            "SNC-RZ50N"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/media/video2",
+        "port": 0
+    },
+    {
+        "models": [
+            "210",
+            "c110",
+            "CH-110",
+            "CH-120",
+            "CH-140",
+            "CH-210",
+            "CH-220",
+            "CH-280",
+            "DH-110",
+            "dh140",
+            "DH-160",
+            "dh180",
+            "DH-260",
+            "DHC110",
+            "EP-550",
+            "SNC-EP580",
+            "SNC-RZ25N",
+            "Unknown",
+            "SNC-CH110",
+            "SNC-CH120",
+            "SNC-CH140",
+            "SNC-CH210",
+            "SNC-DH110",
+            "SNC-DH110T",
+            "SNC-DH120",
+            "SNC-DH140",
+            "SNC-DH180",
+            "SNC-DH210T",
+            "SNC-DH220",
+            "SNC-DH220T",
+            "SNC-DH260",
+            "SNC-EP521",
+            "SNC-ER521",
+            "SNC-ER580",
+            "SNC-ER585",
+            "SNC-RX530",
+            "SNC-RX570n",
+            "SNC-RZ50",
+            "SNC-RZ50N"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/h264",
+        "port": 8554
+    },
+    {
+        "models": [
+            "210",
+            "Unknown"
+        ],
+        "variant": "VLC",
+        "protocol": "http://",
+        "path": "/axis-cgi/mjpg/video.cgi",
+        "port": 8554
+    },
+    {
+        "models": [
+            "510"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?rate=11",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown",
+            "DM160",
+            "SNC-DF80N",
+            "SNC-RX550P"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/av0_0",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/mjpeg",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown",
+            "SNC-EB632R",
+            "SNC-RX550P",
+            "SNC-RZ50P"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/",
+        "port": 80
+    },
+    {
+        "models": [
+            "C6603"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/video?submenu=mjpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "CH-110",
+            "CH-240",
+            "DF-70N",
+            "DS10",
+            "ds-60",
+            "ER-6032-VAP-B",
+            "SNC-RZ25N",
+            "Unknown",
+            "SNC-CH210",
+            "SNC-CM120",
+            "SNC-CS11",
+            "SNC-CS3N",
+            "SNC-CS50n",
+            "SNC-CS50P",
+            "SNC-DF40N",
+            "SNC-DF40P",
+            "SNC-DF70N",
+            "SNC-DS10",
+            "SNC-DS60",
+            "SNC-EP580",
+            "SNC-M1",
+            "SNC-P1",
+            "SNC-P5",
+            "SNC-P5S-3",
+            "SNC-RX530",
+            "SNC-RX550P",
+            "SNC-RZ25",
+            "SNC-RZ25P",
+            "SNC-RZ50N",
+            "SNC-RZ50P",
+            "SND-160",
+            "DM110"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpeg",
+        "port": 0
+    },
+    {
+        "models": [
+            "CH-110",
+            "CH-160",
+            "CH-210",
+            "CH-260",
+            "DH-110",
+            "DH-160",
+            "DH-210",
+            "DH-260",
+            "ICS-3178DN",
+            "SNC-RX530",
+            "RZ-25P",
+            "SNC-RZ25N",
+            "SNC-20",
+            "SNC-CH110",
+            "SNC-CH160",
+            "SNC-CS11",
+            "SNC-CS20",
+            "SNC-CS3",
+            "SNC-CS3N",
+            "SNC-CS3P",
+            "SNC-CS50P",
+            "SNC-DF40N",
+            "SNC-DF40P",
+            "SNC-DF50N",
+            "SNC-DF50p",
+            "SNC-DF70N",
+            "SNC-DH180",
+            "SNC-DS60",
+            "SNC-M1",
+            "SNC-M3",
+            "SNC-M3W",
+            "SNC-P5S-2",
+            "SNC-RS84N",
+            "SNC-RX550P",
+            "SNC-RZ20P",
+            "SNC-RZ25",
+            "SNC-RZ25n",
+            "SNC-RZ30",
+            "SNC-RZ30N",
+            "SNC-RZ30P",
+            "SNC-RZ50N",
+            "SNC-RZ50P",
+            "SNC-z20N",
+            "SNT-EP104",
+            "SNT-EX101"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/image",
+        "port": 0
+    },
+    {
+        "models": [
+            "ch-120",
+            "CH-210",
+            "DH-140",
+            "SNC-CH140",
+            "SNC-CX600W",
+            "SNC-DH140",
+            "SNC-EB600B",
+            "SNC-EM600",
+            "SNC-HM662",
+            "SNC-VB635",
+            "SNC-VM600",
+            "SNC-VM630",
+            "SNC-VM772R",
+            "SNC-XM631",
+            "SRG300SE",
+            "SRG-300SE",
+            "XM-631",
+            "SNC-EB632R"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/video1",
+        "port": 0
+    },
+    {
+        "models": [
+            "CH-120",
+            "CH-180",
+            "DF-70N",
+            "DH-140",
+            "DH-180",
+            "DM-110",
+            "Em600",
+            "em-602r",
+            "RZ-25p",
+            "SNC-RZ30N",
+            "SNC-DS60",
+            "SNC-CX600W",
+            "SNC-VM602R",
+            "SNC-50",
+            "SNC-642R",
+            "SNC-CH110",
+            "SNC-CH140",
+            "SNC-CH160",
+            "SNC-CH220",
+            "SNC-CH240",
+            "SNC-CH260",
+            "SNC-CS11",
+            "SNC-CS20",
+            "SNC-CS3N",
+            "SNC-CS3P",
+            "SNC-CS50P",
+            "SNC-CX600",
+            "SNC-DF50N",
+            "SNC-DF70N",
+            "SNC-DF80P",
+            "SNC-DH110",
+            "SNC-DH110T",
+            "SNC-DH120",
+            "SNC-DH120T",
+            "SNC-DH140",
+            "SNC-DH160",
+            "SNC-DH210T",
+            "SNC-DH280",
+            "SNC-DS10",
+            "SNC-EB600",
+            "SNC-EB600B",
+            "SNC-EB602",
+            "SNC-EB602R",
+            "SNC-EB630B",
+            "SNC-EB632R",
+            "SNC-EM600",
+            "SNC-EM602R",
+            "SNC-EM630",
+            "SNC-EM631",
+            "SNC-EM632",
+            "SNC-ER580",
+            "SNC-ER585",
+            "SNC-M1",
+            "SNC-M3",
+            "SNC-P1",
+            "SNC-P5",
+            "SNC-P5S-1",
+            "SNC-RH164",
+            "SNC-RS84N",
+            "SNC-RX550N",
+            "SNC-RX550P",
+            "SNC-RX750N",
+            "SNC-RZ20P",
+            "SNC-RZ25",
+            "SNC-RZ25n",
+            "SNC-RZ25P",
+            "SNC-RZ30P",
+            "SNC-RZ50",
+            "SNC-RZ50N",
+            "SNC-RZ50P",
+            "SNC-VB600",
+            "SNC-VB600B",
+            "SNC-VB630",
+            "SNC-VB770",
+            "SNC-VM600",
+            "SNC-VM600b",
+            "SNC-VM601",
+            "SNC-VM601B",
+            "SNC-VM630",
+            "SNC-VM630B",
+            "SNC-VM632R",
+            "SNC-VM772R",
+            "SNC-WR600",
+            "SNC-WR62",
+            "SNC-WR630",
+            "SNC-WR632",
+            "SNC-XM631",
+            "SNC-XM632",
+            "SNC-Z20",
+            "SNC-z20N",
+            "SNC-Z20N",
+            "SNC-Z20P",
+            "SNT-EX104",
+            "SRG300se",
+            "VB600",
+            "VB-630",
+            "VM601",
+            "WR-630",
+            "XM-631",
+            "XM-632"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/oneshotimage.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "CH-120",
+            "SNC-CH120",
+            "SNC-CH160",
+            "SNC-DH110",
+            "SNC-EB600B",
+            "SNC-RZ25",
+            "XM-631"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/oneshotimage[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "CH-160",
+            "DH-110",
+            "ds-60",
+            "EP-550",
+            "SNC-EP580",
+            "SNC-50",
+            "SNC-CH140",
+            "SNC-CH160",
+            "SNC-DF50N",
+            "SNC-DF50p",
+            "SNC-DF70N",
+            "SNC-DH140",
+            "SNC-DS10",
+            "SNC-DS60",
+            "SNC-EP520",
+            "SNC-EP521",
+            "SNC-ER580",
+            "SNC-ER585",
+            "SNC-RX550N",
+            "SNC-RX570n",
+            "SNC-RX750N",
+            "SNC-RZ25"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/jpeg/qvga.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "CH-160",
+            "CH-210",
+            "DH-160",
+            "DH-210",
+            "ICS-3718DN",
+            "SNC-CH110",
+            "SNC-DF70N",
+            "SNC-RX550P",
+            "SNC-RZ25",
+            "SNC-RZ30N",
+            "SNC-RZ30P"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/img/mjpeg.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "CIP-WD-2048W"
+        ],
+        "variant": "VLC",
+        "protocol": "http://",
+        "path": "/ipcam/avc.cgi?audiostream=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/11",
+        "port": 0
+    },
+    {
+        "models": [
+            "DH-160"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/image/qvga.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/user=[USERNAME]_password=[PASSWORD]_channel=1_stream=0.sdp",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/now.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "FCB-EH6300",
+            "PCAM-6300"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/fwstream.cgi?ServerId=0&AppKey=0x00006784&PortId=0&CameraId=[CHANNEL]&PauseTime=0&FwCgiVer=0x0001",
+        "port": 0
+    },
+    {
+        "models": [
+            "FCB-EV7500",
+            "SNC-RZ50N"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/videoinput_1:0/h264_1/onvif.stm",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown",
+            "SNC-RX550P"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/user=[USERNAME]_password=[PASSWORD]_channel=1_stream=0.sdp?real_stream",
+        "port": 0
+    },
+    {
+        "models": [
+            "HI-6440A"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?usr=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "HI-6440A"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?usr=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "ICS3178DN"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=[WIDTH]*[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/?action=stream",
+        "port": 80
+    },
+    {
+        "models": [
+            "Unknown",
+            "sip-k678a",
+            "SNC-EB632R"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/h264_stream",
+        "port": 8080
+    },
+    {
+        "models": [
+            "Unknown",
+            "SNC-CH120",
+            "SNC-EM630"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/img/snapshot.cgi?size=2",
+        "port": 80
+    },
+    {
+        "models": [
+            "SNC-DM110"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/1",
+        "port": 554
+    },
+    {
+        "models": [
+            "SNC-XM632"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/oneshotimage1?COUNTER",
+        "port": 82
+    },
+    {
+        "models": [
+            "Unknown",
+            "SN9C202"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/video.mjpg",
+        "port": 4747
+    },
+    {
+        "models": [
+            "NC1500-1600"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/GetData.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=[WIDTH]x[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/stream.asf",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/guest/Video.cgi?media=JPEG&channel=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/encoder?USER=[USERNAME]&PWD=[PASSWORD]&SNAPSHOT",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/out.jpg?id=0.5",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "VLC",
+        "protocol": "http://",
+        "path": "/vdata.v",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "VLC",
+        "protocol": "http://",
+        "path": "/control/faststream.jpg?stream=MxPEG&needlength&fps=6",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/-wvhttp-01-/GetOneShot?image_size=[WIDTH]x[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/cam/realmonitor?channel=[CHANNEL]&subtype=1",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/GetData.cgi?CH=[CHANNEL]&Codec=jpeg&Size=[WIDTH]x[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/nphMotionJpeg?Resolution=640x480&Quality=Standard",
+        "port": 0
+    },
+    {
+        "models": [
+            "SDE-3000n"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/webra_fcgi.fcgi?api=get_jpeg_raw&chno=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "SNC-CS50P",
+            "SNC-EB632R",
+            "SNC-RZ50N"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live1.264",
+        "port": 554
+    },
+    {
+        "models": [
+            "SNC-M3",
+            "SNC-CS10",
+            "SNC-DF70N",
+            "SNC-RZ25N",
+            "SNC-Z25N"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpeg?res=full&x0=0&y0=0&x1=100%&y1=100%&quality=12&doublescan=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "SNC-CH120",
+            "SNC-EB632R",
+            "SNC-RX550P"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/image.mpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "SNC-CS50P",
+            "SNT-EX104",
+            "SNT-V704"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/CH[CHANNEL]/oneshotimage.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "SNC-DF70N",
+            "SNC-RX550P",
+            "SNC-RZ25"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/image?res=half&x0=0&y0=0&x1=1600&y1=1200&quality=15&doublescan=0&ssn=1340443365044&id=1340443379230",
+        "port": 0
+    },
+    {
+        "models": [
+            "SNC-DM160"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/0",
+        "port": 554
+    },
+    {
+        "models": [
+            "SNC-EB602R"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/snapshot.cgi?chn=[CHANNEL]&u=[USERNAME]&p=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "SNC-EB632R"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.jpg?account=[USERNAME]&password=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "SNC-EM641",
+            "SNC-RH124",
+            "SNC-VM600",
+            "SNC-VM772R",
+            "SNC-WR632"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/image1",
+        "port": 80
+    },
+    {
+        "models": [
+            "SNC-HM662"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/viewer/video.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "SNC-M1",
+            "SNC-M3"
+        ],
+        "variant": "VLC",
+        "protocol": "http://",
+        "path": "/img/video.asf",
+        "port": 0
+    },
+    {
+        "models": [
+            "SNC-RX550N",
+            "SNC-RX570P",
+            "SNC-RZ50"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live/mpeg4",
+        "port": 554
+    },
+    {
+        "models": [
+            "SNC-RZ25",
+            "SNC-VM601"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/image[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "SNC-RZ25",
+            "SNC-RZ50N",
+            "SNC-RZ50P",
+            "SNC-z20N",
+            "SNC-RZ30P",
+            "SNC-CS20"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/image?speed=25",
+        "port": 80
+    },
+    {
+        "models": [
+            "SNC-RZ30N"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/video?profile=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "SNC-VB600B",
+            "SNC-VB630",
+            "SNC-WR600",
+            "SNC-WR630",
+            "SNC-XM632",
+            "Unknown",
+            "VB-630",
+            "VB-635",
+            "VB-65",
+            "WR-630",
+            "XM-632"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/profile",
+        "port": 0
+    },
+    {
+        "models": [
+            "SNT-V704"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/command/image.cgi?grant=User&channelno=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/cam1/onvif-h264",
+        "port": 554
+    },
+    {
+        "models": [
+            "STS-3282TE"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/guest/Video.cgi?media=JPEG",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/net_jpeg.cgi?ch=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?",
+        "port": 88
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/image.jpg",
+        "port": 0
+    }
+]

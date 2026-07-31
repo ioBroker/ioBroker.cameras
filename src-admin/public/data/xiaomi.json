@@ -1,0 +1,175 @@
+[
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/ch0.h264",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown",
+            "SXJ01ZM"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/live/ch00_0",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown",
+            "Xiaofang",
+            "XiaoYi"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/ch0_0.h264",
+        "port": 0
+    },
+    {
+        "models": [
+            "Dafang",
+            "Dafang3",
+            "T20",
+            "Xiaofang"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/unicast",
+        "port": 8554
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/video?profile=0",
+        "port": 8080
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=320x240",
+        "port": 80
+    },
+    {
+        "models": [
+            "M1901F7H"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/shot.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/video",
+        "port": 4747
+    },
+    {
+        "models": [
+            "Unknown",
+            "MI-3"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videofeed",
+        "port": 80
+    },
+    {
+        "models": [
+            "MJSXJ02CM"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/?action=stream",
+        "port": 80
+    },
+    {
+        "models": [
+            "MJSXJ02CM",
+            "MJSXJ05CM"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/mainstream",
+        "port": 8554
+    },
+    {
+        "models": [
+            "MJSXJ02HL",
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/11",
+        "port": 554
+    },
+    {
+        "models": [
+            "MJSXJ05CM",
+            "V380"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/user=[USERNAME]_password=[PASSWORD]_channel=1_stream=0.sdp",
+        "port": 8554
+    },
+    {
+        "models": [
+            "MJSXJ05CM",
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/",
+        "port": 80
+    },
+    {
+        "models": [
+            "MJSXJ05CM"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/substream",
+        "port": 8554
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/image.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi?user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/video?profile=[CHANNEL]",
+        "port": 0
+    }
+]

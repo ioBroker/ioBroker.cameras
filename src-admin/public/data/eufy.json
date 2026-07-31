@@ -1,0 +1,169 @@
+[
+    {
+        "models": [
+            "2c pro",
+            "C120",
+            "C210",
+            "C22",
+            "C220",
+            "Cam 2 Pro",
+            "Cam 2C (Regular - USA)",
+            "Cam2C",
+            "E220",
+            "E30",
+            "e42",
+            "EufyCam 2 Pro",
+            "EufyCam 2C",
+            "FloodLight Cam Pro",
+            "Garage-Control Cam Plus",
+            "Indoor Cam 2K",
+            "T8400X",
+            "Indoor Cam 2K Pan and Tilt",
+            "C220 PTZ",
+            "Indoor Cam Mini",
+            "Indoor Cam Pan and Tilt",
+            "Indoor Cam S350",
+            "C24",
+            "IndoorCam 4K",
+            "S350",
+            "L40",
+            "t8113",
+            "T8400",
+            "T84001W1",
+            "T8410",
+            "T8410121",
+            "T8419",
+            "E340",
+            "C31"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live0",
+        "port": 554
+    },
+    {
+        "models": [
+            "C210",
+            "Cam 2C",
+            "Cam 2C Pro",
+            "Cam2c Pro",
+            "EufyCam 2 Pro",
+            "EufyCam 2C Pro",
+            "E30",
+            "C350"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live1",
+        "port": 554
+    },
+    {
+        "models": [
+            "C24",
+            "Cam2c",
+            "Cam2c Pro",
+            "EufyCam 2",
+            "EufyCam 2C Pro",
+            "S330",
+            "Unknown",
+            "T8210",
+            "E330 Pro"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live2",
+        "port": 554
+    },
+    {
+        "models": [
+            "E340",
+            "EufyCam S330"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live3",
+        "port": 0
+    },
+    {
+        "models": [
+            "S330",
+            "Indoor Cam Pan and Tilt"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live4",
+        "port": 0
+    },
+    {
+        "models": [
+            "Indoor Cam 2K"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/11",
+        "port": 554
+    },
+    {
+        "models": [
+            "Indoor Cam 2K Pan and Tilt"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpg/video.mjpg",
+        "port": 10002
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/img/media.sav",
+        "port": 554
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live0.264",
+        "port": 554
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/0",
+        "port": 554
+    },
+    {
+        "models": [
+            "T8410"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 554
+    },
+    {
+        "models": [
+            "Indoor Cam Pan and Tilt"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live5",
+        "port": 0
+    },
+    {
+        "models": [
+            "S330"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/181e84c3d2d616ec",
+        "port": 33571
+    }
+]

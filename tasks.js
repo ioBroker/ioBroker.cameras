@@ -29,6 +29,21 @@ function widgetsClean() {
     deleteFoldersRecursive(`${__dirname}/widgets`);
 }
 
+function devicesClean() {
+    deleteFoldersRecursive(`${__dirname}/src-devices/build`);
+    deleteFoldersRecursive(`${__dirname}/admin/dm-widgets`);
+}
+
+/**
+ * The devices widgets are a separate module-federation bundle that ioBroker.devices loads.
+ * It goes into admin/dm-widgets/, which ships with the adapter (see "files" in package.json).
+ */
+function devicesCopyAllFiles() {
+    copyFiles(['src-devices/build/customDevices.js'], 'admin/dm-widgets');
+    copyFiles(['src-devices/build/assets/*.*'], 'admin/dm-widgets/assets');
+    copyFiles(['src-devices/img/*.*'], 'admin/dm-widgets');
+}
+
 async function widgetsCopyAllFiles() {
     copyFiles(
         ['src-widgets/build/**/*', '!src-widgets/build/index.html', '!src-widgets/build/mf-manifest.json'],
@@ -114,6 +129,31 @@ if (process.argv.includes('--0-clean')) {
             console.error(`Cannot build: ${e}`);
             process.exit(2);
         });
+} else if (process.argv.includes('--devices-0-clean')) {
+    devicesClean();
+} else if (process.argv.includes('--devices-1-npm')) {
+    if (!fs.existsSync(`${__dirname}/src-devices/node_modules`)) {
+        npmInstall('src-devices').catch(e => {
+            console.error(`Cannot run npm: ${e}`);
+            process.exit(2);
+        });
+    }
+} else if (process.argv.includes('--devices-2-build')) {
+    buildReact(`${__dirname}/src-devices`, { rootDir: `${__dirname}/src-devices`, vite: true }).catch(e => {
+        console.error(`Cannot build: ${e}`);
+        process.exit(2);
+    });
+} else if (process.argv.includes('--devices-3-copy')) {
+    devicesCopyAllFiles();
+} else if (process.argv.includes('--devices-build')) {
+    devicesClean();
+    npmInstall('src-devices')
+        .then(() => buildReact(`${__dirname}/src-devices`, { rootDir: `${__dirname}/src-devices`, vite: true }))
+        .then(() => devicesCopyAllFiles())
+        .catch(e => {
+            console.error(`Cannot build devices widgets: ${e}`);
+            process.exit(2);
+        });
 } else {
     clean();
     npmInstall('src-admin')
@@ -123,6 +163,10 @@ if (process.argv.includes('--0-clean')) {
         .then(() => npmInstall('src-widgets'))
         .then(() => buildReact(`${__dirname}/src-widgets`, { rootDir: `${__dirname}/src-widgets`, vite: true }))
         .then(() => widgetsCopyAllFiles())
+        .then(() => devicesClean())
+        .then(() => npmInstall('src-devices'))
+        .then(() => buildReact(`${__dirname}/src-devices`, { rootDir: `${__dirname}/src-devices`, vite: true }))
+        .then(() => devicesCopyAllFiles())
         .catch(e => {
             console.error(`Cannot build: ${e}`);
             process.exit(2);

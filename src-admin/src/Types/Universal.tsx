@@ -11,6 +11,23 @@ type UniversalConfigItem = {
     variant: 'FFMPEG' | 'VLC' | 'MJPEG';
     protocol: 'rtsp://' | 'http://';
     path: string;
+    /** Default port for this connection, 0 if the source did not provide one */
+    port?: number;
+};
+
+type ManufacturerItem = {
+    /** File name of the data file in ./data/, e.g. "hikvision" */
+    id: string;
+    /** Label shown in the dropdown, e.g. "Hikvision" */
+    name: string;
+};
+
+type ModelItem = {
+    model: string;
+    urlPath: string;
+    uniqueModel: boolean;
+    urlProtocol: 'http://' | 'rtsp://' | '';
+    port: number;
 };
 
 const styles: Record<string, any> = {
@@ -41,9 +58,10 @@ export default class Universal extends ConfigGeneric<
     CameraConfigUniversal,
     {
         manufacturer: string;
+        manufacturers: ManufacturerItem[];
         list: UniversalConfigItem[];
         icon: string;
-        models: { model: string; urlPath: string; uniqueModel: boolean; urlProtocol: 'http://' | 'rtsp://' | '' }[];
+        models: ModelItem[];
     }
 > {
     public static isRtsp = true; // this camera can be used in RTSP snapshot
@@ -58,7 +76,8 @@ export default class Universal extends ConfigGeneric<
             password: this.props.settings.password || '',
             username: this.props.settings.username === undefined ? 'admin' : this.props.settings.username || '',
             urlProtocol: this.props.settings.urlProtocol || '',
-            manufacturer: this.props.settings.manufacturer,
+            manufacturer: this.props.settings.manufacturer || '',
+            manufacturers: [],
             model: this.props.settings.model || '',
             list: [],
             channel: this.props.settings.channel || 0,
@@ -69,20 +88,29 @@ export default class Universal extends ConfigGeneric<
 
     componentDidMount(): void {
         this.props.decrypt(this.state.password || '', password => this.setState({ password }));
-        void fetch(`./data/${this.state.manufacturer}.json`)
+
+        void fetch('./data/manufacturers.json')
+            .then(response => response.json())
+            .then((manufacturers: ManufacturerItem[]) => this.setState({ manufacturers }))
+            .catch(e => window.alert(`Cannot read the list of manufacturers: ${e}`));
+
+        if (this.state.manufacturer) {
+            this.loadManufacturer(this.state.manufacturer);
+        }
+    }
+
+    /** Read the model/URL table and the logo of one manufacturer */
+    loadManufacturer(manufacturer: string): void {
+        void fetch(`./data/${manufacturer}.json`)
             .then(response => response.json())
             .then((list: UniversalConfigItem[]): void => {
-                const models: {
-                    model: string;
-                    urlPath: string;
-                    uniqueModel: boolean;
-                    urlProtocol: 'http://' | 'rtsp://' | '';
-                }[] = [
+                const models: ModelItem[] = [
                     {
                         model: '',
                         urlPath: '',
                         uniqueModel: true,
                         urlProtocol: '',
+                        port: 0,
                     },
                 ];
                 for (const item of list) {
@@ -98,6 +126,7 @@ export default class Universal extends ConfigGeneric<
                                 urlPath: item.path,
                                 uniqueModel: !sameName,
                                 urlProtocol: item.protocol,
+                                port: item.port || 0,
                             });
                         }
                     });
@@ -111,20 +140,25 @@ export default class Universal extends ConfigGeneric<
 
                 this.setState({ list, models });
             })
-            .catch(e => window.alert(`Cannot read config data for "${this.state.manufacturer}": ${e}`));
+            .catch(e => window.alert(`Cannot read config data for "${manufacturer}": ${e}`));
 
-        // Find icon png or svg
-        void fetch(`./data/${this.state.manufacturer}.svg`)
-            .then(() => this.setState({ icon: `./data/${this.state.manufacturer}.svg` }))
-            .catch(() =>
-                fetch(`./data/${this.state.manufacturer}.png`)
-                    .then(() => this.setState({ icon: `./data/${this.state.manufacturer}.png` }))
-                    .catch(() =>
-                        fetch(`./data/${this.state.manufacturer}.jpg`)
-                            .then(() => this.setState({ icon: `./data/${this.state.manufacturer}.jpg` }))
-                            .catch(() => console.warn(`Cannot find icon for ${this.state.manufacturer}`)),
-                    ),
-            );
+        // Find icon svg, png or jpg. fetch() also resolves on 404, so the status must be checked
+        const findIcon = async (): Promise<string> => {
+            for (const extension of ['svg', 'png', 'jpg']) {
+                const url = `./data/${manufacturer}.${extension}`;
+                try {
+                    const response = await fetch(url);
+                    if (response.ok) {
+                        return url;
+                    }
+                } catch {
+                    // try the next extension
+                }
+            }
+            return '';
+        };
+
+        void findIcon().then(icon => this.setState({ icon }));
     }
 
     reportSettings(): void {
@@ -144,13 +178,12 @@ export default class Universal extends ConfigGeneric<
     }
 
     render(): React.JSX.Element {
-        const selectedModel =
-            this.state.models.find(it => it.model === this.state.model && it.urlPath === this.state.urlPath) ||
-            this.state.models[0];
-
-        if (!this.state.models?.length) {
+        if (!this.state.manufacturers.length) {
             return <LinearProgress />;
         }
+
+        const selectedManufacturer =
+            this.state.manufacturers.find(it => it.id === this.state.manufacturer) || null;
 
         return (
             <div style={styles.page}>
@@ -161,6 +194,75 @@ export default class Universal extends ConfigGeneric<
                         style={{ height: 32, width: 'auto' }}
                     />
                 ) : null}
+                <Autocomplete
+                    autoHighlight
+                    value={selectedManufacturer}
+                    options={this.state.manufacturers}
+                    fullWidth
+                    getOptionLabel={option => option.name}
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                    renderOption={(props, option) => {
+                        const { key, ...optionProps } = props;
+                        return (
+                            <Box
+                                component="li"
+                                key={option.id}
+                                {...optionProps}
+                                style={{ display: 'flex', alignItems: 'center', gap: 8 }}
+                            >
+                                <img
+                                    src={`./data/${option.id}.svg`}
+                                    alt=""
+                                    style={{ width: 24, height: 24, flexShrink: 0 }}
+                                    // A manufacturer may ship a .png/.jpg instead - do not show a broken image
+                                    onError={e => ((e.target as HTMLImageElement).style.visibility = 'hidden')}
+                                />
+                                <span>{option.name}</span>
+                            </Box>
+                        );
+                    }}
+                    onChange={(_event, newValue) =>
+                        this.setState(
+                            {
+                                manufacturer: newValue?.id || '',
+                                // The models of the previous manufacturer are meaningless now
+                                model: '',
+                                urlPath: '',
+                                urlProtocol: '',
+                                list: [],
+                                models: [],
+                                icon: '',
+                            },
+                            () => {
+                                if (newValue) {
+                                    this.loadManufacturer(newValue.id);
+                                }
+                                this.reportSettings();
+                            },
+                        )
+                    }
+                    renderInput={params => (
+                        <TextField
+                            {...params}
+                            variant="standard"
+                            label={I18n.t('Manufacturer')}
+                        />
+                    )}
+                />
+                {this.state.manufacturer && !this.state.models.length ? <LinearProgress /> : null}
+                {this.state.models.length ? this.renderModelSelector() : null}
+                {this.state.models.length ? this.renderConnectionFields() : null}
+            </div>
+        );
+    }
+
+    renderModelSelector(): React.JSX.Element {
+        const selectedModel =
+            this.state.models.find(it => it.model === this.state.model && it.urlPath === this.state.urlPath) ||
+            this.state.models[0];
+
+        return (
+            <>
                 <Autocomplete
                     autoHighlight
                     value={selectedModel}
@@ -197,6 +299,10 @@ export default class Universal extends ConfigGeneric<
                                 model: newValue?.model || '',
                                 urlPath: newValue?.urlPath || '',
                                 urlProtocol: newValue?.urlProtocol || '',
+                                // Take the default port of the model, otherwise the protocol default
+                                port:
+                                    newValue?.port ||
+                                    (newValue?.urlProtocol === 'http://' ? '80' : '554'),
                             },
                             () => this.reportSettings(),
                         )
@@ -210,6 +316,13 @@ export default class Universal extends ConfigGeneric<
                         />
                     )}
                 />
+            </>
+        );
+    }
+
+    renderConnectionFields(): React.JSX.Element {
+        return (
+            <>
                 <TextField
                     variant="standard"
                     style={styles.ip}
@@ -245,7 +358,7 @@ export default class Universal extends ConfigGeneric<
                         onChange={e => this.setState({ channel: e.target.value }, () => this.reportSettings())}
                     />
                 ) : null}
-            </div>
+            </>
         );
     }
 }

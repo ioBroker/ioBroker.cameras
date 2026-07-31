@@ -1,0 +1,665 @@
+[
+    {
+        "models": [
+            "1115",
+            "1224",
+            "1500",
+            "1510",
+            "1520",
+            "1520dp",
+            "2105",
+            "3005wn",
+            "3010WG",
+            "310",
+            "3110W",
+            "3115",
+            "3116w",
+            "7001",
+            "7001W",
+            "7110W",
+            "900",
+            "9000",
+            "9001",
+            "ic 3005wn",
+            "ic 3115w",
+            "IC-08E61D",
+            "IC-14F96A",
+            "IC-1500",
+            "IC-1500WG",
+            "ic-1510",
+            "ic1510w",
+            "IC-1510Wg",
+            "IC-1520DP",
+            "IC-161D94",
+            "IC30000",
+            "IC-3005",
+            "IC-3010",
+            "IC-3015",
+            "IC-3015WN",
+            "IC-3015Ww5a",
+            "IC-3030",
+            "IC-3030WN",
+            "IC-3100W",
+            "IC-3110W",
+            "IC-3115w",
+            "IC-3116W",
+            "IC-4933DA",
+            "IC5120",
+            "IC-660AD1",
+            "IC-7000",
+            "IC-7000PT v2",
+            "ic7000ptn",
+            "IC-7001",
+            "ic-7001w",
+            "ic-7010",
+            "IC-7010PTN",
+            "IC7110",
+            "IC-7110P",
+            "IC-7110W",
+            "IC-9000",
+            "IC-E37C68",
+            "IC-EE8C99"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.jpg?account=[USERNAME]&password=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "1500",
+            "3005wn",
+            "3030",
+            "IC_3030iPE",
+            "IC1500",
+            "ic-1500wg",
+            "IC1510",
+            "IC-3005",
+            "IC-3030",
+            "IC3030iPoE",
+            "IC-3030iWn",
+            "IC3030WN",
+            "ic-3116w",
+            "IC-3116W",
+            "ic-7001w",
+            "ic9000",
+            "IC-ED2485"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.jpg?user=[USERNAME]&pwd=[PASSWORD]&strm=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "1500",
+            "1510",
+            "1c-1510",
+            "3005wn",
+            "3005zn",
+            "3010WG",
+            "3015WN",
+            "3110W",
+            "3140w",
+            "5150W",
+            "7882",
+            "C3115W",
+            "CI-1500",
+            "ic3010",
+            "IC 3115W",
+            "IC-1500",
+            "IC-1500WG",
+            "ic-1510",
+            "IC-1510Wg",
+            "ic-30005zn",
+            "IC-3005WN",
+            "ic-3005zn",
+            "IC-3100W",
+            "IC-3110P",
+            "IC-3115",
+            "ic3116w",
+            "ic3140w",
+            "IC-7000",
+            "IC-7000PT V2",
+            "IC7001W",
+            "ic9000"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.jpg?user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "1510",
+            "3015wn",
+            "ic 3110w",
+            "ic 3115w",
+            "IC-1500WG",
+            "IC-3010",
+            "IC-3030IWN",
+            "IC3100W",
+            "ic3116",
+            "IC-7010PTN",
+            "IC-7110W",
+            "ic-8196c1",
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/jpg/1/image.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "1510",
+            "1520dp",
+            "3010WG",
+            "3015wn",
+            "3115",
+            "3115w",
+            "3116W",
+            "5110",
+            "7110W",
+            "C3115W",
+            "ic 3110w",
+            "ic 3115w",
+            "IC-1500",
+            "IC-1500WG",
+            "Ic1510",
+            "IC-1510Wg",
+            "ic1510wkl",
+            "IC-1520",
+            "IC-1520DP",
+            "IC-2F38D8",
+            "ic-3005",
+            "ic-3005wn",
+            "IC-3010",
+            "IC-3015",
+            "IC-3015WN",
+            "IC-3030",
+            "IC3030iPoE",
+            "IC-3030IWN",
+            "IC-3030WN",
+            "IC3100P",
+            "IC-3115",
+            "IC-3116W",
+            "IC3140W",
+            "IC-3210W",
+            "IC-6220DC",
+            "IC-6C15D1",
+            "IC-7000",
+            "IC7001W",
+            "ic7010",
+            "ic7010PT",
+            "IC-7010PTN",
+            "IC-7110W",
+            "IC-7113W",
+            "ic-73b92f",
+            "IC-9000",
+            "ic-9110w",
+            "IP-1510"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpg/video.mjpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "1510",
+            "3010WG",
+            "IC_3030IPE",
+            "IC-1500WG",
+            "ic-3005",
+            "ic-3010",
+            "IC-3010",
+            "IC-3015WN",
+            "IC3030iPoE",
+            "IC-3030IWN",
+            "IC-3030Wn",
+            "IC-3030WN",
+            "IC-3110p",
+            "IC-3110W",
+            "IC-3115W",
+            "IC-7000",
+            "ic7000ptn",
+            "ic7010",
+            "IC-7010PTn",
+            "IC-7010PTN",
+            "IC7110",
+            "IC-9000",
+            "IC-BD45A4"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/ipcam.sdp",
+        "port": 0
+    },
+    {
+        "models": [
+            "1520dp",
+            "30",
+            "3005wn",
+            "3030poe",
+            "3100",
+            "3115w",
+            "7001W",
+            "ic 3115w",
+            "IC07223w",
+            "IC-1500WG",
+            "IC-1520DP",
+            "IC-3010",
+            "IC-3015WN",
+            "IC-3030",
+            "IC3030iPoE",
+            "IC-3030IWN",
+            "IC-3110W",
+            "ic3115",
+            "ic-3116w",
+            "IC-3116W",
+            "IC-3140w",
+            "IC-321430",
+            "IC-51",
+            "IC-5170SC",
+            "IC-64D0F1",
+            "IC-7000",
+            "ic7010",
+            "IC-7010PTn",
+            "IC-7110W",
+            "IC-7113W",
+            "IC-7223w",
+            "IC-9000",
+            "ic-9110w",
+            "IC9110W",
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpg/video.mjpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "1520gp",
+            "1b09e2",
+            "3015wn",
+            "3115",
+            "3116W",
+            "7001W",
+            "C3115W",
+            "ic 3115w",
+            "IC-1500",
+            "IC-1500WG",
+            "ic-3005",
+            "IC-3010",
+            "IC-3015WN",
+            "IC-3030IWN",
+            "IC-3115J",
+            "IC-3116W",
+            "IC-3140W",
+            "IC-51",
+            "IC-7000",
+            "IC-7000PT v2",
+            "IC7001",
+            "IC-7010PTN",
+            "IC-9000"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "3010",
+            "3010WG",
+            "3015WN",
+            "3030",
+            "3030poe",
+            "3100",
+            "3110W",
+            "3116",
+            "3116W",
+            "7001",
+            "7110W",
+            "7112",
+            "ic 3110w",
+            "ic-3010",
+            "IC-3030",
+            "IC3030iPoE",
+            "IC-3030IWN",
+            "IC-3030Wn",
+            "IC3030WN",
+            "IC-3030WN",
+            "IC3100P",
+            "IC3100W",
+            "IC-3110P",
+            "IC-3115w",
+            "ic3116",
+            "IC-3116W",
+            "IC3140W",
+            "IC-3140W",
+            "IC5120",
+            "IC-5170SC",
+            "ic7010",
+            "IC-7010PTn",
+            "IC-7010PTN",
+            "IC-7100",
+            "IC-7110P",
+            "IC-7110W",
+            "IC-7112w",
+            "IC-7112W",
+            "ic-7113w",
+            "IC-7113W",
+            "IC-9000w",
+            "IC9110W",
+            "IC-9110W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/ipcam_h264.sdp",
+        "port": 0
+    },
+    {
+        "models": [
+            "3010WG",
+            "3015wn",
+            "3030",
+            "3110W",
+            "3110W 2",
+            "3115w",
+            "3115W",
+            "3116W",
+            "5150w",
+            "7001w",
+            "9001",
+            "Unknown",
+            "ic 3110w",
+            "ic 3115w",
+            "IC_3030IPE",
+            "IC-08E61D",
+            "IC-1500WG",
+            "IC-1510Wg",
+            "IC-1520DP",
+            "IC2A70",
+            "IC-3010",
+            "IC-3015",
+            "IC-3015WN",
+            "IC-3030IWN",
+            "IC-3030WN",
+            "IC-3110P",
+            "IC-3115",
+            "IC-3116W",
+            "IC-3140w",
+            "IC-7000PT V2",
+            "IC7001W",
+            "IC-7001W",
+            "IC-7010PTn",
+            "IC-7110W",
+            "IC-7112w",
+            "IC-7113W",
+            "IC-9110W",
+            "IC-BD4EB1"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/mjpg/1/video.mjpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "3015wn",
+            "3115",
+            "3115W",
+            "IC-3005",
+            "IC-3015WN",
+            "IC-3030Wn",
+            "IC-3115W",
+            "IC-3116WN"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/jpg/image.jpg?size=3",
+        "port": 0
+    },
+    {
+        "models": [
+            "3100",
+            "3105",
+            "3116W",
+            "IC-1500",
+            "IC-1500WG",
+            "ic1510",
+            "IC-3010",
+            "IC-3015WN",
+            "IC-3030IWN",
+            "IC-3100W",
+            "IC-3110W",
+            "IC-3115W",
+            "ic-3116w",
+            "IC-7000",
+            "ic-7010",
+            "IC-7010PTN",
+            "IC-9000"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/jpg/image.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "7001",
+            "IC-3115"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?usr=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "IC-1500WG"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/image.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "IC-1500WG",
+            "IC-3010",
+            "IC-3030IWN",
+            "IC-3115W",
+            "IC-7000",
+            "IC7001",
+            "IC-7010PTN",
+            "IC-9000",
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "IC-1520DP"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/viewer/video.jpg?resolution=640x480",
+        "port": 0
+    },
+    {
+        "models": [
+            "ic-3116w",
+            "IC-9110W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/ipcam_mjpeg.sdp",
+        "port": 554
+    },
+    {
+        "models": [
+            "IC-5000P"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/GetData.cgi?CH=[CHANNEL]&Codec=jpeg&Size=[WIDTH]x[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "IC-7000"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/snapshot.cgi?loginuse=[USERNAME]&loginpas=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "IC-7000",
+            "IC-9000"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/Stream?Video",
+        "port": 0
+    },
+    {
+        "models": [
+            "IC-7001W"
+        ],
+        "variant": "VLC",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "IC-7010PTN"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=[WIDTH]x[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "IC-7010PTN"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?resolution=8&rate=13",
+        "port": 0
+    },
+    {
+        "models": [
+            "IC-7110P",
+            "IR-112E",
+            "IR113E",
+            "ire_112",
+            "ND-233E",
+            "Unknown",
+            "PT-31E",
+            "VS100"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/stream1",
+        "port": 0
+    },
+    {
+        "models": [
+            "IC-7110W"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/user/videostream.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "ic9000"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/[CHANNEL]/[USERNAME]:[PASSWORD]/main",
+        "port": 0
+    },
+    {
+        "models": [
+            "IC-9000"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/[USERNAME].[PASSWORD]?udp",
+        "port": 0
+    },
+    {
+        "models": [
+            "IR-112",
+            "IR-112E"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/stream2",
+        "port": 0
+    },
+    {
+        "models": [
+            "IR-112E"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/h264_stream",
+        "port": 554
+    },
+    {
+        "models": [
+            "IR-112E",
+            "IR-113E",
+            "NC-213E",
+            "PT-31E",
+            "VS100"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/cgi/mjpg/mjpeg.cgi",
+        "port": 80
+    },
+    {
+        "models": [
+            "MD111E",
+            "PT-112E"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/imagep/picture.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "MD111E",
+            "PT-112E"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live1.sdp",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/VIDEO.CGI",
+        "port": 0
+    }
+]

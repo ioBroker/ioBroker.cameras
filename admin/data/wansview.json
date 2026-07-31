@@ -1,0 +1,739 @@
+[
+    {
+        "models": [
+            "001",
+            "043825-XXHGP",
+            "1080",
+            "1080P",
+            "1080P W1",
+            "W2",
+            "W4",
+            "W6",
+            "1080P Q5",
+            "1080P K3",
+            "1080p K5",
+            "1080P Q6",
+            "1080P W3",
+            "1080p W4",
+            "1080P W5",
+            "1090",
+            "121",
+            "192",
+            "251253",
+            "459116",
+            "543NB",
+            "543W",
+            "625",
+            "625W",
+            "633GBU",
+            "700GC",
+            "702p",
+            "720",
+            "720P",
+            "720p W3",
+            "K2",
+            "Q3",
+            "Q5",
+            "K3",
+            "K40",
+            "NCM625GA",
+            "NBC543W",
+            "NCH537MW",
+            "NCM621W",
+            "NCM620GA",
+            "NCM620W",
+            "NCM622GA",
+            "NCM622GA Q2",
+            "NCM623W",
+            "NCM624W",
+            "NCM625",
+            "NCM625GB",
+            "NCM-625W",
+            "NCM630GB",
+            "NCM725GA",
+            "NCM750GA",
+            "NCM751",
+            "NCM751GA",
+            "NCM751VGA",
+            "NCM754GC",
+            "NCM75AGA",
+            "Q33",
+            "Q35",
+            "Q3S",
+            "Q3-s",
+            "USA703K2",
+            "US-W4-B",
+            "W-3",
+            "W60",
+            "W9",
+            "W5",
+            "X624W",
+            "X720",
+            "2K K7",
+            "Q3 (X-Series)"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live/ch0",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown",
+            "NBC541W",
+            "NC541",
+            "NCB541W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?resolution=64&rate=30",
+        "port": 1125
+    },
+    {
+        "models": [
+            "1080",
+            "1080P",
+            "541",
+            "541W",
+            "625",
+            "720P",
+            "NBC543W",
+            "NC541",
+            "NC541W-P",
+            "NCB5140",
+            "NCB-540",
+            "NCB540W",
+            "NCB-541W",
+            "NCB-543W",
+            "NCL616W",
+            "W2"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=[WIDTH]*[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "1080",
+            "541W",
+            "543W",
+            "720P",
+            "NBC543W",
+            "NCB-534W",
+            "NCB541",
+            "NCB541W",
+            "NCB-541W",
+            "NCB-543W",
+            "NCB545W",
+            "NCL615W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?resolution=8&rate=13",
+        "port": 0
+    },
+    {
+        "models": [
+            "1080",
+            "541",
+            "543NB",
+            "625W",
+            "720P",
+            "DCS543W",
+            "N540W",
+            "N541",
+            "NBC543W",
+            "NC541W",
+            "NCB-534W",
+            "NCB540W",
+            "NCB-541w",
+            "NCB-543W",
+            "NCB545W",
+            "NCH-530W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=64&rate=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "1080",
+            "1080P",
+            "1080P W1",
+            "W4",
+            "W6",
+            "1080P K3",
+            "1080p K5",
+            "W2",
+            "1080P Q5",
+            "1080P Q6",
+            "1080P W3",
+            "1080P W5",
+            "541W",
+            "624W",
+            "625W",
+            "702P",
+            "720",
+            "720P",
+            "720p W3",
+            "780GB",
+            "DCS543W",
+            "K2",
+            "Q5",
+            "K3",
+            "NC541W",
+            "NCM622GA",
+            "NCM625GA",
+            "NCM625GB",
+            "NCM-630GB",
+            "NCM750GA",
+            "NCM751GA",
+            "Unknown",
+            "Q3S",
+            "US-W4-B",
+            "W-3",
+            "W5",
+            "W9",
+            "Q3 (X-Series)"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live/ch1",
+        "port": 0
+    },
+    {
+        "models": [
+            "1080",
+            "1080P",
+            "W6",
+            "625W",
+            "720P",
+            "720P W3",
+            "780GB",
+            "NCM624W",
+            "NCM625",
+            "NCM625GA",
+            "NCM625W",
+            "Q5"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live/ch2",
+        "port": 0
+    },
+    {
+        "models": [
+            "1080",
+            "W2",
+            "NCH-530W",
+            "NCH536MW"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snap.jpg?JpegSize=XL",
+        "port": 0
+    },
+    {
+        "models": [
+            "1080",
+            "1080P",
+            "2K W7",
+            "MCM-627",
+            "NCB541W",
+            "NCH536MW",
+            "NCM625W",
+            "NCM626w",
+            "NCM-628",
+            "NCM751GA",
+            "NCL616W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/12",
+        "port": 0
+    },
+    {
+        "models": [
+            "1080P",
+            "W2",
+            "NC530",
+            "NCH532MKW",
+            "NCH532MW",
+            "NCH536MW",
+            "NCH537MW",
+            "NCM621W",
+            "NCM623w",
+            "NCM-627"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snap.jpg?usr=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "1080P W1",
+            "W2",
+            "W4",
+            "1080P W3",
+            "720P",
+            "Q3",
+            "Q3-s",
+            "W-3"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/mjpeg/stream.cgi?chn=0",
+        "port": 80
+    },
+    {
+        "models": [
+            "W6",
+            "541W",
+            "625W",
+            "NBC543W",
+            "NC541",
+            "NCM620",
+            "NCM620W",
+            "NCM622GA Q2",
+            "NCM-624W",
+            "NCM-625",
+            "NCM626w",
+            "NCL616W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/11",
+        "port": 554
+    },
+    {
+        "models": [
+            "1080P Q5"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/camera",
+        "port": 80
+    },
+    {
+        "models": [
+            "1080P Q5"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/video.mjpg?q=30&fps=33&id=0.5",
+        "port": 8090
+    },
+    {
+        "models": [
+            "123456",
+            "541W",
+            "NC541",
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]&resolution=32&rate=0",
+        "port": 8080
+    },
+    {
+        "models": [
+            "124",
+            "NC543W",
+            "NCB541W"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/ videostream.cgi",
+        "port": 81
+    },
+    {
+        "models": [
+            "541",
+            "NCL615W",
+            "NCS601W"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "541",
+            "543W",
+            "NCM-620W",
+            "625W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/ucast/11",
+        "port": 0
+    },
+    {
+        "models": [
+            "541W",
+            "625",
+            "625W",
+            "JW0009",
+            "NC541",
+            "NCB-534W",
+            "NCB-541W",
+            "NCB-543W",
+            "NCH530W",
+            "NCL615W",
+            "NCM521W",
+            "NCM620W",
+            "NCM621W",
+            "NCM622W",
+            "NCM625GA",
+            "NCM-625W",
+            "NCM-627",
+            "NCM-628",
+            "NCM751GA"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/tmpfs/auto.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "541W",
+            "543NB",
+            "DCS543W",
+            "N540w",
+            "NC541W",
+            "NC543W",
+            "NC543W-P",
+            "NCB-541w",
+            "NCB541W-adt",
+            "NCB-543W",
+            "NCB545W"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?rate=0&user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "543w",
+            "N540w",
+            "NC543W",
+            "NCL610W",
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/img/snapshot.cgi?size=2",
+        "port": 0
+    },
+    {
+        "models": [
+            "616",
+            "720P W3",
+            "JW0011",
+            "N541",
+            "NBC543W",
+            "NC541W-P",
+            "NC543W",
+            "NC543W-P",
+            "NCB-541W",
+            "NCL615w",
+            "NCL616W",
+            "NCM621W",
+            "NCS543W"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi?user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "625W",
+            "MCM-627",
+            "N540w",
+            "NC543W",
+            "NCB-534W",
+            "NCB-541W",
+            "NCB-543W",
+            "NCL-610W",
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?user=[USERNAME]&password=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "625W"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/image.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "720P",
+            "720P W3",
+            "NCH530W",
+            "NCH531MW",
+            "NCH532MKW"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snap.jpg?JpegCam=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown",
+            "NCM629W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live/ch00_0",
+        "port": 5544
+    },
+    {
+        "models": [
+            "N540w",
+            "NC543W",
+            "NCB-534W",
+            "NCB-541W",
+            "NCB-543W"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?rate=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "N540w",
+            "NC543W",
+            "NCB541W",
+            "NCL-610W"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]&resolution=32&rate=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "NBC541W",
+            "NCB541W",
+            "NCB541W-adt",
+            "NCB-543W",
+            "NCL610D04",
+            "NCL610W",
+            "NCL614W"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]&resolution=32",
+        "port": 0
+    },
+    {
+        "models": [
+            "NBC543W",
+            "NC540W",
+            "NCB541W",
+            "NCL610W",
+            "NCL615w"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?rate=11",
+        "port": 0
+    },
+    {
+        "models": [
+            "NBC543W",
+            "NCB545W",
+            "NCB-546W",
+            "NCB546W3"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf",
+        "port": 0
+    },
+    {
+        "models": [
+            "NC512"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/video.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "NC541",
+            "NC541W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=320*240",
+        "port": 80
+    },
+    {
+        "models": [
+            "NC543W",
+            "NCB-534W",
+            "NCB541W",
+            "NCL616W"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?usr=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "NC543W"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi?user=[USERNAME]&pwd=[PASSWORD]&count=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "NCB1541W",
+            "NCB-541W",
+            "NCB-543W",
+            "NCL610D04",
+            "NCL-610W"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?",
+        "port": 0
+    },
+    {
+        "models": [
+            "NCB541W"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=[USERNAME]&pwd=[PASSWORD]&",
+        "port": 88
+    },
+    {
+        "models": [
+            "NCH532MW"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/web/mobile.html",
+        "port": 80
+    },
+    {
+        "models": [
+            "NCH532MW"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/web/admin.html",
+        "port": 80
+    },
+    {
+        "models": [
+            "NCM625W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/h264Preview_01_main",
+        "port": 0
+    },
+    {
+        "models": [
+            "NCS601W"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/goform/video",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/current[CHANNEL].jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/jpg/1/image.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/viewer/video.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/snapshot.html",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "VLC",
+        "protocol": "http://",
+        "path": "/vdata.v",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/cgi-bin/net_jpeg.cgi?ch=[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snap.jpg?JpegCam=0",
+        "port": 80
+    }
+]

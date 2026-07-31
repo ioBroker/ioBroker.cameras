@@ -1,0 +1,425 @@
+[
+    {
+        "models": [
+            "1080HD",
+            "5905",
+            "5907HD",
+            "5907HD-oniv",
+            "6001",
+            "6001HD",
+            "6012",
+            "6012HD",
+            "7011",
+            "7011HD",
+            "9003",
+            "9008FullHD",
+            "9020",
+            "HD6014",
+            "IN-1612HD",
+            "IN2901",
+            "IN-5907",
+            "IN-6012",
+            "IN-6012HD",
+            "IN-6014",
+            "IN-6014HD",
+            "IN-8001",
+            "IN-8003FHD-PoE",
+            "IN-9008FHD-POE",
+            "IN-9020HD"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/11",
+        "port": 554
+    },
+    {
+        "models": [
+            "2090",
+            "5905-HD",
+            "5907HD",
+            "7011",
+            "IN-9020"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/live.sdp",
+        "port": 554
+    },
+    {
+        "models": [
+            "29025",
+            "2905",
+            "3003",
+            "3005",
+            "3011",
+            "4010",
+            "4011",
+            "IN2901",
+            "IN-2905 V2",
+            "IN-2908",
+            "IN-3010",
+            "IN-3011",
+            "INSTAR3011",
+            "INSTAR3100"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=32&rate=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "2905",
+            "6102",
+            "IN-7011"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "",
+        "port": 0
+    },
+    {
+        "models": [
+            "2905",
+            "IN-2905"
+        ],
+        "variant": "VLC",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "2905",
+            "IN-3011"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.jpg?user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "2905"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "2905",
+            "3010",
+            "4010",
+            "IN-3011"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=64&rate=0",
+        "port": 0
+    },
+    {
+        "models": [
+            "3003",
+            "IN-2905",
+            "IN-3010"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/",
+        "port": 554
+    },
+    {
+        "models": [
+            "3011",
+            "5908",
+            "IN-2905",
+            "IN-2905 v2",
+            "IN-2907",
+            "IN-2908"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?usr=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "4010",
+            "IN-2905"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=[WIDTH]x[HEIGHT]",
+        "port": 0
+    },
+    {
+        "models": [
+            "4010",
+            "IN-3010"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/videostream.asf",
+        "port": 0
+    },
+    {
+        "models": [
+            "4010"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?rate=0&user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "4011",
+            "IN-3010",
+            "IN-3011"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/videostream.cgi?rate=11",
+        "port": 0
+    },
+    {
+        "models": [
+            "5907",
+            "5907HD",
+            "5907HD-ONIV",
+            "6001",
+            "6011",
+            "6012",
+            "6012HD",
+            "6014HD",
+            "7011HD",
+            "8015",
+            "9008HD",
+            "9020",
+            "HD5907",
+            "IN-3010",
+            "IN-5907",
+            "IN-6001HD",
+            "IN-6011",
+            "IN-6012HD",
+            "in-8015",
+            "IN-8015",
+            "IN-9008HD",
+            "IN-9010FullHD"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/tmpfs/auto.jpg",
+        "port": 0
+    },
+    {
+        "models": [
+            "5907",
+            "5907HD",
+            "IN2901",
+            "IN-3010",
+            "IN-6012",
+            "IN-6014HD",
+            "IN-9020"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/MediaInput/mpeg4",
+        "port": 0
+    },
+    {
+        "models": [
+            "5907",
+            "6011"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snap.jpg?usr=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "5907HD",
+            "6012",
+            "6012HD",
+            "6014HD",
+            "IN-2905",
+            "IN-6014HD"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/cam[CHANNEL]/h264",
+        "port": 0
+    },
+    {
+        "models": [
+            "5907HD"
+        ],
+        "variant": "VLC",
+        "protocol": "rtsp://",
+        "path": "/medias[CHANNEL]",
+        "port": 0
+    },
+    {
+        "models": [
+            "5907HD",
+            "5907HD-rtsp",
+            "6001HD",
+            "HD6014",
+            "IN-6001HD",
+            "IN-8003FHD-PoE",
+            "IN-9010FullHD",
+            "IN-9408 2K+ POE",
+            "9008FullHD"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/12",
+        "port": 0
+    },
+    {
+        "models": [
+            "6011",
+            "IN-9008HD"
+        ],
+        "variant": "VLC",
+        "protocol": "http://",
+        "path": "/iphone/11?[USERNAME]:[PASSWORD]&",
+        "port": 0
+    },
+    {
+        "models": [
+            "6011"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snap.jpg?JpegSize=M",
+        "port": 0
+    },
+    {
+        "models": [
+            "8415 2K+",
+            "9820",
+            "IN-9408",
+            "IN-9408 2K+",
+            "IN-9408 2K+ POE",
+            "IN-9420 2K",
+            "9420"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/livestream/11",
+        "port": 554
+    },
+    {
+        "models": [
+            "9420",
+            "IN-8401 2K+",
+            "IN-9408 2K+"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/livestream/13",
+        "port": 554
+    },
+    {
+        "models": [
+            "9420 4k+"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/livestream/11?action=play&media=mjpeg&user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 80
+    },
+    {
+        "models": [
+            "9420 4k+"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/livestream/13?action=play&media=mjpeg&user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 80
+    },
+    {
+        "models": [
+            "IN-2905",
+            "IN-3010",
+            "IN-3011"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi",
+        "port": 0
+    },
+    {
+        "models": [
+            "IN-2905 v2",
+            "IN-3011"
+        ],
+        "variant": "JPEG",
+        "protocol": "http://",
+        "path": "/snapshot.cgi?user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 0
+    },
+    {
+        "models": [
+            "IN-6001HD"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/user=[USERNAME]_password=[PASSWORD]_channel=1_stream=0.sdp",
+        "port": 554
+    },
+    {
+        "models": [
+            "IN-8401 2K+",
+            "IN-9408 2K+",
+            "9408 2K"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "http://",
+        "path": "/livestream/12?action=play&media=mjpeg&user=[USERNAME]&pwd=[PASSWORD]",
+        "port": 80
+    },
+    {
+        "models": [
+            "IN-9008FHD-POE"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/13",
+        "port": 554
+    },
+    {
+        "models": [
+            "IN-9408 2K+",
+            "IN-9280"
+        ],
+        "variant": "MJPEG",
+        "protocol": "rtsp://",
+        "path": "/livestream/12",
+        "port": 554
+    },
+    {
+        "models": [
+            "IN-9408 2K+ POE",
+            "IN-9420 2K",
+            "Instar9408"
+        ],
+        "variant": "MJPEG",
+        "protocol": "http://",
+        "path": "/livestream/11?action=play&media=mjpeg",
+        "port": 80
+    },
+    {
+        "models": [
+            "IN-9008HD"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/1",
+        "port": 554
+    }
+]
