@@ -10,7 +10,7 @@
         "@mui/icons-material": "^6.5.0",
         "@mui/material": "^6.5.0",
         "@originjs/vite-plugin-federation": "^1.4.1",
-        "@vitejs/plugin-react": "^5.2.0",
+        "@vitejs/plugin-react": "^6.0.5",
         "moment": "^2.30.1",
         "prop-types": "^15.8.1",
         "react": "^18.3.1",
