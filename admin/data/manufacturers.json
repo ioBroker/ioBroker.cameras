@@ -132,6 +132,10 @@
         "name": "Sricam"
     },
     {
+        "id": "steinel",
+        "name": "Steinel"
+    },
+    {
         "id": "swann",
         "name": "Swann"
     },

@@ -1,0 +1,29 @@
+[
+    {
+        "models": [
+            "L620"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/user=[USERNAME]&password=[PASSWORD]&channel=1&stream=1.sdp?real_stream-rtp-caching=500",
+        "port": 554
+    },
+    {
+        "models": [
+            "Unknown"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/user=[USERNAME]_password=[PASSWORD]_channel=1_stream=0.sdp",
+        "port": 554
+    },
+    {
+        "models": [
+            "L620 (main stream)"
+        ],
+        "variant": "FFMPEG",
+        "protocol": "rtsp://",
+        "path": "/user=[USERNAME]&password=[PASSWORD]&channel=1&stream=0.sdp?",
+        "port": 554
+    }
+]

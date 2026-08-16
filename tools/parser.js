@@ -50,6 +50,7 @@ const MANUFACTURERS = {
     sannce: 'SANNCE',
     sony: 'Sony',
     sricam: 'Sricam',
+    steinel: 'Steinel',
     swann: 'Swann',
     tapo: 'TP-Link Tapo',
     tenvis: 'TENVIS',
@@ -70,6 +71,24 @@ const MANUFACTURERS = {
 
 /** UniversalCamera can only build rtsp:// and http:// URLs, so everything else is dropped */
 const SUPPORTED_PROTOCOLS = ['rtsp://', 'http://'];
+
+/**
+ * URLs that are known to work but are not listed on ispyconnect.com. They are appended after the
+ * scraped rows, so re-running the parser does not lose them again. Only add entries that somebody
+ * actually confirmed on real hardware.
+ */
+const EXTRA_URLS = {
+    // ispyconnect only lists the substream (stream=1); stream=0 is the full resolution main stream
+    steinel: [
+        {
+            models: ['L620 (main stream)'],
+            variant: 'FFMPEG',
+            protocol: 'rtsp://',
+            path: '/user=[USERNAME]&password=[PASSWORD]&channel=1&stream=0.sdp?',
+            port: 554,
+        },
+    ],
+};
 
 function parseCameraConfig(html) {
     const $ = cheerio.load(html);
@@ -123,6 +142,8 @@ async function fetchCameraConfig(manufacturer) {
         console.warn(`  ${manufacturer}: no usable rows - skipped (did the page layout change?)`);
         return;
     }
+
+    data.push(...(EXTRA_URLS[manufacturer] || []));
 
     writeFileSync(join(OUTPUT_DIR, `${manufacturer}.json`), JSON.stringify(data, null, 4));
     const models = new Set();

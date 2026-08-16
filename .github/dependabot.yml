@@ -19,16 +19,38 @@ updates:
     open-pull-requests-limit: 15
     versioning-strategy: "increase"
     ignore:
+      # Typescript does not follow semver, minor updates are usually breaking
       - dependency-name: "typescript"
         update-types:
           - "version-update:semver-minor"
           - "version-update:semver-major"
+      # @types/node major versions follow the node.js releases and must be bumped together with "engines"
+      - dependency-name: "@types/node"
+        update-types:
+          - "version-update:semver-major"
+    # Delay normal updates by 7 days, security updates are still processed immediately
+    cooldown:
+      default-days: 7
 
+  # The three frontends (admin, vis-2 widgets, device manager widgets) have their own package.json each
   - package-ecosystem: "npm"
-    directory: "/src"
+    directories:
+      - "/src-admin"
+      - "/src-widgets"
+      - "/src-devices"
     schedule:
       interval: "cron"
       timezone: "Europe/Berlin"
       cronjob: "11 3 11 * *"
     open-pull-requests-limit: 20
     versioning-strategy: "increase"
+    ignore:
+      - dependency-name: "typescript"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-major"
+      - dependency-name: "@types/node"
+        update-types:
+          - "version-update:semver-major"
+    cooldown:
+      default-days: 7

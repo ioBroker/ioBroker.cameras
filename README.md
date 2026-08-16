@@ -122,7 +122,11 @@ If the binary cannot be found or does not start, the adapter transparently falls
 ### **WORK IN PROGRESS**
 * (@GermanBluefox) Completely rewritten in TypeScript
 * (@GermanBluefox) Added Ezviz cameras
-* (@GermanBluefox) The universal camera type now offers ~49 manufacturers with ~13000 models, each with a logo
+* (@paul179) Added Steinel cameras (as manufacturer of the universal camera type)
+* (@GermanBluefox) The universal camera type now offers ~50 manufacturers with ~13000 models, each with a logo
+* (ioBroker-Bot) Removed the deprecated `common.materialize` from io-package.json
+* (ioBroker-Bot) Adapter requires js-controller >= 6.0.11 now
+* (ioBroker-Bot) Adapter requires node.js >= 22 now
 * (@GermanBluefox) Added Instar cameras
 * (@GermanBluefox) Added optional go2rtc support for snapshots and live streams, proxied via the web adapter
 * (@GermanBluefox) Fixed: the second viewer of the same camera did not receive any picture
