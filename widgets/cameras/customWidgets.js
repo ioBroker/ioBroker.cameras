@@ -3032,7 +3032,7 @@ ${r.slice(0, 5).join(`
   const Sa = bt.initResolve, Qt = {}, er = "default", tr = "__mfe_internal__vis2CameraWidgets";
   let rr, nr;
   async function ba() {
-    return rr ?? (rr = or(() => import("./assets/localSharedImportMap-_97mKR4M.js").then(async (m) => {
+    return rr ?? (rr = or(() => import("./assets/localSharedImportMap-B_TiGbbe.js").then(async (m) => {
       await m.__tla;
       return m;
     }), [], import.meta.url)), rr;
