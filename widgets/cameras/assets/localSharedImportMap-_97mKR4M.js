@@ -3,7 +3,7 @@ let s, n;
 let __tla = (async () => {
   let o;
   o = {
-    "@iobroker/adapter-react-v5": async () => await a(() => import("./index-O7AV6ZlP.js").then(async (m) => {
+    "@iobroker/adapter-react-v5": async () => await a(() => import("./index-CTlR_SOk.js").then(async (m) => {
       await m.__tla;
       return m;
     }), [], import.meta.url),
