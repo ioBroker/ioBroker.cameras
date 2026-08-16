@@ -19,3 +19,6 @@ admin/i18n/*/flat.txt
 /src-widgets/package-lock.json
 /src-widgets/build/
 /win-ffmpeg.exe
+
+#ignore .commitinfo created by ioBroker release script
+.commitinfo
