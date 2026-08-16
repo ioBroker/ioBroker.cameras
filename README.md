@@ -157,6 +157,8 @@ To add a new camera, you must create a Pull Request on GitHub with the following
 ### 0.0.1
 * (bluefox) initial release
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 MIT License
 
