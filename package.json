@@ -63,6 +63,9 @@
     ],
     "scripts": {
         "test": "mocha --exit",
+        "test:package": "mocha test/package.js --exit",
+        "test:unit": "mocha test/unit.js --exit",
+        "test:integration": "mocha test/integration.js --exit",
         "lint": "eslint -c eslint.config.mjs",
         "prepublishOnly": "node tasks",
         "build": "npm run build-backend && node tasks",
