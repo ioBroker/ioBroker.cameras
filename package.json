@@ -9,6 +9,7 @@
   "homepage": "https://github.com/ioBroker/ioBroker.cameras",
   "license": "MIT",
   "keywords": [
+    "ioBroker",
     "ip-cam",
     "web-cam",
     "video"
