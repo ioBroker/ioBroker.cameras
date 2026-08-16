@@ -38,6 +38,14 @@ type UnsubscribeData = {
     reason: 'client';
 };
 
+/**
+ * The loopback address can arrive in three shapes, depending on whether the connection was made over
+ * IPv4, over IPv6, or over IPv4 mapped into IPv6. All three are the local machine.
+ */
+function isLocalhost(ip: string): boolean {
+    return ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1';
+}
+
 export class CamerasAdapter extends Adapter {
     private lang: ioBroker.Languages = 'en';
     private streamSubscribes: { camera: string; clientId: string; ts: number }[] = [];
@@ -501,20 +509,16 @@ export class CamerasAdapter extends Adapter {
                 res.statusCode = 401;
                 res.write('Invalid key');
                 res.end();
-                this.log.debug(`Invalid key from ${clientIp}. Expected ${this.config.key}`);
+                this.log.debug(`Invalid key from ${clientIp}`);
                 return;
             }
 
-            if (
-                clientIp !== '127.0.0.1' &&
-                clientIp !== '::1/128' &&
-                this.allowIPs !== true &&
-                !this.allowIPs.includes(clientIp)
-            ) {
-                res.statusCode = 401;
-                res.write('Invalid key');
+            if (!isLocalhost(clientIp) && this.allowIPs !== true && !this.allowIPs.includes(clientIp)) {
+                // The key was correct - this is purely an address restriction, so do not claim otherwise
+                res.statusCode = 403;
+                res.write('IP not allowed');
                 res.end();
-                this.log.debug(`Invalid key from ${clientIp}. Expected ${this.config.key}`);
+                this.log.debug(`Rejected ${clientIp}: not in "allowIPs"`);
                 return;
             }
 
@@ -563,9 +567,17 @@ export class CamerasAdapter extends Adapter {
                         res.write(data.body || '');
                         res.end();
                     } catch (e) {
-                        res.statusCode = 500;
-                        res.write(`Unknown error: ${e}`);
-                        res.end();
+                        // Grabbing a frame is slow, so the client may be long gone by now. Writing to a
+                        // response that already ended throws again, and that second throw would escape
+                        // this async handler as an unhandled rejection and take the adapter down.
+                        this.log.debug(`Cannot deliver ${cam.name}: ${e}`);
+                        if (!res.headersSent) {
+                            res.statusCode = 500;
+                            res.write(`Unknown error: ${e}`);
+                        }
+                        if (!res.writableEnded) {
+                            res.end();
+                        }
                     }
                 } else {
                     res.statusCode = 501;
@@ -793,7 +805,7 @@ export class CamerasAdapter extends Adapter {
 
         if (typeof this.config.allowIPs === 'string') {
             this.allowIPs = this.config.allowIPs
-                .split(/,;/)
+                .split(/[,;]/)
                 .map(i => i.trim())
                 .filter(i => i);
 
@@ -819,8 +831,13 @@ export class CamerasAdapter extends Adapter {
         await this.syncData();
         await Promise.all(promises);
         await this.syncConfig();
-        await this.fillFiles();
+
+        // Start listening before grabbing the first frames. fillFiles() pulls an image from every
+        // camera, which for RTSP means spawning ffmpeg and waiting for it - up to "defaultTimeout"
+        // per camera. Until the server is up, everything the web extension proxies to this port
+        // fails with ECONNREFUSED, so the cameras would be unreachable for the whole warm-up.
         this.startWebServer();
+        await this.fillFiles();
     }
 }
 

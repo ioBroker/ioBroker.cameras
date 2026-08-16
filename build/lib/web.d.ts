@@ -77,5 +77,16 @@ export default class ProxyCameras {
     rtsp2mjpeg(rule: CameraConfigAny, ws: WebSocketClient, cb: (customHandler?: boolean) => void): Promise<void>;
     /** Pipe the go2rtc MJPEG stream to an express response */
     streamMjpeg(rule: CameraConfigAny, res: ExpressResponse): Promise<void>;
+    /**
+     * Re-read the secret key from the instance object.
+     *
+     * This class keeps the copy of `instanceSettings.native` it was constructed with, but it lives in
+     * the ioBroker.web process: when the key is changed, the cameras adapter restarts with the new one
+     * while this copy stays behind, and every request is answered with "Invalid key" until ioBroker.web
+     * happens to be restarted too. Refreshing after a rejected request repairs that by itself.
+     *
+     * @returns true if the key actually changed, i.e. a retry is worth it
+     */
+    refreshKey(): Promise<boolean>;
     oneCamera(rule: CameraConfigAny): void;
 }

@@ -66,7 +66,9 @@ function getUrl(path, query, port) {
             if (statusCode !== 200) {
                 // Consume response data to free-up memory
                 res.resume();
-                return reject(new Error(`Request Failed. Status Code: ${statusCode}`));
+                const error = new Error(`Request Failed. Status Code: ${statusCode}`);
+                error.statusCode = statusCode;
+                return reject(error);
             }
             const data = [];
             res.on('data', chunk => data.push(chunk));
@@ -568,6 +570,31 @@ class ProxyCameras {
         stream.on('error', () => res.end());
         stream.pipe(res);
     }
+    /**
+     * Re-read the secret key from the instance object.
+     *
+     * This class keeps the copy of `instanceSettings.native` it was constructed with, but it lives in
+     * the ioBroker.web process: when the key is changed, the cameras adapter restarts with the new one
+     * while this copy stays behind, and every request is answered with "Invalid key" until ioBroker.web
+     * happens to be restarted too. Refreshing after a rejected request repairs that by itself.
+     *
+     * @returns true if the key actually changed, i.e. a retry is worth it
+     */
+    async refreshKey() {
+        try {
+            const obj = await this.adapter.getForeignObjectAsync(`system.adapter.${this.namespace}`);
+            const key = obj?.native?.key;
+            if (key !== undefined && key !== this.config.key) {
+                this.adapter.log.info(`Key of ${this.namespace} has changed, using the new one`);
+                this.config.key = key;
+                return true;
+            }
+        }
+        catch (e) {
+            this.adapter.log.debug(`Cannot re-read the configuration of ${this.namespace}: ${e}`);
+        }
+        return false;
+    }
     oneCamera(rule) {
         this.adapter.log.info(`Install extension on /${this.config.route}${rule.name}`);
         this.app.use(`/${this.config.route}${rule.name}`, (req, res) => {
@@ -609,6 +636,14 @@ class ProxyCameras {
                 return;
             }
             getUrl(rule.name, query, this.config.port)
+                .catch(async (error) => {
+                // A 401 most likely means our cached key is stale - refresh it and try once more
+                if (error?.statusCode === 401 && (await this.refreshKey())) {
+                    query.key = this.config.key;
+                    return getUrl(rule.name, query, this.config.port);
+                }
+                throw error;
+            })
                 .then(file => {
                 res.setHeader('Content-type', file.contentType);
                 // Every request returns a freshly grabbed frame. Without this express only sends an

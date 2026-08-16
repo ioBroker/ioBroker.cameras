@@ -132,6 +132,11 @@ If the binary cannot be found or does not start, the adapter transparently falls
 * (@GermanBluefox) Completely rewritten in TypeScript
 * (@GermanBluefox) Added Ezviz cameras
 * (@GermanBluefox) Snapshot requests are answered with `Cache-Control: no-store` so browsers cannot show a stale frame
+* (@GermanBluefox) Fixed: a list of allowed IPs was never split correctly, so any list with more than one address rejected every request
+* (@GermanBluefox) Fixed: connections from the IPv6 loopback address were not recognized as local
+* (@GermanBluefox) Fixed: a failed image request could terminate the adapter with `ERR_HTTP_HEADERS_SENT`
+* (@GermanBluefox) The cameras are reachable immediately after start instead of only after the first frame of every camera was grabbed
+* (@GermanBluefox) The web extension picks up a changed key by itself, without restarting ioBroker.web
 * (@paul179) Added Steinel cameras (as manufacturer of the universal camera type)
 * (@GermanBluefox) The universal camera type now offers ~50 manufacturers with ~13000 models, each with a logo
 * (ioBroker-Bot) Removed the deprecated `common.materialize` from io-package.json
