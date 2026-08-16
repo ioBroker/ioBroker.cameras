@@ -22,7 +22,7 @@
     "url": "https://github.com/ioBroker/ioBroker.cameras"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^3.2.3",
+    "@iobroker/adapter-core": "^3.4.3",
     "axios": "^1.7.9",
     "decompress": "^4.2.1",
     "fluent-ffmpeg": "^2.1.3",
