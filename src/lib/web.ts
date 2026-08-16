@@ -706,6 +706,7 @@ export default class ProxyCameras {
                         }
 
                         res.setHeader('Content-type', file.contentType);
+                        res.setHeader('Cache-Control', 'no-store, private');
                         res.status(200).send(file.body || '');
                     })
                     .catch(error => res.status(500).send(typeof error !== 'string' ? JSON.stringify(error) : error));
@@ -714,6 +715,10 @@ export default class ProxyCameras {
             getUrl(rule.name, query, this.config.port as number)
                 .then(file => {
                     res.setHeader('Content-type', file.contentType);
+                    // Every request returns a freshly grabbed frame. Without this express only sends an
+                    // ETag, which leaves it to the browser whether it revalidates at all - a plain
+                    // <img src="/cameras.0/cam1"> could then keep showing the first frame it ever got.
+                    res.setHeader('Cache-Control', 'no-store, private');
                     res.status(200).send(file.body || '');
                 })
                 .catch(error => res.status(500).send(typeof error !== 'string' ? JSON.stringify(error) : error));

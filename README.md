@@ -15,6 +15,15 @@ You can integrate your web/ip cameras into vis and other visualizations.
 If you configure a camera with name `cam1` it will be available on 
 web server under `http(s)://iobroker-IP:8082/cameras.0/cam1`.
 
+**Use exactly that URL - without a file extension.** Every request to it grabs a new frame from the
+camera, so a periodic reload gives you a live picture.
+
+The adapter additionally stores the last frame as a file under `cameras.0/cam1.jpg`, which the web
+server also happens to serve under `http(s)://iobroker-IP:8082/cameras.0/cam1.jpg`. That file is only
+rewritten when the adapter starts and whenever an `image` message is processed - it is **not** updated
+by requesting it. Pointing a widget at the `.jpg` therefore shows a picture that never refreshes, no
+matter which refresh interval is configured.
+
 Additionally, the image could be requested via a message:
 ```js
 sendTo('cameras.0', 'image', {
@@ -122,6 +131,7 @@ If the binary cannot be found or does not start, the adapter transparently falls
 ### **WORK IN PROGRESS**
 * (@GermanBluefox) Completely rewritten in TypeScript
 * (@GermanBluefox) Added Ezviz cameras
+* (@GermanBluefox) Snapshot requests are answered with `Cache-Control: no-store` so browsers cannot show a stale frame
 * (@paul179) Added Steinel cameras (as manufacturer of the universal camera type)
 * (@GermanBluefox) The universal camera type now offers ~50 manufacturers with ~13000 models, each with a logo
 * (ioBroker-Bot) Removed the deprecated `common.materialize` from io-package.json
