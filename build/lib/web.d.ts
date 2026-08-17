@@ -31,6 +31,8 @@ export default class ProxyCameras {
      * installed here, which inherit the authentication and the http/https scheme of ioBroker.web.
      */
     private go2rtc;
+    /** Whether the cameras adapter runs on the same host as this web instance */
+    private readonly sameHost;
     constructor(server: HttpServer | HttpsServer, webSettings: {
         secure: boolean;
         port: number;
@@ -88,5 +90,54 @@ export default class ProxyCameras {
      * @returns true if the key actually changed, i.e. a retry is worth it
      */
     refreshKey(): Promise<boolean>;
+    /**
+     * Which transport to use for a still image.
+     *
+     * Both work, because the adapter runs in a different process:
+     *
+     *  - `http`: a request to the private server of the adapter on 127.0.0.1.
+     *  - `message`: `sendTo`, which travels through the states database. It needs no open port, so no
+     *    key and no IP allow list are involved, and it is the only one that works when ioBroker.web
+     *    runs on a different host.
+     *
+     * `http` is the default because messages are a lot more expensive. Measured end to end through
+     * ioBroker.web against a jsonl database, median per request:
+     *
+     * | picture  | http    | message |
+     * | -------- | ------- | ------- |
+     * | 42 KB    | 2.7 ms  | 34.5 ms |
+     * | 406 KB   | 4.6 ms  | 47.3 ms |
+     * | 1.2 MB   | 9.5 ms  | 85.3 ms |
+     *
+     * Most of that is a fixed ~30 ms for the database round trip, and the payload additionally goes
+     * through the states database base64 encoded - a load every other adapter shares.
+     */
+    getTransport(): 'http' | 'message';
+    /**
+     * Fetch a still image from the adapter over the transport picked by {@link getTransport}.
+     *
+     * @param name the camera name
+     * @param query parameters of the browser request
+     */
+    getSnapshot(name: string, query: {
+        key?: string;
+        noCache?: 'true' | '1' | 'false' | '0';
+        w?: string;
+        h?: string;
+        angle?: string;
+    }): Promise<{
+        body: Buffer;
+        contentType: string;
+    }>;
+    /**
+     * `sendTo` with a timeout.
+     *
+     * Unlike an HTTP request, a message to a stopped adapter is simply never answered - without this
+     * the browser request would hang until it gives up on its own.
+     *
+     * @param command the message command
+     * @param message the payload
+     */
+    sendToAdapter(command: string, message: Record<string, unknown>): Promise<unknown>;
     oneCamera(rule: CameraConfigAny): void;
 }

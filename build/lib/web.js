@@ -48,6 +48,30 @@ const node_fs_1 = require("node:fs");
 const fluent_ffmpeg_1 = __importDefault(require("fluent-ffmpeg"));
 const ws_1 = require("ws");
 const Go2RtcClient_1 = __importStar(require("./Go2RtcClient"));
+/** A browser is waiting on the other end, so do not let a silent adapter hang the request forever */
+const MESSAGE_TIMEOUT_MS = 10000;
+/**
+ * Turn whatever was thrown into something readable.
+ *
+ * `JSON.stringify(new Error('...'))` is `{}` - an Error carries its message on a non-enumerable
+ * property. Answering a failed request with `{}` hides exactly the information that is needed.
+ *
+ * @param error the caught value
+ */
+function describeError(error) {
+    if (typeof error === 'string') {
+        return error;
+    }
+    if (error instanceof Error) {
+        return error.message;
+    }
+    try {
+        return JSON.stringify(error);
+    }
+    catch {
+        return String(error);
+    }
+}
 /**
  * Read image by request from global web server
  *
@@ -103,6 +127,8 @@ class ProxyCameras {
      * installed here, which inherit the authentication and the http/https scheme of ioBroker.web.
      */
     go2rtc = null;
+    /** Whether the cameras adapter runs on the same host as this web instance */
+    sameHost = true;
     constructor(server, webSettings, adapter, instanceSettings, app, io) {
         this.app = app;
         this.config = instanceSettings
@@ -117,6 +143,14 @@ class ProxyCameras {
         }
         this.adapter = adapter;
         this.ioServer = io?.ioServer || null;
+        // The private server of the adapter is only reachable over 127.0.0.1, so it is no option when
+        // the cameras adapter runs on another host than this web instance
+        const cameraHost = instanceSettings?.common?.host;
+        const ownHost = adapter?.common?.host;
+        this.sameHost = !cameraHost || !ownHost || cameraHost === ownHost;
+        if (this.getTransport() === 'message') {
+            this.adapter.log.info(`Cameras snapshots are requested via messages${this.sameHost ? '' : ` - ${this.namespace} runs on "${cameraHost}"`}`);
+        }
         if (this.config.useGo2rtc) {
             this.go2rtc = new Go2RtcClient_1.default({
                 apiPort: this.config.go2rtcApiPort,
@@ -595,6 +629,97 @@ class ProxyCameras {
         }
         return false;
     }
+    /**
+     * Which transport to use for a still image.
+     *
+     * Both work, because the adapter runs in a different process:
+     *
+     *  - `http`: a request to the private server of the adapter on 127.0.0.1.
+     *  - `message`: `sendTo`, which travels through the states database. It needs no open port, so no
+     *    key and no IP allow list are involved, and it is the only one that works when ioBroker.web
+     *    runs on a different host.
+     *
+     * `http` is the default because messages are a lot more expensive. Measured end to end through
+     * ioBroker.web against a jsonl database, median per request:
+     *
+     * | picture  | http    | message |
+     * | -------- | ------- | ------- |
+     * | 42 KB    | 2.7 ms  | 34.5 ms |
+     * | 406 KB   | 4.6 ms  | 47.3 ms |
+     * | 1.2 MB   | 9.5 ms  | 85.3 ms |
+     *
+     * Most of that is a fixed ~30 ms for the database round trip, and the payload additionally goes
+     * through the states database base64 encoded - a load every other adapter shares.
+     */
+    getTransport() {
+        if (this.config.snapshotTransport === 'http' || this.config.snapshotTransport === 'message') {
+            return this.config.snapshotTransport;
+        }
+        return this.sameHost ? 'http' : 'message';
+    }
+    /**
+     * Fetch a still image from the adapter over the transport picked by {@link getTransport}.
+     *
+     * @param name the camera name
+     * @param query parameters of the browser request
+     */
+    async getSnapshot(name, query) {
+        if (this.getTransport() === 'http') {
+            try {
+                return await getUrl(name, query, this.config.port);
+            }
+            catch (error) {
+                // A 401 most likely means our cached key is stale - refresh it and try once more
+                if (error?.statusCode === 401 && (await this.refreshKey())) {
+                    query.key = this.config.key;
+                    return getUrl(name, query, this.config.port);
+                }
+                throw error;
+            }
+        }
+        const answer = (await this.sendToAdapter('image', {
+            name,
+            width: parseInt(query.w || '0', 10) || undefined,
+            height: parseInt(query.h || '0', 10) || undefined,
+            angle: parseInt(query.angle || '0', 10) || undefined,
+            noCache: query.noCache === 'true' || query.noCache === '1',
+            // A browser request must not rewrite the stored <name>.jpg on every single frame
+            noFileWrite: true,
+        }));
+        if (answer?.error) {
+            throw new Error(answer.error);
+        }
+        if (!answer?.data) {
+            throw new Error('No data from adapter');
+        }
+        return { body: Buffer.from(answer.data, 'base64'), contentType: answer.contentType || 'image/jpeg' };
+    }
+    /**
+     * `sendTo` with a timeout.
+     *
+     * Unlike an HTTP request, a message to a stopped adapter is simply never answered - without this
+     * the browser request would hang until it gives up on its own.
+     *
+     * @param command the message command
+     * @param message the payload
+     */
+    sendToAdapter(command, message) {
+        return new Promise((resolve, reject) => {
+            const timer = setTimeout(() => {
+                reject(new Error(`No answer from ${this.namespace} within ${MESSAGE_TIMEOUT_MS} ms`));
+            }, MESSAGE_TIMEOUT_MS);
+            try {
+                this.adapter.sendTo(this.namespace, command, message, answer => {
+                    clearTimeout(timer);
+                    resolve(answer);
+                });
+            }
+            catch (e) {
+                clearTimeout(timer);
+                reject(e);
+            }
+        });
+    }
     oneCamera(rule) {
         this.adapter.log.info(`Install extension on /${this.config.route}${rule.name}`);
         this.app.use(`/${this.config.route}${rule.name}`, (req, res) => {
@@ -632,18 +757,10 @@ class ProxyCameras {
                     res.setHeader('Cache-Control', 'no-store, private');
                     res.status(200).send(file.body || '');
                 })
-                    .catch(error => res.status(500).send(typeof error !== 'string' ? JSON.stringify(error) : error));
+                    .catch(error => res.status(500).send(describeError(error)));
                 return;
             }
-            getUrl(rule.name, query, this.config.port)
-                .catch(async (error) => {
-                // A 401 most likely means our cached key is stale - refresh it and try once more
-                if (error?.statusCode === 401 && (await this.refreshKey())) {
-                    query.key = this.config.key;
-                    return getUrl(rule.name, query, this.config.port);
-                }
-                throw error;
-            })
+            this.getSnapshot(rule.name, query)
                 .then(file => {
                 res.setHeader('Content-type', file.contentType);
                 // Every request returns a freshly grabbed frame. Without this express only sends an
@@ -652,7 +769,7 @@ class ProxyCameras {
                 res.setHeader('Cache-Control', 'no-store, private');
                 res.status(200).send(file.body || '');
             })
-                .catch(error => res.status(500).send(typeof error !== 'string' ? JSON.stringify(error) : error));
+                .catch(error => res.status(500).send(describeError(error)));
         });
         // Install web socket route
         if (this.ioServer?.addWsRoute && rule.rtsp && rule.enabled !== false) {

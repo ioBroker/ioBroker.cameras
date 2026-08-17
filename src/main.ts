@@ -46,6 +46,17 @@ function isLocalhost(ip: string): boolean {
     return ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1';
 }
 
+/**
+ * Whether the buffer already is a JPEG, judged by its magic bytes.
+ *
+ * The `content-type` a camera sends is not reliable enough for this - the bytes are.
+ *
+ * @param body the picture as delivered by the camera
+ */
+function isJpeg(body: Buffer | string | undefined): boolean {
+    return Buffer.isBuffer(body) && body.length > 3 && body[0] === 0xff && body[1] === 0xd8 && body[2] === 0xff;
+}
+
 export class CamerasAdapter extends Adapter {
     private lang: ioBroker.Languages = 'en';
     private streamSubscribes: { camera: string; clientId: string; ts: number }[] = [];
@@ -200,7 +211,12 @@ export class CamerasAdapter extends Adapter {
                     };
                 }
 
-                await this.writeFileAsync(this.namespace, `/${cam.name}.jpg`, Buffer.from(data.body));
+                // The stored file is a convenience artefact, not the answer to this request. The web
+                // extension asks for a picture on every browser request and does not want to write
+                // the file that often, so it can opt out.
+                if (!cam.noFileWrite) {
+                    await this.writeFileAsync(this.namespace, `/${cam.name}.jpg`, Buffer.from(data.body));
+                }
                 return data.body;
             }
             return Promise.reject(new Error('No data from camera'));
@@ -400,6 +416,12 @@ export class CamerasAdapter extends Adapter {
         height: number | undefined,
     ): Promise<ProcessData> {
         if (!width && !height) {
+            // Nothing to resize. Re-encoding anyway would cost more time than the whole delivery and
+            // would throw away the quality the camera was configured for, so only convert what is not
+            // JPEG yet - the answer is documented to always be JPEG.
+            if (isJpeg(data.body)) {
+                return { body: data.body, contentType: 'image/jpeg' };
+            }
             const body = await sharp(data.body).jpeg().toBuffer();
             return { body, contentType: 'image/jpeg' };
         }
@@ -413,8 +435,9 @@ export class CamerasAdapter extends Adapter {
 
     async rotateImage(data: ProcessDataEx, angle: number | undefined): Promise<ProcessData> {
         if (!angle) {
-            const body = await sharp(data.body).jpeg().toBuffer();
-            return { body, contentType: 'image/jpeg' };
+            // resizeImage() has already made sure this is JPEG - a second pass through sharp would
+            // only cost time and quality
+            return data;
         }
 
         const body = await sharp(data.body).rotate(angle).jpeg().toBuffer();

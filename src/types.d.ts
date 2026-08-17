@@ -112,6 +112,14 @@ export interface CamerasAdapterConfig {
     allowIPs: string;
     ffmpegPath: string;
     tempPath: string;
+    /**
+     * How the web extension gets a still picture from the adapter.
+     *
+     * Unset (the default) picks automatically: `http` when the cameras adapter runs on the same host
+     * as the web instance, otherwise `message`, because the private server only listens on 127.0.0.1.
+     * `message` costs roughly ten times as much per request - see `getTransport()` in lib/web.ts.
+     */
+    snapshotTransport?: 'message' | 'http';
     /** Use a local go2rtc process for RTSP snapshots instead of spawning ffmpeg per request */
     useGo2rtc: boolean;
     /** Explicit path to the go2rtc binary. Empty = search the usual locations */
@@ -140,6 +148,8 @@ export interface CameraRequestInternal extends CameraConfig {
     height?: number;
     angle?: number;
     noCache?: boolean;
+    /** Do not refresh the stored `<name>.jpg` for this request */
+    noFileWrite?: boolean;
 }
 
 export interface CameraRequest extends Omit<CameraRequestInternal, 'type' | 'id'> {

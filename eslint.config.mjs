@@ -25,6 +25,7 @@ export default [
             'tasks.js',
             // Build/maintenance scripts, not part of the compiled adapter
             'tools/**/*.js',
+            'benchmark/**/*.js',
             'tmp/**/*',
             '.**/*',
         ],
