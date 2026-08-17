@@ -26,8 +26,7 @@
         "react-dom": "^19.2.8",
         "typescript": "~6.0.3",
         "vite": "^8.2.1",
-        "vite-plugin-commonjs": "^0.10.4",
-        "vite-tsconfig-paths": "^6.1.1"
+        "vite-plugin-commonjs": "^0.10.4"
     },
     "browserslist": {
         "production": [
