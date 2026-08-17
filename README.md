@@ -128,7 +128,7 @@ If the binary cannot be found or does not start, the adapter transparently falls
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.0.2 (2026-08-17)
 * (@GermanBluefox) The web extension can now request snapshots via messages instead of the private HTTP server, which is used automatically when the cameras adapter runs on a different host than the web instance
 * (@GermanBluefox) Fixed: a failed snapshot request answered with an empty `{}` instead of the error message
 
@@ -163,10 +163,6 @@ If the binary cannot be found or does not start, the adapter transparently falls
 ### 2.0.8 (2024-06-09)
 * (bluefox) Packages updated
 * (bluefox) Allowed selecting another source (with bigger resolution) for URL cameras
-
-### 2.0.5 (2023-12-19)
-* (bluefox) Minimal supported Node.js version is 18
-* (bluefox) Corrected widgets
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
