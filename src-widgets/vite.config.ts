@@ -1,13 +1,9 @@
-// @ts-expect-error no types
 import react from '@vitejs/plugin-react';
-import commonjs from 'vite-plugin-commonjs';
-import vitetsConfigPaths from 'vite-tsconfig-paths';
 import { federation } from '@module-federation/vite';
 import { moduleFederationShared } from '@iobroker/types-vis-2/modulefederation.vis.config';
 import { readFileSync } from 'node:fs';
-import topLevelAwait from 'vite-plugin-top-level-await';
 
-const pack = JSON.parse(readFileSync('./package.json').toString());
+const pack = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
 
 const config = {
     plugins: [
@@ -24,16 +20,13 @@ const config = {
             shared: moduleFederationShared(pack),
             dts: false,
         }),
-        topLevelAwait({
-            // The export name of top-level awaits promise for each chunk module
-            promiseExportName: '__tla',
-            // The function to generate import names of top-level awaits promise in each chunk module
-            promiseImportName: (i: number): string => `__tla_${i}`,
-        }),
         react(),
-        vitetsConfigPaths(),
-        commonjs(),
     ],
+    resolve: {
+        tsconfigPaths: true,
+        // Same set as the shared modules above: the fallback copies inside the widget bundle must be unique too
+        dedupe: ['react', 'react-dom', '@emotion/react', '@mui/material', '@mui/system', '@mui/icons-material'],
+    },
     server: {
         port: 3000,
         proxy: {
@@ -50,7 +43,8 @@ const config = {
     },
     base: './',
     build: {
-        target: 'chrome81',
+        // Top-level await (emitted by @module-federation/vite) needs chrome89+
+        target: 'chrome89',
         outDir: './build',
         rollupOptions: {
             onwarn(warning: { code: string }, warn: (warning: { code: string }) => void): void {
