@@ -46,7 +46,7 @@ function devicesCopyAllFiles() {
 
 async function widgetsCopyAllFiles() {
     copyFiles(
-        ['src-widgets/build/**/*', '!src-widgets/build/index.html', '!src-widgets/build/mf-manifest.json'],
+        ['src-widgets/build/**/*', '!src-widgets/build/index.html'],
         'widgets/cameras/',
         {
             process: (fileData, fileName) => {
