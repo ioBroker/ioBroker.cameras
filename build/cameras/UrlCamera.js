@@ -31,13 +31,10 @@ class UrlCamera extends GenericCamera_1.default {
             validateStatus: status => status < 400,
             timeout: this.config.timeout,
         })
-            .then(response => {
-            this.runningRequest = null;
-            return {
-                body: response.data,
-                contentType: response.headers['Content-type'] || response.headers['content-type'],
-            };
-        })
+            .then(response => ({
+            body: response.data,
+            contentType: response.headers['Content-type'] || response.headers['content-type'],
+        }))
             .catch(error => {
             if (error.response) {
                 throw new Error(error.response.data || error.response.status);
@@ -45,7 +42,10 @@ class UrlCamera extends GenericCamera_1.default {
             else {
                 throw new Error(error.code);
             }
-        });
+        })
+            // Also on failure - a request left behind here would be handed out to every later
+            // caller, so one unreachable camera would stay broken until the adapter restarts
+            .finally(() => (this.runningRequest = null));
         return this.runningRequest;
     }
 }

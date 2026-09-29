@@ -254,14 +254,14 @@ export default class ProxyCameras {
         };
 
         peer.onicecandidate = (event: any): void => {
-            console.log('onicecandidate:', JSON.stringify(event));
+            this.adapter.log.debug(`onicecandidate: ${JSON.stringify(event)}`);
             if (event.candidate) {
                 socket.send(JSON.stringify({ type: 'ice-candidate', candidate: event.candidate }));
             }
         };
 
         peer.onconnectionstatechange = () => {
-            console.log('Connection state:', peer.connectionState);
+            this.adapter.log.debug(`Connection state: ${peer.connectionState}`);
             if (peer.connectionState === 'disconnected') {
                 onSocketClose();
             }
@@ -275,7 +275,7 @@ export default class ProxyCameras {
 
         socket?.on('message', async (message: string): Promise<void> => {
             const data = JSON.parse(message);
-            console.log(`Received: ${JSON.stringify(data)}`);
+            this.adapter.log.debug(`Received: ${JSON.stringify(data)}`);
 
             if (data.type === 'request-offer') {
                 const offer = await peer.createOffer();
@@ -284,7 +284,7 @@ export default class ProxyCameras {
             } else if (data.type === 'answer') {
                 await peer.setRemoteDescription(new RTCSessionDescription({ type: 'answer', sdp: data.sdp }));
             } else if (data.type === 'ice-candidate') {
-                console.log('🔹 Received ICE candidate:', data.candidate);
+                this.adapter.log.debug(`Received ICE candidate: ${JSON.stringify(data.candidate)}`);
                 await peer.addIceCandidate(new RTCIceCandidate(data.candidate));
             }
         });
@@ -351,7 +351,7 @@ export default class ProxyCameras {
         // Start WebRTC server
         proc = startFFmpeg(params, this.ffmpegPath, password, this.adapter.log);
         proc.stderr.on('data', data => {
-            console.error(`FFmpeg Log: ${data}`);
+            this.adapter.log.debug(`FFmpeg log: ${data}`);
         });
 
         if (cb) {
@@ -661,7 +661,7 @@ export default class ProxyCameras {
 
         // Client closed the socket
         socket?.on('close', () => {
-            this.adapter.log.warn(`Socket connection was closed for ${rule.name}`);
+            this.adapter.log.debug(`Socket connection was closed for ${rule.name}`);
             this.onSocketClose(rule, socket, 'socket connection closed');
         });
 
@@ -671,7 +671,7 @@ export default class ProxyCameras {
         });
 
         socket.on('disconnect', () => {
-            this.adapter.log.warn(`Socket disconnection for ${rule.name}`);
+            this.adapter.log.debug(`Socket disconnection for ${rule.name}`);
             this.onSocketClose(rule, socket, 'socket disconnection');
         });
 

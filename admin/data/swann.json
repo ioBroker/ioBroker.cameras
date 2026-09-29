@@ -762,7 +762,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/cam1/onvif-h264",
-        "port": 1935
+        "port": 0
     },
     {
         "models": [
@@ -964,7 +964,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/12",
-        "port": 8282
+        "port": 0
     },
     {
         "models": [

@@ -1180,7 +1180,7 @@
         "variant": "MJPEG",
         "protocol": "http://",
         "path": "/GetData.cgi",
-        "port": 10600
+        "port": 0
     },
     {
         "models": [
@@ -1399,7 +1399,7 @@
         "variant": "MJPEG",
         "protocol": "rtsp://",
         "path": "/user=[USERNAME]_password=[PASSWORD]_channel=1_stream=0.sdp?real_stream",
-        "port": 557
+        "port": 0
     },
     {
         "models": [
@@ -1566,7 +1566,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/11",
-        "port": 5544
+        "port": 0
     },
     {
         "models": [

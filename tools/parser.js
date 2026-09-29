@@ -73,6 +73,21 @@ const MANUFACTURERS = {
 const SUPPORTED_PROTOCOLS = ['rtsp://', 'http://'];
 
 /**
+ * `data-port` is whatever port the person who submitted the row happened to reach their camera on,
+ * not the factory default. A good part of the table therefore carries a port from somebody's router
+ * (Axis on 8082, Bosch on 10600, VIVOTEK on 1025, and a whole lot of five-digit NAT ports), and the
+ * admin dialog would offer that as the default for every owner of the model.
+ *
+ * Only ports a camera really listens on out of the box are kept; everything else becomes 0, which
+ * makes the dialog fall back to 80 resp. 554. 7070 is in both lists because it is the documented
+ * default of ACTi cameras.
+ */
+const PLAUSIBLE_PORTS = {
+    'http://': [80, 81, 88, 7070, 8080, 8081],
+    'rtsp://': [554, 7070, 8554],
+};
+
+/**
  * URLs that are known to work but are not listed on ispyconnect.com. They are appended after the
  * scraped rows, so re-running the parser does not lose them again. Only add entries that somebody
  * actually confirmed on real hardware.
@@ -122,12 +137,14 @@ function parseCameraConfig(html) {
             return;
         }
 
+        const port = parseInt(row.attr('data-port') || '0', 10) || 0;
+
         data.push({
             models: [...new Set(models)],
             variant: (row.attr('data-conn') || '').trim(),
             protocol,
             path: (row.attr('data-path') || '').trim(),
-            port: parseInt(row.attr('data-port') || '0', 10) || 0,
+            port: PLAUSIBLE_PORTS[protocol].includes(port) ? port : 0,
         });
     });
 

@@ -57,7 +57,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/stw-cgi/video.cgi?msubmenu=snapshot&action=view",
-        "port": 10001
+        "port": 0
     },
     {
         "models": [
@@ -66,7 +66,7 @@
         "variant": "MJPEG",
         "protocol": "http://",
         "path": "/stw-cgi/video.cgi?msubmenu=mjpg",
-        "port": 10001
+        "port": 0
     },
     {
         "models": [

@@ -75,7 +75,7 @@
         "variant": "MJPEG",
         "protocol": "http://",
         "path": "/video",
-        "port": 4747
+        "port": 0
     },
     {
         "models": [

@@ -38,6 +38,15 @@ const styles: Record<string, any> = {
         marginRight: 8,
         width: 200,
     },
+    port: {
+        marginRight: 8,
+        width: 120,
+    },
+    size: {
+        marginTop: 16,
+        marginRight: 8,
+        width: 120,
+    },
     username: {
         marginTop: 16,
         marginRight: 8,
@@ -81,6 +90,9 @@ export default class Universal extends ConfigGeneric<
             model: this.props.settings.model || '',
             list: [],
             channel: this.props.settings.channel || 0,
+            // Only used by the paths that carry a [WIDTH]/[HEIGHT] placeholder
+            width: this.props.settings.width || 640,
+            height: this.props.settings.height || 480,
             models: [],
             icon: '',
         };
@@ -173,6 +185,8 @@ export default class Universal extends ConfigGeneric<
                 manufacturer: this.state.manufacturer,
                 model: this.state.model || '',
                 channel: this.state.channel || 0,
+                width: this.state.width || 640,
+                height: this.state.height || 480,
             });
         });
     }
@@ -182,8 +196,7 @@ export default class Universal extends ConfigGeneric<
             return <LinearProgress />;
         }
 
-        const selectedManufacturer =
-            this.state.manufacturers.find(it => it.id === this.state.manufacturer) || null;
+        const selectedManufacturer = this.state.manufacturers.find(it => it.id === this.state.manufacturer) || null;
 
         return (
             <div style={styles.page}>
@@ -300,9 +313,7 @@ export default class Universal extends ConfigGeneric<
                                 urlPath: newValue?.urlPath || '',
                                 urlProtocol: newValue?.urlProtocol || '',
                                 // Take the default port of the model, otherwise the protocol default
-                                port:
-                                    newValue?.port ||
-                                    (newValue?.urlProtocol === 'http://' ? '80' : '554'),
+                                port: newValue?.port || (newValue?.urlProtocol === 'http://' ? '80' : '554'),
                             },
                             () => this.reportSettings(),
                         )
@@ -330,6 +341,14 @@ export default class Universal extends ConfigGeneric<
                     value={this.state.ip}
                     onChange={e => this.setState({ ip: e.target.value }, () => this.reportSettings())}
                 />
+                <TextField
+                    variant="standard"
+                    style={styles.port}
+                    label={I18n.t('Port')}
+                    // The model dropdown only pre-fills this, a camera behind a port forwarding needs its own
+                    value={this.state.port}
+                    onChange={e => this.setState({ port: e.target.value }, () => this.reportSettings())}
+                />
                 <div>
                     <TextField
                         variant="standard"
@@ -349,15 +368,35 @@ export default class Universal extends ConfigGeneric<
                         onChange={e => this.setState({ password: e.target.value }, () => this.reportSettings())}
                     />
                 </div>
-                {this.state.urlPath.includes('[CHANNEL]') ? (
-                    <TextField
-                        variant="standard"
-                        style={styles.ip}
-                        label={I18n.t('Channel')}
-                        value={this.state.channel}
-                        onChange={e => this.setState({ channel: e.target.value }, () => this.reportSettings())}
-                    />
-                ) : null}
+                <div>
+                    {this.state.urlPath.includes('[CHANNEL]') ? (
+                        <TextField
+                            variant="standard"
+                            style={styles.size}
+                            label={I18n.t('Channel')}
+                            value={this.state.channel}
+                            onChange={e => this.setState({ channel: e.target.value }, () => this.reportSettings())}
+                        />
+                    ) : null}
+                    {this.state.urlPath.includes('[WIDTH]') ? (
+                        <TextField
+                            variant="standard"
+                            style={styles.size}
+                            label={I18n.t('Width')}
+                            value={this.state.width}
+                            onChange={e => this.setState({ width: e.target.value }, () => this.reportSettings())}
+                        />
+                    ) : null}
+                    {this.state.urlPath.includes('[HEIGHT]') ? (
+                        <TextField
+                            variant="standard"
+                            style={styles.size}
+                            label={I18n.t('Height')}
+                            value={this.state.height}
+                            onChange={e => this.setState({ height: e.target.value }, () => this.reportSettings())}
+                        />
+                    ) : null}
+                </div>
             </>
         );
     }

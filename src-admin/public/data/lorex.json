@@ -374,7 +374,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/cgi-bin/snapshot.cgi?chn=1&u=[USERNAME]&p=[PASSWORD]",
-        "port": 7000
+        "port": 0
     },
     {
         "models": [
@@ -517,7 +517,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/cgi-bin/net_jpeg.cgi?ch=0",
-        "port": 90
+        "port": 0
     },
     {
         "models": [

@@ -350,7 +350,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/cgi-bin/image.jpg?size=320x240",
-        "port": 20001
+        "port": 0
     },
     {
         "models": [
@@ -359,7 +359,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/control/userimage.html",
-        "port": 20004
+        "port": 0
     },
     {
         "models": [
@@ -435,7 +435,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/cgi-bin/image.jpg?imgprof=CIF-2",
-        "port": 8011
+        "port": 0
     },
     {
         "models": [
@@ -444,7 +444,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/cgi-bin/image.jpg?imgprof=CIF-1",
-        "port": 8011
+        "port": 0
     },
     {
         "models": [
@@ -453,7 +453,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/control/event.jpg",
-        "port": 8011
+        "port": 0
     },
     {
         "models": [
@@ -512,7 +512,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/cgi-bin/guestimage.html",
-        "port": 8038
+        "port": 0
     },
     {
         "models": [

@@ -1397,7 +1397,7 @@
         "variant": "VLC",
         "protocol": "rtsp://",
         "path": "/cam/realmonitor?channel=[CHANNEL]&subtype=1",
-        "port": 10554
+        "port": 0
     },
     {
         "models": [
@@ -2849,7 +2849,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/videoMain",
-        "port": 88
+        "port": 0
     },
     {
         "models": [
@@ -3400,7 +3400,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/Streaming/channels/201",
-        "port": 10554
+        "port": 0
     },
     {
         "models": [
@@ -3417,7 +3417,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/live/h264",
-        "port": 1025
+        "port": 0
     },
     {
         "models": [
@@ -3475,7 +3475,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/Streaming/channels/401",
-        "port": 10554
+        "port": 0
     },
     {
         "models": [
@@ -3489,7 +3489,7 @@
         "variant": "VLC",
         "protocol": "rtsp://",
         "path": "/1/cif",
-        "port": 10554
+        "port": 0
     },
     {
         "models": [
@@ -3508,7 +3508,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/Streaming/Channel/101",
-        "port": 1554
+        "port": 0
     },
     {
         "models": [
@@ -3582,7 +3582,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/Streaming/Channels/501",
-        "port": 10554
+        "port": 0
     },
     {
         "models": [
@@ -3783,7 +3783,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/Streaming/Channels/101/",
-        "port": 32772
+        "port": 0
     },
     {
         "models": [
@@ -4032,7 +4032,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/?action=stream",
-        "port": 8385
+        "port": 0
     },
     {
         "models": [
@@ -4271,7 +4271,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/video.mjpg?q=30&fps=33&id=0.5",
-        "port": 8090
+        "port": 0
     },
     {
         "models": [
@@ -4289,7 +4289,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/ISAPI/Streaming/Channels/102",
-        "port": 5450
+        "port": 0
     },
     {
         "models": [
@@ -4299,7 +4299,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/ISAPI/Streaming/Channels/101",
-        "port": 5450
+        "port": 0
     },
     {
         "models": [
@@ -4699,7 +4699,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/onvif-media/media.amp",
-        "port": 8082
+        "port": 0
     },
     {
         "models": [

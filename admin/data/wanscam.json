@@ -87,7 +87,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/snapshot.cgi?user=[USERNAME]&pwd=[PASSWORD]",
-        "port": 99
+        "port": 0
     },
     {
         "models": [
@@ -474,7 +474,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/snapshot.cgi?user=[USERNAME]&pwd=[PASSWORD]&count=0",
-        "port": 99
+        "port": 0
     },
     {
         "models": [
@@ -531,7 +531,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/videostream.cgi",
-        "port": 99
+        "port": 0
     },
     {
         "models": [
@@ -656,7 +656,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/cgi-bin/net_jpeg.cgi?ch=[CHANNEL]",
-        "port": 1935
+        "port": 0
     },
     {
         "models": [
@@ -670,7 +670,7 @@
         "variant": "VLC",
         "protocol": "rtsp://",
         "path": "/ch0_0.h264",
-        "port": 10554
+        "port": 0
     },
     {
         "models": [
@@ -691,7 +691,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/1",
-        "port": 10554
+        "port": 0
     },
     {
         "models": [
@@ -902,7 +902,7 @@
         "variant": "MJPEG",
         "protocol": "http://",
         "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]",
-        "port": 10554
+        "port": 0
     },
     {
         "models": [
@@ -1207,7 +1207,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/12",
-        "port": 10554
+        "port": 0
     },
     {
         "models": [
@@ -1612,7 +1612,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/video.cgi?resolution=QVGA",
-        "port": 28202
+        "port": 0
     },
     {
         "models": [
@@ -1748,7 +1748,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=[USERNAME]&pwd=[PASSWORD]&",
-        "port": 99
+        "port": 0
     },
     {
         "models": [
@@ -1846,7 +1846,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/snap.jpg?JpegCam=[CHANNEL]",
-        "port": 10554
+        "port": 0
     },
     {
         "models": [
@@ -1861,7 +1861,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/video.mjpg?q=30&fps=33&id=0.5",
-        "port": 8090
+        "port": 0
     },
     {
         "models": [
@@ -1878,7 +1878,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/snap.jpg?usr=[USERNAME]&pwd=[PASSWORD]",
-        "port": 10554
+        "port": 0
     },
     {
         "models": [
@@ -1930,7 +1930,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/iphone/11?[USERNAME]:[PASWORD]&",
-        "port": 9100
+        "port": 0
     },
     {
         "models": [
@@ -1943,7 +1943,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/live/h264/ch[CHANNEL]",
-        "port": 1935
+        "port": 0
     },
     {
         "models": [
@@ -1981,7 +1981,7 @@
         "variant": "MJPEG",
         "protocol": "http://",
         "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]&resolution=1080x1920",
-        "port": 60752
+        "port": 0
     },
     {
         "models": [
@@ -1992,7 +1992,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/tcp/av0_0",
-        "port": 10554
+        "port": 0
     },
     {
         "models": [
@@ -2005,7 +2005,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/snap.jpg?JpegSize=M",
-        "port": 10554
+        "port": 0
     },
     {
         "models": [
@@ -2023,7 +2023,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/videostream.cgi?user=[USERNAME]&pwd=&resolution=32&rate=0",
-        "port": 99
+        "port": 0
     },
     {
         "models": [
@@ -2032,7 +2032,7 @@
         "variant": "MJPEG",
         "protocol": "http://",
         "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]&res=1920x1080",
-        "port": 60752
+        "port": 0
     },
     {
         "models": [
@@ -2051,7 +2051,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/snapshot.cgi?camera=0",
-        "port": 3333
+        "port": 0
     },
     {
         "models": [
@@ -2238,7 +2238,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/videostream.asf?user=[USERNAME]&pwd=%24inM%40ximka20&resolution=320x240",
-        "port": 84
+        "port": 0
     },
     {
         "models": [
@@ -2247,7 +2247,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/videostream.asf?user=[USERNAME]&pwd=%24inM%40ximka20&resolution=320*240",
-        "port": 84
+        "port": 0
     },
     {
         "models": [

@@ -6,7 +6,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/cgi-bin/net_jpeg.cgi?ch=0",
-        "port": 8088
+        "port": 0
     },
     {
         "models": [

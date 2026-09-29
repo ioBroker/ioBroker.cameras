@@ -631,7 +631,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/ONVIF/channel2",
-        "port": 5544
+        "port": 0
     },
     {
         "models": [
@@ -640,7 +640,7 @@
         "variant": "VLC",
         "protocol": "rtsp://",
         "path": "/live/mpeg4",
-        "port": 1935
+        "port": 0
     },
     {
         "models": [

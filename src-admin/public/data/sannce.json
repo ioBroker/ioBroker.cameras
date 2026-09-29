@@ -20,7 +20,7 @@
         "variant": "MJPEG",
         "protocol": "http://",
         "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]",
-        "port": 8554
+        "port": 0
     },
     {
         "models": [
@@ -40,7 +40,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/snapshot.jpg?user=[USERNAME]&pwd=[PASSWORD]",
-        "port": 10554
+        "port": 0
     },
     {
         "models": [
@@ -175,7 +175,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/tcp/av0_0",
-        "port": 10554
+        "port": 0
     },
     {
         "models": [
@@ -304,6 +304,6 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/img/snapshot.cgi?size=3",
-        "port": 10554
+        "port": 0
     }
 ]

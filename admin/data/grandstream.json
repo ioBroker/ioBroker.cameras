@@ -330,7 +330,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/ch0_0.h264",
-        "port": 11018
+        "port": 0
     },
     {
         "models": [
@@ -390,7 +390,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/ipcam:h264.sdp",
-        "port": 2151
+        "port": 0
     },
     {
         "models": [
@@ -399,7 +399,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/goform/stream?cmd=get&channel=0",
-        "port": 151
+        "port": 0
     },
     {
         "models": [
@@ -446,7 +446,7 @@
         "variant": "MJPEG",
         "protocol": "rtsp://",
         "path": "/",
-        "port": 10082
+        "port": 0
     },
     {
         "models": [

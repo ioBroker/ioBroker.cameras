@@ -70,28 +70,35 @@ function getFFmpegVersion(ffmpegPath, log) {
         return '';
     }
 }
+/**
+ * Percent-encode a password for use inside an rtsp:// URL.
+ *
+ * `encodeURIComponent` leaves `!`, `'`, `(`, `)` and `*` alone, which are legal in a URL but are
+ * not what a camera expects in the userinfo part. Both the command line and {@link maskPassword}
+ * have to use exactly this function: when they differ, the mask no longer matches the password in
+ * the command line and the password ends up in the log in clear text.
+ */
+function encodePassword(password) {
+    return encodeURIComponent(password)
+        .replace(/!/g, '%21')
+        .replace(/'/g, '%27')
+        .replace(/\(/g, '%28')
+        .replace(/\)/g, '%29')
+        .replace(/\*/g, '%2A');
+}
 function maskPassword(str, password) {
-    if (password) {
-        password = encodeURIComponent(password)
-            //.replace(/!/g, '%21')
-            .replace(/'/g, '%27')
-            .replace(/\(/g, '%28')
-            .replace(/\)/g, '%29')
-            .replace(/\*/g, '%2A');
+    if (!password) {
+        return str;
     }
-    return str.replace(password || 'ABCGHFG', '******');
+    // The password can appear more than once, e.g. in the URL and in a user defined suffix
+    return str.split(encodePassword(password)).join('******');
 }
 function buildCommand(config, outputFileName, decodedPassword) {
     const parameters = ['-y'];
     let password = decodedPassword;
     if (config.username) {
         // convert special characters
-        password = encodeURIComponent(password)
-            .replace(/!/g, '%21')
-            .replace(/'/g, '%27')
-            .replace(/\(/g, '%28')
-            .replace(/\)/g, '%29')
-            .replace(/\*/g, '%2A');
+        password = encodePassword(password);
     }
     config.prefix && parameters.push(config.prefix);
     parameters.push(`-rtsp_transport`);
@@ -101,6 +108,9 @@ function buildCommand(config, outputFileName, decodedPassword) {
     parameters.push('-loglevel');
     parameters.push('error');
     if (config.originalWidth && config.originalHeight) {
+        // Without -vf ffmpeg reads "scale=..." as the name of an output file and gives up with
+        // "Unable to choose an output format for 'scale=640:480'"
+        parameters.push('-vf');
         parameters.push(`scale=${config.originalWidth}:${config.originalHeight}`);
     }
     parameters.push('-vframes');
@@ -114,7 +124,6 @@ function executeFFmpeg(params, ffmpegPath, decodedPassword, timeoutMs, log) {
     return new Promise((resolve, reject) => {
         log?.debug(`Executing ${ffmpegPath} ${maskPassword(params.join(' '), decodedPassword || '')}`);
         const proc = (0, node_child_process_1.spawn)(ffmpegPath, params || []);
-        proc.on('error', (err) => reject(err));
         const stdout = [];
         const stderr = [];
         proc.stdout.setEncoding('utf8');
@@ -130,10 +139,24 @@ function executeFFmpeg(params, ffmpegPath, decodedPassword, timeoutMs, log) {
             proc.kill();
             reject(new Error('timeout'));
         }, timeoutMs);
+        const stopTimeout = () => {
+            if (!timeout) {
+                // The timeout already fired and rejected the promise
+                return false;
+            }
+            clearTimeout(timeout);
+            timeout = null;
+            return true;
+        };
+        // ffmpeg was not started at all, e.g. because the path is wrong. Without stopping the
+        // timer it would stay pending for the whole timeout and then kill a process that never ran.
+        proc.on('error', (err) => {
+            if (stopTimeout()) {
+                reject(err);
+            }
+        });
         proc.on('close', (code) => {
-            if (timeout) {
-                clearTimeout(timeout);
-                timeout = null;
+            if (stopTimeout()) {
                 code ? reject(new Error(stderr.join(''))) : resolve(stdout.join(''));
             }
         });

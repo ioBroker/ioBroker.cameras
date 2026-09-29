@@ -431,7 +431,7 @@
         "variant": "VLC",
         "protocol": "rtsp://",
         "path": "/live/mpeg4",
-        "port": 8080
+        "port": 0
     },
     {
         "models": [
@@ -683,7 +683,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/onvif-stream2",
-        "port": 5544
+        "port": 0
     },
     {
         "models": [
@@ -747,6 +747,6 @@
         "variant": "MJPEG",
         "protocol": "http://",
         "path": "/cgi-bin/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]",
-        "port": 8040
+        "port": 0
     }
 ]

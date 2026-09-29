@@ -130,7 +130,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/",
-        "port": 8088
+        "port": 0
     },
     {
         "models": [
@@ -333,7 +333,7 @@
         "variant": "MJPEG",
         "protocol": "http://",
         "path": "",
-        "port": 8008
+        "port": 0
     },
     {
         "models": [

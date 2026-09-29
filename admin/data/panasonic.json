@@ -22,7 +22,7 @@
         "variant": "MJPEG",
         "protocol": "http://",
         "path": "/cgi-bin/mjpeg?stream=0",
-        "port": 16082
+        "port": 0
     },
     {
         "models": [
@@ -1387,7 +1387,7 @@
         "variant": "MJPEG",
         "protocol": "http://",
         "path": "/CgiStart?page=Single&Direction=&Resolution=640x480&Quality=Clarity&Size=STD&PresetOperation=Move&Data=0&Frame2=PanTilt&Type=&Language=1&PanTiltMin=0&RPeriod=65534&Sound=Enable&Mode=H264&SendMethod=1&View=Normal&license=OK",
-        "port": 50001
+        "port": 0
     },
     {
         "models": [
@@ -1619,7 +1619,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/cam/realmonitor",
-        "port": 63063
+        "port": 0
     },
     {
         "models": [
@@ -1692,7 +1692,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/live.sdp",
-        "port": 1026
+        "port": 0
     },
     {
         "models": [
@@ -1701,7 +1701,7 @@
         "variant": "MJPEG",
         "protocol": "http://",
         "path": "/axis-cgi/mjpg/video.cgi?camera=[CHANNEL]",
-        "port": 554
+        "port": 0
     },
     {
         "models": [
@@ -1719,7 +1719,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=320x240",
-        "port": 50002
+        "port": 0
     },
     {
         "models": [

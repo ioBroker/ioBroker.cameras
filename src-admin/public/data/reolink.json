@@ -568,7 +568,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/video.mjpg?q=30&fps=33&id=0.5",
-        "port": 8090
+        "port": 0
     },
     {
         "models": [

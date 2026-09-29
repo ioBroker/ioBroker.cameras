@@ -260,7 +260,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/h264",
-        "port": 8554
+        "port": 0
     },
     {
         "models": [
@@ -270,7 +270,7 @@
         "variant": "VLC",
         "protocol": "http://",
         "path": "/axis-cgi/mjpg/video.cgi",
-        "port": 8554
+        "port": 0
     },
     {
         "models": [
@@ -734,7 +734,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/h264_stream",
-        "port": 8080
+        "port": 0
     },
     {
         "models": [
@@ -763,7 +763,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/oneshotimage1?COUNTER",
-        "port": 82
+        "port": 0
     },
     {
         "models": [
@@ -773,7 +773,7 @@
         "variant": "MJPEG",
         "protocol": "http://",
         "path": "/video.mjpg",
-        "port": 4747
+        "port": 0
     },
     {
         "models": [

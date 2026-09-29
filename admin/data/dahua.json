@@ -1511,7 +1511,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "",
-        "port": 85
+        "port": 0
     },
     {
         "models": [
@@ -1720,7 +1720,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/live.sdp",
-        "port": 85
+        "port": 0
     },
     {
         "models": [
@@ -1780,7 +1780,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/",
-        "port": 80
+        "port": 0
     },
     {
         "models": [
@@ -2076,7 +2076,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/cam/realmonitor?channel=1&subtype=2",
-        "port": 8081
+        "port": 0
     },
     {
         "models": [
@@ -2134,7 +2134,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/videoMain",
-        "port": 85
+        "port": 0
     },
     {
         "models": [
@@ -2380,7 +2380,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/img/snapshot.cgi?size=2",
-        "port": 10554
+        "port": 0
     },
     {
         "models": [

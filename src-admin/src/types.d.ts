@@ -79,7 +79,12 @@ export interface CameraConfigUniversal extends CameraConfig {
     manufacturer: string;
     /** Model of the camera, like C3W */
     model: string;
+    /** Value for the [CHANNEL] placeholder of the URL path */
     channel?: number | string;
+    /** Value for the [WIDTH] placeholder of the URL path */
+    width?: number | string;
+    /** Value for the [HEIGHT] placeholder of the URL path */
+    height?: number | string;
 }
 
 export interface CameraConfigReolink extends CameraConfig {

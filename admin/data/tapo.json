@@ -192,7 +192,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/video.mjpg?q=30&fps=33&id=0.5",
-        "port": 8090
+        "port": 0
     },
     {
         "models": [
@@ -415,7 +415,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/video.mp4",
-        "port": 8090
+        "port": 0
     },
     {
         "models": [
@@ -493,7 +493,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/?action=stream",
-        "port": 8090
+        "port": 0
     },
     {
         "models": [
@@ -617,7 +617,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/11",
-        "port": 5544
+        "port": 0
     },
     {
         "models": [
@@ -651,7 +651,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/onvif/device_service",
-        "port": 2020
+        "port": 0
     },
     {
         "models": [
@@ -678,7 +678,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/H264/sub",
-        "port": 8001
+        "port": 0
     },
     {
         "models": [
@@ -744,6 +744,6 @@
         "variant": "MJPEG",
         "protocol": "http://",
         "path": "/video.mjpg",
-        "port": 8090
+        "port": 0
     }
 ]

@@ -336,7 +336,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/11",
-        "port": 5544
+        "port": 0
     },
     {
         "models": [
@@ -754,7 +754,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/0/video0",
-        "port": 8001
+        "port": 0
     },
     {
         "models": [
@@ -775,7 +775,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/0/av0",
-        "port": 8001
+        "port": 0
     },
     {
         "models": [
@@ -799,7 +799,7 @@
         "variant": "MJPEG",
         "protocol": "http://",
         "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]&rate=11",
-        "port": 7777
+        "port": 0
     },
     {
         "models": [
@@ -878,7 +878,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/Streaming/Channels/1",
-        "port": 81
+        "port": 0
     },
     {
         "models": [
@@ -922,7 +922,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/rtsp_live1",
-        "port": 8001
+        "port": 0
     },
     {
         "models": [
@@ -943,7 +943,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/live/h264/ch[CHANNEL]",
-        "port": 8001
+        "port": 0
     },
     {
         "models": [
@@ -953,7 +953,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/video[CHANNEL]",
-        "port": 8001
+        "port": 0
     },
     {
         "models": [
@@ -976,7 +976,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/vjpeg.v?user=[USERNAME]&pwd=[PASSWORD]",
-        "port": 7777
+        "port": 0
     },
     {
         "models": [
@@ -985,7 +985,7 @@
         "variant": "MJPEG",
         "protocol": "http://",
         "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]&resolution=64&rate=30",
-        "port": 7777
+        "port": 0
     },
     {
         "models": [
@@ -1081,7 +1081,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/",
-        "port": 7777
+        "port": 0
     },
     {
         "models": [
@@ -1179,7 +1179,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/videostream.asf?user=[USERNAME]&pwd=[PASSWORD]&resolution=720&rate=0",
-        "port": 7777
+        "port": 0
     },
     {
         "models": [

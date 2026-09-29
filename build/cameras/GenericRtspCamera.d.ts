@@ -30,6 +30,13 @@ export default class GenericRtspCamera extends GenericCamera {
     private processViaGo2Rtc;
     destroy(): Promise<void>;
     process(): Promise<ProcessData>;
+    /**
+     * Scratch file ffmpeg writes the snapshot to.
+     *
+     * Named after the camera, not after its address: a main stream and a sub stream of the same
+     * camera are two entries with the same IP, and they would overwrite each other's frame.
+     */
+    private getSnapshotFileName;
     getRtspURL(): string;
     startWebStream(options?: {
         width?: number;

@@ -63,7 +63,8 @@ export class CamerasAdapter extends Adapter {
     declare public config: CamerasAdapterConfig;
     private bForceInterval: NodeJS.Timeout | null = null;
     private server: http.Server | null = null;
-    private cache: { [cameraName: CameraName]: { data: ProcessDataEx; ts: number; params: string } } = {};
+    /** Processed pictures per camera, one entry per requested `{w,h,angle}` combination */
+    private cache: { [cameraName: CameraName]: { [params: string]: { data: ProcessDataEx; ts: number } } } = {};
     private allowIPs: true | string[] = true;
     private cameras: Record<CameraName, GenericCamera> = {};
     private bForce: { [ip: string]: number } = {};
@@ -146,9 +147,14 @@ export class CamerasAdapter extends Adapter {
                 throw new Error(`Cannot load "${item.type}"`);
             }
 
-            // get image
-            let data = await tempCamera.process();
-            if (data?.body) {
+            // get image. The temporary camera has to be unloaded in any case, also when the
+            // camera does not answer - that is the normal outcome of testing a wrong configuration
+            try {
+                let data = await tempCamera.process();
+                if (!data?.body) {
+                    throw new Error(`No answer`);
+                }
+
                 data = await this.resizeImage(data, item.width, item.height);
                 data = await this.rotateImage(data, item.angle);
                 data = await this.addTextToImage(
@@ -160,68 +166,73 @@ export class CamerasAdapter extends Adapter {
                     body: `data:${data.contentType};base64,${data.body.toString('base64')}`,
                     contentType: data.contentType,
                 };
+            } finally {
                 await tempCamera.destroy();
-            } else {
-                await tempCamera.destroy();
-                throw new Error(`No answer`);
             }
 
-            // unload camera
             return result;
         }
 
         throw new Error('Unknown type or invalid parameters');
     }
 
-    async getCameraImage(cam: CameraRequestInternal): Promise<Buffer | string> {
-        if (this.cameras[cam.name]) {
-            this.log.debug(`Request ${cam.type} ${cam.name}`);
-
-            const params = {
-                w: parseInt(cam.width as unknown as string, 10) || 0,
-                h: parseInt(cam.height as unknown as string, 10) || 0,
-                angle: parseInt(cam.angle as unknown as string, 10) || 0,
-            };
-
-            if (
-                !cam.noCache &&
-                this.cache[cam.name] &&
-                this.cache[cam.name].ts > Date.now() &&
-                this.cache[cam.name].params === JSON.stringify(params)
-            ) {
-                this.log.debug(`Take from cache ${cam.name} ${cam.type}`);
-                return this.cache[cam.name].data.body;
-            }
-
-            let data = await this.cameras[cam.name].process();
-            if (data) {
-                data = await this.resizeImage(data, params.w, params.h);
-                data = await this.rotateImage(data, params.angle);
-                data = await this.addTextToImage(
-                    data,
-                    cam.addTime ? this.config.dateFormat || 'LTS' : undefined,
-                    cam.title,
-                );
-
-                if (cam.cacheTimeout) {
-                    this.cache[cam.name] = {
-                        data,
-                        ts: Date.now() + (cam.cacheTimeout as number),
-                        params: JSON.stringify(params),
-                    };
-                }
-
-                // The stored file is a convenience artefact, not the answer to this request. The web
-                // extension asks for a picture on every browser request and does not want to write
-                // the file that often, so it can opt out.
-                if (!cam.noFileWrite) {
-                    await this.writeFileAsync(this.namespace, `/${cam.name}.jpg`, Buffer.from(data.body));
-                }
-                return data.body;
-            }
-            return Promise.reject(new Error('No data from camera'));
+    /**
+     * Grab a picture and run it through the image pipeline.
+     *
+     * This is the single implementation behind all three entry points (private HTTP server, `image`
+     * message and the initial {@link fillFiles}), so that they cannot drift apart in caching or in
+     * what they do to the picture.
+     */
+    async getCameraImageData(cam: CameraRequestInternal): Promise<ProcessDataEx> {
+        if (!this.cameras[cam.name]) {
+            throw new Error('Unsupported camera type');
         }
-        return Promise.reject(new Error('Unsupported camera type'));
+
+        this.log.debug(`Request ${cam.type} ${cam.name}`);
+
+        const params = {
+            w: parseInt(cam.width as unknown as string, 10) || 0,
+            h: parseInt(cam.height as unknown as string, 10) || 0,
+            angle: parseInt(cam.angle as unknown as string, 10) || 0,
+        };
+        // Every size is cached on its own: the web extension and a vis widget usually ask for
+        // different ones, and with a single slot per camera they would evict each other's picture
+        // on every request and the cache would never be used at all.
+        const paramsKey = JSON.stringify(params);
+
+        const cached = this.cache[cam.name]?.[paramsKey];
+        if (!cam.noCache && cached && cached.ts > Date.now()) {
+            this.log.debug(`Take from cache ${cam.name} ${cam.type}`);
+            return cached.data;
+        }
+
+        let data = await this.cameras[cam.name].process();
+        if (!data) {
+            throw new Error('No data from camera');
+        }
+
+        data = await this.resizeImage(data, params.w, params.h);
+        data = await this.rotateImage(data, params.angle);
+        data = await this.addTextToImage(data, cam.addTime ? this.config.dateFormat || 'LTS' : undefined, cam.title);
+
+        if (cam.cacheTimeout) {
+            this.cache[cam.name] = this.cache[cam.name] || {};
+            this.cache[cam.name][paramsKey] = { data, ts: Date.now() + (cam.cacheTimeout as number) };
+        }
+
+        // The stored file is a convenience artefact, not the answer to this request. The web
+        // extension asks for a picture on every browser request and does not want to write
+        // the file that often, so it can opt out.
+        if (!cam.noFileWrite) {
+            await this.writeFileAsync(this.namespace, `/${cam.name}.jpg`, Buffer.from(data.body));
+        }
+
+        return data;
+    }
+
+    async getCameraImage(cam: CameraRequestInternal): Promise<Buffer | string> {
+        const data = await this.getCameraImageData(cam);
+        return data.body;
     }
 
     async onClientSubscribe(msg: { clientId: string; message: ioBroker.Message }): Promise<{
@@ -281,26 +292,32 @@ export class CamerasAdapter extends Adapter {
             message.type = [message.type];
         }
 
+        const now = Date.now();
+
         message.type.forEach(type => {
             if (type && type.startsWith('startCamera/')) {
                 const cameraName = type.substring('startCamera/'.length);
-                let deleted;
-                do {
-                    deleted = false;
-                    const pos = this.streamSubscribes.findIndex(s => s.clientId === clientId);
-                    if (pos !== -1) {
-                        deleted = true;
-                        this.streamSubscribes.splice(pos, 1);
-                        // check if anyone else subscribed on this camera
-                        if (!this.streamSubscribes.find(s => s.camera === cameraName || Date.now() - s.ts > 60000)) {
-                            // stop camera
-                            this.log.debug(`Stop camera "${cameraName}"`);
-                            this.cameras[cameraName]
-                                .stopWebStream()
-                                .catch(e => this.log.error(`Cannot stop camera on unsubscribe "${cameraName}": ${e}`));
-                        }
+
+                // Only the subscriptions for this camera are touched - the same client may well be
+                // watching other cameras, and those must keep receiving frames. Subscriptions that
+                // were not renewed within the heartbeat belong to a client that is gone; they are
+                // dropped here too, so they cannot keep the camera running for nobody.
+                // The array is shared with the cameras (see registerRtspStreams), so it has to be
+                // changed in place instead of being replaced.
+                for (let i = this.streamSubscribes.length - 1; i >= 0; i--) {
+                    const sub = this.streamSubscribes[i];
+                    if (sub.camera === cameraName && (sub.clientId === clientId || now - sub.ts > 60000)) {
+                        this.streamSubscribes.splice(i, 1);
                     }
-                } while (deleted);
+                }
+
+                if (!this.streamSubscribes.some(s => s.camera === cameraName)) {
+                    this.log.debug(`Stop camera "${cameraName}"`);
+                    // A camera that failed to initialize has no entry here
+                    this.cameras[cameraName]
+                        ?.stopWebStream()
+                        .catch(e => this.log.error(`Cannot stop camera on unsubscribe "${cameraName}": ${e}`));
+                }
             }
         });
     }
@@ -552,39 +569,17 @@ export class CamerasAdapter extends Adapter {
 
             if (cam) {
                 if (this.cameras[cam.name]) {
-                    let data;
                     try {
-                        const params = {
-                            w: parseInt(query.w || '0', 10) || 0,
-                            h: parseInt(query.h || '0', 10) || 0,
+                        const data = await this.getCameraImageData({
+                            ...(cam as CameraRequestInternal),
+                            width: parseInt(query.w || '0', 10) || 0,
+                            height: parseInt(query.h || '0', 10) || 0,
                             angle: parseInt(query.angle || '0', 10) || 0,
-                        };
-                        if (
-                            !ignoreCache &&
-                            this.cache[cam.name] &&
-                            this.cache[cam.name].ts > Date.now() &&
-                            this.cache[cam.name].params === JSON.stringify(params)
-                        ) {
-                            this.log.debug(`Take from cache ${cam.name} ${cam.type}`);
-                            data = this.cache[cam.name].data;
-                        } else {
-                            this.log.debug(`Request ${cam.name}`);
-                            data = await this.cameras[cam.name].process();
-                            data = await this.resizeImage(data, params.w, params.h);
-                            data = await this.rotateImage(data, params.angle);
-                            data = await this.addTextToImage(
-                                data,
-                                cam.addTime ? this.config.dateFormat || 'LTS' : undefined,
-                                cam.title,
-                            );
-                            if (cam.cacheTimeout) {
-                                this.cache[cam.name] = {
-                                    data,
-                                    ts: Date.now() + (cam.cacheTimeout as number),
-                                    params: JSON.stringify(params),
-                                };
-                            }
-                        }
+                            noCache: ignoreCache,
+                            // This server answers a browser request through the web extension, which
+                            // happens far too often to refresh the stored picture every time
+                            noFileWrite: true,
+                        });
 
                         res.setHeader('Content-type', data.contentType);
                         res.write(data.body || '');

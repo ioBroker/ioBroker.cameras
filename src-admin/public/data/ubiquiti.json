@@ -135,7 +135,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/5e254c28900822014a06053a_0",
-        "port": 7447
+        "port": 0
     },
     {
         "models": [
@@ -153,6 +153,6 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/DRELXB66JxT9T4XW",
-        "port": 7447
+        "port": 0
     }
 ]

@@ -937,7 +937,7 @@
         "variant": "MJPEG",
         "protocol": "rtsp://",
         "path": "/h264Preview_02_main",
-        "port": 555
+        "port": 0
     },
     {
         "models": [
@@ -950,7 +950,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/h264Preview_01_main",
-        "port": 555
+        "port": 0
     },
     {
         "models": [
@@ -1264,7 +1264,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/axis-cgi/mjpg/video.cgi?camera=0",
-        "port": 6004
+        "port": 0
     },
     {
         "models": [

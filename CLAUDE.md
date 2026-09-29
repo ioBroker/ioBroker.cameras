@@ -48,6 +48,9 @@ Frontend dev servers: `cd src-admin && npm start` (port 3000, proxies to admin o
   `camera.process()` → `resizeImage` → `rotateImage` → `addTextToImage` (all `sharp`). Results are cached
   per camera under a key of `{w,h,angle}` for `cacheTimeout` ms. The latest frame is also written to the
   adapter's meta files as `cameras.<i>/<name>.jpg`.
+  All three entry points (private HTTP server, `image` message, `fillFiles` at start) go through
+  **`getCameraImageData()`** — put changes to caching or to the pipeline there, not into a caller, or
+  the paths drift apart (they used to, with two copies of the cache logic).
 - Messages (`sendTo`): `image` (base64 JPEG for a configured camera), `test` (render a not-yet-saved
   camera config, used by the admin dialogs), `list`, `ffmpeg` (probe a binary's version).
 - Per camera it creates two states: `<name>.running` (writable — writing `true`/`false` starts/stops the
@@ -128,6 +131,14 @@ fully behind ioBroker.web.
 
 Passwords are stored encrypted; decrypt with `this.adapter.decrypt(...)` in the camera's `init()`.
 
+Two invariants that are easy to break:
+
+- **`runningRequest` must be cleared in a `finally`,** never only in the success path. It is handed to
+  every concurrent caller, so a rejected promise left in it turns one failed request into a camera that
+  stays broken until the adapter restarts. Every camera class has this field.
+- **`streamSubscribes` is one array, shared by reference** with every camera (`registerRtspStreams` in
+  `Factory.ts`). Change it in place — replacing it in `main.ts` leaves the cameras with the old one.
+
 ## Adding a new camera type
 
 The README's "How to add a new camera" section refers to the old pre-TypeScript layout. Current steps:
@@ -163,6 +174,18 @@ straight into `src-admin/public/data/` and rebuilds `manufacturers.json`. The sc
 `data-protocol` / `data-path` / `data-port` / `data-conn` attributes of the `<tr>` elements on
 ispyconnect.com — do not go back to reading column positions, that is what broke the previous version.
 Rows with protocols `UniversalCamera` cannot build (`mms://`, `rtmp://`, …) are dropped.
+
+Two things about that data that are not obvious:
+
+- **`data-port` is not the factory default.** It is the port the submitter happened to reach the
+  camera on, so a good part of the table carries somebody's port forwarding. `PLAUSIBLE_PORTS` in
+  the parser keeps only ports a camera really ships with and writes `0` otherwise, which makes the
+  dialog fall back to 80 resp. 554. Do not "restore" those ports from the page.
+- **The paths contain placeholders** — `[CHANNEL]`, `[USERNAME]`, `[PASSWORD]`, `[WIDTH]`,
+  `[HEIGHT]`, `[AUTH]` (base64 of `user:password`) and the source-side typo `[PASWORD]`. All of
+  them are resolved in one pass in `UniversalCamera.buildUrlPath()`; a new placeholder has to be
+  added there, otherwise it ends up verbatim in the URL. `[TOKEN]` (three Reolink rows) is the one
+  that is still unresolved — it needs a login against the camera.
 
 A dedicated type is only worth it when the camera needs its own logic (Eufy reads the URL from another
 adapter's state, Reolink/HiKam have fixed quality paths, Instar has a bespoke snapshot URL).

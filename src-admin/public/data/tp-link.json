@@ -236,7 +236,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/jpg/image.jpg?size=3",
-        "port": 5544
+        "port": 0
     },
     {
         "models": [
@@ -456,7 +456,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/live0.264",
-        "port": 5544
+        "port": 0
     },
     {
         "models": [
@@ -654,7 +654,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/h264_vga.sdp",
-        "port": 10554
+        "port": 0
     },
     {
         "models": [
@@ -760,7 +760,7 @@
         "variant": "MJPEG",
         "protocol": "http://",
         "path": "/mjpeg.cgi",
-        "port": 800
+        "port": 0
     },
     {
         "models": [
@@ -1161,7 +1161,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/onvif/device_service",
-        "port": 2020
+        "port": 0
     },
     {
         "models": [
@@ -1249,7 +1249,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/tcp/av0_0",
-        "port": 10554
+        "port": 0
     },
     {
         "models": [

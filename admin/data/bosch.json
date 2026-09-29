@@ -25,7 +25,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/snap.jpg?JpegSize=M",
-        "port": 10600
+        "port": 0
     },
     {
         "models": [
@@ -84,7 +84,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/rtsp_tunnel",
-        "port": 10600
+        "port": 0
     },
     {
         "models": [
@@ -139,7 +139,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/snap.jpg?JpegCam=[CHANNEL]",
-        "port": 10600
+        "port": 0
     },
     {
         "models": [
@@ -165,7 +165,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/video.h264",
-        "port": 10600
+        "port": 0
     },
     {
         "models": [
@@ -380,7 +380,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/snap.jpg?JpegCam=0",
-        "port": 8075
+        "port": 0
     },
     {
         "models": [
@@ -469,7 +469,7 @@
         "variant": "VLC",
         "protocol": "rtsp://",
         "path": "/live3.sdp",
-        "port": 10600
+        "port": 0
     },
     {
         "models": [

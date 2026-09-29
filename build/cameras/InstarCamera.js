@@ -34,13 +34,10 @@ class InstarCamera extends GenericCamera_1.default {
         };
         this.runningRequest = axios_1.default
             .get(this.link, options)
-            .then(response => {
-            this.runningRequest = null;
-            return {
-                body: response.data,
-                contentType: response.headers['Content-type'] || response.headers['content-type'],
-            };
-        })
+            .then(response => ({
+            body: response.data,
+            contentType: response.headers['Content-type'] || response.headers['content-type'],
+        }))
             .catch(error => {
             if (error.response) {
                 throw new Error(error.response.data || error.response.status);
@@ -48,7 +45,10 @@ class InstarCamera extends GenericCamera_1.default {
             else {
                 throw new Error(error.code);
             }
-        });
+        })
+            // Also on failure - a request left behind here would be handed out to every later
+            // caller, so one unreachable camera would stay broken until the adapter restarts
+            .finally(() => (this.runningRequest = null));
         return this.runningRequest;
     }
 }

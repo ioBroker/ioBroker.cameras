@@ -61,7 +61,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/unicast/c1/s1/live",
-        "port": 85
+        "port": 0
     },
     {
         "models": [
@@ -158,7 +158,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/videoMain",
-        "port": 85
+        "port": 0
     },
     {
         "models": [

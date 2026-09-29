@@ -326,7 +326,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/live/video_audio/profile1",
-        "port": 88
+        "port": 0
     },
     {
         "models": [
@@ -477,7 +477,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/live/h264_ulaw/HD720P",
-        "port": 88
+        "port": 0
     },
     {
         "models": [
@@ -493,7 +493,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/live/video/profile1",
-        "port": 8151
+        "port": 0
     },
     {
         "models": [
@@ -503,7 +503,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/live/video_audio/ch01/record",
-        "port": 8085
+        "port": 0
     },
     {
         "models": [
@@ -554,7 +554,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/snapshot.cgi",
-        "port": 10554
+        "port": 0
     },
     {
         "models": [
@@ -631,7 +631,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/videoMain",
-        "port": 88
+        "port": 0
     },
     {
         "models": [
@@ -640,7 +640,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/cgi-bin/guest/Video.cgi?media=JPEG&channel=16",
-        "port": 554
+        "port": 0
     },
     {
         "models": [
@@ -649,7 +649,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/cgi-bin/guest/Video.cgi?media=JPEG&channel=1",
-        "port": 51938
+        "port": 0
     },
     {
         "models": [
@@ -658,7 +658,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/cgi-bin/guest/Video.cgi?media=JPEG&channel=2",
-        "port": 51938
+        "port": 0
     },
     {
         "models": [

@@ -46,7 +46,7 @@
         "variant": "VLC",
         "protocol": "rtsp://",
         "path": "/live/ch00_0",
-        "port": 5544
+        "port": 0
     },
     {
         "models": [

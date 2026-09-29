@@ -129,6 +129,9 @@ export default class RTSPImageConfig extends ConfigGeneric<CameraConfigRtsp, { u
         parameters.push('-loglevel');
         parameters.push('error');
         if (options.originalWidth && options.originalHeight) {
+            // Keep in sync with buildCommand() in src/cameras/rtspCommon.ts - this is only the
+            // preview of the command line, but it must show what the adapter really executes
+            parameters.push('-vf');
             parameters.push(`scale=${options.originalWidth}:${options.originalHeight}`);
         }
         parameters.push('-vframes');
@@ -167,11 +170,7 @@ export default class RTSPImageConfig extends ConfigGeneric<CameraConfigRtsp, { u
                         <Select
                             variant="standard"
                             value={this.state.protocol || 'udp'}
-                            onChange={e =>
-                                this.setState({ protocol: e.target.value as 'udp' | 'tcp' }, () =>
-                                    this.reportSettings(),
-                                )
-                            }
+                            onChange={e => this.setState({ protocol: e.target.value }, () => this.reportSettings())}
                         >
                             <MenuItem value="udp">UDP</MenuItem>
                             <MenuItem value="tcp">TCP</MenuItem>

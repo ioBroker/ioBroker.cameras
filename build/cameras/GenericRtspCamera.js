@@ -90,9 +90,8 @@ class GenericRtspCamera extends GenericCamera_1.default {
         if (viaGo2Rtc) {
             return viaGo2Rtc;
         }
-        const outputFileName = node_path_1.default.normalize(`${this.adapter.config.tempPath}/${this.settings.ip.replace(/[.:]/g, '_')}.jpg`);
-        this.runningRequest = (0, rtspCommon_1.getRtspSnapshot)(this.settings, outputFileName, this.ffmpegPath, this.decodedPassword, this.config.timeout, this.adapter.log).then(async (body) => {
-            this.runningRequest = null;
+        this.runningRequest = (0, rtspCommon_1.getRtspSnapshot)(this.settings, this.getSnapshotFileName(), this.ffmpegPath, this.decodedPassword, this.config.timeout, this.adapter.log)
+            .then(async (body) => {
             this.adapter.log.debug(`Snapshot from ${this.settings.ip}. Done!`);
             if (!this.ratio) {
                 // try to get width and height
@@ -104,8 +103,20 @@ class GenericRtspCamera extends GenericCamera_1.default {
                 body,
                 contentType: 'image/jpeg',
             };
-        });
+        })
+            // Also on failure - a request left behind here would be handed out to every later
+            // caller, so one unreachable camera would stay broken until the adapter restarts
+            .finally(() => (this.runningRequest = null));
         return this.runningRequest;
+    }
+    /**
+     * Scratch file ffmpeg writes the snapshot to.
+     *
+     * Named after the camera, not after its address: a main stream and a sub stream of the same
+     * camera are two entries with the same IP, and they would overwrite each other's frame.
+     */
+    getSnapshotFileName() {
+        return node_path_1.default.normalize(`${this.adapter.config.tempPath}/${this.config.name.replace(/[^\w-]/g, '_')}.jpg`);
     }
     getRtspURL() {
         if (!this.settings) {
@@ -122,16 +133,21 @@ class GenericRtspCamera extends GenericCamera_1.default {
         }
         const desiredWidth = options?.width || 0;
         if (this.width !== desiredWidth) {
-            // if width changed drastically
+            // A small difference is not worth restarting ffmpeg for, the scale is close enough
             if (this.width && desiredWidth && Math.abs(this.width - desiredWidth) < 100) {
                 this.width = desiredWidth;
             }
-            else {
-                // stop streaming
+            else if (this.proc) {
+                // The scale is part of the running ffmpeg command line, so a real change needs a
+                // restart. Only then - with nothing running yet there is nothing to wait for, and
+                // waiting here would delay the first picture of every viewer by ten seconds.
                 this.adapter.log.debug(`Stopping streaming for ${this.config.name} while requested width is ${desiredWidth}. Was ${this.width}`);
                 await this.stopWebStream();
-                // wait 10 seconds
+                // Give the camera a moment to let go of the old connection
                 await new Promise(resolve => setTimeout(resolve, 10000));
+                this.width = desiredWidth;
+            }
+            else {
                 this.width = desiredWidth;
             }
         }
@@ -149,8 +165,7 @@ class GenericRtspCamera extends GenericCamera_1.default {
             if (this.width) {
                 // first try to find the best scale
                 if (!this.ratio) {
-                    const outputFileName = node_path_1.default.normalize(`${this.adapter.config.tempPath}/${this.settings.ip.replace(/[.:]/g, '_')}.jpg`);
-                    const body = await (0, rtspCommon_1.getRtspSnapshot)(this.settings, outputFileName, this.ffmpegPath, this.decodedPassword, this.config.timeout, this.adapter.log);
+                    const body = await (0, rtspCommon_1.getRtspSnapshot)(this.settings, this.getSnapshotFileName(), this.ffmpegPath, this.decodedPassword, this.config.timeout, this.adapter.log);
                     // try to get width and height
                     const image = (0, sharp_1.default)(body);
                     const metadata = await image.metadata();
@@ -194,7 +209,6 @@ class GenericRtspCamera extends GenericCamera_1.default {
                     // Do not send frames too often
                     if (!this.lastFrame || Date.now() - this.lastFrame > 300) {
                         this.lastFrame = Date.now();
-                        console.log(`frame ${frame.length}`);
                         this.lastBase64Frame = frame;
                         if (this.streamSubscribes) {
                             const clientsToDelete = [];
@@ -234,9 +248,6 @@ class GenericRtspCamera extends GenericCamera_1.default {
                             await this.adapter.setState(`${this.config.name}.stream`, frame, true);
                         }
                     }
-                    else {
-                        console.log(`skip frame ${frame.length}`);
-                    }
                     chunks = chunk;
                 }
                 else {
@@ -246,6 +257,9 @@ class GenericRtspCamera extends GenericCamera_1.default {
         }
     }
     async stopWebStream(restart) {
+        // The last frame of the stream must not survive it. process() answers from it while the
+        // stream runs, so keeping it would freeze every later snapshot on that picture.
+        this.lastBase64Frame = '';
         if (this.initialized) {
             if (this.monitor) {
                 clearInterval(this.monitor);
@@ -257,14 +271,15 @@ class GenericRtspCamera extends GenericCamera_1.default {
                     this.proc = null;
                 }
                 catch (e) {
-                    console.error(`Cannot stop process: ${e}`);
+                    this.adapter.log.warn(`Cannot stop ffmpeg for "${this.config.name}": ${e}`);
                 }
                 await this.adapter.setState(`${this.config.name}.stream`, '', true);
                 await this.adapter.setState(`${this.config.name}.running`, false, true);
             }
-            // todo
             if (restart) {
-                this.adapter.log.warn('Implement restart of ffmpeg process');
+                // Nothing to do here: the stream is stopped, and the next subscription of a GUI
+                // client starts it again. Restarting it now would keep ffmpeg running for nobody.
+                this.adapter.log.debug(`Streaming for ${this.config.name} stopped after an error`);
             }
         }
     }

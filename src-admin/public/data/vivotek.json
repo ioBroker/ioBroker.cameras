@@ -545,7 +545,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/cgi-bin/viewer/video.jpg?resolution=640x480",
-        "port": 1025
+        "port": 0
     },
     {
         "models": [
@@ -837,7 +837,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/cgi-bin/viewer/video.jpg",
-        "port": 1025
+        "port": 0
     },
     {
         "models": [
@@ -1104,12 +1104,13 @@
             "CC8370-HV",
             "FD9387-HTV-A",
             "BT9388-HT",
-            "IB9380-H"
+            "IB9380-H",
+            "h9161"
         ],
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/live1s1.sdp",
-        "port": 1026
+        "port": 0
     },
     {
         "models": [
@@ -1302,7 +1303,7 @@
         "variant": "JPEG",
         "protocol": "http://",
         "path": "/jpg/image.jpg?size=3",
-        "port": 8554
+        "port": 0
     },
     {
         "models": [

@@ -6,6 +6,7 @@ export declare class CamerasAdapter extends Adapter {
     config: CamerasAdapterConfig;
     private bForceInterval;
     private server;
+    /** Processed pictures per camera, one entry per requested `{w,h,angle}` combination */
     private cache;
     private allowIPs;
     private cameras;
@@ -16,6 +17,14 @@ export declare class CamerasAdapter extends Adapter {
     onStateChange(id: string, state: ioBroker.State | null | undefined): void;
     onUnload(cb: () => void): void;
     testCamera(item: CameraRequestInternal): Promise<ProcessData | null>;
+    /**
+     * Grab a picture and run it through the image pipeline.
+     *
+     * This is the single implementation behind all three entry points (private HTTP server, `image`
+     * message and the initial {@link fillFiles}), so that they cannot drift apart in caching or in
+     * what they do to the picture.
+     */
+    getCameraImageData(cam: CameraRequestInternal): Promise<ProcessDataEx>;
     getCameraImage(cam: CameraRequestInternal): Promise<Buffer | string>;
     onClientSubscribe(msg: {
         clientId: string;

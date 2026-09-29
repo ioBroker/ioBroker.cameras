@@ -110,7 +110,7 @@
         "variant": "MJPEG",
         "protocol": "http://",
         "path": "/mjpg/video.mjpg",
-        "port": 10002
+        "port": 0
     },
     {
         "models": [
@@ -146,7 +146,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/videostream.cgi?user=[USERNAME]&pwd=[PASSWORD]",
-        "port": 554
+        "port": 0
     },
     {
         "models": [
@@ -164,6 +164,6 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/181e84c3d2d616ec",
-        "port": 33571
+        "port": 0
     }
 ]

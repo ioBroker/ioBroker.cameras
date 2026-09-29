@@ -516,7 +516,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/videostream.asf?usr=[USERNAME]&pwd=[PASSWORD]",
-        "port": 4747
+        "port": 0
     },
     {
         "models": [
@@ -528,7 +528,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/h264_pcm.sdp",
-        "port": 8080
+        "port": 0
     },
     {
         "models": [
@@ -598,7 +598,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/1",
-        "port": 1935
+        "port": 0
     },
     {
         "models": [
@@ -637,7 +637,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/",
-        "port": 1935
+        "port": 0
     },
     {
         "models": [
@@ -669,7 +669,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/Streaming/Channels/1",
-        "port": 1024
+        "port": 0
     },
     {
         "models": [
@@ -678,7 +678,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/h264.sdp",
-        "port": 8080
+        "port": 0
     },
     {
         "models": [
@@ -697,7 +697,7 @@
         "variant": "FFMPEG",
         "protocol": "http://",
         "path": "/qvga_livestream.avi",
-        "port": 7679
+        "port": 0
     },
     {
         "models": [
@@ -970,7 +970,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/onvif/profile2/media.smp",
-        "port": 8080
+        "port": 0
     },
     {
         "models": [
@@ -997,7 +997,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/0",
-        "port": 4524
+        "port": 0
     },
     {
         "models": [
@@ -1006,7 +1006,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/2",
-        "port": 4524
+        "port": 0
     },
     {
         "models": [
@@ -1015,7 +1015,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/3",
-        "port": 4524
+        "port": 0
     },
     {
         "models": [
@@ -1024,7 +1024,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/4",
-        "port": 4524
+        "port": 0
     },
     {
         "models": [
@@ -1033,7 +1033,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/5",
-        "port": 4524
+        "port": 0
     },
     {
         "models": [
@@ -1042,7 +1042,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/6",
-        "port": 4524
+        "port": 0
     },
     {
         "models": [
@@ -1051,7 +1051,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/7",
-        "port": 4524
+        "port": 0
     },
     {
         "models": [
@@ -1060,7 +1060,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/8",
-        "port": 4524
+        "port": 0
     },
     {
         "models": [
@@ -1069,7 +1069,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/9",
-        "port": 4524
+        "port": 0
     },
     {
         "models": [
@@ -1078,7 +1078,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/10",
-        "port": 4524
+        "port": 0
     },
     {
         "models": [
@@ -1087,7 +1087,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/11",
-        "port": 4524
+        "port": 0
     },
     {
         "models": [
@@ -1096,7 +1096,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/12",
-        "port": 4524
+        "port": 0
     },
     {
         "models": [
@@ -1105,7 +1105,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/13",
-        "port": 4524
+        "port": 0
     },
     {
         "models": [
@@ -1114,7 +1114,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/14",
-        "port": 4524
+        "port": 0
     },
     {
         "models": [
@@ -1123,7 +1123,7 @@
         "variant": "FFMPEG",
         "protocol": "rtsp://",
         "path": "/15",
-        "port": 4524
+        "port": 0
     },
     {
         "models": [
