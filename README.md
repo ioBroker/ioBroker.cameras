@@ -134,7 +134,7 @@ If the binary cannot be found or does not start, the adapter transparently falls
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.1.0 (2026-09-29)
 * (@GermanBluefox) Fixed: after a single failed request a camera stayed broken until the adapter was restarted
 * (@GermanBluefox) Fixed: after a live stream had ended, every snapshot kept showing its last frame
 * (@GermanBluefox) Fixed: an RTSP camera with "original width/height" never delivered a picture, because the scale filter was passed to ffmpeg without `-vf`
@@ -182,10 +182,6 @@ If the binary cannot be found or does not start, the adapter transparently falls
 
 ### 2.1.1 (2024-07-07)
 * (bluefox) Removed withStyles package
-
-### 2.0.8 (2024-06-09)
-* (bluefox) Packages updated
-* (bluefox) Allowed selecting another source (with bigger resolution) for URL cameras
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
