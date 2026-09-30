@@ -10,6 +10,7 @@ import RtspCamera from './RtspCamera';
 import ReolinkE1Camera from './ReolinkE1Camera';
 import EufyCamera from './EufyCamera';
 import UniversalCamera from './UniversalCamera';
+import UnifiCamera from './UnifiCamera';
 
 export default async function createCamera(
     adapter: ioBroker.Adapter,
@@ -43,6 +44,9 @@ export default async function createCamera(
             break;
         case 'universal':
             camera = new UniversalCamera(adapter, config, ffmpegPath);
+            break;
+        case 'unifi':
+            camera = new UnifiCamera(adapter, config, ffmpegPath);
             break;
     }
     if (!camera) {

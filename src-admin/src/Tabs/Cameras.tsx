@@ -48,6 +48,7 @@ import type { ConfigProps } from '../Types/ConfigGeneric';
 // eslint-disable-next-line @/no-duplicate-imports,no-duplicate-imports
 import type ConfigGeneric from '../Types/ConfigGeneric';
 import InstarConfig from '../Types/Instar';
+import UniFiConfig from '../Types/UniFi';
 
 interface IConfigGeneric extends ConfigGeneric<any> {
     readonly isRtsp: boolean;
@@ -69,6 +70,7 @@ const TYPES: Record<
         name: 'By manufacturer',
     },
     instar: { Config: InstarConfig as unknown as IConfigGeneric, name: 'Instar' },
+    unifi: { Config: UniFiConfig as unknown as IConfigGeneric, name: 'UniFi Protect', icon: 'ubiquiti.svg' },
 };
 
 const styles: Record<string, any> = {
@@ -421,6 +423,7 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
                                 <Config
                                     native={this.props.native}
                                     socket={this.props.socket}
+                                    instanceId={`${this.props.adapterName}.${this.props.instance}`}
                                     settings={cam}
                                     themeType={this.props.themeType}
                                     theme={this.props.theme}

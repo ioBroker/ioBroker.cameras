@@ -43,10 +43,40 @@ The result is always in `jpg` format.
 Supported cameras:
 - `Reolink E1 Pro` via RTSP (important, without `Pro` it will not work)
 - `Eufy` via eusec adapter
+- `UniFi Protect` - every camera managed by a UniFi console or NVR, see below
 - [HiKam](https://support.hikam.de/support/solutions/articles/16000070656-zugriff-auf-kameras-der-2-generation-via-onvif-f%C3%BCr-s6-q8-a7-2-generation-) of second and third generation via ONVIF (für S6, Q8, A7 2. Generation), A7 Pro, A9
 - [WIWICam M1 via HiKam adapter](https://www.wiwacam.com/de/mw1-minikamera-kurzanleitung-und-faq/)
 - RTSP Native - if your camera supports RTSP protocol
 - Screenshots via HTTP URL - if you can get the snapshot from your camera via URL
+
+### UniFi Protect
+Protect re-streams every camera from the console, so the address is the one of the console (or NVR),
+not of the camera. Instead of credentials the stream link contains a token:
+`rtsp://<console>:7447/<token>` or `rtsps://<console>:7441/<token>?enableSrtp`.
+Protect itself always uses these two ports. The field *RTSP port* is only needed if the console is reached
+through a port forwarding or a proxy; left empty, it follows the RTSPS setting.
+
+Two ways to configure a camera:
+- **With an API key** (Protect 5.3 or newer): create a key under *UniFi OS → Settings → Control Plane →
+  Integrations*, enter it together with the console IP and press *Load cameras*. The token is then read from Protect
+  at every start, and snapshots are taken by Protect itself (about 0.3 s, no ffmpeg needed).
+  If Protect has no RTSP stream for the chosen quality yet, the adapter switches it on - the same as enabling
+  "RTSP" for the camera in the Protect UI.
+- **With the token only**: enable RTSP for the camera in Protect and paste the link (or just its last part) into
+  *Stream token*. Snapshots are then decoded from the stream with ffmpeg.
+
+**Recommended: enter both.** The API key keeps the token up to date - Protect issues a new one when RTSP is switched
+off and on again or the camera is re-adopted, and a token entered by hand then stops working until it is replaced.
+The token stays as a fallback: if the API cannot be reached or the key was deleted, the stream is used with the
+configured token and snapshots come from ffmpeg.
+
+Use the **token only** if you do not want to give ioBroker an API key - the key opens the whole Protect API, all
+cameras and their settings, while a token only gives read access to one stream - or if your Protect is older than
+5.3. The live stream uses RTSP/RTSPS with the token in both cases; the key only affects snapshots and how the token
+is obtained.
+
+The console uses a self-signed certificate, which is not verified for these requests. Many Protect cameras send
+H.265; snapshots are taken from key frames only, otherwise the first picture is a grey area.
 
 ### URL image
 This is a normal URL request, where all parameters are in URL. Like `http://mycam/snapshot.jpg`  
@@ -132,6 +162,9 @@ If the binary cannot be found or does not start, the adapter transparently falls
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (@hdering) Added: UniFi Protect cameras, with the stream token from the Protect API or entered by hand (#133)
+* (@hdering) Added: RTSPS for UniFi Protect, also through go2rtc
 
 ## Changelog
 ### 3.1.0 (2026-09-29)
