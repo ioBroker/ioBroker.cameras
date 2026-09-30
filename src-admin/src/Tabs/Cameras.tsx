@@ -179,7 +179,8 @@ interface CamerasState {
     editChanged: boolean;
     requesting: boolean;
     instanceAlive: boolean;
-    webInstanceHost: string;
+    /** Like "https://192.168.1.2:8082" - protocol, address and port of the web instance */
+    webInstanceUrl: string;
     editedSettings: string | null;
     editedSettingsOld: string | null;
     message: string;
@@ -195,7 +196,7 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
             editChanged: false,
             requesting: false,
             instanceAlive: this.props.instanceAlive,
-            webInstanceHost: '',
+            webInstanceUrl: '',
             editedSettings: null,
             editedSettingsOld: null,
             message: '',
@@ -317,7 +318,9 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
         }
 
         if (webInstance) {
-            this.setState({ webInstanceHost: `${webInstance.native.bind}:${webInstance.native.port || 8082}` });
+            this.setState({
+                webInstanceUrl: `${webInstance.native.secure ? 'https' : 'http'}://${webInstance.native.bind}:${webInstance.native.port || 8082}`,
+            });
         }
     }
 
@@ -498,12 +501,12 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
                                     :&nbsp;
                                     <a
                                         style={styles.link}
-                                        href={`http://${this.state.webInstanceHost}/${this.props.adapterName}.${this.props.instance}/${cam.name}`}
+                                        href={`${this.state.webInstanceUrl}/${this.props.adapterName}.${this.props.instance}/${cam.name}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        URL: http://{this.state.webInstanceHost}/{this.props.adapterName}.
-                                        {this.props.instance}/{cam.name}
+                                        URL: {this.state.webInstanceUrl}/{this.props.adapterName}.{this.props.instance}/
+                                        {cam.name}
                                     </a>
                                 </div>
                             </div>
