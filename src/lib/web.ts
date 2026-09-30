@@ -10,7 +10,6 @@ import type { Express, Response as ExpressResponse } from 'express';
 import type { CameraConfigAny, CamerasAdapterConfig } from '../types';
 import type { Socket as WebSocketClient } from '@iobroker/ws-server';
 import type { WebSocket } from 'ws';
-import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate } from '@roamhq/wrtc';
 import { findFFmpegPath, startFFmpeg } from '../cameras/rtspCommon';
 import createCamera from '../cameras/Factory';
 import type GenericRtspCamera from '../cameras/GenericRtspCamera';
@@ -234,6 +233,11 @@ export default class ProxyCameras {
         cb: (customHandler?: boolean) => void,
     ): Promise<void> {
         // Does not work!.
+
+        // Loaded here and not at the top of the file: the package needs a native binary for the
+        // platform, which npm installs as an optional dependency. When that binary is missing, a
+        // top-level import made the whole web extension fail to start - every camera route with it.
+        const { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate } = await import('@roamhq/wrtc');
 
         // Request for connection
         const { url, password } = await this.getRtspURL(rule);
