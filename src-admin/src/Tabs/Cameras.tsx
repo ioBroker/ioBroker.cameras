@@ -295,6 +295,14 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
         return hostIp;
     }
 
+    /** Whether the camera delivers a video stream. A "universal" camera can also be a plain HTTP snapshot */
+    static hasStream(cam: CameraConfig): boolean {
+        if (!TYPES[cam.type]?.Config.isRtsp) {
+            return false;
+        }
+        return cam.type !== 'universal' || (cam as CameraConfigUniversal).urlProtocol !== 'http://';
+    }
+
     async getWebInstances(): Promise<void> {
         const list = await this.props.socket.getAdapterInstances('web');
         let webInstance;
@@ -509,6 +517,22 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
                                         {cam.name}
                                     </a>
                                 </div>
+                                {/* stream.mjpeg is served by go2rtc only - without it the route answers with a still image */}
+                                {this.props.native.useGo2rtc && Cameras.hasStream(cam) ? (
+                                    <div style={styles.sampleUrl}>
+                                        {I18n.t('Stream URL')}
+                                        :&nbsp;
+                                        <a
+                                            style={styles.link}
+                                            href={`${this.state.webInstanceUrl}/${this.props.adapterName}.${this.props.instance}/${cam.name}/stream.mjpeg`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            URL: {this.state.webInstanceUrl}/{this.props.adapterName}.
+                                            {this.props.instance}/{cam.name}/stream.mjpeg
+                                        </a>
+                                    </div>
+                                ) : null}
                             </div>
                             <div style={styles.divTestCam}>
                                 <Button
