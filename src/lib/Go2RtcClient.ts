@@ -165,5 +165,11 @@ export function toGo2RtcSource(source: string): string {
     if (!source.startsWith('rtsps://')) {
         return source;
     }
-    return `rtspx://${source.substring('rtsps://'.length)}`.replace(/[?&]enableSrtp(?=&|$)/, '').replace(/\?&/, '?');
+    // Drop enableSrtp wherever it sits in the query and keep the rest of it intact: dropping the
+    // "?" of a query that still has other parameters would turn them into part of the path
+    const withoutSrtp = source.replace(
+        /([?&])enableSrtp(?:=[^&]*)?(&|$)/g,
+        (_full: string, before: string, after: string): string => (after ? before : ''),
+    );
+    return `rtspx://${withoutSrtp.substring('rtsps://'.length)}`;
 }

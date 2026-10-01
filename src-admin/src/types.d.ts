@@ -104,7 +104,7 @@ export interface CameraConfigUnifi extends CameraConfig {
     apiKey?: string;
     /** Protect id of the camera, picked in the dialog. Only used together with `apiKey` */
     cameraId?: string;
-    /** Last part of the RTSP link Protect shows for a stream. Taken from the API if `apiKey` is set */
+    /** Encrypted last part of the RTSP link Protect shows for a stream. Taken from the API if `apiKey` is set */
     token?: string;
     quality?: 'high' | 'medium' | 'low';
     /** RTSPS on port 7441 instead of RTSP on port 7447 */

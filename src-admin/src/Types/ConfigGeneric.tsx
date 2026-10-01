@@ -21,6 +21,8 @@ export interface ConfigProps<T> {
     socket: AdminConnection;
     /** Adapter instance the dialog belongs to, like "cameras.0", for sendTo */
     instanceId?: string;
+    /** False while the instance is stopped - it cannot answer a sendTo then */
+    instanceAlive?: boolean;
 }
 
 export default abstract class ConfigGeneric<T, S = object> extends Component<

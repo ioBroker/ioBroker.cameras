@@ -33,6 +33,9 @@ const styles = {
     },
 };
 
+/** A stopped instance never answers, and sendTo brings no timeout of its own */
+const SEND_TO_TIMEOUT_MS = 10000;
+
 interface UnifiCamera {
     id: string;
     name: string;
@@ -67,30 +70,40 @@ export default class UniFiConfig extends ConfigGeneric<CameraConfigUnifi, UnifiS
 
     componentDidMount(): void {
         this.props.decrypt(this.state.apiKey || '', apiKey => this.setState({ apiKey }));
+        this.props.decrypt(this.state.token || '', token => this.setState({ token }));
     }
 
     reportSettings(): void {
-        this.props.encrypt(this.state.apiKey || '', apiKey => {
-            this.props.onChange({
-                ip: this.state.ip,
-                apiKey,
-                cameraId: this.state.cameraId,
-                token: this.state.token,
-                quality: this.state.quality,
-                secure: this.state.secure,
-                port: this.state.port,
-            });
-        });
+        // The token gives access to the stream, so it is stored encrypted like the key
+        this.props.encrypt(this.state.apiKey || '', apiKey =>
+            this.props.encrypt(this.state.token || '', token => {
+                this.props.onChange({
+                    ip: this.state.ip,
+                    apiKey,
+                    cameraId: this.state.cameraId,
+                    token,
+                    quality: this.state.quality,
+                    secure: this.state.secure,
+                    port: this.state.port,
+                });
+            }),
+        );
     }
 
     async loadCameras(): Promise<void> {
         this.setState({ loading: true, error: '' });
+        let timer: ReturnType<typeof setTimeout> | undefined;
         try {
-            const result: { cameras?: UnifiCamera[]; error?: string } = await this.props.socket.sendTo(
-                this.props.instanceId || '',
-                'unifiCameras',
-                { ip: this.state.ip, apiKey: this.state.apiKey },
-            );
+            const result: { cameras?: UnifiCamera[]; error?: string } = await Promise.race([
+                this.props.socket.sendTo(this.props.instanceId || '', 'unifiCameras', {
+                    ip: this.state.ip,
+                    apiKey: this.state.apiKey,
+                }),
+                // Without this the spinner would keep turning forever when nobody answers
+                new Promise<never>((_resolve, reject) => {
+                    timer = setTimeout(() => reject(new Error(I18n.t('No answer'))), SEND_TO_TIMEOUT_MS);
+                }),
+            ]);
             if (result?.error || !result?.cameras) {
                 this.setState({ loading: false, cameras: null, error: result?.error || I18n.t('No answer') });
             } else {
@@ -100,12 +113,16 @@ export default class UniFiConfig extends ConfigGeneric<CameraConfigUnifi, UnifiS
                 this.setState({ loading: false, cameras, cameraId }, () => this.reportSettings());
             }
         } catch (e) {
-            this.setState({ loading: false, error: (e as Error).toString() });
+            this.setState({ loading: false, error: (e as Error).message || (e as Error).toString() });
+        } finally {
+            if (timer) {
+                clearTimeout(timer);
+            }
         }
     }
 
     renderCameraSelect(): React.JSX.Element {
-        const cameras = this.state.cameras || [];
+        const cameras = [...(this.state.cameras || [])];
         // Keep a stored camera selectable before the list was loaded
         if (this.state.cameraId && !cameras.find(cam => cam.id === this.state.cameraId)) {
             cameras.push({ id: this.state.cameraId, name: this.state.cameraId });
@@ -154,7 +171,19 @@ export default class UniFiConfig extends ConfigGeneric<CameraConfigUnifi, UnifiS
                         control={
                             <Checkbox
                                 checked={!!this.state.secure}
-                                onChange={e => this.setState({ secure: e.target.checked }, () => this.reportSettings())}
+                                onChange={e =>
+                                    this.setState(
+                                        {
+                                            secure: e.target.checked,
+                                            // A port that is only the default of the other mode would
+                                            // stay behind unnoticed and break the stream
+                                            port: ['7441', '7447'].includes(String(this.state.port || ''))
+                                                ? ''
+                                                : this.state.port,
+                                        },
+                                        () => this.reportSettings(),
+                                    )
+                                }
                             />
                         }
                         label={I18n.t('Use RTSPS (port 7441)')}
@@ -185,7 +214,13 @@ export default class UniFiConfig extends ConfigGeneric<CameraConfigUnifi, UnifiS
                     <Button
                         style={styles.button}
                         variant="outlined"
-                        disabled={!this.state.ip || !this.state.apiKey || this.state.loading || !this.props.instanceId}
+                        disabled={
+                            !this.state.ip ||
+                            !this.state.apiKey ||
+                            this.state.loading ||
+                            !this.props.instanceId ||
+                            !this.props.instanceAlive
+                        }
                         onClick={() => this.loadCameras()}
                         startIcon={this.state.loading ? <CircularProgress size={16} /> : null}
                     >

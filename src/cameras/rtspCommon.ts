@@ -101,12 +101,21 @@ function encodePassword(password: string): string {
         .replace(/\*/g, '%2A');
 }
 
-function maskPassword(str: string, password: string): string {
+/**
+ * Replace every occurrence of a secret in a string that is about to be logged.
+ *
+ * Both forms have to go: a command line carries the encoded password, while a log line that
+ * prints the URL of a camera without a user name carries the secret verbatim - UniFi Protect,
+ * where the stream token sits in the path and is the whole credential.
+ */
+export function maskPassword(str: string, password: string): string {
     if (!password) {
         return str;
     }
     // The password can appear more than once, e.g. in the URL and in a user defined suffix
-    return str.split(encodePassword(password)).join('******');
+    const encoded = encodePassword(password);
+    const masked = str.split(encoded).join('******');
+    return encoded === password ? masked : masked.split(password).join('******');
 }
 
 function buildCommand(config: RtspOptions, outputFileName: string, decodedPassword: string): string[] {
@@ -203,7 +212,10 @@ export function executeFFmpeg(
 
         proc.on('close', (code: number): void => {
             if (stopTimeout()) {
-                code ? reject(new Error(stderr.join(''))) : resolve(stdout.join(''));
+                // The stderr of ffmpeg repeats the input URL, so it must not be passed on unmasked
+                code
+                    ? reject(new Error(maskPassword(stderr.join(''), decodedPassword || '')))
+                    : resolve(stdout.join(''));
             }
         });
     });

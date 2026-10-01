@@ -424,6 +424,7 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
                                     native={this.props.native}
                                     socket={this.props.socket}
                                     instanceId={`${this.props.adapterName}.${this.props.instance}`}
+                                    instanceAlive={this.state.instanceAlive}
                                     settings={cam}
                                     themeType={this.props.themeType}
                                     theme={this.props.theme}

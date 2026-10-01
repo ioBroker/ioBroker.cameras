@@ -76,7 +76,8 @@ cameras and their settings, while a token only gives read access to one stream -
 is obtained.
 
 The console uses a self-signed certificate, which is not verified for these requests. Many Protect cameras send
-H.265; snapshots are taken from key frames only, otherwise the first picture is a grey area.
+H.265; snapshots are taken from key frames only, otherwise the first picture is a grey area. The snapshot API of
+Protect only knows a high and a low resolution, so *medium* takes the high one.
 
 ### URL image
 This is a normal URL request, where all parameters are in URL. Like `http://mycam/snapshot.jpg`  
@@ -162,11 +163,13 @@ If the binary cannot be found or does not start, the adapter transparently falls
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+## Changelog
 ### **WORK IN PROGRESS**
 * (@hdering) Added: UniFi Protect cameras, with the stream token from the Protect API or entered by hand (#133)
 * (@hdering) Added: RTSPS for UniFi Protect, also through go2rtc
+* (@GermanBluefox) Fixed: the stderr of a failed ffmpeg call was passed on unmasked, so a camera password could end up in the log
 
-## Changelog
 ### 3.1.0 (2026-09-29)
 * (@GermanBluefox) Fixed: after a single failed request a camera stayed broken until the adapter was restarted
 * (@GermanBluefox) Fixed: after a live stream had ended, every snapshot kept showing its last frame

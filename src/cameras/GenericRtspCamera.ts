@@ -4,7 +4,7 @@ import sharp from 'sharp';
 
 import GenericCamera from './GenericCamera';
 import type { ContentType, CamerasAdapterConfig, ProcessData, CameraConfigAny } from '../types';
-import { getRtspSnapshot, type RtspOptions } from './rtspCommon';
+import { getRtspSnapshot, maskPassword, type RtspOptions } from './rtspCommon';
 import type Go2RtcServer from '../lib/Go2RtcServer';
 
 export default class GenericRtspCamera extends GenericCamera {
@@ -45,6 +45,14 @@ export default class GenericRtspCamera extends GenericCamera {
 
     getPassword(): string {
         return this.decodedPassword;
+    }
+
+    /**
+     * Hide the credentials of an RTSP URL before it is logged: the user info, and the secret of a
+     * camera that has none - UniFi Protect carries its stream token in the path instead.
+     */
+    protected maskUrl(url: string): string {
+        return maskPassword(url.replace(/:[^@]+@/, ':****@'), this.decodedPassword);
     }
 
     /** Hand over a running go2rtc instance. If set, snapshots are taken from it instead of ffmpeg */
@@ -195,7 +203,7 @@ export default class GenericRtspCamera extends GenericCamera {
             await this.adapter.setState(`${this.config.name}.running`, true, true);
 
             this.adapter.log.debug(
-                `Starting streaming for ${this.config.name} (${url.replace(/:[^@]+@/, ':****@')}), width: ${this.width}`,
+                `Starting streaming for ${this.config.name} (${this.maskUrl(url)}), width: ${this.width}`,
             );
 
             this.proc = ffmpeg(url)
