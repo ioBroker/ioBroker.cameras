@@ -14,6 +14,7 @@ const decompress_1 = __importDefault(require("decompress"));
 const Factory_1 = __importDefault(require("./cameras/Factory"));
 const rtspCommon_1 = require("./cameras/rtspCommon");
 const Go2RtcServer_1 = __importDefault(require("./lib/Go2RtcServer"));
+const UnifiProtectClient_1 = __importDefault(require("./lib/UnifiProtectClient"));
 const WIN_FFMPEG_VERSION = '2025-02-02-git-957eb2323a-full_build-www.gyan.dev';
 /**
  * The loopback address can arrive in three shapes, depending on whether the connection was made over
@@ -311,6 +312,23 @@ class CamerasAdapter extends adapter_core_1.Adapter {
                             id: `${this.namespace}.cameras.${cam.name}`,
                         })),
                     }, obj.callback);
+                break;
+            }
+            case 'unifiCameras': {
+                // Camera list for the UniFi dialog. The key comes in clear text, as typed in the dialog
+                if (obj.callback) {
+                    try {
+                        if (!obj.message?.ip || !obj.message?.apiKey) {
+                            throw new Error('IP and API key are required');
+                        }
+                        const client = new UnifiProtectClient_1.default(obj.message.ip, obj.message.apiKey);
+                        const cameras = await client.getCameras();
+                        this.sendTo(obj.from, obj.command, { cameras }, obj.callback);
+                    }
+                    catch (error) {
+                        this.sendTo(obj.from, obj.command, { error: error.toString() }, obj.callback);
+                    }
+                }
                 break;
             }
             case 'ffmpeg': {

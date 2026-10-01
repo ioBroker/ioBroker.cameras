@@ -12,6 +12,7 @@ const RtspCamera_1 = __importDefault(require("./RtspCamera"));
 const ReolinkE1Camera_1 = __importDefault(require("./ReolinkE1Camera"));
 const EufyCamera_1 = __importDefault(require("./EufyCamera"));
 const UniversalCamera_1 = __importDefault(require("./UniversalCamera"));
+const UnifiCamera_1 = __importDefault(require("./UnifiCamera"));
 async function createCamera(adapter, config, ffmpegPath, streamSubscribes, go2rtc) {
     let camera;
     switch (config.type) {
@@ -38,6 +39,9 @@ async function createCamera(adapter, config, ffmpegPath, streamSubscribes, go2rt
             break;
         case 'universal':
             camera = new UniversalCamera_1.default(adapter, config, ffmpegPath);
+            break;
+        case 'unifi':
+            camera = new UnifiCamera_1.default(adapter, config, ffmpegPath);
             break;
     }
     if (!camera) {

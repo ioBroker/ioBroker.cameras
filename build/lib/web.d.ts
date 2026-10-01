@@ -42,11 +42,7 @@ export default class ProxyCameras {
     }, adapter: ioBroker.Adapter, instanceSettings: ioBroker.InstanceObject, app: Express, io?: IOSocketClass);
     unload(): Promise<void>;
     getFfmpegPath(): string;
-    getRtspURL(rule: CameraConfigAny): Promise<{
-        url: string;
-        password: string;
-    }>;
-    rtsp2WebRTC(rule: CameraConfigAny, ws: WebSocketClient, cb: (customHandler?: boolean) => void): Promise<void>;
+    getRtspURL(rule: CameraConfigAny): Promise<string>;
     onSocketClose(rule: CameraConfigAny, socket: WebSocket, reason: string): void;
     /**
      * Attach a socket to an already running source.

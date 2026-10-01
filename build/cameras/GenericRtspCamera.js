@@ -42,6 +42,13 @@ class GenericRtspCamera extends GenericCamera_1.default {
     getPassword() {
         return this.decodedPassword;
     }
+    /**
+     * Hide the credentials of an RTSP URL before it is logged: the user info, and the secret of a
+     * camera that has none - UniFi Protect carries its stream token in the path instead.
+     */
+    maskUrl(url) {
+        return (0, rtspCommon_1.maskPassword)(url.replace(/:[^@]+@/, ':****@'), this.decodedPassword);
+    }
     /** Hand over a running go2rtc instance. If set, snapshots are taken from it instead of ffmpeg */
     setGo2Rtc(server) {
         this.go2rtc = server;
@@ -122,7 +129,7 @@ class GenericRtspCamera extends GenericCamera_1.default {
         if (!this.settings) {
             throw new Error(`No settings for camera ${this.config.name}`);
         }
-        return `rtsp://${this.settings.username ? `${encodeURIComponent(this.settings.username)}:${encodeURIComponent(this.decodedPassword)}@` : ''}${this.settings.ip}:${this.settings.port || 554}${this.settings.urlPath ? (this.settings.urlPath.startsWith('/') ? this.settings.urlPath : `/${this.settings.urlPath}`) : ''}`;
+        return `${this.settings.secure ? 'rtsps' : 'rtsp'}://${this.settings.username ? `${encodeURIComponent(this.settings.username)}:${encodeURIComponent(this.decodedPassword)}@` : ''}${this.settings.ip}:${this.settings.port || 554}${this.settings.urlPath ? (this.settings.urlPath.startsWith('/') ? this.settings.urlPath : `/${this.settings.urlPath}`) : ''}`;
     }
     // ffmpeg -rtsp_transport udp -i rtsp://localhost:8090/stream -c:a aac -b:a 160000 -ac 2 -s 854x480 -c:v libx264 -b:v 800000 -hls_time 10 -hls_list_size 2 -hls_flags delete_segments -start_number 1 playlist.m3u8
     async startWebStream(options) {
@@ -153,7 +160,7 @@ class GenericRtspCamera extends GenericCamera_1.default {
         }
         if (!this.proc) {
             await this.adapter.setState(`${this.config.name}.running`, true, true);
-            this.adapter.log.debug(`Starting streaming for ${this.config.name} (${url.replace(/:[^@]+@/, ':****@')}), width: ${this.width}`);
+            this.adapter.log.debug(`Starting streaming for ${this.config.name} (${this.maskUrl(url)}), width: ${this.width}`);
             this.proc = (0, fluent_ffmpeg_1.default)(url)
                 .setFfmpegPath(this.ffmpegPath)
                 // .addInputOption('-preset', 'ultrafast')

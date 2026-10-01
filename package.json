@@ -22,7 +22,6 @@
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.4.3",
-    "@roamhq/wrtc": "^0.10.0",
     "axios": "^1.20.0",
     "decompress": "^4.2.1",
     "fluent-ffmpeg": "^2.1.3",

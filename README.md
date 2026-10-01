@@ -169,6 +169,10 @@ If the binary cannot be found or does not start, the adapter transparently falls
 * (@hdering) Added: UniFi Protect cameras, with the stream token from the Protect API or entered by hand (#133)
 * (@hdering) Added: RTSPS for UniFi Protect, also through go2rtc
 * (@GermanBluefox) Fixed: the stderr of a failed ffmpeg call was passed on unmasked, so a camera password could end up in the log
+* (@hdering) Fixed: the web URL of a camera in the admin was always shown with `http://`, also for a web instance with https; the MJPEG stream URL is shown when go2rtc is enabled
+* (@GermanBluefox) Fixed: a request for the MJPEG stream of a camera was left hanging when go2rtc was switched on but not reachable
+* (@hdering) Fixed: all camera URLs of the web extension answered 404 when the native WebRTC binary was missing (#321)
+* (@GermanBluefox) Removed the unfinished `rtsp2WebRTC` experiment and the `@roamhq/wrtc` dependency with it - WebRTC runs through go2rtc
 
 ### 3.1.0 (2026-09-29)
 * (@GermanBluefox) Fixed: after a single failed request a camera stayed broken until the adapter was restarted

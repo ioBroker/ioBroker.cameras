@@ -21,6 +21,11 @@ export default class GenericRtspCamera extends GenericCamera {
     constructor(adapter: ioBroker.Adapter, config: CameraConfigAny, ffmpegPath: string);
     init(): Promise<void>;
     getPassword(): string;
+    /**
+     * Hide the credentials of an RTSP URL before it is logged: the user info, and the secret of a
+     * camera that has none - UniFi Protect carries its stream token in the path instead.
+     */
+    protected maskUrl(url: string): string;
     /** Hand over a running go2rtc instance. If set, snapshots are taken from it instead of ffmpeg */
     setGo2Rtc(server: Go2RtcServer | null): void;
     /**

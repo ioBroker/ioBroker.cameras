@@ -75,7 +75,10 @@ Registered via `common.webExtension: "build/lib/web.js"`. It:
   127.0.0.1, injecting the secret key — this is what makes `http://iobroker:8082/cameras.0/cam1` work;
 - for RTSP cameras, adds a WebSocket route (`rtsp2mjpeg`) that spawns its own ffmpeg and pushes raw JPEG
   frames as binary. ffmpeg lingers 3 s after the last socket closes so page reloads don't restart it.
-- `rtsp2WebRTC` is an unfinished experiment; it is not wired into any route.
+- WebRTC is only available through go2rtc (`webrtcSignalling`, see below). The former `rtsp2WebRTC`
+  experiment and its `@roamhq/wrtc` dependency were removed: the package needs a native binary per
+  platform, and a missing one made the whole extension fail to load, so every camera route answered
+  404 - for a feature that was never wired into a route.
 
 Note there are **two independent ffmpeg stream implementations** (`GenericRtspCamera.startWebStream` for
 the message/state path, `ProxyCameras.startFFmpeg` for the websocket path). Changes to streaming

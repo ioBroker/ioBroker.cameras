@@ -41,7 +41,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * It will be started by ioBroker.web and called by it
  */
 const http = __importStar(require("node:http"));
-const wrtc_1 = require("@roamhq/wrtc");
 const rtspCommon_1 = require("../cameras/rtspCommon");
 const Factory_1 = __importDefault(require("../cameras/Factory"));
 const node_fs_1 = require("node:fs");
@@ -188,128 +187,13 @@ class ProxyCameras {
             tempCamera = (await (0, Factory_1.default)(this.adapter, rule, this.ffmpegPath));
             await tempCamera.init();
             const url = tempCamera.getRtspURL();
-            const password = tempCamera.getPassword();
             await tempCamera.destroy();
             tempCamera = null;
-            return { password, url };
+            return url;
         }
         catch (e) {
             this.adapter.log.error(`Cannot load "${rule.type}": ${e}`);
             throw new Error(`Cannot load "${rule.type}"`);
-        }
-    }
-    async rtsp2WebRTC(rule, ws, cb) {
-        // Does not work!.
-        // Request for connection
-        const { url, password } = await this.getRtspURL(rule);
-        this.getFfmpegPath();
-        const socket = ws.ws;
-        let proc = null;
-        const peer = new wrtc_1.RTCPeerConnection({
-            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
-        });
-        const onSocketClose = () => {
-            if (proc) {
-                proc.kill();
-                proc = null;
-            }
-        };
-        peer.onicecandidate = (event) => {
-            this.adapter.log.debug(`onicecandidate: ${JSON.stringify(event)}`);
-            if (event.candidate) {
-                socket.send(JSON.stringify({ type: 'ice-candidate', candidate: event.candidate }));
-            }
-        };
-        peer.onconnectionstatechange = () => {
-            this.adapter.log.debug(`Connection state: ${peer.connectionState}`);
-            if (peer.connectionState === 'disconnected') {
-                onSocketClose();
-            }
-        };
-        // Inform the web socket that we will handle everything ourselves
-        if (ws.enableCustomHandler) {
-            // The socket was closed by web instance
-            ws.enableCustomHandler(onSocketClose);
-        }
-        socket?.on('message', async (message) => {
-            const data = JSON.parse(message);
-            this.adapter.log.debug(`Received: ${JSON.stringify(data)}`);
-            if (data.type === 'request-offer') {
-                const offer = await peer.createOffer();
-                await peer.setLocalDescription(offer);
-                socket.send(JSON.stringify({ type: 'offer', sdp: offer.sdp }));
-            }
-            else if (data.type === 'answer') {
-                await peer.setRemoteDescription(new wrtc_1.RTCSessionDescription({ type: 'answer', sdp: data.sdp }));
-            }
-            else if (data.type === 'ice-candidate') {
-                this.adapter.log.debug(`Received ICE candidate: ${JSON.stringify(data.candidate)}`);
-                await peer.addIceCandidate(new wrtc_1.RTCIceCandidate(data.candidate));
-            }
-        });
-        // Client closed the socket
-        socket?.on('close', onSocketClose);
-        socket?.on('error', () => {
-            this.adapter.log.warn(`Error in web socket for ${rule.name}`);
-            onSocketClose();
-        });
-        socket.on('disconnect', () => {
-            onSocketClose();
-        });
-        const params = [
-            '-rtsp_transport',
-            'tcp',
-            '-i',
-            url,
-            '-c:v',
-            'libx265',
-            '-preset',
-            'ultrafast',
-            '-tune',
-            'zerolatency',
-            '-b:v',
-            '800k',
-            '-bufsize',
-            '800k',
-            '-vf',
-            'format=yuv420p',
-            '-c:a',
-            'aac',
-            '-f',
-            'rtp',
-            'rtp://127.0.0.1:5004',
-        ];
-        /*params = [
-            '-rtsp_transport',
-            'tcp',
-            '-i',
-            url,
-            '-map',
-            '0:v:0',
-            '-c:v',
-            'libx264',
-            '-preset',
-            'ultrafast',
-            '-tune',
-            'zerolatency',
-            '-b:v',
-            '800k',
-            '-bufsize',
-            '800k',
-            '-vf',
-            'format=yuv420p',
-            '-f',
-            'rtp',
-            'rtp://127.0.0.1:5004',
-        ];*/
-        // Start WebRTC server
-        proc = (0, rtspCommon_1.startFFmpeg)(params, this.ffmpegPath, password, this.adapter.log);
-        proc.stderr.on('data', data => {
-            this.adapter.log.debug(`FFmpeg log: ${data}`);
-        });
-        if (cb) {
-            // inform the caller that we will process all messages
-            cb(true);
         }
     }
     onSocketClose(rule, socket, reason) {
@@ -421,7 +305,7 @@ class ProxyCameras {
         if (this.attachSocket(name, socket)) {
             return;
         }
-        const { url } = await this.getRtspURL(rule);
+        const url = await this.getRtspURL(rule);
         this.procs[name] = { proc: null, go2rtcStream: null, sockets: [socket], timer: undefined };
         this.adapter.log.debug(`Starting go2rtc stream for "${name}"`);
         await this.go2rtc.ensureStream(name, url);
@@ -455,7 +339,7 @@ class ProxyCameras {
         this.getFfmpegPath();
         const name = rule.name;
         if (!this.procs[name]) {
-            const { url } = await this.getRtspURL(rule);
+            const url = await this.getRtspURL(rule);
             this.procs[name] = { proc: null, sockets: [], timer: undefined };
             this.adapter.log.debug(`Starting ffmpeg for "${name}"`);
             // Start ffmpeg server
@@ -514,7 +398,7 @@ class ProxyCameras {
             cb?.(true);
             return;
         }
-        const { url } = await this.getRtspURL(rule);
+        const url = await this.getRtspURL(rule);
         await client.ensureStream(rule.name, url);
         const upstream = new ws_1.WebSocket(client.getWsUrl(rule.name));
         const pending = [];
@@ -594,7 +478,7 @@ class ProxyCameras {
     /** Pipe the go2rtc MJPEG stream to an express response */
     async streamMjpeg(rule, res) {
         const client = this.go2rtc;
-        const { url } = await this.getRtspURL(rule);
+        const url = await this.getRtspURL(rule);
         await client.ensureStream(rule.name, url);
         const { stream, contentType } = await client.openMjpegStream(rule.name);
         res.setHeader('Content-Type', contentType);
@@ -735,7 +619,15 @@ class ProxyCameras {
             // Continuous MJPEG straight from go2rtc, usable in a plain <img src="...">.
             // Proxied on purpose - the go2rtc API stays bound to localhost.
             if (this.go2rtc && req.path.match(/^\/stream\.mjpeg/)) {
-                this.streamMjpeg(rule, res).catch(error => this.adapter.log.debug(`MJPEG stream for "${rule.name}" ended: ${error}`));
+                this.streamMjpeg(rule, res).catch(error => {
+                    this.adapter.log.debug(`MJPEG stream for "${rule.name}" ended: ${error}`);
+                    // Nothing was sent yet, so the stream never started - go2rtc is switched on but
+                    // not reachable. Leaving the request unanswered makes the browser wait for its
+                    // own timeout instead of showing a broken image.
+                    if (!res.headersSent) {
+                        res.status(502).send(describeError(error));
+                    }
+                });
                 return;
             }
             if (req.path.match(/^\/streaming/)) {

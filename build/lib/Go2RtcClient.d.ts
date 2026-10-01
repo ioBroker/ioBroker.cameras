@@ -53,3 +53,9 @@ export declare class JpegFrameExtractor {
     constructor(maxBuffer?: number);
     push(chunk: Buffer): Buffer[];
 }
+/**
+ * go2rtc checks the certificate of an `rtsps://` source, and cameras - UniFi Protect among them -
+ * come with a self-signed one. Its own `rtspx://` scheme is RTSPS without that check. The
+ * `enableSrtp` parameter UniFi puts into its links is meant for other players, go2rtc does not need it.
+ */
+export declare function toGo2RtcSource(source: string): string;

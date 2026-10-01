@@ -297,12 +297,16 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
         return hostIp;
     }
 
-    /** Whether the camera delivers a video stream. A "universal" camera can also be a plain HTTP snapshot */
+    /**
+     * Whether the camera delivers a video stream.
+     *
+     * `rtsp` is the same flag the web extension gates its stream routes on, and it is kept up to
+     * date here: on every type change, and for "universal" - which can also be a plain HTTP
+     * snapshot - on every change of its settings. Deriving a second answer from the type would
+     * disagree with the backend for a universal camera whose protocol is not chosen yet.
+     */
     static hasStream(cam: CameraConfig): boolean {
-        if (!TYPES[cam.type]?.Config.isRtsp) {
-            return false;
-        }
-        return cam.type !== 'universal' || (cam as CameraConfigUniversal).urlProtocol !== 'http://';
+        return !!cam.rtsp && !!TYPES[cam.type]?.Config.isRtsp;
     }
 
     async getWebInstances(): Promise<void> {
@@ -319,11 +323,22 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
             if (!webInstance.native.bind || webInstance.native.bind === '0.0.0.0') {
                 // get current host
                 const host = await this.props.socket.getObject(`system.host.${webInstance.common.host}`);
+
+                // The name this page was opened with reaches the same machine too, and unlike the
+                // bare IP below it can match the certificate of a web instance running with
+                // "secure". Only when it really names that host - with the web instance on another
+                // host of a multi-host installation it would point at the wrong machine.
+                const hostname = window.location.hostname;
+                const namesThisHost =
+                    !!host?.common?.hostname &&
+                    !!hostname.match(/[^.\d]/) &&
+                    hostname.split('.')[0].toLowerCase() === host.common.hostname.toLowerCase();
+
                 // get ips on this host
-                const ip = host && Cameras.findNetworkAddressOfHost(host, window.location.hostname);
+                const ip = namesThisHost ? hostname : host && Cameras.findNetworkAddressOfHost(host, hostname);
 
                 // but for now
-                webInstance.native.bind = ip || window.location.hostname;
+                webInstance.native.bind = ip || hostname;
             }
         }
 
@@ -517,7 +532,7 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        URL: {this.state.webInstanceUrl}/{this.props.adapterName}.{this.props.instance}/
+                                        {this.state.webInstanceUrl}/{this.props.adapterName}.{this.props.instance}/
                                         {cam.name}
                                     </a>
                                 </div>
@@ -532,8 +547,8 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
-                                            URL: {this.state.webInstanceUrl}/{this.props.adapterName}.
-                                            {this.props.instance}/{cam.name}/stream.mjpeg
+                                            {this.state.webInstanceUrl}/{this.props.adapterName}.{this.props.instance}/
+                                            {cam.name}/stream.mjpeg
                                         </a>
                                     </div>
                                 ) : null}

@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.JpegFrameExtractor = void 0;
+exports.toGo2RtcSource = toGo2RtcSource;
 /**
  * HTTP client for a running go2rtc instance.
  *
@@ -45,6 +46,7 @@ class Go2RtcClient {
      * consumer actually attaches, so the transcoder costs nothing while nobody is watching.
      */
     async ensureStream(name, source) {
+        source = toGo2RtcSource(source);
         if (this.registered.get(name) === source) {
             return;
         }
@@ -134,4 +136,18 @@ class JpegFrameExtractor {
     }
 }
 exports.JpegFrameExtractor = JpegFrameExtractor;
+/**
+ * go2rtc checks the certificate of an `rtsps://` source, and cameras - UniFi Protect among them -
+ * come with a self-signed one. Its own `rtspx://` scheme is RTSPS without that check. The
+ * `enableSrtp` parameter UniFi puts into its links is meant for other players, go2rtc does not need it.
+ */
+function toGo2RtcSource(source) {
+    if (!source.startsWith('rtsps://')) {
+        return source;
+    }
+    // Drop enableSrtp wherever it sits in the query and keep the rest of it intact: dropping the
+    // "?" of a query that still has other parameters would turn them into part of the path
+    const withoutSrtp = source.replace(/([?&])enableSrtp(?:=[^&]*)?(&|$)/g, (_full, before, after) => (after ? before : ''));
+    return `rtspx://${withoutSrtp.substring('rtsps://'.length)}`;
+}
 //# sourceMappingURL=Go2RtcClient.js.map

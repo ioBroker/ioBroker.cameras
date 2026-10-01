@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.findFFmpegPath = findFFmpegPath;
 exports.getFFmpegVersion = getFFmpegVersion;
+exports.maskPassword = maskPassword;
 exports.executeFFmpeg = executeFFmpeg;
 exports.startFFmpeg = startFFmpeg;
 exports.getRtspSnapshot = getRtspSnapshot;
@@ -86,12 +87,21 @@ function encodePassword(password) {
         .replace(/\)/g, '%29')
         .replace(/\*/g, '%2A');
 }
+/**
+ * Replace every occurrence of a secret in a string that is about to be logged.
+ *
+ * Both forms have to go: a command line carries the encoded password, while a log line that
+ * prints the URL of a camera without a user name carries the secret verbatim - UniFi Protect,
+ * where the stream token sits in the path and is the whole credential.
+ */
 function maskPassword(str, password) {
     if (!password) {
         return str;
     }
     // The password can appear more than once, e.g. in the URL and in a user defined suffix
-    return str.split(encodePassword(password)).join('******');
+    const encoded = encodePassword(password);
+    const masked = str.split(encoded).join('******');
+    return encoded === password ? masked : masked.split(password).join('******');
 }
 function buildCommand(config, outputFileName, decodedPassword) {
     const parameters = ['-y'];
@@ -101,10 +111,14 @@ function buildCommand(config, outputFileName, decodedPassword) {
         password = encodePassword(password);
     }
     config.prefix && parameters.push(config.prefix);
+    if (config.keyFramesOnly) {
+        parameters.push('-skip_frame');
+        parameters.push('nokey');
+    }
     parameters.push(`-rtsp_transport`);
-    parameters.push(config.protocol || 'udp');
+    parameters.push(config.secure ? 'tcp' : config.protocol || 'udp');
     parameters.push('-i');
-    parameters.push(`rtsp://${config.username ? `${encodeURIComponent(config.username)}:${password}@` : ''}${config.ip}${!config.port || parseInt(config.port, 10) === 554 ? '' : `:${config.port}`}${config.urlPath ? (config.urlPath.startsWith('/') ? config.urlPath : `/${config.urlPath}`) : ''}`);
+    parameters.push(`${config.secure ? 'rtsps' : 'rtsp'}://${config.username ? `${encodeURIComponent(config.username)}:${password}@` : ''}${config.ip}${!config.port || parseInt(config.port, 10) === 554 ? '' : `:${config.port}`}${config.urlPath ? (config.urlPath.startsWith('/') ? config.urlPath : `/${config.urlPath}`) : ''}`);
     parameters.push('-loglevel');
     parameters.push('error');
     if (config.originalWidth && config.originalHeight) {
@@ -157,7 +171,10 @@ function executeFFmpeg(params, ffmpegPath, decodedPassword, timeoutMs, log) {
         });
         proc.on('close', (code) => {
             if (stopTimeout()) {
-                code ? reject(new Error(stderr.join(''))) : resolve(stdout.join(''));
+                // The stderr of ffmpeg repeats the input URL, so it must not be passed on unmasked
+                code
+                    ? reject(new Error(maskPassword(stderr.join(''), decodedPassword || '')))
+                    : resolve(stdout.join(''));
             }
         });
     });
