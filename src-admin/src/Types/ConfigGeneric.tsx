@@ -19,6 +19,8 @@ export interface ConfigProps<T> {
     theme: IobTheme;
     themeType: ThemeType;
     socket: AdminConnection;
+    /** Adapter instance the dialog belongs to, like "cameras.0", for sendTo */
+    instanceId?: string;
 }
 
 export default abstract class ConfigGeneric<T, S = object> extends Component<

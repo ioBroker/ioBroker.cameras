@@ -52,6 +52,7 @@ export default class Go2RtcClient {
      * consumer actually attaches, so the transcoder costs nothing while nobody is watching.
      */
     async ensureStream(name: string, source: string): Promise<void> {
+        source = toGo2RtcSource(source);
         if (this.registered.get(name) === source) {
             return;
         }
@@ -153,4 +154,16 @@ export class JpegFrameExtractor {
 
         return frames;
     }
+}
+
+/**
+ * go2rtc checks the certificate of an `rtsps://` source, and cameras - UniFi Protect among them -
+ * come with a self-signed one. Its own `rtspx://` scheme is RTSPS without that check. The
+ * `enableSrtp` parameter UniFi puts into its links is meant for other players, go2rtc does not need it.
+ */
+export function toGo2RtcSource(source: string): string {
+    if (!source.startsWith('rtsps://')) {
+        return source;
+    }
+    return `rtspx://${source.substring('rtsps://'.length)}`.replace(/[?&]enableSrtp(?=&|$)/, '').replace(/\?&/, '?');
 }

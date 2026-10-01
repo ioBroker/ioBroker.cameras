@@ -12,6 +12,13 @@ export interface RtspOptions {
     username?: string;
     originalHeight?: number | string;
     originalWidth?: number | string;
+    /** `rtsps://` instead of `rtsp://`, e.g. UniFi Protect on port 7441. RTSPS always runs over TCP */
+    secure?: boolean;
+    /**
+     * Decode key frames only. An H.265 stream joined in the middle of a GOP otherwise gives ffmpeg a
+     * frame without its reference picture, and the snapshot comes out as a flat grey image.
+     */
+    keyFramesOnly?: boolean;
 }
 
 export function findFFmpegPath(pathToExecutable?: string, log?: ioBroker.Log): string {
@@ -112,12 +119,17 @@ function buildCommand(config: RtspOptions, outputFileName: string, decodedPasswo
 
     config.prefix && parameters.push(config.prefix);
 
+    if (config.keyFramesOnly) {
+        parameters.push('-skip_frame');
+        parameters.push('nokey');
+    }
+
     parameters.push(`-rtsp_transport`);
-    parameters.push(config.protocol || 'udp');
+    parameters.push(config.secure ? 'tcp' : config.protocol || 'udp');
 
     parameters.push('-i');
     parameters.push(
-        `rtsp://${config.username ? `${encodeURIComponent(config.username)}:${password}@` : ''}${config.ip}${!config.port || parseInt(config.port as string, 10) === 554 ? '' : `:${config.port}`}${config.urlPath ? (config.urlPath.startsWith('/') ? config.urlPath : `/${config.urlPath}`) : ''}`,
+        `${config.secure ? 'rtsps' : 'rtsp'}://${config.username ? `${encodeURIComponent(config.username)}:${password}@` : ''}${config.ip}${!config.port || parseInt(config.port as string, 10) === 554 ? '' : `:${config.port}`}${config.urlPath ? (config.urlPath.startsWith('/') ? config.urlPath : `/${config.urlPath}`) : ''}`,
     );
 
     parameters.push('-loglevel');

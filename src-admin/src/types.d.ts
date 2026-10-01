@@ -1,5 +1,6 @@
 export type ContentType = string;
-export type CameraType = 'url' | 'urlBasicAuth' | 'rtsp' | 'reolinkE1' | 'eufy' | 'hikam' | 'universal' | 'instar';
+export type CameraType =
+    'url' | 'urlBasicAuth' | 'rtsp' | 'reolinkE1' | 'eufy' | 'hikam' | 'universal' | 'instar' | 'unifi';
 
 export type CameraName = string;
 
@@ -95,6 +96,23 @@ export interface CameraConfigReolink extends CameraConfig {
     quality: 'high' | 'low';
 }
 
+export interface CameraConfigUnifi extends CameraConfig {
+    type: 'unifi';
+    /** Address of the UniFi console or NVR that runs Protect */
+    ip: string;
+    /** Encrypted key for the Protect integration API. Optional - without it `token` is required */
+    apiKey?: string;
+    /** Protect id of the camera, picked in the dialog. Only used together with `apiKey` */
+    cameraId?: string;
+    /** Last part of the RTSP link Protect shows for a stream. Taken from the API if `apiKey` is set */
+    token?: string;
+    quality?: 'high' | 'medium' | 'low';
+    /** RTSPS on port 7441 instead of RTSP on port 7447 */
+    secure?: boolean;
+    /** Only needed behind a port forwarding or proxy. Empty = 7447, or 7441 with `secure` */
+    port?: number | string;
+}
+
 export type CameraConfigAny =
     | CameraConfigUrl
     | CameraConfigUrlBasicAuth
@@ -103,7 +121,8 @@ export type CameraConfigAny =
     | CameraConfigHiKam
     | CameraConfigUniversal
     | CameraInstarConfig
-    | CameraConfigReolink;
+    | CameraConfigReolink
+    | CameraConfigUnifi;
 
 export interface CamerasAdapterConfig {
     bind: string;

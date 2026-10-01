@@ -23,6 +23,7 @@ import type {
 import createCamera from './cameras/Factory';
 import { findFFmpegPath, getFFmpegVersion } from './cameras/rtspCommon';
 import Go2RtcServer from './lib/Go2RtcServer';
+import UnifiProtectClient from './lib/UnifiProtectClient';
 
 const WIN_FFMPEG_VERSION = '2025-02-02-git-957eb2323a-full_build-www.gyan.dev';
 
@@ -384,6 +385,23 @@ export class CamerasAdapter extends Adapter {
                         obj.callback,
                     );
 
+                break;
+            }
+
+            case 'unifiCameras': {
+                // Camera list for the UniFi dialog. The key comes in clear text, as typed in the dialog
+                if (obj.callback) {
+                    try {
+                        if (!obj.message?.ip || !obj.message?.apiKey) {
+                            throw new Error('IP and API key are required');
+                        }
+                        const client = new UnifiProtectClient(obj.message.ip, obj.message.apiKey);
+                        const cameras = await client.getCameras();
+                        this.sendTo(obj.from, obj.command, { cameras }, obj.callback);
+                    } catch (error) {
+                        this.sendTo(obj.from, obj.command, { error: (error as Error).toString() }, obj.callback);
+                    }
+                }
                 break;
             }
 
