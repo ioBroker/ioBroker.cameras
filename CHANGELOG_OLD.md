@@ -1,4 +1,7 @@
 # Older changes
+## 2.1.1 (2024-07-07)
+* (bluefox) Removed withStyles package
+
 ## 2.0.8 (2024-06-09)
 * (bluefox) Packages updated
 * (bluefox) Allowed selecting another source (with bigger resolution) for URL cameras

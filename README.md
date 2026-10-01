@@ -165,7 +165,7 @@ If the binary cannot be found or does not start, the adapter transparently falls
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.2.0 (2026-10-01)
 * (@hdering) Added: UniFi Protect cameras, with the stream token from the Protect API or entered by hand (#133)
 * (@hdering) Added: RTSPS for UniFi Protect, also through go2rtc
 * (@GermanBluefox) Fixed: the stderr of a failed ffmpeg call was passed on unmasked, so a camera password could end up in the log
@@ -219,9 +219,6 @@ If the binary cannot be found or does not start, the adapter transparently falls
 
 ### 2.1.2 (2024-07-15)
 * (bluefox) Updated packages
-
-### 2.1.1 (2024-07-07)
-* (bluefox) Removed withStyles package
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
