@@ -181,7 +181,8 @@ interface CamerasState {
     editChanged: boolean;
     requesting: boolean;
     instanceAlive: boolean;
-    webInstanceHost: string;
+    /** Like "https://192.168.1.2:8082" - protocol, address and port of the web instance */
+    webInstanceUrl: string;
     editedSettings: string | null;
     editedSettingsOld: string | null;
     message: string;
@@ -197,7 +198,7 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
             editChanged: false,
             requesting: false,
             instanceAlive: this.props.instanceAlive,
-            webInstanceHost: '',
+            webInstanceUrl: '',
             editedSettings: null,
             editedSettingsOld: null,
             message: '',
@@ -296,6 +297,14 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
         return hostIp;
     }
 
+    /** Whether the camera delivers a video stream. A "universal" camera can also be a plain HTTP snapshot */
+    static hasStream(cam: CameraConfig): boolean {
+        if (!TYPES[cam.type]?.Config.isRtsp) {
+            return false;
+        }
+        return cam.type !== 'universal' || (cam as CameraConfigUniversal).urlProtocol !== 'http://';
+    }
+
     async getWebInstances(): Promise<void> {
         const list = await this.props.socket.getAdapterInstances('web');
         let webInstance;
@@ -319,7 +328,9 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
         }
 
         if (webInstance) {
-            this.setState({ webInstanceHost: `${webInstance.native.bind}:${webInstance.native.port || 8082}` });
+            this.setState({
+                webInstanceUrl: `${webInstance.native.secure ? 'https' : 'http'}://${webInstance.native.bind}:${webInstance.native.port || 8082}`,
+            });
         }
     }
 
@@ -502,14 +513,30 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
                                     :&nbsp;
                                     <a
                                         style={styles.link}
-                                        href={`http://${this.state.webInstanceHost}/${this.props.adapterName}.${this.props.instance}/${cam.name}`}
+                                        href={`${this.state.webInstanceUrl}/${this.props.adapterName}.${this.props.instance}/${cam.name}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        URL: http://{this.state.webInstanceHost}/{this.props.adapterName}.
-                                        {this.props.instance}/{cam.name}
+                                        URL: {this.state.webInstanceUrl}/{this.props.adapterName}.{this.props.instance}/
+                                        {cam.name}
                                     </a>
                                 </div>
+                                {/* stream.mjpeg is served by go2rtc only - without it the route answers with a still image */}
+                                {this.props.native.useGo2rtc && Cameras.hasStream(cam) ? (
+                                    <div style={styles.sampleUrl}>
+                                        {I18n.t('Stream URL')}
+                                        :&nbsp;
+                                        <a
+                                            style={styles.link}
+                                            href={`${this.state.webInstanceUrl}/${this.props.adapterName}.${this.props.instance}/${cam.name}/stream.mjpeg`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            URL: {this.state.webInstanceUrl}/{this.props.adapterName}.
+                                            {this.props.instance}/{cam.name}/stream.mjpeg
+                                        </a>
+                                    </div>
+                                ) : null}
                             </div>
                             <div style={styles.divTestCam}>
                                 <Button
