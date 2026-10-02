@@ -45,8 +45,10 @@ export default class UniversalCamera extends GenericRtspCamera {
     async init(): Promise<void> {
         this.decodedPassword = this.config.password ? this.adapter.decrypt(this.config.password) : '';
 
-        if (!this.config.model) {
-            throw new Error('Model is required');
+        // The model only helps to find the path in the dialog - an own path works without one.
+        // Older configurations may have a model but no protocol, they were always RTSP then
+        if (!this.config.urlProtocol && !this.config.model) {
+            throw new Error('Stream / path is required');
         }
         if (this.config.urlProtocol === 'http://') {
             // It is URL type

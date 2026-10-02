@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { MenuItem, Select, TextField } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 
 import { I18n } from '@iobroker/gui-components';
 import ConfigGeneric, { type ConfigProps } from './ConfigGeneric';
@@ -88,18 +88,24 @@ export default class RTSPReolinkE1Config extends ConfigGeneric<CameraConfigReoli
                         onChange={e => this.setState({ password: e.target.value }, () => this.reportSettings())}
                     />
                     <br />
-                    <Select
+                    <FormControl
                         style={styles.quality}
                         variant="standard"
-                        value={this.state.quality}
-                        label={I18n.t('Quality')}
-                        onChange={e =>
-                            this.setState({ quality: e.target.value as 'low' | 'high' }, () => this.reportSettings())
-                        }
                     >
-                        <MenuItem value="low">{I18n.t('low quality')}</MenuItem>
-                        <MenuItem value="high">{I18n.t('high quality')}</MenuItem>
-                    </Select>
+                        <InputLabel>{I18n.t('Quality')}</InputLabel>
+                        <Select
+                            variant="standard"
+                            value={this.state.quality}
+                            onChange={e =>
+                                this.setState({ quality: e.target.value as 'low' | 'high' }, () =>
+                                    this.reportSettings(),
+                                )
+                            }
+                        >
+                            <MenuItem value="low">{I18n.t('low quality')}</MenuItem>
+                            <MenuItem value="high">{I18n.t('high quality')}</MenuItem>
+                        </Select>
+                    </FormControl>
                 </form>
             </div>
         );

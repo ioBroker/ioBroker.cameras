@@ -66,6 +66,8 @@ export interface CameraConfigRtsp extends CameraConfig {
     prefix?: string;
     suffix?: string;
     protocol: 'udp' | 'tcp';
+    /** rtsps:// instead of rtsp://, always over TCP */
+    secure?: boolean;
 }
 
 export interface CameraConfigUniversal extends CameraConfig {

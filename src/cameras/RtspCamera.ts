@@ -21,6 +21,7 @@ export default class RtspCamera extends GenericRtspCamera {
             prefix: this.config.prefix,
             suffix: this.config.suffix,
             protocol: this.config.protocol || 'tcp',
+            secure: !!this.config.secure,
         };
 
         return super.init();

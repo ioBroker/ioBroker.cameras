@@ -41,13 +41,28 @@ sendTo('cameras.0', 'image', {
 The result is always in `jpg` format.
 
 Supported cameras:
-- `Reolink E1 Pro` via RTSP (important, without `Pro` it will not work)
+- More than 50 manufacturers with their model lists, e.g. Hikvision, Dahua, Axis, Reolink (incl. E1 Pro), Foscam, TP-Link/Tapo
 - `Eufy` via eusec adapter
 - `UniFi Protect` - every camera managed by a UniFi console or NVR, see below
 - [HiKam](https://support.hikam.de/support/solutions/articles/16000070656-zugriff-auf-kameras-der-2-generation-via-onvif-f%C3%BCr-s6-q8-a7-2-generation-) of second and third generation via ONVIF (für S6, Q8, A7 2. Generation), A7 Pro, A9
 - [WIWICam M1 via HiKam adapter](https://www.wiwacam.com/de/mw1-minikamera-kurzanleitung-und-faq/)
 - RTSP Native - if your camera supports RTSP protocol
 - Screenshots via HTTP URL - if you can get the snapshot from your camera via URL
+
+### Adding a camera
+The dialog asks for the **manufacturer** first. Afterwards it shows only what fits:
+- **Universal (custom URL / RTSP)** for a snapshot URL (with or without basic authentication) or an RTSP stream.
+  The RTSP stream takes the whole link, e.g. `rtsp://192.168.1.10:554/stream1` or `rtsps://...`; a login in the link is
+  moved to the user and password fields.
+- A manufacturer with its own implementation (Eufy, HiKam, INSTAR, UniFi Protect) offers it as *Connection*,
+  next to the model list where the manufacturer has one.
+- Every other manufacturer leads to its model list. The main field is the **stream path**: the list shows the paths of
+  the manufacturer sorted by how many models use them, so the right one is usually among the first. *Search model* is
+  optional and only narrows the list. A path of your own can be typed in as well.
+
+The stored configuration keeps its format, existing cameras are shown with their manufacturer. The former type
+*Reolink E1* is deprecated: it still works, is not offered for new cameras any more, and its dialog converts it to the
+Reolink model list with one click.
 
 ### UniFi Protect
 Protect re-streams every camera from the console, so the address is the one of the console (or NVR),
@@ -124,7 +139,7 @@ Most cameras do not need any code. The `universal` type is driven by the data fi
    instead, simply place `<manufacturer>.svg`, `.png` or `.jpg` in `src-admin/public/data/` —
    existing files are never overwritten (unless `--force` is given)
 
-The new manufacturer then appears in the dropdown of the "By manufacturer" camera type.
+The new manufacturer then appears in the manufacturer list of the camera dialog.
 
 The port of a row is only taken over when the camera plausibly listens on it out of the box
 (`PLAUSIBLE_PORTS` in `tools/parser.js`). ispyconnect stores whatever port the submitter reached
@@ -143,6 +158,9 @@ Only needed when the camera requires its own logic. Create a Pull Request with:
 - `src-admin/src/Tabs/Cameras.tsx` — import the dialog and add it to the `TYPES` structure, e.g.
   `mycam: { Config: MyCamConfig as unknown as IConfigGeneric, name: 'MyCam' },`. The key must be
   identical to the `type` used in the backend.
+- `src-admin/src/Components/TypeSelector.tsx` — add the type to `DEDICATED` under its manufacturer (the
+  id of the model list if there is one), otherwise the dialog does not offer it. A type that is replaced
+  by another one gets `deprecated: true`: existing cameras keep working, new ones cannot choose it
 - Add the new labels to all files in `src-admin/src/i18n/`
 
 ### go2rtc (optional)
@@ -165,6 +183,14 @@ If the binary cannot be found or does not start, the adapter transparently falls
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (@hdering) Changed: a camera is added by choosing the manufacturer first, then only the fitting connection is offered; the stored configuration keeps its format
+* (@hdering) Changed: the model list is chosen by stream path, sorted by how many models use it; the model is optional. HTTP paths that deliver a stream instead of an image are hidden, they never worked
+* (@hdering) Changed: an RTSP camera is configured with one URL field, also for `rtsps://`; a pasted login goes to its own fields
+* (@hdering) Deprecated: the type "Reolink E1" - it keeps working and can be converted to the Reolink model list in its dialog
+* (@hdering) Fixed: the RTSP dialog showed UDP while the adapter used TCP, and saved UDP as soon as another field was changed
+* (@hdering) Fixed: the URL preview of an RTSP camera was only updated after saving
+* (@hdering) Fixed: changes in the camera dialog were applied to the stored settings instead of the edited ones, so an earlier change could get lost
 ### 3.2.0 (2026-10-01)
 * (@hdering) Added: UniFi Protect cameras, with the stream token from the Protect API or entered by hand (#133)
 * (@hdering) Added: RTSPS for UniFi Protect, also through go2rtc

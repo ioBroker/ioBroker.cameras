@@ -10,16 +10,12 @@ const styles: Record<string, any> = {
     page: {
         width: '100%',
     },
-    ip: {
-        marginRight: 8,
-        width: 200,
-    },
-    port: {
-        marginRight: 8,
-        width: 200,
+    url: {
+        width: 408,
     },
     protocol: {
-        width: 70,
+        marginTop: 16,
+        width: 200,
     },
     username: {
         marginTop: 16,
@@ -29,11 +25,6 @@ const styles: Record<string, any> = {
     password: {
         marginTop: 16,
         width: 200,
-    },
-    urlPath: {
-        marginTop: 16,
-        marginBotton: `24px !important`,
-        width: 408,
     },
     width: {
         marginTop: 16,
@@ -66,8 +57,60 @@ const styles: Record<string, any> = {
     ffmpgCommand: {
         fontFamily: 'monospace',
         fontSize: 'smaller',
+        // One long line otherwise, which widens the whole column
+        wordBreak: 'break-all',
     },
 };
+
+/** Standard port of RTSPS. A camera may use another one, like UniFi Protect with 7441 */
+const RTSPS_PORT = '322';
+
+/** Address, port and path as one URL, without the login - that has fields of its own */
+function buildUrl(ip: string, port: string | number, urlPath: string, secure?: boolean): string {
+    if (!ip) {
+        return '';
+    }
+    const path = urlPath ? (urlPath.startsWith('/') ? urlPath : `/${urlPath}`) : '';
+    // The backend leaves out only the RTSP default port, see buildCommand() in src/cameras/rtspCommon.ts
+    const showPort = port && (secure || parseInt(port as string, 10) !== 554);
+    return `${secure ? 'rtsps' : 'rtsp'}://${ip}${showPort ? `:${port}` : ''}${path}`;
+}
+
+/**
+ * Split a pasted link like "rtsp://admin:secret@192.168.1.10:554/stream1" into the stored fields.
+ * Returns null while the text is no usable address yet.
+ */
+function parseUrl(text: string): {
+    ip: string;
+    port: string;
+    urlPath: string;
+    secure: boolean;
+    username?: string;
+    password?: string;
+} | null {
+    const m = text
+        .trim()
+        .match(/^(?:(rtsps?):\/\/)?(?:([^:@/]*)(?::([^@/]*))?@)?(\[[^\]]+]|[^:/?#\s]+)(?::(\d*))?([/?#].*)?$/i);
+    if (!m) {
+        return null;
+    }
+    const secure = m[1]?.toLowerCase() === 'rtsps';
+    const decode = (value: string): string => {
+        try {
+            return decodeURIComponent(value);
+        } catch {
+            return value;
+        }
+    };
+    return {
+        ip: m[4],
+        port: m[5] || (secure ? RTSPS_PORT : '554'),
+        urlPath: m[6] || '',
+        secure,
+        username: m[2] !== undefined ? decode(m[2]) : undefined,
+        password: m[3] !== undefined ? decode(m[3]) : undefined,
+    };
+}
 
 export default class RTSPImageConfig extends ConfigGeneric<CameraConfigRtsp, { url: string; expertMode: boolean }> {
     public static isRtsp = true; // this camera can be used in RTSP snapshot
@@ -81,13 +124,26 @@ export default class RTSPImageConfig extends ConfigGeneric<CameraConfigRtsp, { u
             urlPath: this.props.settings.urlPath || '',
             password: this.props.settings.password || '',
             username: this.props.settings.username === undefined ? 'admin' : this.props.settings.username || '',
-            url: `rtsp://${this.props.settings.username ? `${this.props.settings.username}:***@` : ''}${this.props.settings.ip}:${this.props.settings.port}${this.props.settings.urlPath ? (this.props.settings.urlPath.startsWith('/') ? this.props.settings.urlPath : `/${this.props.settings.urlPath}`) : ''}`,
+            // The text of the URL field. Kept as typed, the stored fields are parsed from it
+            url: buildUrl(
+                this.props.settings.ip || '',
+                this.props.settings.port || '554',
+                this.props.settings.urlPath || '',
+                this.props.settings.secure,
+            ),
+            secure: !!this.props.settings.secure,
             originalHeight: this.props.settings.originalHeight || '',
             originalWidth: this.props.settings.originalWidth || '',
             prefix: this.props.settings.prefix || '',
             suffix: this.props.settings.suffix || '',
-            protocol: this.props.settings.protocol || 'udp',
-            expertMode: false,
+            // Same default as RtspCamera in the backend
+            protocol: this.props.settings.protocol || 'tcp',
+            // Open when one of its settings is used, so nothing is hidden that changes the result
+            expertMode:
+                !!this.props.settings.prefix ||
+                !!this.props.settings.suffix ||
+                !!this.props.settings.originalWidth ||
+                !!this.props.settings.originalHeight,
         };
     }
 
@@ -106,10 +162,34 @@ export default class RTSPImageConfig extends ConfigGeneric<CameraConfigRtsp, { u
                 prefix: this.state.prefix,
                 suffix: this.state.suffix,
                 protocol: this.state.protocol,
+                secure: this.state.secure,
                 originalWidth: this.state.originalWidth,
                 originalHeight: this.state.originalHeight,
             });
         });
+    }
+
+    onUrlChange(url: string): void {
+        const parsed = parseUrl(url);
+        if (!parsed) {
+            this.setState({ url, ip: '' }, () => this.reportSettings());
+            return;
+        }
+        const { username, password, ...address } = parsed;
+        if (username !== undefined) {
+            // A pasted login goes to its own fields - the password must not stay readable in the URL
+            this.setState(
+                {
+                    ...address,
+                    username,
+                    password: password || '',
+                    url: buildUrl(address.ip, address.port, address.urlPath, address.secure),
+                },
+                () => this.reportSettings(),
+            );
+        } else {
+            this.setState({ ...address, url }, () => this.reportSettings());
+        }
     }
 
     buildCommand(
@@ -121,10 +201,16 @@ export default class RTSPImageConfig extends ConfigGeneric<CameraConfigRtsp, { u
         const parameters = ['-y'];
         options.prefix && parameters.push(options.prefix);
         parameters.push('-rtsp_transport');
-        parameters.push(options.protocol || 'udp');
+        // RTSPS runs over TCP only, like in src/cameras/rtspCommon.ts
+        parameters.push(options.secure ? 'tcp' : options.protocol || 'tcp');
         parameters.push('-i');
+        const scheme = options.secure ? 'rtsps://' : 'rtsp://';
         parameters.push(
-            `rtsp://${options.username ? options.username + (options.password ? ':***' : '') : ''}@${options.ip}:${options.port || 554}${options.urlPath ? (options.urlPath.startsWith('/') ? options.urlPath : `/${options.urlPath}`) : ''}`,
+            // Same form as buildCommand() in src/cameras/rtspCommon.ts, with the password masked
+            buildUrl(options.ip, options.port, options.urlPath, options.secure).replace(
+                scheme,
+                `${scheme}${options.username ? `${encodeURIComponent(options.username)}:${options.password ? '***' : ''}@` : ''}`,
+            ),
         );
         parameters.push('-loglevel');
         parameters.push('error');
@@ -149,41 +235,13 @@ export default class RTSPImageConfig extends ConfigGeneric<CameraConfigRtsp, { u
                 <form>
                     <TextField
                         variant="standard"
-                        style={styles.ip}
-                        label={I18n.t('Camera IP')}
-                        value={this.state.ip}
-                        onChange={e => this.setState({ ip: e.target.value }, () => this.reportSettings())}
-                    />
-                    <TextField
-                        variant="standard"
-                        style={styles.port}
-                        type="number"
-                        label={I18n.t('Port')}
-                        value={this.state.port}
-                        onChange={e => this.setState({ port: e.target.value }, () => this.reportSettings())}
-                    />
-                    <FormControl
-                        style={styles.protocol}
-                        variant="standard"
-                    >
-                        <InputLabel>{I18n.t('Protocol')}</InputLabel>
-                        <Select
-                            variant="standard"
-                            value={this.state.protocol || 'udp'}
-                            onChange={e => this.setState({ protocol: e.target.value }, () => this.reportSettings())}
-                        >
-                            <MenuItem value="udp">UDP</MenuItem>
-                            <MenuItem value="tcp">TCP</MenuItem>
-                        </Select>
-                    </FormControl>
-                    <br />
-                    <TextField
-                        variant="standard"
-                        style={styles.urlPath}
-                        label={I18n.t('Path')}
-                        value={this.state.urlPath}
-                        onChange={e => this.setState({ urlPath: e.target.value }, () => this.reportSettings())}
-                        helperText={this.state.url}
+                        style={styles.url}
+                        label={I18n.t('RTSP URL')}
+                        placeholder="rtsp://192.168.1.10:554/stream1"
+                        value={this.state.url}
+                        error={!!this.state.url && !parseUrl(this.state.url)}
+                        helperText={I18n.t('rtsp_url_hint')}
+                        onChange={e => this.onUrlChange(e.target.value)}
                     />
                     <br />
                     <TextField
@@ -214,6 +272,25 @@ export default class RTSPImageConfig extends ConfigGeneric<CameraConfigRtsp, { u
                         }
                         label={I18n.t('Expert settings')}
                     />
+                    {this.state.expertMode ? <br /> : null}
+                    {this.state.expertMode ? (
+                        <FormControl
+                            style={styles.protocol}
+                            variant="standard"
+                        >
+                            <InputLabel>{I18n.t('Transport')}</InputLabel>
+                            <Select
+                                variant="standard"
+                                // RTSPS runs over TCP only
+                                disabled={this.state.secure}
+                                value={this.state.secure ? 'tcp' : this.state.protocol || 'tcp'}
+                                onChange={e => this.setState({ protocol: e.target.value }, () => this.reportSettings())}
+                            >
+                                <MenuItem value="tcp">TCP</MenuItem>
+                                <MenuItem value="udp">UDP</MenuItem>
+                            </Select>
+                        </FormControl>
+                    ) : null}
                     {this.state.expertMode ? <br /> : null}
                     {this.state.expertMode ? (
                         <TextField
