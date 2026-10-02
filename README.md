@@ -216,7 +216,7 @@ If the binary cannot be found or does not start, the adapter transparently falls
 * (@hdering) Fixed: changes in the camera dialog were applied to the stored settings instead of the edited ones, so an earlier change could get lost
 * (@hdering) Added: MJPEG streams over HTTP - the first frame is taken; this makes the MJPEG paths of the model lists usable. A video stream over HTTP fails at once with a hint instead of a timeout
 * (@hdering) Added: a grey snapshot of an H.265 stream is recognized and taken again from a key frame; "Key frames only" in the expert settings of the RTSP type sets it permanently
-* (@hdering) Added: the Eufy dialog lists the cameras of the eusec adapter; cameras without RTSP of their own are streamed through the station by eusec
+* (@hdering) Added: the Eufy dialog lists the cameras of the eusec adapter; cameras without RTSP of their own are streamed through the station by eusec (#205)
 * (@hdering) Fixed: switching the Eufy dialog between eusec and IP address was not saved
 ### 3.2.0 (2026-10-01)
 * (@hdering) Added: UniFi Protect cameras, with the stream token from the Protect API or entered by hand (#133)
