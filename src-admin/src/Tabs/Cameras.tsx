@@ -436,7 +436,10 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
             },
             (parseInt((settings.timeout as string) || (this.props.native.defaultTimeout as string), 10) || 5_000) *
                 // A grey H.265 snapshot is taken a second time from a key frame, see GenericRtspCamera.takeSnapshot()
-                (TYPES[settings.type]?.rtsp ? 2 : 1),
+                (TYPES[settings.type]?.rtsp ? 2 : 1) +
+                // A Eufy camera without RTSP is first woken up through the station (up to 25 s,
+                // EufyCamera.ensureLivestream), then its first frame may take another 20 s
+                (settings.type === 'eufy' ? 60_000 : 0),
         );
 
         this.setState({ requesting: true, testImg: null }, async () => {
