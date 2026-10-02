@@ -434,7 +434,9 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
                 timeout = null;
                 this.setState({ message: 'Timeout', requesting: false });
             },
-            parseInt((settings.timeout as string) || (this.props.native.defaultTimeout as string), 10) || 5_000,
+            (parseInt((settings.timeout as string) || (this.props.native.defaultTimeout as string), 10) || 5_000) *
+                // A grey H.265 snapshot is taken a second time from a key frame, see GenericRtspCamera.takeSnapshot()
+                (TYPES[settings.type]?.rtsp ? 2 : 1),
         );
 
         this.setState({ requesting: true, testImg: null }, async () => {

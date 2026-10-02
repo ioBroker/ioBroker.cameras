@@ -34,10 +34,12 @@ type PathItem = {
     port: number;
     /** Lower case model names */
     models: string[];
+    /** Set when the source lists the path as MJPEG over HTTP: the adapter takes its first frame */
+    mjpeg: boolean;
     /**
-     * The adapter takes a snapshot from an RTSP stream with ffmpeg, but fetches an HTTP path with
-     * one plain request: that only works for a single JPEG, a never-ending MJPEG or video stream
-     * runs into the timeout.
+     * The adapter takes a snapshot from an RTSP stream with ffmpeg. Over HTTP it reads a single
+     * JPEG or the first frame of an MJPEG stream (src/lib/httpSnapshot.ts) - but cannot decode a
+     * video stream like ASF or MP4.
      */
     supported: boolean;
 };
@@ -159,11 +161,13 @@ export default class Universal extends ConfigGeneric<
                         path: item.path,
                         port: 0,
                         models: [],
+                        mjpeg: false,
                         supported: false,
                     };
                     const entry = byKey[key];
                     entry.port ||= item.port || 0;
-                    entry.supported ||= item.protocol === 'rtsp://' || item.variant === 'JPEG';
+                    entry.mjpeg ||= item.protocol === 'http://' && item.variant === 'MJPEG';
+                    entry.supported ||= item.protocol === 'rtsp://' || item.variant === 'JPEG' || entry.mjpeg;
                     for (const model of item.models) {
                         const m = model.toLowerCase();
                         if (!entry.models.includes(m)) {
@@ -274,11 +278,14 @@ export default class Universal extends ConfigGeneric<
         );
     }
 
-    static getKindLabel(item: { protocol: string; supported: boolean }): string {
+    static getKindLabel(item: { protocol: string; mjpeg: boolean; supported: boolean }): string {
         if (item.protocol === 'rtsp://') {
             return I18n.t('RTSP stream');
         }
-        return item.supported ? I18n.t('Snapshot (JPEG)') : I18n.t('HTTP stream (not supported)');
+        if (item.mjpeg) {
+            return I18n.t('MJPEG stream (first frame)');
+        }
+        return item.supported ? I18n.t('Snapshot (JPEG)') : I18n.t('Video stream (not supported)');
     }
 
     renderPathSelector(): React.JSX.Element {

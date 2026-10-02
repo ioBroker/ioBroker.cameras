@@ -4,7 +4,7 @@ import sharp from 'sharp';
 
 import GenericCamera from './GenericCamera';
 import type { ContentType, CamerasAdapterConfig, ProcessData, CameraConfigAny } from '../types';
-import { getRtspSnapshot, maskPassword, type RtspOptions } from './rtspCommon';
+import { getRtspSnapshot, isFlatImage, maskPassword, type RtspOptions } from './rtspCommon';
 import type Go2RtcServer from '../lib/Go2RtcServer';
 
 export default class GenericRtspCamera extends GenericCamera {
@@ -115,14 +115,7 @@ export default class GenericRtspCamera extends GenericCamera {
             return viaGo2Rtc;
         }
 
-        this.runningRequest = getRtspSnapshot(
-            this.settings,
-            this.getSnapshotFileName(),
-            this.ffmpegPath,
-            this.decodedPassword,
-            this.config.timeout as number,
-            this.adapter.log,
-        )
+        this.runningRequest = this.takeSnapshot()
             .then(async body => {
                 this.adapter.log.debug(`Snapshot from ${this.settings!.ip}. Done!`);
 
@@ -143,6 +136,42 @@ export default class GenericRtspCamera extends GenericCamera {
             .finally(() => (this.runningRequest = null));
 
         return this.runningRequest;
+    }
+
+    /**
+     * Snapshot with ffmpeg. A flat grey image is what ffmpeg decodes from an H.265 stream joined
+     * between two key frames - then the snapshot is taken again from a key frame, and the camera
+     * keeps that for as long as the adapter runs. Nobody would find the expert option on their own.
+     */
+    private async takeSnapshot(): Promise<Buffer> {
+        const settings = this.settings!;
+        const snapshot = (): Promise<Buffer> =>
+            getRtspSnapshot(
+                settings,
+                this.getSnapshotFileName(),
+                this.ffmpegPath,
+                this.decodedPassword,
+                this.config.timeout as number,
+                this.adapter.log,
+            );
+
+        const body = await snapshot();
+        if (settings.keyFramesOnly || !(await isFlatImage(body))) {
+            return body;
+        }
+
+        settings.keyFramesOnly = true;
+        const fromKeyFrame = await snapshot().catch(() => null);
+        if (fromKeyFrame && !(await isFlatImage(fromKeyFrame))) {
+            this.adapter.log.info(
+                `Camera "${this.config.name}" delivered a grey image (H.265?). Snapshots are now taken from key frames only`,
+            );
+            return fromKeyFrame;
+        }
+        // Flat from a key frame as well - a covered lens or a camera showing one colour. Waiting for
+        // key frames does not help then and would only make every snapshot slower
+        settings.keyFramesOnly = false;
+        return body;
     }
 
     /**

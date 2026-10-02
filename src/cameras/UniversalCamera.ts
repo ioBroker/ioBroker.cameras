@@ -1,6 +1,6 @@
 import type { CameraConfigAny, CameraConfigUniversal, ProcessData } from '../types';
 import GenericRtspCamera from './GenericRtspCamera';
-import axios from 'axios';
+import { fetchSnapshot } from '../lib/httpSnapshot';
 
 export default class UniversalCamera extends GenericRtspCamera {
     protected config: CameraConfigUniversal;
@@ -78,28 +78,11 @@ export default class UniversalCamera extends GenericRtspCamera {
             return this.runningRequest;
         }
 
-        const options: axios.AxiosRequestConfig = {
-            responseType: 'arraybuffer',
-            validateStatus: status => status < 400,
-            timeout: this.config.timeout as number,
-        };
-        if (this.basicAuth) {
-            options.headers = { Authorization: this.basicAuth };
-        }
-
-        this.runningRequest = axios
-            .get(this.simpleURL!, options)
-            .then(response => ({
-                body: response.data,
-                contentType: response.headers['Content-type'] || response.headers['content-type'],
-            }))
-            .catch(error => {
-                if (error.response) {
-                    throw new Error(error.response.data || error.response.status);
-                } else {
-                    throw new Error(error.code);
-                }
-            })
+        // A snapshot path as well as an MJPEG stream, of which the first frame is taken
+        this.runningRequest = fetchSnapshot(this.simpleURL!, {
+            timeout: this.config.timeout,
+            headers: this.basicAuth ? { Authorization: this.basicAuth } : undefined,
+        })
             // Also on failure - a request left behind here would be handed out to every later
             // caller, so one unreachable camera would stay broken until the adapter restarts
             .finally(() => (this.runningRequest = null));

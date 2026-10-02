@@ -132,6 +132,7 @@ export default class RTSPImageConfig extends ConfigGeneric<CameraConfigRtsp, { u
                 this.props.settings.secure,
             ),
             secure: !!this.props.settings.secure,
+            keyFramesOnly: !!this.props.settings.keyFramesOnly,
             originalHeight: this.props.settings.originalHeight || '',
             originalWidth: this.props.settings.originalWidth || '',
             prefix: this.props.settings.prefix || '',
@@ -142,6 +143,7 @@ export default class RTSPImageConfig extends ConfigGeneric<CameraConfigRtsp, { u
             expertMode:
                 !!this.props.settings.prefix ||
                 !!this.props.settings.suffix ||
+                !!this.props.settings.keyFramesOnly ||
                 !!this.props.settings.originalWidth ||
                 !!this.props.settings.originalHeight,
         };
@@ -163,6 +165,7 @@ export default class RTSPImageConfig extends ConfigGeneric<CameraConfigRtsp, { u
                 suffix: this.state.suffix,
                 protocol: this.state.protocol,
                 secure: this.state.secure,
+                keyFramesOnly: this.state.keyFramesOnly,
                 originalWidth: this.state.originalWidth,
                 originalHeight: this.state.originalHeight,
             });
@@ -200,6 +203,10 @@ export default class RTSPImageConfig extends ConfigGeneric<CameraConfigRtsp, { u
     ): string[] {
         const parameters = ['-y'];
         options.prefix && parameters.push(options.prefix);
+        if (options.keyFramesOnly) {
+            parameters.push('-skip_frame');
+            parameters.push('nokey');
+        }
         parameters.push('-rtsp_transport');
         // RTSPS runs over TCP only, like in src/cameras/rtspCommon.ts
         parameters.push(options.secure ? 'tcp' : options.protocol || 'tcp');
@@ -290,6 +297,21 @@ export default class RTSPImageConfig extends ConfigGeneric<CameraConfigRtsp, { u
                                 <MenuItem value="udp">UDP</MenuItem>
                             </Select>
                         </FormControl>
+                    ) : null}
+                    {this.state.expertMode ? <br /> : null}
+                    {this.state.expertMode ? (
+                        <FormControlLabel
+                            style={styles.expertMode}
+                            control={
+                                <Checkbox
+                                    checked={!!this.state.keyFramesOnly}
+                                    onChange={e =>
+                                        this.setState({ keyFramesOnly: e.target.checked }, () => this.reportSettings())
+                                    }
+                                />
+                            }
+                            label={I18n.t('Key frames only (against grey images with H.265)')}
+                        />
                     ) : null}
                     {this.state.expertMode ? <br /> : null}
                     {this.state.expertMode ? (

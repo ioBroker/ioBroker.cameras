@@ -100,10 +100,19 @@ This is a normal URL request, where all parameters are in URL. Like `http://myca
 ### URL image with basic authentication
 This is URL request for image, where all parameters are in URL, but you can provide the credentials for basic authentication. Like `http://mycam/snapshot.jpg`  
 
+Both URL types - and the HTTP paths of the model lists - also accept an **MJPEG stream** (`multipart/x-mixed-replace`,
+often `.../video.mjpg` or `.../mjpg/video.cgi`): its first frame is taken and the connection is closed, no ffmpeg
+needed. A video stream over HTTP (ASF, MP4, ...) cannot be decoded this way; it fails at once with a hint to use the
+snapshot or RTSP URL of the camera.
+
 ### FFmpeg
 If you want to access snapshots on RTSP cameras, you can use ffmpeg. You need to install ffmpeg on your system:
 - Windows has precompiled ffmpeg and there is no need to download anything. (Windows version is taken from here: https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-full.7z)
 - Linux: `sudo apt-get install ffmpeg -y`
+
+Many cameras send H.265. Joined between two key frames, ffmpeg decodes the first picture as a flat grey area. The
+adapter recognizes such a picture, takes the snapshot again from a key frame and keeps that for the camera while it
+runs (a note appears in the log). *Key frames only* in the expert settings of the RTSP type sets it permanently.
 
 How to update the windows version of `ffmpeg`:
 - Download file https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-full.7z
@@ -191,6 +200,8 @@ If the binary cannot be found or does not start, the adapter transparently falls
 * (@hdering) Fixed: the RTSP dialog showed UDP while the adapter used TCP, and saved UDP as soon as another field was changed
 * (@hdering) Fixed: the URL preview of an RTSP camera was only updated after saving
 * (@hdering) Fixed: changes in the camera dialog were applied to the stored settings instead of the edited ones, so an earlier change could get lost
+* (@hdering) Added: MJPEG streams over HTTP - the first frame is taken; this makes the MJPEG paths of the model lists usable. A video stream over HTTP fails at once with a hint instead of a timeout
+* (@hdering) Added: a grey snapshot of an H.265 stream is recognized and taken again from a key frame; "Key frames only" in the expert settings of the RTSP type sets it permanently
 ### 3.2.0 (2026-10-01)
 * (@hdering) Added: UniFi Protect cameras, with the stream token from the Protect API or entered by hand (#133)
 * (@hdering) Added: RTSPS for UniFi Protect, also through go2rtc
