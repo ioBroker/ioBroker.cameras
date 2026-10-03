@@ -82,7 +82,12 @@ export class RtspCameraComponent extends CameraWidgetBase<RtspCameraSettings, Ca
 
         this.subscribedTo = `startCamera/${name}`;
         socket
-            .subscribeOnInstance(instance, this.subscribedTo, { width: this.getRequestedWidth() }, this.onFrame)
+            .subscribeOnInstance(
+                instance,
+                this.subscribedTo,
+                { width: this.getRequestedWidth(this.state.dialogOpen) },
+                this.onFrame,
+            )
             .catch((e: Error) => {
                 this.subscribedTo = null;
                 this.setError(e.toString());
@@ -92,6 +97,27 @@ export class RtspCameraComponent extends CameraWidgetBase<RtspCameraSettings, Ca
         if (this.props.settings.snapshotWhenOffline !== false) {
             void this.loadSnapshot();
         }
+    }
+
+    /**
+     * The adapter scales the stream to the width of the last subscribe request, so opening the dialog
+     * has to ask again - a renewed request with a different width restarts ffmpeg with the new scale,
+     * which is what the periodic refresh of the vis-2 widget relies on as well. Without this the
+     * dialog showed the tile picture blown up, as nothing else ever asks for a bigger one here.
+     */
+    protected override onDialogToggled(dialogOpen: boolean): void {
+        if (this.destroyed || !this.camera || !this.subscribedTo) {
+            return;
+        }
+        this.props.stateContext
+            .getSocket()
+            .subscribeOnInstance(
+                this.camera.instance,
+                this.subscribedTo,
+                { width: this.getRequestedWidth(dialogOpen) },
+                this.onFrame,
+            )
+            .catch((e: Error) => console.warn(`Cannot renew camera subscription: ${e.toString()}`));
     }
 
     protected stopCamera(): void {
@@ -120,7 +146,7 @@ export class RtspCameraComponent extends CameraWidgetBase<RtspCameraSettings, Ca
             const socket = this.props.stateContext.getSocket();
             const result: { data?: string; error?: string } = await socket.sendTo(this.camera.instance, 'image', {
                 name: this.camera.name,
-                width: this.getRequestedWidth(),
+                width: this.getRequestedWidth(this.state.dialogOpen),
                 angle: this.props.settings.rotate || 0,
             });
             // Do not overwrite a live frame that arrived in the meantime

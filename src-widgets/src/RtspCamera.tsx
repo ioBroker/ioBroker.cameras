@@ -146,6 +146,8 @@ export default class RtspCamera extends (window.visRxWidget as typeof VisRxWidge
     private currentCam: null | string = null;
     private subscribedOnAlive: null | string = null;
     private useMessages: boolean | undefined;
+    /** Last frame drawn, to fill the dialog while the stream is restarted for the bigger scale */
+    private lastBase64Frame = '';
 
     constructor(props: VisRxWidgetProps) {
         super(props);
@@ -264,6 +266,7 @@ export default class RtspCamera extends (window.visRxWidget as typeof VisRxWidge
                 this.setState({ loading: false });
             }
 
+            this.lastBase64Frame = state.val as string;
             RtspCamera.drawCamera(this.videoRef, state.val as string);
 
             if (this.state.full) {
@@ -301,6 +304,7 @@ export default class RtspCamera extends (window.visRxWidget as typeof VisRxWidge
             }
 
             if (typeof data === 'string') {
+                this.lastBase64Frame = data;
                 RtspCamera.drawCamera(this.videoRef, data);
 
                 if (this.state.full) {
@@ -428,11 +432,38 @@ export default class RtspCamera extends (window.visRxWidget as typeof VisRxWidge
         // if (parseInt(this.state.rxData.width, 10)) {
         //    return parseInt(this.state.rxData.width, 10);
         // }
-        if (isFull && this.fullVideoRef.current?.parentElement) {
-            return this.fullVideoRef.current.parentElement.clientWidth || 0;
+        if (isFull) {
+            const fullWidth = this.fullVideoRef.current?.parentElement?.clientWidth || 0;
+            // Zero means the dialog is not laid out yet. The adapter reads a zero as "do not scale"
+            // and would restart ffmpeg for the full resolution of the camera, so the width of the
+            // small canvas is the better answer - the next refresh corrects it anyway
+            if (fullWidth) {
+                return fullWidth;
+            }
         }
 
         return this.videoRef.current?.parentElement?.clientWidth || 0;
+    }
+
+    /**
+     * Open or close the full screen dialog and ask for the stream again.
+     *
+     * The adapter scales the stream to the width the subscription asked for, so without a new
+     * request the big canvas would show the small picture - and after closing, the small one would
+     * go on paying for the big stream - until the 14 s refresh in {@link componentDidMount} comes
+     * around.
+     */
+    setFullScreen(full: boolean): void {
+        this.setState({ full }, () => {
+            // ffmpeg is restarted for the other scale, which takes about ten seconds. Show the last
+            // frame enlarged until then - the same picture as before, instead of an empty canvas
+            if (full && this.lastBase64Frame) {
+                RtspCamera.drawCamera(this.fullVideoRef, this.lastBase64Frame);
+            }
+            // In the callback the dialog is mounted resp. gone, so the canvas to scale to is the
+            // one getImageWidth() measures now
+            this.propertiesUpdate().catch(e => console.error(e));
+        });
     }
 
     async subscribeOnAlive(): Promise<void> {
@@ -515,7 +546,7 @@ export default class RtspCamera extends (window.visRxWidget as typeof VisRxWidge
                 fullWidth
                 maxWidth="lg"
                 open={!0}
-                onClose={() => this.setState({ full: false })}
+                onClose={() => this.setFullScreen(false)}
             >
                 <DialogTitle>{this.state.rxData.widgetTitle}</DialogTitle>
                 <DialogContent>
@@ -531,7 +562,7 @@ export default class RtspCamera extends (window.visRxWidget as typeof VisRxWidge
                         onClick={e => {
                             e.stopPropagation();
                             e.preventDefault();
-                            this.setState({ full: false });
+                            this.setFullScreen(false);
                         }}
                         startIcon={<Close />}
                         color="primary"
@@ -550,7 +581,7 @@ export default class RtspCamera extends (window.visRxWidget as typeof VisRxWidge
         const content = (
             <div
                 style={styles.imageContainer}
-                onClick={() => this.setState({ full: true })}
+                onClick={() => this.setFullScreen(true)}
             >
                 {this.state.loading && this.state.alive && <CircularProgress style={styles.progress} />}
                 {!this.state.alive ? (

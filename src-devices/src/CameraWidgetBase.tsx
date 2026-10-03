@@ -146,6 +146,20 @@ export abstract class CameraWidgetBase<
         return this.props.settings.size === '1x1' ? 320 : 640;
     }
 
+    /** Open or close the dialog. Always through this, so {@link onDialogToggled} cannot be missed. */
+    protected setDialogOpen(dialogOpen: boolean): void {
+        this.setState({ dialogOpen } as Partial<TState> as TState, () => this.onDialogToggled(dialogOpen));
+    }
+
+    /**
+     * The picture is asked for in the size it is shown in, and the dialog is four times as wide as a
+     * tile. A subclass that polls picks the new width up by itself; one that holds a subscription has
+     * to renew it here, otherwise the dialog stays on the small picture.
+     */
+    protected onDialogToggled(_dialogOpen: boolean): void {
+        // Nothing to do by default
+    }
+
     /** The picture itself - identical in the tile and in the dialog */
     protected renderPicture(full?: boolean): React.JSX.Element {
         if (!this.camera) {
@@ -212,11 +226,11 @@ export abstract class CameraWidgetBase<
                 open={!0}
                 fullWidth
                 maxWidth="lg"
-                onClose={() => this.setState({ dialogOpen: false } as Partial<TState> as TState)}
+                onClose={() => this.setDialogOpen(false)}
             >
                 <DialogContent sx={{ position: 'relative', p: 1 }}>
                     <IconButton
-                        onClick={() => this.setState({ dialogOpen: false } as Partial<TState> as TState)}
+                        onClick={() => this.setDialogOpen(false)}
                         sx={{ position: 'absolute', top: 4, right: 4, zIndex: 1 }}
                         size="small"
                     >
@@ -243,7 +257,7 @@ export abstract class CameraWidgetBase<
                 sx={(theme: any) => styleFn(theme)}
             >
                 <Box
-                    onClick={() => this.setState({ dialogOpen: true } as Partial<TState> as TState)}
+                    onClick={() => this.setDialogOpen(true)}
                     sx={(theme: any) => ({
                         display: 'flex',
                         flexDirection: 'column',
