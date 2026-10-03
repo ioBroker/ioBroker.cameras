@@ -205,7 +205,7 @@ If the binary cannot be found or does not start, the adapter transparently falls
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.2.1 (2026-10-03)
 * (@hdering) Changed: a camera is added by choosing the manufacturer first, then only the fitting connection is offered; the stored configuration keeps its format
 * (@hdering) Changed: the model list is chosen by stream path, sorted by how many models use it; the model is optional. HTTP paths that deliver a stream instead of an image are hidden, they never worked
 * (@hdering) Changed: an RTSP camera is configured with one URL field, also for `rtsps://`; a pasted login goes to its own fields
@@ -271,9 +271,6 @@ If the binary cannot be found or does not start, the adapter transparently falls
 * (@GermanBluefox) Fixed: the `.running` state did not start or stop the stream
 * (@GermanBluefox) Fixed: width/height/angle of the `image` message were ignored
 * (@GermanBluefox) Fixed: a camera in the dialog of the snapshot widget was never used
-
-### 2.1.2 (2024-07-15)
-* (bluefox) Updated packages
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 

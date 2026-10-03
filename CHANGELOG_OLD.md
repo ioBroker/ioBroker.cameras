@@ -1,4 +1,7 @@
 # Older changes
+## 2.1.2 (2024-07-15)
+* (bluefox) Updated packages
+
 ## 2.1.1 (2024-07-07)
 * (bluefox) Removed withStyles package
 
