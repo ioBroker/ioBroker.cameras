@@ -168,8 +168,10 @@ Logos live next to the data as `data/<id>.svg` and are produced by `node tools/l
 brand marks from `simple-icons` (CC0) for the nine manufacturers it actually carries, and a generated
 monogram for the rest, because most IP camera brands have no freely licensed logo and copying
 trademarked artwork into an MIT repo is not an option. **To use a real logo, just drop
-`<id>.svg`/`.png`/`.jpg` into `src-admin/public/data/`** — `Universal.tsx` probes those three
-extensions and `tools/logos.js` skips ids that already have a file.
+`<id>.svg`/`.png`/`.jpg` into `src-admin/public/data/`** — `ManufacturerIcon` in
+`Components/TypeSelector.tsx` probes those three extensions and `tools/logos.js` skips ids that
+already have a file. Keep the two in step: logos.js writes no monogram for an id that already has a
+`.png`/`.jpg`, so an extension the icon does not try shows nothing at all.
 
 Regenerate the model data with `node tools/parser.js` (all) or `node tools/parser.js hikvision dahua`
 (selected). New manufacturers go into the `MANUFACTURERS` map at the top of the script; it writes

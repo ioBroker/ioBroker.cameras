@@ -94,6 +94,21 @@ The console uses a self-signed certificate, which is not verified for these requ
 H.265; snapshots are taken from key frames only, otherwise the first picture is a grey area. The snapshot API of
 Protect only knows a high and a low resolution, so *medium* takes the high one.
 
+### Eufy
+With the [eusec](https://github.com/bropat/ioBroker.eusec) adapter installed, the dialog lists its cameras and doorbells
+by the names from the Eufy app:
+- A camera **with RTSP** of its own uses the link eusec provides in `rtsp_stream_url`. RTSP is switched on for it
+  automatically; if no link appears, enable RTSP for the camera in the Eufy app.
+- A camera **without RTSP** (many battery cameras) is marked *live via station*: for an image the adapter presses
+  `start_stream` of eusec, which streams the camera through the station into its own go2rtc, and takes the snapshot
+  from there. The first image takes a few seconds, and a battery camera is woken up each time. eusec ends the stream
+  after its *max. livestream duration*; images within that time do not wake the camera again. Such a camera is only
+  woken by a request - unlike every other type it gets no picture at the start of the adapter, which would cost its
+  battery at every restart. The RTSP server of the go2rtc in eusec must not require a login - its password is a
+  protected setting of eusec that other adapters cannot read.
+
+Without eusec, a camera with RTSP can be entered by its IP address.
+
 ### URL image
 This is a normal URL request, where all parameters are in URL. Like `http://mycam/snapshot.jpg`  
 
@@ -202,6 +217,8 @@ If the binary cannot be found or does not start, the adapter transparently falls
 * (@hdering) Fixed: changes in the camera dialog were applied to the stored settings instead of the edited ones, so an earlier change could get lost
 * (@hdering) Added: MJPEG streams over HTTP - the first frame is taken; this makes the MJPEG paths of the model lists usable. A video stream over HTTP fails at once with a hint instead of a timeout
 * (@hdering) Added: a grey snapshot of an H.265 stream is recognized and taken again from a key frame; "Key frames only" in the expert settings of the RTSP type sets it permanently
+* (@hdering) Added: the Eufy dialog lists the cameras of the eusec adapter; cameras without RTSP of their own are streamed through the station by eusec (#205)
+* (@hdering) Fixed: switching the Eufy dialog between eusec and IP address was not saved
 ### 3.2.0 (2026-10-01)
 * (@hdering) Added: UniFi Protect cameras, with the stream token from the Protect API or entered by hand (#133)
 * (@hdering) Added: RTSPS for UniFi Protect, also through go2rtc

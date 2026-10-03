@@ -123,6 +123,14 @@ export function getCameraTypeLabel(cam: CameraConfig, manufacturers: Manufacture
     return name;
 }
 
+/**
+ * `tools/logos.js` generates an `<id>.svg` and keeps a file that is already there, whatever of these
+ * extensions it has - a real logo is added by dropping it next to the model list. So all three have
+ * to be tried here, otherwise such a manufacturer shows nothing at all: the generated monogram was
+ * not written for it either.
+ */
+const LOGO_EXTENSIONS = ['svg', 'png', 'jpg'];
+
 export function ManufacturerIcon(props: { manufacturer: string; size?: number }): React.JSX.Element | null {
     const size = props.size || 24;
     if (!props.manufacturer) {
@@ -133,13 +141,23 @@ export function ManufacturerIcon(props: { manufacturer: string; size?: number })
     }
     return (
         <img
-            // The <img> is reused for the next manufacturer - it must not stay hidden after an error
+            // The <img> is reused for the next manufacturer - it must not stay hidden after an error,
+            // and the extension already tried must not be carried over either
             key={props.manufacturer}
-            src={`./data/${props.manufacturer}.svg`}
+            src={`./data/${props.manufacturer}.${LOGO_EXTENSIONS[0]}`}
             alt=""
             style={{ width: size, height: size, flexShrink: 0, objectFit: 'contain' }}
-            // Not every manufacturer has a logo - do not show a broken image
-            onError={e => ((e.target as HTMLImageElement).style.visibility = 'hidden')}
+            onError={e => {
+                const img = e.target as HTMLImageElement;
+                const next = parseInt(img.dataset.extension || '0', 10) + 1;
+                if (next < LOGO_EXTENSIONS.length) {
+                    img.dataset.extension = next.toString();
+                    img.src = `./data/${props.manufacturer}.${LOGO_EXTENSIONS[next]}`;
+                } else {
+                    // Not every manufacturer has a logo - do not show a broken image
+                    img.style.visibility = 'hidden';
+                }
+            }}
         />
     );
 }
