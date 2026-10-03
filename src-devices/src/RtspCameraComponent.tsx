@@ -23,6 +23,8 @@ export class RtspCameraComponent extends CameraWidgetBase<RtspCameraSettings, Ca
     private subscribedTo: string | null = null;
     private aliveId: string | null = null;
     private destroyed = false;
+    /** Keeps the subscription alive, see {@link scheduleRenew} */
+    private renewTimer: ReturnType<typeof setInterval> | null = null;
 
     constructor(props: WidgetGenericProps<RtspCameraSettings>) {
         super(props);
@@ -88,6 +90,7 @@ export class RtspCameraComponent extends CameraWidgetBase<RtspCameraSettings, Ca
                 { width: this.getRequestedWidth(this.state.dialogOpen) },
                 this.onFrame,
             )
+            .then(result => this.scheduleRenew(result?.heartbeat))
             .catch((e: Error) => {
                 this.subscribedTo = null;
                 this.setError(e.toString());
@@ -100,12 +103,31 @@ export class RtspCameraComponent extends CameraWidgetBase<RtspCameraSettings, Ca
     }
 
     /**
-     * The adapter scales the stream to the width of the last subscribe request, so opening the dialog
-     * has to ask again - a renewed request with a different width restarts ffmpeg with the new scale,
-     * which is what the periodic refresh of the vis-2 widget relies on as well. Without this the
-     * dialog showed the tile picture blown up, as nothing else ever asks for a bigger one here.
+     * The adapter answers every subscription with the interval the client has to re-subscribe
+     * within. A client that misses it is dropped by js-controller with reason "timeout", and the
+     * adapter then stops the stream - so without this the tile froze on its last frame after a
+     * minute, silently: the send error happens on the adapter side and never reaches the browser.
+     * Renewed at half the heartbeat, so a single lost request is not fatal.
+     *
+     * @param heartbeat interval from the subscribe answer, in ms. Without one there is nothing to renew
      */
-    protected override onDialogToggled(dialogOpen: boolean): void {
+    private scheduleRenew(heartbeat?: number): void {
+        if (this.renewTimer) {
+            clearInterval(this.renewTimer);
+            this.renewTimer = null;
+        }
+        if (this.destroyed || !heartbeat) {
+            return;
+        }
+        this.renewTimer = setInterval(() => this.renewSubscription(), Math.max(5000, Math.round(heartbeat / 2)));
+    }
+
+    /**
+     * Subscribing again is what renewing is: the adapter refreshes the timestamp of an existing
+     * subscription instead of adding a second one, and it restarts ffmpeg only if the width really
+     * changed - so this is cheap enough to run on a timer.
+     */
+    private renewSubscription(): void {
         if (this.destroyed || !this.camera || !this.subscribedTo) {
             return;
         }
@@ -114,15 +136,31 @@ export class RtspCameraComponent extends CameraWidgetBase<RtspCameraSettings, Ca
             .subscribeOnInstance(
                 this.camera.instance,
                 this.subscribedTo,
-                { width: this.getRequestedWidth(dialogOpen) },
+                { width: this.getRequestedWidth(this.state.dialogOpen) },
                 this.onFrame,
             )
             .catch((e: Error) => console.warn(`Cannot renew camera subscription: ${e.toString()}`));
     }
 
+    /**
+     * The adapter scales the stream to the width of the last subscribe request, so opening the dialog
+     * has to ask again - a renewed request with a different width restarts ffmpeg with the new scale,
+     * which is what the periodic renewal above does for the heartbeat. Without this the dialog showed
+     * the tile picture blown up, as nothing else ever asks for a bigger one here. This runs as a
+     * `setState` callback, so `state.dialogOpen` is already the new value.
+     */
+    protected override onDialogToggled(_dialogOpen: boolean): void {
+        this.renewSubscription();
+    }
+
     protected stopCamera(): void {
         this.destroyed = true;
         const socket = this.props.stateContext.getSocket();
+
+        if (this.renewTimer) {
+            clearInterval(this.renewTimer);
+            this.renewTimer = null;
+        }
 
         if (this.aliveId) {
             socket.unsubscribeState(this.aliveId, this.onAliveChanged);
