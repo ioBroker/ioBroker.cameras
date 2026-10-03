@@ -35,6 +35,7 @@ export declare class CamerasAdapter extends Adapter {
         error?: string;
     }>;
     onClientUnsubscribe(clientId: string, obj: ioBroker.Message | undefined): void;
+    private dropSubscriptions;
     onMessage(obj: ioBroker.Message): Promise<void>;
     unloadCameras(cb: () => void): void;
     resizeImage(data: ProcessDataEx, width: number | undefined, height: number | undefined): Promise<ProcessData>;

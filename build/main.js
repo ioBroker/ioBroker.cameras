@@ -232,37 +232,47 @@ class CamerasAdapter extends adapter_core_1.Adapter {
             return;
         }
         const message = obj?.message;
+        const now = Date.now();
         if (!message?.type) {
+            // The client did not renew its subscription within the heartbeat (e.g. the browser tab
+            // was closed). Such an unsubscribe carries no message, so all cameras of this client
+            // are affected. Keeping them would send every frame to a client that is not registered
+            // anymore and log a warning for each of them.
+            const cameraNames = [
+                ...new Set(this.streamSubscribes.filter(s => s.clientId === clientId).map(s => s.camera)),
+            ];
+            cameraNames.forEach(cameraName => this.dropSubscriptions(cameraName, clientId, now));
             return;
         }
         if (!Array.isArray(message.type)) {
             message.type = [message.type];
         }
-        const now = Date.now();
         message.type.forEach(type => {
             if (type && type.startsWith('startCamera/')) {
-                const cameraName = type.substring('startCamera/'.length);
-                // Only the subscriptions for this camera are touched - the same client may well be
-                // watching other cameras, and those must keep receiving frames. Subscriptions that
-                // were not renewed within the heartbeat belong to a client that is gone; they are
-                // dropped here too, so they cannot keep the camera running for nobody.
-                // The array is shared with the cameras (see registerRtspStreams), so it has to be
-                // changed in place instead of being replaced.
-                for (let i = this.streamSubscribes.length - 1; i >= 0; i--) {
-                    const sub = this.streamSubscribes[i];
-                    if (sub.camera === cameraName && (sub.clientId === clientId || now - sub.ts > 60000)) {
-                        this.streamSubscribes.splice(i, 1);
-                    }
-                }
-                if (!this.streamSubscribes.some(s => s.camera === cameraName)) {
-                    this.log.debug(`Stop camera "${cameraName}"`);
-                    // A camera that failed to initialize has no entry here
-                    this.cameras[cameraName]
-                        ?.stopWebStream()
-                        .catch(e => this.log.error(`Cannot stop camera on unsubscribe "${cameraName}": ${e}`));
-                }
+                this.dropSubscriptions(type.substring('startCamera/'.length), clientId, now);
             }
         });
+    }
+    dropSubscriptions(cameraName, clientId, now) {
+        // Only the subscriptions for this camera are touched - the same client may well be
+        // watching other cameras, and those must keep receiving frames. Subscriptions that
+        // were not renewed within the heartbeat belong to a client that is gone; they are
+        // dropped here too, so they cannot keep the camera running for nobody.
+        // The array is shared with the cameras (see registerRtspStreams), so it has to be
+        // changed in place instead of being replaced.
+        for (let i = this.streamSubscribes.length - 1; i >= 0; i--) {
+            const sub = this.streamSubscribes[i];
+            if (sub.camera === cameraName && (sub.clientId === clientId || now - sub.ts > 60000)) {
+                this.streamSubscribes.splice(i, 1);
+            }
+        }
+        if (!this.streamSubscribes.some(s => s.camera === cameraName)) {
+            this.log.debug(`Stop camera "${cameraName}"`);
+            // A camera that failed to initialize has no entry here
+            this.cameras[cameraName]
+                ?.stopWebStream()
+                .catch(e => this.log.error(`Cannot stop camera on unsubscribe "${cameraName}": ${e}`));
+        }
     }
     async onMessage(obj) {
         if (!obj?.command) {

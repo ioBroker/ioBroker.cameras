@@ -54,5 +54,6 @@ export default class GenericRtspCamera extends GenericCamera {
     startWebStream(options?: {
         width?: number;
     }): Promise<void>;
+    private onSendToUIError;
     stopWebStream(restart?: boolean): Promise<void>;
 }

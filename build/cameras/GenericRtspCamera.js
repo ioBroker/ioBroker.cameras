@@ -256,38 +256,21 @@ class GenericRtspCamera extends GenericCamera_1.default {
                         this.lastFrame = Date.now();
                         this.lastBase64Frame = frame;
                         if (this.streamSubscribes) {
-                            const clientsToDelete = [];
                             this.streamSubscribes.forEach(sub => {
                                 if (sub.camera === this.config.name) {
                                     found = true;
                                     try {
                                         if (this.adapter.sendToUI) {
-                                            this.adapter.sendToUI({ clientId: sub.clientId, data: frame }).catch(e => {
-                                                if (e?.toString().includes('not registered')) {
-                                                    // forget this client
-                                                    clientsToDelete.push(sub.clientId);
-                                                }
-                                                this.adapter.log.warn(`Cannot send to UI: ${e}`);
-                                            });
+                                            this.adapter
+                                                .sendToUI({ clientId: sub.clientId, data: frame })
+                                                .catch(e => this.onSendToUIError(sub, e));
                                         }
                                     }
                                     catch (e) {
-                                        if (e?.toString().includes('not registered')) {
-                                            // forget this client
-                                            clientsToDelete.push(sub.clientId);
-                                        }
-                                        this.adapter.log.warn(`Cannot send to UI: ${e}`);
+                                        this.onSendToUIError(sub, e);
                                     }
                                 }
                             });
-                            // Forget the clients that are no longer registered. Remove them by
-                            // identity - the index in clientsToDelete is unrelated to streamSubscribes
-                            for (const clientId of clientsToDelete) {
-                                const pos = this.streamSubscribes.findIndex(s => s.clientId === clientId && s.camera === this.config.name);
-                                if (pos !== -1) {
-                                    this.streamSubscribes.splice(pos, 1);
-                                }
-                            }
                         }
                         if (!found) {
                             await this.adapter.setState(`${this.config.name}.stream`, frame, true);
@@ -299,6 +282,22 @@ class GenericRtspCamera extends GenericCamera_1.default {
                     chunks = Buffer.concat([chunks, chunk]);
                 }
             });
+        }
+    }
+    onSendToUIError(sub, e) {
+        const error = e instanceof Error ? e.message : String(e);
+        if (error.includes('not registered')) {
+            // The client is gone (e.g. the browser tab was closed) - forget it, otherwise every
+            // following frame would fail the same way. The rejection arrives after the frame loop
+            // is done, so the subscription is removed here, by identity, and not collected for it.
+            const pos = this.streamSubscribes?.indexOf(sub) ?? -1;
+            if (pos !== -1) {
+                this.streamSubscribes.splice(pos, 1);
+            }
+            this.adapter.log.debug(`GUI client "${sub.clientId}" for ${this.config.name} is gone: ${error}`);
+        }
+        else {
+            this.adapter.log.warn(`Cannot send to UI: ${error}`);
         }
     }
     async stopWebStream(restart) {
