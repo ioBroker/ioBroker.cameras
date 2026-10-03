@@ -102,9 +102,10 @@ by the names from the Eufy app:
 - A camera **without RTSP** (many battery cameras) is marked *live via station*: for an image the adapter presses
   `start_stream` of eusec, which streams the camera through the station into its own go2rtc, and takes the snapshot
   from there. The first image takes a few seconds, and a battery camera is woken up each time. eusec ends the stream
-  after its *max. livestream duration*; images within that time do not wake the camera again. The RTSP server of the
-  go2rtc in eusec must not require a login - its password is a protected setting of eusec that other adapters cannot
-  read.
+  after its *max. livestream duration*; images within that time do not wake the camera again. Such a camera is only
+  woken by a request - unlike every other type it gets no picture at the start of the adapter, which would cost its
+  battery at every restart. The RTSP server of the go2rtc in eusec must not require a login - its password is a
+  protected setting of eusec that other adapters cannot read.
 
 Without eusec, a camera with RTSP can be entered by its IP address.
 

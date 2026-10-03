@@ -91,6 +91,9 @@ export default class EufyCamera extends GenericRtspCamera {
      */
     private async initLivestream(device: string): Promise<void> {
         this.livestreamDevice = device;
+        // Pressing "start_stream" for a picture wakes the camera, so the adapter must not ask for one
+        // on its own. Without this, fillFiles() woke every such camera right after init() returned
+        this.wakesUpForSnapshot = true;
         // The protocol must be TCP, go2rtc does not serve RTSP over UDP
         this.settings!.protocol = 'tcp';
 

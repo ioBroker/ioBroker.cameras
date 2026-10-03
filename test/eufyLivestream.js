@@ -69,6 +69,9 @@ describe('Eufy camera without RTSP (live stream of eusec)', function () {
         await camera.init();
         assert.strictEqual(adapter.presses, 0);
         assert.strictEqual(camera.getRtspURL(), 'rtsp://127.0.0.1:8554/T8113ABC');
+        // init() alone is not enough: fillFiles() asks every camera for a picture right after it,
+        // which would press "start_stream". It leaves a camera with this flag out
+        assert.strictEqual(camera.wakesUpForSnapshot, true);
     });
 
     it('starts the stream for a snapshot and uses the link of eusec', async () => {
