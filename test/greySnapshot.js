@@ -98,6 +98,37 @@ describe('Grey H.265 snapshots', () => {
         assert.deepStrictEqual(calls[2], { keyFramesOnly: false });
     });
 
+    it('does not check a flat image again on every snapshot', async () => {
+        answers = [await grey(), await grey(), await grey(), await grey()];
+        const camera = await createCamera();
+        await camera.process();
+        assert.deepStrictEqual(calls, [{ keyFramesOnly: false }, { keyFramesOnly: true }]);
+
+        // A camera really showing one colour would otherwise pay for the second ffmpeg run on
+        // every request for the rest of the runtime
+        await camera.process();
+        assert.deepStrictEqual(calls, [
+            { keyFramesOnly: false },
+            { keyFramesOnly: true },
+            { keyFramesOnly: false },
+        ]);
+    });
+
+    it('checks a flat image again once the pause is over', async () => {
+        const good = await noisy();
+        answers = [await grey(), await grey(), await grey(), good];
+        const camera = await createCamera();
+        await camera.process();
+        assert.strictEqual(calls.length, 2);
+
+        // The check is on hold, not given up: a lens does not stay covered forever, and the H.265
+        // problem would never be found after that. Here the pause is skipped instead of waited out
+        camera.greyCheckAgainAt = 0;
+        const result = await camera.process();
+        assert.strictEqual(calls.length, 4);
+        assert.ok(result.body.equals(good));
+    });
+
     it('uses key frames right away when configured', async () => {
         answers = [await grey()];
         const camera = await createCamera({ keyFramesOnly: true });

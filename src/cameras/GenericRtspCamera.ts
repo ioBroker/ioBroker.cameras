@@ -7,6 +7,13 @@ import type { ContentType, CamerasAdapterConfig, ProcessData, CameraConfigAny } 
 import { getRtspSnapshot, isFlatImage, maskPassword, type RtspOptions } from './rtspCommon';
 import type Go2RtcServer from '../lib/Go2RtcServer';
 
+/**
+ * How long the grey check stays on hold after a key frame turned out to be flat as well. Short enough
+ * that a lens someone uncovered is noticed again, long enough that the second snapshot is not paid
+ * for on every request - see {@link GenericRtspCamera.takeSnapshot}.
+ */
+const GREY_RECHECK_MS = 10 * 60_000;
+
 export default class GenericRtspCamera extends GenericCamera {
     private width = 0;
     private ratio = 0;
@@ -20,6 +27,8 @@ export default class GenericRtspCamera extends GenericCamera {
     protected settings: RtspOptions | null = null;
     private readonly ffmpegPath: string;
     private go2rtc: Go2RtcServer | null = null;
+    /** Not before this the grey check may spend a second ffmpeg run again, see {@link takeSnapshot} */
+    private greyCheckAgainAt = 0;
 
     constructor(adapter: ioBroker.Adapter, config: CameraConfigAny, ffmpegPath: string) {
         super(adapter, config);
@@ -156,12 +165,15 @@ export default class GenericRtspCamera extends GenericCamera {
             );
 
         const body = await snapshot();
-        if (settings.keyFramesOnly || !(await isFlatImage(body))) {
+        if (settings.keyFramesOnly || Date.now() < this.greyCheckAgainAt || !(await isFlatImage(body))) {
             return body;
         }
 
         settings.keyFramesOnly = true;
-        const fromKeyFrame = await snapshot().catch(() => null);
+        const fromKeyFrame = await snapshot().catch((e: Error) => {
+            this.adapter.log.debug(`Camera "${this.config.name}": no snapshot from a key frame: ${e.message}`);
+            return null;
+        });
         if (fromKeyFrame && !(await isFlatImage(fromKeyFrame))) {
             this.adapter.log.info(
                 `Camera "${this.config.name}" delivered a grey image (H.265?). Snapshots are now taken from key frames only`,
@@ -169,8 +181,12 @@ export default class GenericRtspCamera extends GenericCamera {
             return fromKeyFrame;
         }
         // Flat from a key frame as well - a covered lens or a camera showing one colour. Waiting for
-        // key frames does not help then and would only make every snapshot slower
+        // key frames does not help then and would only make every snapshot slower.
+        // A camera really showing one colour would otherwise pay for the second snapshot on every
+        // request for the rest of the runtime, so the check is put on hold - but not given up: a lens
+        // does not stay covered forever, and the H.265 problem would never be found after that.
         settings.keyFramesOnly = false;
+        this.greyCheckAgainAt = Date.now() + GREY_RECHECK_MS;
         return body;
     }
 
