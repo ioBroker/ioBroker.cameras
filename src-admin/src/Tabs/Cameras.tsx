@@ -2,16 +2,14 @@ import React, { Component } from 'react';
 
 import {
     Fab,
+    Alert,
     Button,
+    ButtonBase,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
-    FormControl,
     FormControlLabel,
-    InputLabel,
-    MenuItem,
-    Select,
     TextField,
     Checkbox,
     CircularProgress,
@@ -43,12 +41,26 @@ import RTSPReolinkE1Config from '../Types/RTSPReolinkE1';
 import RTSPEufyConfig from '../Types/RTSPEufy';
 import RTSPHiKamConfig from '../Types/RTSPHiKam';
 import UniversalConfig from '../Types/Universal';
-import type { CamerasAdapterConfig, CameraConfig, CameraConfigAny, CameraType, CameraConfigUniversal } from '../types';
+import type {
+    CamerasAdapterConfig,
+    CameraConfig,
+    CameraConfigAny,
+    CameraType,
+    CameraConfigUniversal,
+    CameraConfigReolink,
+} from '../types';
 import type { ConfigProps } from '../Types/ConfigGeneric';
 // eslint-disable-next-line @/no-duplicate-imports,no-duplicate-imports
 import type ConfigGeneric from '../Types/ConfigGeneric';
 import InstarConfig from '../Types/Instar';
 import UniFiConfig from '../Types/UniFi';
+import TypeSelector, {
+    ManufacturerIcon,
+    getCameraTypeLabel,
+    getManufacturerOfCamera,
+    isDeprecatedType,
+    type ManufacturerItem,
+} from '../Components/TypeSelector';
 
 interface IConfigGeneric extends ConfigGeneric<any> {
     readonly isRtsp: boolean;
@@ -97,11 +109,34 @@ const styles: Record<string, any> = {
     },
     lineDesc: {
         display: 'inline-block',
-        flexGrow: 1,
+        width: 300,
+        flexShrink: 1,
+        minWidth: 120,
     },
     lineType: {
         display: 'inline-block',
-        width: 200,
+        flexGrow: 1,
+        minWidth: 200,
+        overflow: 'hidden',
+    },
+    typeLabel: {
+        fontSize: '0.75rem',
+        opacity: 0.7,
+        marginTop: 4,
+    },
+    typeButton: {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        gap: 8,
+        width: '100%',
+        padding: '4px 0',
+        borderBottom: '1px dotted gray',
+    },
+    typeText: {
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        textAlign: 'left',
     },
     lineEdit: {
         display: 'inline-block',
@@ -135,8 +170,19 @@ const styles: Record<string, any> = {
         width: 40,
         marginLeft: 10,
     },
+    divSettings: {
+        display: 'flex',
+        flexDirection: 'column',
+        // Limited, so long content of a form - like the ffmpeg command line of the expert
+        // settings - wraps instead of squeezing the test image next to it
+        flex: '1 1 420px',
+        maxWidth: 520,
+        minWidth: 0,
+    },
     divTestCam: {
-        flex: 1,
+        // Below the settings if the dialog is too narrow for both, but never smaller than this
+        flex: '1 1 360px',
+        minWidth: 320,
         verticalAlign: 'top',
         display: 'flex',
         flexDirection: 'column',
@@ -187,6 +233,8 @@ interface CamerasState {
     editedSettingsOld: string | null;
     message: string;
     testImg: string | null;
+    /** Manufacturers that have a model list in ./data/ */
+    manufacturers: ManufacturerItem[];
 }
 
 export default class Cameras extends Component<CamerasProps, CamerasState> {
@@ -203,6 +251,7 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
             editedSettingsOld: null,
             message: '',
             testImg: null,
+            manufacturers: [],
         };
 
         // translate all names once
@@ -219,6 +268,11 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
 
     componentDidMount(): void {
         this.getWebInstances().catch(e => this.props.onError?.(e));
+
+        void fetch('./data/manufacturers.json')
+            .then(response => response.json())
+            .then((manufacturers: ManufacturerItem[]) => this.setState({ manufacturers }))
+            .catch(e => this.props.onError?.(`Cannot read the list of manufacturers: ${e}`));
     }
 
     static ip2int(ip: string): number {
@@ -410,28 +464,132 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
     }
 
     onCameraSettingsChanged(settings: CameraConfig): void {
-        const oldSettings: CameraConfig = JSON.parse(this.state.editedSettingsOld || '{}');
-        // apply changes
-        settings = Object.assign(oldSettings, settings);
-        const editedSettings = JSON.stringify(settings);
+        // Apply the changes to the edited state, not to the stored one: the type may have been
+        // changed in the dialog already, and the type forms only report their own fields
+        const current: CameraConfig = JSON.parse(this.state.editedSettings || this.state.editedSettingsOld || '{}');
+        settings = Object.assign(current, settings);
 
         // custom solution for universal camera
         if (settings.type === 'universal') {
             settings.rtsp = (settings as CameraConfigUniversal).urlProtocol === 'rtsp://';
         }
 
+        this.setEditedSettings(settings);
+    }
+
+    setEditedSettings(settings: CameraConfig): void {
+        const editedSettings = JSON.stringify(settings);
         if (this.state.editedSettingsOld === editedSettings) {
             this.setState({ editChanged: false, editedSettings: null });
-        } else if (this.state.editedSettingsOld !== editedSettings) {
+        } else {
             this.setState({ editChanged: true, editedSettings });
         }
+    }
+
+    /** Settings that do not depend on the type and survive a change of it */
+    static getCommonSettings(cam: CameraConfig): CameraConfig {
+        return {
+            name: cam.name,
+            desc: cam.desc,
+            id: cam.id,
+            enabled: cam.enabled,
+            timeout: cam.timeout,
+            cacheTimeout: cam.cacheTimeout,
+            addTime: cam.addTime,
+            title: cam.title,
+            type: cam.type,
+            rtsp: cam.rtsp,
+        };
+    }
+
+    onTypeSelected(cam: CameraConfig, manufacturer: string, type: CameraType): void {
+        if (cam.type === type && getManufacturerOfCamera(cam) === manufacturer) {
+            return;
+        }
+        this.setState({ testImg: null });
+
+        // Back to the stored type: restore its settings completely. Only looking at another type
+        // must not cost the API key, token or path - they are not carried over to other types
+        const stored: CameraConfig = JSON.parse(this.state.editedSettingsOld || '{}');
+        if (stored.type === type && getManufacturerOfCamera(stored) === manufacturer) {
+            this.setEditedSettings({ ...stored, ...Cameras.getCommonSettings(cam), type, rtsp: stored.rtsp });
+            return;
+        }
+
+        const settings: Record<string, any> = {
+            ...Cameras.getCommonSettings(cam),
+            type,
+            // A universal camera has a stream only after a model with an RTSP path was chosen
+            rtsp: type === 'universal' ? false : !!TYPES[type].rtsp,
+        };
+        // Keep the address and the login - mostly the same camera is just configured another way
+        const old = cam as Record<string, any>;
+        ['ip', 'username', 'password'].forEach(attr => {
+            if (old[attr] !== undefined) {
+                settings[attr] = old[attr];
+            }
+        });
+        if (type === 'universal') {
+            settings.manufacturer = manufacturer;
+        }
+        this.setEditedSettings(settings as CameraConfig);
+    }
+
+    /** Move a camera of a deprecated type to the type that replaces it */
+    onConvertDeprecated(cam: CameraConfig): void {
+        if (cam.type === 'reolinkE1') {
+            const reolink = cam as CameraConfigReolink;
+            const settings: CameraConfigUniversal = {
+                ...Cameras.getCommonSettings(cam),
+                type: 'universal',
+                rtsp: true,
+                manufacturer: 'reolink',
+                // Listed in reolink.json with both paths that the E1 type used
+                model: 'e1 pro',
+                urlProtocol: 'rtsp://',
+                urlPath: reolink.quality === 'high' ? '/h264Preview_01_main' : '/h264Preview_01_sub',
+                ip: reolink.ip,
+                port: 554,
+                username: reolink.username,
+                password: reolink.password,
+            };
+            this.setEditedSettings(settings);
+        }
+    }
+
+    isNewCamera(): boolean {
+        return this.state.editCam === (this.props.native.cameras?.length || 0);
+    }
+
+    onAddCamera(): void {
+        const cameras = this.props.native.cameras || [];
+        let i = 1;
+        while (cameras.find(cam => cam.name === `cam${i}`)) {
+            i++;
+        }
+        // The type is chosen in the dialog. The camera is only added to the list with "Apply"
+        const cam = { name: `cam${i}`, type: '', id: Date.now(), rtsp: false } as unknown as CameraConfig;
+        this.setState({
+            editCam: cameras.length,
+            editedSettingsOld: JSON.stringify(cam),
+            editedSettings: null,
+            editChanged: false,
+            testImg: null,
+        });
     }
 
     renderConfigDialog(): React.JSX.Element | null {
         if (this.state.editCam !== false) {
             const cam: CameraConfig = JSON.parse(this.state.editedSettings || this.state.editedSettingsOld || '{}');
+            const isNew = this.isNewCamera();
+            const manufacturer = getManufacturerOfCamera(cam);
+            // Nothing to configure before the manufacturer (and for "universal" its model list) is known
+            const typeChosen = !!TYPES[cam.type] && !!manufacturer;
             const Config: React.FC<ConfigProps<CameraConfig>> = (TYPES[cam.type] || TYPES.url)
                 .Config as unknown as React.FC<ConfigProps<CameraConfig>>;
+            const duplicateName = !!this.props.native.cameras?.find(
+                (c, i) => c.name === cam.name && i !== this.state.editCam,
+            );
 
             return (
                 <Dialog
@@ -441,76 +599,127 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
                     onClose={() => this.state.editCam !== null && this.setState({ editCam: false, editChanged: false })}
                 >
                     <DialogTitle>
-                        {I18n.t('Edit camera %s [%s]', cam.name, cam.type)} - {cam.desc}
+                        {isNew ? I18n.t('Add new camera') : I18n.t('Edit camera %s [%s]', cam.name, cam.type)}
+                        {!isNew && cam.desc ? ` - ${cam.desc}` : ''}
                     </DialogTitle>
                     <DialogContent>
-                        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                <Config
-                                    native={this.props.native}
-                                    socket={this.props.socket}
-                                    instanceId={`${this.props.adapterName}.${this.props.instance}`}
-                                    instanceAlive={this.state.instanceAlive}
-                                    settings={cam}
-                                    themeType={this.props.themeType}
-                                    theme={this.props.theme}
-                                    onChange={settings => this.onCameraSettingsChanged(settings as CameraConfig)}
-                                    encrypt={(value: string, cb: (encrypted: string) => void) =>
-                                        this.props.encrypt(value, cb)
-                                    }
-                                    decrypt={(value: string, cb: (decrypted: string) => void) =>
-                                        this.props.decrypt(value, cb)
+                        {isNew ? (
+                            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 8 }}>
+                                <TextField
+                                    variant="standard"
+                                    style={{ width: 200 }}
+                                    label={I18n.t('Name')}
+                                    error={duplicateName || !cam.name}
+                                    helperText={duplicateName ? I18n.t('Duplicate name') : ''}
+                                    value={cam.name || ''}
+                                    onChange={e =>
+                                        this.onCameraSettingsChanged({
+                                            ...cam,
+                                            name: e.target.value.replace(/[^-_\da-zA-Z]/g, '_'),
+                                        })
                                     }
                                 />
                                 <TextField
                                     variant="standard"
-                                    style={styles.username}
-                                    label={I18n.t('Request timeout (ms)')}
-                                    value={cam.timeout === undefined ? '' : cam.timeout}
-                                    helperText={I18n.t('If empty or 0, use default settings.')}
-                                    onChange={e => {
-                                        const settings: CameraConfig = JSON.parse(JSON.stringify(cam));
-                                        settings.timeout = e.target.value;
-                                        this.onCameraSettingsChanged(settings);
-                                    }}
+                                    style={{ flex: 1, minWidth: 250 }}
+                                    label={I18n.t('Description')}
+                                    value={cam.desc || ''}
+                                    onChange={e => this.onCameraSettingsChanged({ ...cam, desc: e.target.value })}
                                 />
-                                <TextField
-                                    variant="standard"
-                                    style={styles.username}
-                                    label={I18n.t('Cache timeout (ms)')}
-                                    value={cam.cacheTimeout === undefined ? '' : cam.cacheTimeout}
-                                    helperText={I18n.t('If empty, use default settings. If 0, cache disabled')}
-                                    onChange={e => {
-                                        const settings: CameraConfig = JSON.parse(JSON.stringify(cam));
-                                        settings.cacheTimeout = e.target.value;
-                                        this.onCameraSettingsChanged(settings);
-                                    }}
-                                />
-                                <FormControlLabel
-                                    label={I18n.t('Add time to screenshot')}
-                                    control={
-                                        <Checkbox
-                                            checked={cam.addTime || false}
-                                            onChange={e => {
-                                                const settings: CameraConfig = JSON.parse(JSON.stringify(cam));
-                                                settings.addTime = e.target.checked;
-                                                this.onCameraSettingsChanged(settings);
-                                            }}
-                                        />
-                                    }
-                                />
-                                <TextField
-                                    variant="standard"
-                                    fullWidth
-                                    label={I18n.t('Add title')}
-                                    value={cam.title === undefined ? '' : cam.title}
-                                    onChange={e => {
-                                        const settings: CameraConfig = JSON.parse(JSON.stringify(cam));
-                                        settings.title = e.target.value;
-                                        this.onCameraSettingsChanged(settings);
-                                    }}
-                                />
-                                {/*<div style={styles.sampleUrl}>
+                            </div>
+                        ) : null}
+                        <TypeSelector
+                            cam={cam}
+                            manufacturers={this.state.manufacturers}
+                            onChange={(manufacturer, type) => this.onTypeSelected(cam, manufacturer, type)}
+                        />
+                        {isDeprecatedType(cam.type) ? (
+                            <Alert
+                                severity="warning"
+                                style={{ marginBottom: 16 }}
+                                action={
+                                    <Button
+                                        color="inherit"
+                                        size="small"
+                                        onClick={() => this.onConvertDeprecated(cam)}
+                                    >
+                                        {I18n.t('Convert')}
+                                    </Button>
+                                }
+                            >
+                                {I18n.t('deprecated_type_hint')}
+                            </Alert>
+                        ) : null}
+                        {typeChosen ? (
+                            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+                                <div style={styles.divSettings}>
+                                    <Config
+                                        // The forms read the settings only once - mount a new one for another type
+                                        key={`${cam.type}_${manufacturer}`}
+                                        native={this.props.native}
+                                        socket={this.props.socket}
+                                        instanceId={`${this.props.adapterName}.${this.props.instance}`}
+                                        instanceAlive={this.state.instanceAlive}
+                                        settings={cam}
+                                        themeType={this.props.themeType}
+                                        theme={this.props.theme}
+                                        onChange={settings => this.onCameraSettingsChanged(settings as CameraConfig)}
+                                        encrypt={(value: string, cb: (encrypted: string) => void) =>
+                                            this.props.encrypt(value, cb)
+                                        }
+                                        decrypt={(value: string, cb: (decrypted: string) => void) =>
+                                            this.props.decrypt(value, cb)
+                                        }
+                                    />
+                                    <TextField
+                                        variant="standard"
+                                        style={styles.username}
+                                        label={I18n.t('Request timeout (ms)')}
+                                        value={cam.timeout === undefined ? '' : cam.timeout}
+                                        helperText={I18n.t('If empty or 0, use default settings.')}
+                                        onChange={e => {
+                                            const settings: CameraConfig = JSON.parse(JSON.stringify(cam));
+                                            settings.timeout = e.target.value;
+                                            this.onCameraSettingsChanged(settings);
+                                        }}
+                                    />
+                                    <TextField
+                                        variant="standard"
+                                        style={styles.username}
+                                        label={I18n.t('Cache timeout (ms)')}
+                                        value={cam.cacheTimeout === undefined ? '' : cam.cacheTimeout}
+                                        helperText={I18n.t('If empty, use default settings. If 0, cache disabled')}
+                                        onChange={e => {
+                                            const settings: CameraConfig = JSON.parse(JSON.stringify(cam));
+                                            settings.cacheTimeout = e.target.value;
+                                            this.onCameraSettingsChanged(settings);
+                                        }}
+                                    />
+                                    <FormControlLabel
+                                        label={I18n.t('Add time to screenshot')}
+                                        control={
+                                            <Checkbox
+                                                checked={cam.addTime || false}
+                                                onChange={e => {
+                                                    const settings: CameraConfig = JSON.parse(JSON.stringify(cam));
+                                                    settings.addTime = e.target.checked;
+                                                    this.onCameraSettingsChanged(settings);
+                                                }}
+                                            />
+                                        }
+                                    />
+                                    <TextField
+                                        variant="standard"
+                                        fullWidth
+                                        label={I18n.t('Add title')}
+                                        value={cam.title === undefined ? '' : cam.title}
+                                        onChange={e => {
+                                            const settings: CameraConfig = JSON.parse(JSON.stringify(cam));
+                                            settings.title = e.target.value;
+                                            this.onCameraSettingsChanged(settings);
+                                        }}
+                                    />
+                                    {/*<div style={styles.sampleUrl}>
                                     {I18n.t('Local URL')}
                                     :&nbsp;
                                     <a
@@ -523,66 +732,67 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
                                         {this.props.native.key}
                                     </a>
                                 </div>*/}
-                                <div style={styles.sampleUrl}>
-                                    {I18n.t('Web URL')}
-                                    :&nbsp;
-                                    <a
-                                        style={styles.link}
-                                        href={`${this.state.webInstanceUrl}/${this.props.adapterName}.${this.props.instance}/${cam.name}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        {this.state.webInstanceUrl}/{this.props.adapterName}.{this.props.instance}/
-                                        {cam.name}
-                                    </a>
-                                </div>
-                                {/* stream.mjpeg is served by go2rtc only - without it the route answers with a still image */}
-                                {this.props.native.useGo2rtc && Cameras.hasStream(cam) ? (
                                     <div style={styles.sampleUrl}>
-                                        {I18n.t('Stream URL')}
+                                        {I18n.t('Web URL')}
                                         :&nbsp;
                                         <a
                                             style={styles.link}
-                                            href={`${this.state.webInstanceUrl}/${this.props.adapterName}.${this.props.instance}/${cam.name}/stream.mjpeg`}
+                                            href={`${this.state.webInstanceUrl}/${this.props.adapterName}.${this.props.instance}/${cam.name}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
                                             {this.state.webInstanceUrl}/{this.props.adapterName}.{this.props.instance}/
-                                            {cam.name}/stream.mjpeg
+                                            {cam.name}
                                         </a>
                                     </div>
-                                ) : null}
+                                    {/* stream.mjpeg is served by go2rtc only - without it the route answers with a still image */}
+                                    {this.props.native.useGo2rtc && Cameras.hasStream(cam) ? (
+                                        <div style={styles.sampleUrl}>
+                                            {I18n.t('Stream URL')}
+                                            :&nbsp;
+                                            <a
+                                                style={styles.link}
+                                                href={`${this.state.webInstanceUrl}/${this.props.adapterName}.${this.props.instance}/${cam.name}/stream.mjpeg`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                {this.state.webInstanceUrl}/{this.props.adapterName}.
+                                                {this.props.instance}/{cam.name}/stream.mjpeg
+                                            </a>
+                                        </div>
+                                    ) : null}
+                                </div>
+                                <div style={styles.divTestCam}>
+                                    <Button
+                                        disabled={this.state.requesting || !this.state.instanceAlive}
+                                        variant="contained"
+                                        color="primary"
+                                        size="small"
+                                        style={styles.buttonTest}
+                                        onClick={() => this.onTest()}
+                                        startIcon={<IconTest />}
+                                    >
+                                        {I18n.t('Test')}
+                                    </Button>
+                                    {this.state.testImg ? (
+                                        <img
+                                            alt="test"
+                                            style={styles.imgTest}
+                                            src={this.state.testImg}
+                                        />
+                                    ) : null}
+                                    {this.state.requesting ? <CircularProgress /> : null}
+                                </div>
                             </div>
-                            <div style={styles.divTestCam}>
-                                <Button
-                                    disabled={this.state.requesting || !this.state.instanceAlive}
-                                    variant="contained"
-                                    color="primary"
-                                    size="small"
-                                    style={styles.buttonTest}
-                                    onClick={() => this.onTest()}
-                                    startIcon={<IconTest />}
-                                >
-                                    {I18n.t('Test')}
-                                </Button>
-                                {this.state.testImg ? (
-                                    <img
-                                        alt="test"
-                                        style={styles.imgTest}
-                                        src={this.state.testImg}
-                                    />
-                                ) : null}
-                                {this.state.requesting ? <CircularProgress /> : null}
-                            </div>
-                        </div>
+                        ) : null}
                     </DialogContent>
                     <DialogActions>
                         <Button
-                            disabled={!this.state.editChanged}
+                            disabled={!this.state.editChanged || !typeChosen || (isNew && (!cam.name || duplicateName))}
                             variant="contained"
                             onClick={() => {
                                 const cameras: CameraConfigAny[] = JSON.parse(
-                                    JSON.stringify(this.props.native.cameras),
+                                    JSON.stringify(this.props.native.cameras || []),
                                 );
                                 if (this.state.editedSettings) {
                                     cameras[this.state.editCam as number] = JSON.parse(this.state.editedSettings);
@@ -611,6 +821,16 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
         return null;
     }
 
+    onEditCamera(cam: CameraConfig, i: number): void {
+        this.setState({
+            editCam: i,
+            editedSettingsOld: JSON.stringify(cam),
+            editedSettings: null,
+            editChanged: false,
+            testImg: null,
+        });
+    }
+
     renderCameraButtons(cam: CameraConfig, i: number): React.JSX.Element {
         return (
             <div style={{ display: 'flex', gap: 8, width: 160 }}>
@@ -618,14 +838,7 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
                     size="small"
                     key="edit"
                     style={styles.lineEdit}
-                    onClick={() =>
-                        this.setState({
-                            editCam: i,
-                            editedSettingsOld: JSON.stringify(cam),
-                            editedSettings: null,
-                            testImg: null,
-                        })
-                    }
+                    onClick={() => this.onEditCamera(cam, i)}
                 >
                     <IconEdit style={styles.buttonIcon} />
                 </IconButton>
@@ -765,66 +978,18 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
                         />
                     </div>
                     <div style={styles.lineType}>
-                        <FormControl
-                            fullWidth
-                            style={styles.type}
-                            variant="standard"
+                        <div style={styles.typeLabel}>{I18n.t('Type')}</div>
+                        <ButtonBase
+                            style={styles.typeButton}
+                            title={I18n.t('Edit camera %s [%s]', cam.name, cam.type)}
+                            onClick={() => this.onEditCamera(cam, i)}
                         >
-                            <InputLabel>{I18n.t('Type')}</InputLabel>
-                            <Select
-                                variant="standard"
-                                value={cam.type || ''}
-                                onChange={e => {
-                                    const cameras: CameraConfig[] = JSON.parse(
-                                        JSON.stringify(this.props.native.cameras),
-                                    );
-                                    const camera = cameras[i];
-                                    cameras[i] = {
-                                        type: e.target.value,
-                                        desc: camera.desc,
-                                        name: camera.name,
-                                        enabled: camera.enabled,
-                                        // @ts-expect-error try to keep the ip address
-                                        ip: (camera as any).ip,
-                                        rtsp: !!TYPES[e.target.value].rtsp,
-                                    };
-                                    this.props.onChange('cameras', cameras);
-                                }}
-                                renderValue={type => (
-                                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                                        {TYPES[type].icon ? (
-                                            <img
-                                                src={`./data/${TYPES[type].icon}`}
-                                                style={{ height: 20, width: 'auto' }}
-                                                alt={type}
-                                            />
-                                        ) : null}
-                                        {TYPES[type].icon && TYPES[type].hideName ? null : (
-                                            <div>{TYPES[type].name || type}</div>
-                                        )}
-                                    </div>
-                                )}
-                            >
-                                {Object.keys(TYPES).map(type => (
-                                    <MenuItem
-                                        key={type}
-                                        value={type}
-                                        style={{ display: 'flex', gap: 8, alignItems: 'center' }}
-                                    >
-                                        {TYPES[type as CameraType].icon ? (
-                                            <img
-                                                src={`./data/${TYPES[type as CameraType].icon}`}
-                                                style={{ height: 20, width: 'auto' }}
-                                                alt={type}
-                                            />
-                                        ) : null}
-                                        {TYPES[type as CameraType].icon && TYPES[type as CameraType].hideName ? null : (
-                                            <div>{TYPES[type as CameraType].name || type}</div>
-                                        )}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                            <ManufacturerIcon
+                                manufacturer={getManufacturerOfCamera(cam)}
+                                size={20}
+                            />
+                            <span style={styles.typeText}>{getCameraTypeLabel(cam, this.state.manufacturers)}</span>
+                        </ButtonBase>
                     </div>
                     {this.renderCameraButtons(cam, i)}
                 </div>
@@ -839,16 +1004,7 @@ export default class Cameras extends Component<CamerasProps, CamerasState> {
                 <Fab
                     size="small"
                     title={I18n.t('Add new camera')}
-                    onClick={() => {
-                        const cameras: CameraConfigAny[] = JSON.parse(JSON.stringify(this.props.native.cameras));
-                        let i = 1;
-
-                        while (cameras.find(cam => cam.name === `cam${i}`)) {
-                            i++;
-                        }
-                        cameras.push({ name: `cam${i}`, type: 'url', id: Date.now(), rtsp: !!TYPES.url.rtsp, url: '' });
-                        this.props.onChange('cameras', cameras);
-                    }}
+                    onClick={() => this.onAddCamera()}
                 >
                     <IconAdd />
                 </Fab>
