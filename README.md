@@ -205,6 +205,9 @@ If the binary cannot be found or does not start, the adapter transparently falls
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (@hdering) Fixed: after a browser tab with a live stream was closed, "Cannot send to UI: ... is not registered" was logged for every frame and the stream kept running (#201)
+
 ### 3.2.1 (2026-10-03)
 * (@hdering) Changed: a camera is added by choosing the manufacturer first, then only the fitting connection is offered; the stored configuration keeps its format
 * (@hdering) Changed: the model list is chosen by stream path, sorted by how many models use it; the model is optional. HTTP paths that deliver a stream instead of an image are hidden, they never worked
