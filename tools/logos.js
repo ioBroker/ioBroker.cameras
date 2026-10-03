@@ -5,8 +5,8 @@
 //   2. A generated monogram for everything else. Most IP camera brands are not in any
 //      freely licensed icon set, and copying trademarked logos off the web into an MIT
 //      repository is not something we want to do. The monogram keeps the picker readable
-//      and can be replaced at any time: Types/Universal.tsx looks for <id>.svg, then .png,
-//      then .jpg, so dropping a real logo next to the JSON file is enough.
+//      and can be replaced at any time: Components/TypeSelector.tsx looks for <id>.svg, then
+//      .png, then .jpg, so dropping a real logo next to the JSON file is enough.
 //
 // Usage: node tools/logos.js [--force]
 const { writeFileSync, existsSync, readFileSync } = require('node:fs');
