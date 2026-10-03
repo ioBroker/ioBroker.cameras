@@ -290,11 +290,23 @@ class GenericRtspCamera extends GenericCamera_1.default {
             // The client is gone (e.g. the browser tab was closed) - forget it, otherwise every
             // following frame would fail the same way. The rejection arrives after the frame loop
             // is done, so the subscription is removed here, by identity, and not collected for it.
-            const pos = this.streamSubscribes?.indexOf(sub) ?? -1;
-            if (pos !== -1) {
-                this.streamSubscribes.splice(pos, 1);
+            const subscribes = this.streamSubscribes;
+            const pos = subscribes?.indexOf(sub) ?? -1;
+            if (!subscribes || pos === -1) {
+                // Already forgotten - several frames of the same client can be in flight, and a
+                // regular unsubscribe may have removed it in between
+                return;
             }
+            subscribes.splice(pos, 1);
             this.adapter.log.debug(`GUI client "${sub.clientId}" for ${this.config.name} is gone: ${error}`);
+            // The stream has to be stopped here as well, exactly like onClientUnsubscribe does it:
+            // the timeout unsubscribe that arrives up to one heartbeat later derives the cameras
+            // from this very array, so with the subscription already gone it finds nothing - and
+            // ffmpeg would keep running for nobody, writing every frame into the `.stream` state.
+            if (!subscribes.some(s => s.camera === this.config.name)) {
+                this.adapter.log.debug(`Stop camera "${this.config.name}": no GUI client left`);
+                this.stopWebStream().catch(err => this.adapter.log.error(`Cannot stop camera "${this.config.name}": ${err}`));
+            }
         }
         else {
             this.adapter.log.warn(`Cannot send to UI: ${error}`);

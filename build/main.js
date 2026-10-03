@@ -17,6 +17,12 @@ const Go2RtcServer_1 = __importDefault(require("./lib/Go2RtcServer"));
 const UnifiProtectClient_1 = __importDefault(require("./lib/UnifiProtectClient"));
 const WIN_FFMPEG_VERSION = '2025-02-02-git-957eb2323a-full_build-www.gyan.dev';
 /**
+ * Interval a GUI client has to re-subscribe within, answered to every subscription. After it runs
+ * out, js-controller drops the client and reports it with reason "timeout" - and a subscription
+ * that is older than this belongs to a client that stopped renewing without saying goodbye.
+ */
+const SUBSCRIBE_HEARTBEAT_MS = 60000;
+/**
  * The loopback address can arrive in three shapes, depending on whether the connection was made over
  * IPv4, over IPv6, or over IPv4 mapped into IPv6. All three are the local machine.
  */
@@ -222,7 +228,7 @@ class CamerasAdapter extends adapter_core_1.Adapter {
             else {
                 sub.ts = Date.now();
             }
-            return { accepted: true, heartbeat: 60000 };
+            return { accepted: true, heartbeat: SUBSCRIBE_HEARTBEAT_MS };
         }
         return { accepted: false, error: 'Unknown message type' };
     }
@@ -238,8 +244,15 @@ class CamerasAdapter extends adapter_core_1.Adapter {
             // was closed). Such an unsubscribe carries no message, so all cameras of this client
             // are affected. Keeping them would send every frame to a client that is not registered
             // anymore and log a warning for each of them.
+            //
+            // The sweep deliberately takes every camera with an obsolete subscription, not only the
+            // ones of this client: a client that stopped renewing without an unsubscribe of its own
+            // is never reported again, so nothing else would ever look at its subscriptions - and as
+            // long as one of them is left, its camera keeps streaming for nobody. A camera without
+            // any subscription is not touched, its stream was started by writing `<camera>.running`
+            // and does not belong to a GUI client.
             const cameraNames = [
-                ...new Set(this.streamSubscribes.filter(s => s.clientId === clientId).map(s => s.camera)),
+                ...new Set(this.streamSubscribes.filter(s => this.isObsolete(s, clientId, now)).map(s => s.camera)),
             ];
             cameraNames.forEach(cameraName => this.dropSubscriptions(cameraName, clientId, now));
             return;
@@ -253,6 +266,19 @@ class CamerasAdapter extends adapter_core_1.Adapter {
             }
         });
     }
+    /**
+     * A subscription that has to go: either it belongs to the client that just unsubscribed, or it
+     * was not renewed within the heartbeat, which means its client is gone. Used by the sweep and
+     * by the removal itself - the two must match, otherwise the sweep stops a camera whose
+     * subscriptions are then kept, or picks a camera it does not clean up.
+     *
+     * @param sub the subscription to check
+     * @param clientId the client that unsubscribed
+     * @param now timestamp the whole unsubscribe is judged by
+     */
+    isObsolete(sub, clientId, now) {
+        return sub.clientId === clientId || now - sub.ts > SUBSCRIBE_HEARTBEAT_MS;
+    }
     dropSubscriptions(cameraName, clientId, now) {
         // Only the subscriptions for this camera are touched - the same client may well be
         // watching other cameras, and those must keep receiving frames. Subscriptions that
@@ -262,7 +288,7 @@ class CamerasAdapter extends adapter_core_1.Adapter {
         // changed in place instead of being replaced.
         for (let i = this.streamSubscribes.length - 1; i >= 0; i--) {
             const sub = this.streamSubscribes[i];
-            if (sub.camera === cameraName && (sub.clientId === clientId || now - sub.ts > 60000)) {
+            if (sub.camera === cameraName && this.isObsolete(sub, clientId, now)) {
                 this.streamSubscribes.splice(i, 1);
             }
         }
