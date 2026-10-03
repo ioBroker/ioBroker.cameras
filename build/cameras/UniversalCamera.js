@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const GenericRtspCamera_1 = __importDefault(require("./GenericRtspCamera"));
-const axios_1 = __importDefault(require("axios"));
+const httpSnapshot_1 = require("../lib/httpSnapshot");
 class UniversalCamera extends GenericRtspCamera_1.default {
     config;
     basicAuth;
@@ -41,8 +41,10 @@ class UniversalCamera extends GenericRtspCamera_1.default {
     }
     async init() {
         this.decodedPassword = this.config.password ? this.adapter.decrypt(this.config.password) : '';
-        if (!this.config.model) {
-            throw new Error('Model is required');
+        // The model only helps to find the path in the dialog - an own path works without one.
+        // Older configurations may have a model but no protocol, they were always RTSP then
+        if (!this.config.urlProtocol && !this.config.model) {
+            throw new Error('Stream / path is required');
         }
         if (this.config.urlProtocol === 'http://') {
             // It is URL type
@@ -69,27 +71,10 @@ class UniversalCamera extends GenericRtspCamera_1.default {
         if (this.runningRequest) {
             return this.runningRequest;
         }
-        const options = {
-            responseType: 'arraybuffer',
-            validateStatus: status => status < 400,
+        // A snapshot path as well as an MJPEG stream, of which the first frame is taken
+        this.runningRequest = (0, httpSnapshot_1.fetchSnapshot)(this.simpleURL, {
             timeout: this.config.timeout,
-        };
-        if (this.basicAuth) {
-            options.headers = { Authorization: this.basicAuth };
-        }
-        this.runningRequest = axios_1.default
-            .get(this.simpleURL, options)
-            .then(response => ({
-            body: response.data,
-            contentType: response.headers['Content-type'] || response.headers['content-type'],
-        }))
-            .catch(error => {
-            if (error.response) {
-                throw new Error(error.response.data || error.response.status);
-            }
-            else {
-                throw new Error(error.code);
-            }
+            headers: this.basicAuth ? { Authorization: this.basicAuth } : undefined,
         })
             // Also on failure - a request left behind here would be handed out to every later
             // caller, so one unreachable camera would stay broken until the adapter restarts

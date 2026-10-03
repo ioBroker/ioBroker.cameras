@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.findFFmpegPath = findFFmpegPath;
 exports.getFFmpegVersion = getFFmpegVersion;
@@ -6,9 +9,11 @@ exports.maskPassword = maskPassword;
 exports.executeFFmpeg = executeFFmpeg;
 exports.startFFmpeg = startFFmpeg;
 exports.getRtspSnapshot = getRtspSnapshot;
+exports.isFlatImage = isFlatImage;
 const node_fs_1 = require("node:fs");
 const node_child_process_1 = require("node:child_process");
 const node_path_1 = require("node:path");
+const sharp_1 = __importDefault(require("sharp"));
 function findFFmpegPath(pathToExecutable, log) {
     if (pathToExecutable) {
         return (0, node_fs_1.existsSync)(pathToExecutable) ? (0, node_path_1.normalize)(pathToExecutable).replace(/\\/g, '/') : '';
@@ -193,5 +198,24 @@ async function getRtspSnapshot(config, outputFileName, ffmpegPath, decodedPasswo
     const parameters = buildCommand(config, outputFileName, decodedPassword);
     await executeFFmpeg(parameters, ffmpegPath, decodedPassword, timeout, log);
     return (0, node_fs_1.readFileSync)(outputFileName);
+}
+/**
+ * Below this standard deviation in every colour channel an image counts as one flat colour. Even a
+ * dark night image has more than that from sensor noise alone.
+ */
+const FLAT_IMAGE_MAX_STDEV = 2;
+/**
+ * Whether a snapshot is one flat colour, like the grey image ffmpeg decodes from an H.265 frame
+ * without its reference picture (see `keyFramesOnly`). Unreadable data counts as not flat - that
+ * is an error for the caller to see, not a case for a retry.
+ */
+async function isFlatImage(body) {
+    try {
+        const { channels } = await (0, sharp_1.default)(body).stats();
+        return channels.every(channel => channel.stdev < FLAT_IMAGE_MAX_STDEV);
+    }
+    catch {
+        return false;
+    }
 }
 //# sourceMappingURL=rtspCommon.js.map

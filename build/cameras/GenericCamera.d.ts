@@ -5,6 +5,12 @@ export default abstract class GenericCamera {
     protected config: CameraConfigAny;
     readonly path: string;
     isRtsp: boolean;
+    /**
+     * A snapshot of this camera has a price beyond the request: a Eufy camera without RTSP of its
+     * own is woken up through its station for it. Such a camera is left out of the initial
+     * `fillFiles()` in main.ts - filling the cache is not worth a battery at every adapter start.
+     */
+    wakesUpForSnapshot: boolean;
     protected streamSubscribes: {
         camera: string;
         clientId: string;

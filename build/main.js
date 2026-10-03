@@ -543,7 +543,18 @@ class CamerasAdapter extends adapter_core_1.Adapter {
     }
     async fillFiles() {
         // write all states with actual images one time at the start
-        const promises = this.config.cameras.map(cam => this.getCameraImage(cam).catch((e) => this.log.error(`Cannot get image: ${e}`)));
+        const promises = this.config.cameras
+            // Not for a camera that has to be woken up for it (Eufy through its station): the one
+            // picture nobody asked for yet would cost its battery at every restart of the adapter,
+            // and the start would wait up to 45 s for it. The first real request fetches it.
+            .filter(cam => {
+            if (!this.cameras[cam.name]?.wakesUpForSnapshot) {
+                return true;
+            }
+            this.log.debug(`Skip the first image of "${cam.name}": it would wake the camera up`);
+            return false;
+        })
+            .map(cam => this.getCameraImage(cam).catch((e) => this.log.error(`Cannot get image: ${e}`)));
         await Promise.all(promises);
     }
     async syncData() {

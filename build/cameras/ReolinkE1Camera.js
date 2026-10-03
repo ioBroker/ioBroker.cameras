@@ -12,6 +12,8 @@ class ReolinkE1Camera extends GenericRtspCamera_1.default {
         this.config = config;
     }
     async init() {
+        // Still supported, the admin only does not offer it for new cameras any more
+        this.adapter.log.info(`Camera "${this.config.name}" uses the deprecated type "Reolink E1". It keeps working, but can be converted to the Reolink model list in the camera settings.`);
         this.decodedPassword = this.config.password ? this.adapter.decrypt(this.config.password) : '';
         this.settings = {
             ip: this.config.ip,

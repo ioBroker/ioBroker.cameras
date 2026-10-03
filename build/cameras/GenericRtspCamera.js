@@ -8,6 +8,12 @@ const fluent_ffmpeg_1 = __importDefault(require("fluent-ffmpeg"));
 const sharp_1 = __importDefault(require("sharp"));
 const GenericCamera_1 = __importDefault(require("./GenericCamera"));
 const rtspCommon_1 = require("./rtspCommon");
+/**
+ * How long the grey check stays on hold after a key frame turned out to be flat as well. Short enough
+ * that a lens someone uncovered is noticed again, long enough that the second snapshot is not paid
+ * for on every request - see {@link GenericRtspCamera.takeSnapshot}.
+ */
+const GREY_RECHECK_MS = 10 * 60_000;
 class GenericRtspCamera extends GenericCamera_1.default {
     width = 0;
     ratio = 0;
@@ -21,6 +27,8 @@ class GenericRtspCamera extends GenericCamera_1.default {
     settings = null;
     ffmpegPath;
     go2rtc = null;
+    /** Not before this the grey check may spend a second ffmpeg run again, see {@link takeSnapshot} */
+    greyCheckAgainAt = 0;
     constructor(adapter, config, ffmpegPath) {
         super(adapter, config);
         this.ffmpegPath = ffmpegPath;
@@ -97,7 +105,7 @@ class GenericRtspCamera extends GenericCamera_1.default {
         if (viaGo2Rtc) {
             return viaGo2Rtc;
         }
-        this.runningRequest = (0, rtspCommon_1.getRtspSnapshot)(this.settings, this.getSnapshotFileName(), this.ffmpegPath, this.decodedPassword, this.config.timeout, this.adapter.log)
+        this.runningRequest = this.takeSnapshot()
             .then(async (body) => {
             this.adapter.log.debug(`Snapshot from ${this.settings.ip}. Done!`);
             if (!this.ratio) {
@@ -115,6 +123,36 @@ class GenericRtspCamera extends GenericCamera_1.default {
             // caller, so one unreachable camera would stay broken until the adapter restarts
             .finally(() => (this.runningRequest = null));
         return this.runningRequest;
+    }
+    /**
+     * Snapshot with ffmpeg. A flat grey image is what ffmpeg decodes from an H.265 stream joined
+     * between two key frames - then the snapshot is taken again from a key frame, and the camera
+     * keeps that for as long as the adapter runs. Nobody would find the expert option on their own.
+     */
+    async takeSnapshot() {
+        const settings = this.settings;
+        const snapshot = () => (0, rtspCommon_1.getRtspSnapshot)(settings, this.getSnapshotFileName(), this.ffmpegPath, this.decodedPassword, this.config.timeout, this.adapter.log);
+        const body = await snapshot();
+        if (settings.keyFramesOnly || Date.now() < this.greyCheckAgainAt || !(await (0, rtspCommon_1.isFlatImage)(body))) {
+            return body;
+        }
+        settings.keyFramesOnly = true;
+        const fromKeyFrame = await snapshot().catch((e) => {
+            this.adapter.log.debug(`Camera "${this.config.name}": no snapshot from a key frame: ${e.message}`);
+            return null;
+        });
+        if (fromKeyFrame && !(await (0, rtspCommon_1.isFlatImage)(fromKeyFrame))) {
+            this.adapter.log.info(`Camera "${this.config.name}" delivered a grey image (H.265?). Snapshots are now taken from key frames only`);
+            return fromKeyFrame;
+        }
+        // Flat from a key frame as well - a covered lens or a camera showing one colour. Waiting for
+        // key frames does not help then and would only make every snapshot slower.
+        // A camera really showing one colour would otherwise pay for the second snapshot on every
+        // request for the rest of the runtime, so the check is put on hold - but not given up: a lens
+        // does not stay covered forever, and the H.265 problem would never be found after that.
+        settings.keyFramesOnly = false;
+        this.greyCheckAgainAt = Date.now() + GREY_RECHECK_MS;
+        return body;
     }
     /**
      * Scratch file ffmpeg writes the snapshot to.

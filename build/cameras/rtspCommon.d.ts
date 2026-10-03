@@ -30,3 +30,9 @@ export declare function maskPassword(str: string, password: string): string;
 export declare function executeFFmpeg(params: string[], ffmpegPath: string, decodedPassword?: string, timeoutMs?: number, log?: ioBroker.Log): Promise<string>;
 export declare function startFFmpeg(params: string[], ffmpegPath: string, decodedPassword?: string, log?: ioBroker.Log): ChildProcessWithoutNullStreams;
 export declare function getRtspSnapshot(config: RtspOptions, outputFileName: string, ffmpegPath: string, decodedPassword: string, timeout: number, log: ioBroker.Log): Promise<Buffer>;
+/**
+ * Whether a snapshot is one flat colour, like the grey image ffmpeg decodes from an H.265 frame
+ * without its reference picture (see `keyFramesOnly`). Unreadable data counts as not flat - that
+ * is an error for the caller to see, not a case for a retry.
+ */
+export declare function isFlatImage(body: Buffer): Promise<boolean>;

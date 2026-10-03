@@ -18,6 +18,8 @@ export default class GenericRtspCamera extends GenericCamera {
     protected settings: RtspOptions | null;
     private readonly ffmpegPath;
     private go2rtc;
+    /** Not before this the grey check may spend a second ffmpeg run again, see {@link takeSnapshot} */
+    private greyCheckAgainAt;
     constructor(adapter: ioBroker.Adapter, config: CameraConfigAny, ffmpegPath: string);
     init(): Promise<void>;
     getPassword(): string;
@@ -35,6 +37,12 @@ export default class GenericRtspCamera extends GenericCamera {
     private processViaGo2Rtc;
     destroy(): Promise<void>;
     process(): Promise<ProcessData>;
+    /**
+     * Snapshot with ffmpeg. A flat grey image is what ffmpeg decodes from an H.265 stream joined
+     * between two key frames - then the snapshot is taken again from a key frame, and the camera
+     * keeps that for as long as the adapter runs. Nobody would find the expert option on their own.
+     */
+    private takeSnapshot;
     /**
      * Scratch file ffmpeg writes the snapshot to.
      *

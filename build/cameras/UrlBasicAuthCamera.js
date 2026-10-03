@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const GenericCamera_1 = __importDefault(require("./GenericCamera"));
-const axios_1 = __importDefault(require("axios"));
+const httpSnapshot_1 = require("../lib/httpSnapshot");
 class UrlBasicAuthCamera extends GenericCamera_1.default {
     config;
     basicAuth;
@@ -31,27 +31,10 @@ class UrlBasicAuthCamera extends GenericCamera_1.default {
         if (this.runningRequest) {
             return this.runningRequest;
         }
-        const options = {
-            responseType: 'arraybuffer',
-            validateStatus: status => status < 400,
+        // A snapshot URL as well as an MJPEG stream, of which the first frame is taken
+        this.runningRequest = (0, httpSnapshot_1.fetchSnapshot)(this.config.url, {
             timeout: this.config.timeout,
-        };
-        if (this.basicAuth) {
-            options.headers = { Authorization: this.basicAuth };
-        }
-        this.runningRequest = axios_1.default
-            .get(this.config.url, options)
-            .then(response => ({
-            body: response.data,
-            contentType: response.headers['Content-type'] || response.headers['content-type'],
-        }))
-            .catch(error => {
-            if (error.response) {
-                throw new Error(error.response.data || error.response.status);
-            }
-            else {
-                throw new Error(error.code);
-            }
+            headers: this.basicAuth ? { Authorization: this.basicAuth } : undefined,
         })
             // Also on failure - a request left behind here would be handed out to every later
             // caller, so one unreachable camera would stay broken until the adapter restarts
