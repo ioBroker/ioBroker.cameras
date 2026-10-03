@@ -40,6 +40,27 @@ sendTo('cameras.0', 'image', {
 
 The result is always in `jpg` format.
 
+### Sending the image to a messenger
+`result.data` is the JPEG as a base64 string, so it can not be passed to a messenger directly. Turn it into a
+`Buffer` or a file first. In a script of the javascript adapter (also usable from Blockly via the
+*Javascript function* block):
+```js
+sendTo('cameras.0', 'image', { name: 'cam1' }, result => {
+    if (result.error) {
+        log(`Cannot get image: ${result.error}`, 'warn');
+        return;
+    }
+    const image = Buffer.from(result.data, 'base64');
+
+    // Telegram accepts the buffer directly
+    sendTo('telegram.0', 'send', { text: image, type: 'photo', caption: 'cam1' });
+
+    // Every other adapter gets a file path, e.g. pushover, signal or email attachments
+    const fileName = createTempFile('cam1.jpg', image);
+    sendTo('pushover.0', 'send', { message: 'cam1', file: fileName });
+});
+```
+
 Supported cameras:
 - More than 50 manufacturers with their model lists, e.g. Hikvision, Dahua, Axis, Reolink (incl. E1 Pro), Foscam, TP-Link/Tapo
 - `Eufy` via `eusec` adapter
@@ -202,6 +223,7 @@ If the binary cannot be found or does not start, the adapter transparently falls
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
+* (@hdering) Added: README shows how to send the image of the `image` message to Telegram or another messenger (#78)
 -->
 
 ## Changelog
