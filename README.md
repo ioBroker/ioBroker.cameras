@@ -205,7 +205,7 @@ If the binary cannot be found or does not start, the adapter transparently falls
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.2.2 (2026-10-03)
 * (@hdering) Fixed: after a browser tab with a live stream was closed, "Cannot send to UI: ... is not registered" was logged for every frame and the stream kept running (#201)
 * (@GermanBluefox) Fixed: the live picture of a camera in ioBroker.devices froze after a minute - the widget did not renew its subscription
 
@@ -253,28 +253,6 @@ If the binary cannot be found or does not start, the adapter transparently falls
 ### 3.0.2 (2026-08-17)
 * (@GermanBluefox) The web extension can now request snapshots via messages instead of the private HTTP server, which is used automatically when the cameras adapter runs on a different host than the web instance
 * (@GermanBluefox) Fixed: a failed snapshot request answered with an empty `{}` instead of the error message
-
-### 3.0.1 (2026-08-16)
-* (@GermanBluefox) Completely rewritten in TypeScript
-* (@GermanBluefox) Added Ezviz cameras
-* (@GermanBluefox) Snapshot requests are answered with `Cache-Control: no-store` so browsers cannot show a stale frame
-* (@GermanBluefox) Fixed: a list of allowed IPs was never split correctly, so any list with more than one address rejected every request
-* (@GermanBluefox) Fixed: connections from the IPv6 loopback address were not recognized as local
-* (@GermanBluefox) Fixed: a failed image request could terminate the adapter with `ERR_HTTP_HEADERS_SENT`
-* (@GermanBluefox) The cameras are reachable immediately after start instead of only after the first frame of every camera was grabbed
-* (@GermanBluefox) The web extension picks up a changed key by itself, without restarting ioBroker.web
-* (@paul179) Added `Steinel` cameras (as manufacturer of the universal camera type)
-* (@GermanBluefox) The universal camera type now offers ~50 manufacturers with ~13000 models, each with a logo
-* (ioBroker-Bot) Removed the deprecated `common.materialize` from io-package.json
-* (ioBroker-Bot) Adapter requires js-controller >= 6.0.11 now
-* (ioBroker-Bot) Adapter requires node.js >= 22 now
-* (@GermanBluefox) Added `Instar` cameras
-* (@GermanBluefox) Added optional go2rtc support for snapshots and live streams, proxied via the web adapter
-* (@GermanBluefox) Fixed: the second viewer of the same camera did not receive any picture
-* (@GermanBluefox) Added two widgets for ioBroker.devices: RTSP camera and snapshot camera
-* (@GermanBluefox) Fixed: the `.running` state did not start or stop the stream
-* (@GermanBluefox) Fixed: width/height/angle of the `image` message were ignored
-* (@GermanBluefox) Fixed: a camera in the dialog of the snapshot widget was never used
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 

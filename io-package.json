@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "cameras",
-    "version": "3.2.1",
+    "version": "3.2.2",
     "news": {
+      "3.2.2": {
+        "en": "Fixed: after a browser tab with a live stream was closed, \"Cannot send to UI: ... is not registered\" was logged for every frame and the stream kept running (#201)\nFixed: the live picture of a camera in ioBroker.devices froze after a minute - the widget did not renew its subscription",
+        "de": "Behoben: Nach dem Schließen eines Livestreams wurde bei jedem Frame „Cannot send to UI:... is not registered“ geloggt und der Stream lief weiter (#201)\nBehoben: Live-Bild einer Kamera in ioBroker. Geräte froren nach einer Minute ein — das Widget hat sein Abo nicht erneuert",
+        "ru": "Исправлено: после закрытия вкладки браузера с прямой трансляцией для каждого кадра регистрировалось сообщение «Невозможно отправить в пользовательский интерфейс:... не зарегистрировано», и трансляция продолжалась (#201)\nИсправлено: живое изображение камеры в IOBroker.Devices зависало через минуту — виджет не продлил подписку",
+        "pt": "Corrigido: após fechar a aba do navegador ao vivo, “Não é enviado para UI:... não está registrado” em cada quadro e a transmissão continua (#201)\nCorrigido: a imagem ao vivo de uma câmera no IOBroker.devices travou após um minuto - o widget não renovou sua assinatura",
+        "nl": "Opgelost: nadat een browsertabblad met een livestream was gesloten, werd „Kan niet naar de gebruikersinterface verzenden:... is niet geregistreerd” geregistreerd voor elk frame en bleef de stream actief (#201)\nOpgelost: het livebeeld van een camera in IOBroker. Apparaten liepen vast na een minuut - het abonnement van de widget werd niet verlengd",
+        "fr": "Corrigé : après la fermeture de l'onglet du navigateur, « Impossible d'envoyer à l'interface utilisateur :... is not registered » était enregistré à chaque image et le stream continuait (#201)\nCorrigé : image en direct d'une caméra dans IOBroker. Les appareils se bloquaient au bout d'une minute. L'abonnement n'a pas été renouvelé",
+        "it": "Risolto: dopo la chiusura di una scheda con un live streaming, «Impossibile inviare a UI:... non è registrato» per ogni frame (#201)\nRisolto: la foto live di una telecamera in IOBroker.Devices si bloccava dopo un minuto e il widget non rinnovava",
+        "es": "Solucionado: Tras cerrar la pestaña del navegador con una emisión en directo, se registraba «No se puede enviar a la UI:... no está registrado» en cada fotograma y la emisión sigue emitiéndose (#201)\nCorregido: imagen en directo de una cámara de IOBroker. Los dispositivos se paralizaban al cabo de un minuto, el widget no renovaba su suscripción",
+        "pl": "Naprawiono: po zamknięciu karty przeglądarki z transmisją na żywo, „Nie można wysłać do interfejsu użytkownika:... nie jest zarejestrowany” był rejestrowany dla każdej klatki, a strumień nadal działał (#201)\nNaprawiono: zdjęcie kamery na żywo w iOBroker.Devices zamarło po minucie - widżet nie odnowił subskrypcji",
+        "uk": "Виправлено: після закриття вкладки браузера з прямою трансляцією «Неможливо надіслати до інтерфейсу користувача:... не зареєстровано» було зареєстровано для кожного кадру, і потік продовжував працювати (#201)\nВиправлено: жива картинка камери в IObroker.Пристрої замерзли через хвилину - віджет не поновив свою підписку",
+        "zh-cn": "修复：关闭包含直播的浏览器选项卡后，每帧都会记录 “无法发送到 UI:... 未注册”，直播继续运行 (#201)\n修复：一分钟后，iobroker.devices中摄像机的实时画面冻结了-该小工具未续订订阅"
+      },
       "3.2.1": {
         "en": "Changed: a camera is added by choosing the manufacturer first, then only the fitting connection is offered; the stored configuration keeps its format\nChanged: the model list is chosen by stream path, sorted by how many models use it; the model is optional. HTTP paths that deliver a stream instead of an image are hidden, they never worked\nChanged: an RTSP camera is configured with one URL field, also for `rtsps://`; a pasted login goes to its own fields\nDeprecated: the type \"Reolink E1\" - it keeps working and can be converted to the Reolink model list in its dialog\nFixed: the RTSP dialog showed UDP while the adapter used TCP, and saved UDP as soon as another field was changed\nFixed: the URL preview of an RTSP camera was only updated after saving\nFixed: changes in the camera dialog were applied to the stored settings instead of the edited ones, so an earlier change could get lost\nAdded: MJPEG streams over HTTP - the first frame is taken; this makes the MJPEG paths of the model lists usable. A video stream over HTTP fails at once with a hint instead of a timeout\nAdded: a grey snapshot of an H.265 stream is recognized and taken again from a key frame; \"Key frames only\" in the expert settings of the RTSP type sets it permanently\nAdded: the Eufy dialog lists the cameras of the `eusec` adapter; cameras without RTSP of their own are streamed through the station by `eusec` (#205)\nFixed: switching the Eufy dialog between `eusec` and IP address was not saved\nFixed: opening or closing the full screen dialog of an RTSP camera asks for the stream in the size it is shown in right away; until now the big view showed the small picture enlarged for up to 14 seconds\nFixed: the dialog of the RTSP camera widget for ioBroker.devices never asked for a bigger picture at all",
         "de": "Geändert: Erst der Hersteller wird eine Kamera hinzugefügt, dann nur der passende Anschluss; das Format der gespeicherten Konfiguration\nGeändert: Die Modellliste ist nach Stream-Pfad sortiert; das Modell ist optional. HTTP-Pfade für Streams statt Bilder sind versteckt, sie haben nie geklappt\nGeändert: Eine RTSP-Kamera hat ein URL-Feld, auch für `rtsps: //`; eingefügte Login-Felder\nVeraltet: Typ „Reolink E1\" — er läuft weiter und kann im Dialog in die Reolink-Modellliste umgewandelt werden\nBehoben: Der RTSP-Dialog zeigte UDP an, der Adapter nutzte TCP und speicherte UDP, sobald ein Feld geändert wurde\nBehoben: Die URL-Vorschau einer RTSP-Kamera kam erst nach dem Speichern\nBehoben: Änderungen im Kameradialog betrafen die gespeicherten und nicht die bearbeiteten, so dass sie verloren gingen\nHinzugefügt: MJPEG-Streams über HTTP — das erste Bild macht die MJPEG-Pfade der Modelllisten nutzbar. Ein Videostream über HTTP schlägt sofort mit Hinweis statt Timeout fehl\nHinzugefügt: Ein grauer Snapshot eines H.265-Streams wird erkannt und aus einem Keyframe übernommen; „Nur Keyframes“ in den RTSP\nHinzugefügt: Der Eufy-Dialog listet die Kameras des `eusec`-Adapters auf; Kameras ohne RTSP streamt `eusec` über den Sender (#205)\nBehoben: Eufy-Dialog zwischen `eusec` und IP-Adresse wurde nicht gespeichert\nBehoben: Das Öffnen oder Schließen des Vollbilds einer RTSP-Kamera fragt sofort nach dem Stream in der Größe, in der er angezeigt wird; bis jetzt war das kleine Bild bis zu 14 Sekunden vergrößert\nBehoben: Der Dialog des RTSP-Kamera-Widgets für ioBroker. Geräte fragten nie nach einem größeren Bild",
@@ -80,19 +93,6 @@
         "pl": "Aktualizacja pakietów",
         "uk": "Оновлені пакети",
         "zh-cn": "更新软件包"
-      },
-      "2.1.1": {
-        "en": "Removed withStyles package",
-        "de": "MitStyles-Paket entfernt",
-        "ru": "Удаленный пакет со Стайлз",
-        "pt": "Removido com pacote Estilos",
-        "nl": "Verwijderd metStyles pakket",
-        "fr": "Enlever avec le paquetStyles",
-        "it": "Rimosso con pacchettoStyles",
-        "es": "Retire el paquete de estilos",
-        "pl": "Usunięty z pakietem Styles",
-        "uk": "Видаліть пакет \"Стиль\"",
-        "zh-cn": "用 Styles 软件包删除"
       }
     },
     "titleLang": {

@@ -1,4 +1,26 @@
 # Older changes
+## 3.0.1 (2026-08-16)
+* (@GermanBluefox) Completely rewritten in TypeScript
+* (@GermanBluefox) Added Ezviz cameras
+* (@GermanBluefox) Snapshot requests are answered with `Cache-Control: no-store` so browsers cannot show a stale frame
+* (@GermanBluefox) Fixed: a list of allowed IPs was never split correctly, so any list with more than one address rejected every request
+* (@GermanBluefox) Fixed: connections from the IPv6 loopback address were not recognized as local
+* (@GermanBluefox) Fixed: a failed image request could terminate the adapter with `ERR_HTTP_HEADERS_SENT`
+* (@GermanBluefox) The cameras are reachable immediately after start instead of only after the first frame of every camera was grabbed
+* (@GermanBluefox) The web extension picks up a changed key by itself, without restarting ioBroker.web
+* (@paul179) Added `Steinel` cameras (as manufacturer of the universal camera type)
+* (@GermanBluefox) The universal camera type now offers ~50 manufacturers with ~13000 models, each with a logo
+* (ioBroker-Bot) Removed the deprecated `common.materialize` from io-package.json
+* (ioBroker-Bot) Adapter requires js-controller >= 6.0.11 now
+* (ioBroker-Bot) Adapter requires node.js >= 22 now
+* (@GermanBluefox) Added `Instar` cameras
+* (@GermanBluefox) Added optional go2rtc support for snapshots and live streams, proxied via the web adapter
+* (@GermanBluefox) Fixed: the second viewer of the same camera did not receive any picture
+* (@GermanBluefox) Added two widgets for ioBroker.devices: RTSP camera and snapshot camera
+* (@GermanBluefox) Fixed: the `.running` state did not start or stop the stream
+* (@GermanBluefox) Fixed: width/height/angle of the `image` message were ignored
+* (@GermanBluefox) Fixed: a camera in the dialog of the snapshot widget was never used
+
 ## 2.1.2 (2024-07-15)
 * (bluefox) Updated packages
 
