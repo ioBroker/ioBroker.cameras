@@ -68,6 +68,8 @@ export interface CameraConfigRtsp extends CameraConfig {
     protocol: 'udp' | 'tcp';
     /** rtsps:// instead of rtsp://, always over TCP */
     secure?: boolean;
+    /** Decode key frames only - against grey snapshots of H.265 streams, see rtspCommon.ts */
+    keyFramesOnly?: boolean;
 }
 
 export interface CameraConfigUniversal extends CameraConfig {

@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { spawn, execSync, type ChildProcessWithoutNullStreams } from 'node:child_process';
 import { normalize } from 'node:path';
+import sharp from 'sharp';
 
 export interface RtspOptions {
     ip: string;
@@ -253,4 +254,24 @@ export async function getRtspSnapshot(
 
     await executeFFmpeg(parameters, ffmpegPath, decodedPassword, timeout, log);
     return readFileSync(outputFileName);
+}
+
+/**
+ * Below this standard deviation in every colour channel an image counts as one flat colour. Even a
+ * dark night image has more than that from sensor noise alone.
+ */
+const FLAT_IMAGE_MAX_STDEV = 2;
+
+/**
+ * Whether a snapshot is one flat colour, like the grey image ffmpeg decodes from an H.265 frame
+ * without its reference picture (see `keyFramesOnly`). Unreadable data counts as not flat - that
+ * is an error for the caller to see, not a case for a retry.
+ */
+export async function isFlatImage(body: Buffer): Promise<boolean> {
+    try {
+        const { channels } = await sharp(body).stats();
+        return channels.every(channel => channel.stdev < FLAT_IMAGE_MAX_STDEV);
+    } catch {
+        return false;
+    }
 }
