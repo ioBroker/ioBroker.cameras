@@ -1,7 +1,7 @@
 const http = require('node:http');
 const assert = require('node:assert');
 // Like the integration tests this needs `npm run build-backend` first
-const { fetchSnapshot, extractFirstJpeg } = require('../build/lib/httpSnapshot');
+const { fetchSnapshot, extractFirstJpeg, parseBoundary } = require('../build/lib/httpSnapshot');
 
 // A JPEG with an end marker inside, like one with an embedded EXIF thumbnail
 const jpeg = Buffer.concat([
@@ -68,8 +68,10 @@ describe('httpSnapshot', () => {
 
     it('takes the first frame of an MJPEG stream without Content-Length', async () => {
         const result = await fetchSnapshot(`${base}/mjpeg-nolen`, { timeout: 1000 });
-        assert.deepStrictEqual([...result.body.subarray(0, 2)], [0xff, 0xd8]);
-        assert.deepStrictEqual([...result.body.subarray(-2)], [0xff, 0xd9]);
+        // The whole frame, not up to the first end marker: asserting only that it starts with FFD8
+        // and ends with FFD9 is also true of a frame cut short inside the EXIF thumbnail
+        assert.ok(result.body.equals(jpeg), 'the frame must not be cut at the end marker of the thumbnail');
+        assert.strictEqual(result.contentType, 'image/jpeg');
     });
 
     it('rejects a video stream at once', async () => {
@@ -88,5 +90,37 @@ describe('httpSnapshot', () => {
         const header = Buffer.from(`--frame\r\nContent-Length: ${jpeg.length}\r\n\r\n`);
         assert.strictEqual(extractFirstJpeg(Buffer.concat([header, jpeg.subarray(0, 10)])), null);
         assert.ok(extractFirstJpeg(Buffer.concat([header, jpeg]))?.equals(jpeg));
+    });
+
+    it('ends a frame without Content-Length at the next boundary', () => {
+        const part = Buffer.concat([Buffer.from('--frame\r\nContent-Type: image/jpeg\r\n\r\n'), jpeg]);
+        // The end marker of the thumbnail is passed over, the frame ends where the next part begins
+        assert.strictEqual(extractFirstJpeg(part), null, 'not complete until the next boundary is there');
+        const next = Buffer.concat([part, Buffer.from('\r\n--frame\r\n')]);
+        assert.ok(extractFirstJpeg(next)?.equals(jpeg));
+    });
+
+    it('takes the boundary of the body over the one of the header', () => {
+        // Cameras do contradict their own header - the body is what the frame really ends with
+        const part = Buffer.concat([
+            Buffer.from('--realBoundary\r\nContent-Type: image/jpeg\r\n\r\n'),
+            jpeg,
+            Buffer.from('\r\n--realBoundary\r\n'),
+        ]);
+        assert.ok(extractFirstJpeg(part, 'announcedBoundary')?.equals(jpeg));
+    });
+
+    it('falls back to the end marker when there is no boundary at all', () => {
+        // Nothing left to go by: the frame is cut at the first end marker, thumbnail or not
+        const cut = extractFirstJpeg(Buffer.concat([Buffer.from('Content-Type: image/jpeg\r\n\r\n'), jpeg]));
+        assert.deepStrictEqual([...cut.subarray(0, 2)], [0xff, 0xd8]);
+        assert.deepStrictEqual([...cut.subarray(-2)], [0xff, 0xd9]);
+    });
+
+    it('reads the boundary out of a content type', () => {
+        assert.strictEqual(parseBoundary('multipart/x-mixed-replace; boundary=frame'), 'frame');
+        assert.strictEqual(parseBoundary('multipart/x-mixed-replace;boundary="my frame"'), 'my frame');
+        assert.strictEqual(parseBoundary('multipart/x-mixed-replace; boundary=frame; charset=utf-8'), 'frame');
+        assert.strictEqual(parseBoundary('image/jpeg'), '');
     });
 });
