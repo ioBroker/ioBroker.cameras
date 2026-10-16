@@ -1,4 +1,8 @@
 # Older changes
+## 3.0.2 (2026-08-17)
+* (@GermanBluefox) The web extension can now request snapshots via messages instead of the private HTTP server, which is used automatically when the cameras adapter runs on a different host than the web instance
+* (@GermanBluefox) Fixed: a failed snapshot request answered with an empty `{}` instead of the error message
+
 ## 3.0.1 (2026-08-16)
 * (@GermanBluefox) Completely rewritten in TypeScript
 * (@GermanBluefox) Added Ezviz cameras
