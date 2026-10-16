@@ -155,6 +155,9 @@
         "web": ">=2.0.0"
       }
     ],
+    "ifInstalledDependencies": {
+      "vis-2": ">=2.20.0"
+    },
     "osDependencies": {
       "linux": [
         "ffmpeg"

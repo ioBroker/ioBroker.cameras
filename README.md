@@ -228,7 +228,7 @@ If the binary cannot be found or does not start, the adapter transparently falls
 
 ## Changelog
 ### **WORK IN PROGRESS**
-* (@GermanBluefox) Migrated widgets to React 19
+* (@GermanBluefox) Migrated widgets to React 19 - vis-2 >= 2.20.0 is required, if installed
 
 ### 3.2.2 (2026-10-03)
 * (@hdering) Fixed: after a browser tab with a live stream was closed, "Cannot send to UI: ... is not registered" was logged for every frame and the stream kept running (#201)
