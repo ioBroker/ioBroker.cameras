@@ -227,6 +227,9 @@ If the binary cannot be found or does not start, the adapter transparently falls
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (@GermanBluefox) Migrated widgets to React 19
+
 ### 3.2.2 (2026-10-03)
 * (@hdering) Fixed: after a browser tab with a live stream was closed, "Cannot send to UI: ... is not registered" was logged for every frame and the stream kept running (#201)
 * (@GermanBluefox) Fixed: the live picture of a camera in ioBroker.devices froze after a minute - the widget did not renew its subscription
