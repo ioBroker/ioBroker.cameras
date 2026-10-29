@@ -40,6 +40,14 @@ sendTo('cameras.0', 'image', {
 
 The result is always in `jpg` format.
 
+### vis-2 widgets
+The adapter brings two widgets for vis-2: **Polling Camera** loads a new frame in the given interval
+(snapshot), **RTSP Camera** shows the live stream. Select the camera in the widget by its instance and
+name, e.g. `0/cam1`. A click on the picture opens it in a dialog, optionally with a second camera of a
+higher resolution.
+
+![vis-2 widgets](img/vis2-widget-cameras.jpg)
+
 ### Sending the image to a messenger
 `result.data` is the JPEG as a base64 string, so it can not be passed to a messenger directly. Turn it into a
 `Buffer` or a file first. In a script of the javascript adapter (also usable from Blockly via the
