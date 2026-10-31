@@ -235,6 +235,9 @@ If the binary cannot be found or does not start, the adapter transparently falls
 -->
 
 ## Changelog
+
+### **WORK IN PROGRESS**
+- (copilot) Adapter requires node.js >= 22.19.0 now
 ### 3.3.0 (2026-10-16)
 * (@GermanBluefox) Migrated widgets to React 19 - vis-2 >= 2.20.0 is required, if installed
 
