@@ -13,7 +13,10 @@
  * Prepare:
  *   node <controller>/iobroker.js object get system.adapter.cameras.0 > backup.json
  * Run:
- *   node benchmark/snapshot-transport.js <path-to-backup.json>
+ *   node benchmark/snapshot-transport.js <path-to-backup.json> [<path-to-iobroker.js>] [<iobroker-cwd>]
+ *
+ *   <path-to-iobroker.js> defaults to ../node_modules/iobroker.js-controller/iobroker.js,
+ *   <iobroker-cwd> defaults to the directory two levels above <path-to-iobroker.js>.
  *
  * Result on a jsonl database (median per request), see getTransport() in src/lib/web.ts:
  *   42 KB   http 2.7 ms   message 34.5 ms
@@ -24,16 +27,15 @@ const http = require('node:http');
 const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
 
-const IOB = process.env.IOB_CONTROLLER || '../node_modules/iobroker.js-controller/iobroker.js';
 const BACKUP = process.argv[2];
+const IOB = process.argv[3] || '../node_modules/iobroker.js-controller/iobroker.js';
+const IOB_CWD = process.argv[4] || require('node:path').dirname(require('node:path').dirname(IOB));
 const CAM_PORT = 8456;
 const WEB = 'http://127.0.0.1:8082/cameras.0/bench';
 const ITERATIONS = 40;
 const WARMUP = 8;
 
-if (!BACKUP) { console.error('Usage: node benchmark/snapshot-transport.js <backup.json>'); process.exit(1); }
-const IOB_CWD = process.env.IOB_CWD || require('node:path').dirname(require('node:path').dirname(IOB));
-const backup = JSON.parse(fs.readFileSync(BACKUP, 'utf8'));
+let backup;
 
 function iob(...args) {
     return execFileSync('node', [IOB, ...args], { encoding: 'utf8', cwd: IOB_CWD, stdio: ['ignore', 'pipe', 'pipe'] });
@@ -128,7 +130,8 @@ async function measureTransport(transport, sizes) {
     return rows;
 }
 
-(async () => {
+async function main() {
+    backup = JSON.parse(fs.readFileSync(BACKUP, 'utf8'));
     const sizes = [
         ['klein', 300, 70],
         ['mittel', 900, 80],
@@ -176,4 +179,13 @@ async function measureTransport(transport, sizes) {
         );
         console.log('-'.repeat(80));
     }
-})();
+}
+
+if (!BACKUP) {
+    console.error(
+        'Usage: node benchmark/snapshot-transport.js <backup.json> [<path-to-iobroker.js>] [<iobroker-cwd>]',
+    );
+    process.exitCode = 1;
+} else {
+    void main();
+}
