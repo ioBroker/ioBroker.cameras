@@ -9,6 +9,7 @@
   "homepage": "https://github.com/ioBroker/ioBroker.cameras",
   "license": "MIT",
   "keywords": [
+    "ioBroker",
     "ip-cam",
     "web-cam",
     "video"
@@ -41,7 +42,6 @@
     "@types/decompress": "^4.2.7",
     "@types/express": "^5.0.6",
     "@types/fluent-ffmpeg": "^2.1.28",
-    "@types/mocha": "^10.0.10",
     "@types/node": "^22.20.5",
     "@types/sharp": "^0.32.0",
     "@types/ws": "^8.18.2",

@@ -105,6 +105,7 @@
       "it": "Telecamere IP",
       "es": "Cámaras IP",
       "pl": "Kamery IP",
+      "uk": "Камери",
       "zh-cn": "IP摄像机"
     },
     "desc": {
@@ -117,6 +118,7 @@
       "it": "Collegare le telecamere IP a iobroker",
       "es": "Conecte cámaras IP a iobroker",
       "pl": "Podłącz kamery IP do iobroker",
+      "uk": "Підключення IP-камер до ioBroker",
       "zh-cn": "将IP摄像机连接到iobroker"
     },
     "authors": [
@@ -153,6 +155,11 @@
       {
         "js-controller": ">=6.0.11",
         "web": ">=2.0.0"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=7.6.17"
       }
     ],
     "ifInstalledDependencies": {
