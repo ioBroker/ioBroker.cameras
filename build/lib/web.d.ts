@@ -33,6 +33,16 @@ export default class ProxyCameras {
     private go2rtc;
     /** Whether the cameras adapter runs on the same host as this web instance */
     private readonly sameHost;
+    /** Paths this extension installed in the web socket server of web, taken out again by `unload()` */
+    private readonly wsRoutes;
+    /** Running WebRTC relays, each with the function that closes it */
+    private readonly relays;
+    /**
+     * Tells `ioBroker.web` that it can stop this extension and start it again with new settings while it keeps
+     * running, instead of restarting itself: `unload()` gives back everything besides the express routes, which
+     * web takes back by itself.
+     */
+    readonly supportsHotReload = true;
     constructor(server: HttpServer | HttpsServer, webSettings: {
         secure: boolean;
         port: number;
@@ -51,7 +61,12 @@ export default class ProxyCameras {
      * was never added to the list and therefore never received a frame.
      */
     private attachSocket;
-    /** Stop whichever source is feeding this camera */
+    /**
+     * Stop whichever source is feeding this camera
+     *
+     * @param name the camera name
+     * @param entry its entry, if it is no longer in {@link procs}
+     */
     private stopSource;
     /** Pick the frame source: go2rtc if it is configured and reachable, otherwise a local ffmpeg */
     startSource(rule: CameraConfigAny, socket: WebSocket): Promise<void>;

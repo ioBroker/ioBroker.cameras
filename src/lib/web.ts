@@ -127,6 +127,19 @@ export default class ProxyCameras {
     /** Whether the cameras adapter runs on the same host as this web instance */
     private readonly sameHost: boolean = true;
 
+    /** Paths this extension installed in the web socket server of web, taken out again by `unload()` */
+    private readonly wsRoutes: string[] = [];
+
+    /** Running WebRTC relays, each with the function that closes it */
+    private readonly relays = new Set<(reason: string) => void>();
+
+    /**
+     * Tells `ioBroker.web` that it can stop this extension and start it again with new settings while it keeps
+     * running, instead of restarting itself: `unload()` gives back everything besides the express routes, which
+     * web takes back by itself.
+     */
+    public readonly supportsHotReload = true;
+
     constructor(
         server: HttpServer | HttpsServer,
         webSettings: {
@@ -182,13 +195,42 @@ export default class ProxyCameras {
     }
 
     unload(): Promise<void> {
-        for (const camera in this.procs) {
-            if (this.procs[camera].timer) {
-                this.adapter.clearTimeout(this.procs[camera].timer);
-            }
-            this.stopSource(camera);
-        }
+        const procs = this.procs;
+        // Emptied first: the sockets closed below report back to onSocketClose(), which then finds nothing to do
         this.procs = {};
+        for (const camera in procs) {
+            if (procs[camera].timer) {
+                this.adapter.clearTimeout(procs[camera].timer);
+            }
+            this.stopSource(camera, procs[camera]);
+            // The widget opens the stream again - from the extension that replaces this one
+            for (const socket of procs[camera].sockets) {
+                try {
+                    socket.close();
+                } catch {
+                    // ignore
+                }
+            }
+        }
+        for (const close of [...this.relays]) {
+            close('extension unloaded');
+        }
+        this.relays.clear();
+
+        // The web socket server of web has no call to remove a route, only the table itself
+        const ioServer = this.ioServer as unknown as {
+            removeWsRoute?: (path: string) => void;
+            wsRoutes?: Record<string, unknown>;
+        } | null;
+        for (const path of this.wsRoutes) {
+            if (typeof ioServer?.removeWsRoute === 'function') {
+                ioServer.removeWsRoute(path);
+            } else if (ioServer?.wsRoutes) {
+                delete ioServer.wsRoutes[path];
+            }
+        }
+        this.wsRoutes.length = 0;
+
         this.go2rtc?.forgetAll();
 
         return Promise.resolve();
@@ -299,9 +341,13 @@ export default class ProxyCameras {
         return true;
     }
 
-    /** Stop whichever source is feeding this camera */
-    private stopSource(name: string): void {
-        const entry = this.procs[name];
+    /**
+     * Stop whichever source is feeding this camera
+     *
+     * @param name the camera name
+     * @param entry its entry, if it is no longer in {@link procs}
+     */
+    private stopSource(name: string, entry = this.procs[name]): void {
         if (!entry) {
             return;
         }
@@ -470,6 +516,7 @@ export default class ProxyCameras {
                 return;
             }
             closed = true;
+            this.relays.delete(closeBoth);
             this.adapter.log.debug(`WebRTC relay for "${rule.name}" closed: ${reason}`);
             try {
                 upstream.close();
@@ -482,6 +529,7 @@ export default class ProxyCameras {
                 // ignore
             }
         };
+        this.relays.add(closeBoth);
 
         upstream.on('open', () => {
             while (pending.length) {
@@ -765,6 +813,7 @@ export default class ProxyCameras {
         if (this.ioServer?.addWsRoute && rule.rtsp && rule.enabled !== false) {
             this.adapter.log.info(`Install web socket extension on /${this.config.route}${rule.name}`);
 
+            this.wsRoutes.push(`/${this.config.route}${rule.name}`);
             this.ioServer.addWsRoute(
                 `/${this.config.route}${rule.name}`,
                 (ws: WebSocketClient, cb: (customHandler?: boolean) => void): void => {
@@ -776,6 +825,7 @@ export default class ProxyCameras {
             if (this.go2rtc) {
                 this.adapter.log.info(`Install WebRTC signalling on /${this.config.route}${rule.name}/webrtc`);
 
+                this.wsRoutes.push(`/${this.config.route}${rule.name}/webrtc`);
                 this.ioServer.addWsRoute(
                     `/${this.config.route}${rule.name}/webrtc`,
                     (ws: WebSocketClient, cb: (customHandler?: boolean) => void): void => {

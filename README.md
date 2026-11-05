@@ -238,6 +238,9 @@ If the binary cannot be found or does not start, the adapter transparently falls
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (@GermanBluefox) ioBroker.web can stop the web extension and start it again with new settings instead of restarting itself (`supportsHotReload`, with a version of web that supports it). When it is stopped, the web extension now also closes the live streams and WebRTC connections of the browsers and removes its web socket routes
+
 ### 3.3.0 (2026-10-16)
 * (@GermanBluefox) Migrated widgets to React 19 - vis-2 >= 2.20.0 is required, if installed
 
