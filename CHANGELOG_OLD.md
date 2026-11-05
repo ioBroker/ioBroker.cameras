@@ -1,4 +1,21 @@
 # Older changes
+## 3.1.0 (2026-09-29)
+* (@GermanBluefox) Fixed: after a single failed request a camera stayed broken until the adapter was restarted
+* (@GermanBluefox) Fixed: after a live stream had ended, every snapshot kept showing its last frame
+* (@GermanBluefox) Fixed: an RTSP camera with "original width/height" never delivered a picture, because the scale filter was passed to `ffmpeg` without `-vf`
+* (@GermanBluefox) Fixed: the first picture of a live stream appeared only after a delay of 10 seconds
+* (@GermanBluefox) Fixed: closing the view of one camera also unsubscribed the other cameras of the same browser
+* (@GermanBluefox) Fixed: a camera that failed to start could throw when a GUI client unsubscribed from it
+* (@GermanBluefox) Fixed: two cameras with the same IP address overwrote each other's snapshot
+* (@GermanBluefox) Fixed: a password containing `!` appeared in the log in clear text
+* (@GermanBluefox) Pictures are cached per requested size, so the web adapter and a widget no longer evict each other
+* (@GermanBluefox) A browser that leaves the page no longer produces warnings in the log
+* (@GermanBluefox) The universal camera type has a port field now - the port from the model table is only a suggestion
+* (@GermanBluefox) Fixed: the model table of the universal type offered the port of somebody's port forwarding as the default for 226 URLs
+* (@GermanBluefox) Fixed: `[WIDTH]`, `[HEIGHT]` and `[AUTH]` in the URL of a universal camera were never replaced, and a placeholder was only replaced once per URL
+* (@GermanBluefox) Added the `VIVOTEK` H9161
+* (@GermanBluefox) Updated packages
+
 ## 3.0.2 (2026-08-17)
 * (@GermanBluefox) The web extension can now request snapshots via messages instead of the private HTTP server, which is used automatically when the cameras adapter runs on a different host than the web instance
 * (@GermanBluefox) Fixed: a failed snapshot request answered with an empty `{}` instead of the error message
