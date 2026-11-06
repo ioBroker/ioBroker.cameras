@@ -1,0 +1,272 @@
+{
+    "$schema": "https://raw.githubusercontent.com/ioBroker/web-components/main/schemas/manifest.json",
+    "manifestVersion": 1,
+    "tag": "iob-cameras-snapshot",
+    "name": {
+        "en": "Snapshot Camera",
+        "de": "Snapshot Camera",
+        "ru": "Snapshot Camera",
+        "pt": "Snapshot Camera",
+        "nl": "Snapshot Camera",
+        "fr": "Snapshot Camera",
+        "it": "Snapshot Camera",
+        "es": "Snapshot Camera",
+        "pl": "Snapshot Camera",
+        "uk": "Snapshot Camera",
+        "zh-cn": "Snapshot Camera"
+    },
+    "description": {
+        "en": "Periodically updated snapshot of a camera",
+        "de": "Regelmäßig aktualisiertes Standbild einer Kamera",
+        "ru": "Периодически обновляемый снимок камеры",
+        "pt": "Snapshot da câmera atualizado periodicamente",
+        "nl": "Periodiek vernieuwde momentopname van een camera",
+        "fr": "Instantané d'une caméra mis à jour périodiquement",
+        "it": "Istantanea della telecamera aggiornata periodicamente",
+        "es": "Instantánea de una cámara actualizada periódicamente",
+        "pl": "Okresowo odświeżane zdjęcie z kamery",
+        "uk": "Періодично оновлюваний знімок камери",
+        "zh-cn": "定期更新的摄像机快照"
+    },
+    "icon": "../cameras.png",
+    "module": "cameras-snapshot.js",
+    "size": {
+        "width": 320,
+        "height": 240
+    },
+    "settings": {
+        "type": "panel",
+        "items": {
+            "camera": {
+                "type": "objectId",
+                "types": "state",
+                "root": "cameras",
+                "label": {
+                    "en": "Camera",
+                    "de": "Kamera",
+                    "ru": "Камера",
+                    "pt": "Câmera",
+                    "nl": "Camera",
+                    "fr": "Caméra",
+                    "it": "Telecamera",
+                    "es": "Cámara",
+                    "pl": "Kamera",
+                    "uk": "Камера",
+                    "zh-cn": "摄像机"
+                },
+                "help": {
+                    "en": "Select a state of the camera, e.g. cameras.0.cam1.running",
+                    "de": "Zustand der Kamera auswählen, z. B. cameras.0.cam1.running",
+                    "ru": "Выберите состояние камеры, например cameras.0.cam1.running",
+                    "pt": "Selecione um estado da câmera, ex. cameras.0.cam1.running",
+                    "nl": "Kies een state van de camera, bijv. cameras.0.cam1.running",
+                    "fr": "Sélectionnez un état de la caméra, p. ex. cameras.0.cam1.running",
+                    "it": "Seleziona uno stato della telecamera, es. cameras.0.cam1.running",
+                    "es": "Seleccione un estado de la cámara, p. ej. cameras.0.cam1.running",
+                    "pl": "Wybierz stan kamery, np. cameras.0.cam1.running",
+                    "uk": "Виберіть стан камери, напр. cameras.0.cam1.running",
+                    "zh-cn": "选择摄像机的状态，例如 cameras.0.cam1.running"
+                }
+            },
+            "title": {
+                "type": "text",
+                "label": {
+                    "en": "Name",
+                    "de": "Name",
+                    "ru": "Название",
+                    "pt": "Nome",
+                    "nl": "Naam",
+                    "fr": "Nom",
+                    "it": "Nome",
+                    "es": "Nombre",
+                    "pl": "Nazwa",
+                    "uk": "Назва",
+                    "zh-cn": "名称"
+                },
+                "help": {
+                    "en": "Shown above the picture; empty: no title",
+                    "de": "Wird über dem Bild angezeigt; leer: kein Titel",
+                    "ru": "Показывается над изображением; пусто: без заголовка",
+                    "pt": "Mostrado acima da imagem; vazio: sem título",
+                    "nl": "Wordt boven de afbeelding getoond; leeg: geen titel",
+                    "fr": "Affiché au-dessus de l'image ; vide : pas de titre",
+                    "it": "Mostrato sopra l'immagine; vuoto: nessun titolo",
+                    "es": "Se muestra encima de la imagen; vacío: sin título",
+                    "pl": "Wyświetlana nad obrazem; puste: bez tytułu",
+                    "uk": "Показується над зображенням; порожньо: без заголовка",
+                    "zh-cn": "显示在图像上方；为空时不显示标题"
+                }
+            },
+            "width": {
+                "type": "number",
+                "label": {
+                    "en": "Picture width (px)",
+                    "de": "Bildbreite (px)",
+                    "ru": "Ширина изображения (px)",
+                    "pt": "Largura da imagem (px)",
+                    "nl": "Afbeeldingsbreedte (px)",
+                    "fr": "Largeur de l'image (px)",
+                    "it": "Larghezza dell'immagine (px)",
+                    "es": "Ancho de la imagen (px)",
+                    "pl": "Szerokość obrazu (px)",
+                    "uk": "Ширина зображення (px)",
+                    "zh-cn": "图像宽度 (px)"
+                },
+                "help": {
+                    "en": "The adapter scales the picture to it, the dialog to at least 1280. 0: as the camera sends it",
+                    "de": "Der Adapter skaliert das Bild darauf, im Dialog auf mindestens 1280. 0: wie die Kamera es liefert",
+                    "ru": "Адаптер масштабирует изображение до этой ширины, в диалоге — минимум до 1280. 0: как отдаёт камера",
+                    "pt": "O adaptador dimensiona a imagem para essa largura, no diálogo para pelo menos 1280. 0: como a câmera a envia",
+                    "nl": "De adapter schaalt de afbeelding naar deze breedte, in het dialoogvenster naar minstens 1280. 0: zoals de camera hem levert",
+                    "fr": "L'adaptateur met l'image à cette largeur, dans la boîte de dialogue à au moins 1280. 0 : telle que la caméra l'envoie",
+                    "it": "L'adattatore scala l'immagine a questa larghezza, nella finestra di dialogo ad almeno 1280. 0: come la invia la telecamera",
+                    "es": "El adaptador escala la imagen a este ancho, en el diálogo a al menos 1280. 0: tal como la envía la cámara",
+                    "pl": "Adapter skaluje obraz do tej szerokości, w oknie dialogowym do co najmniej 1280. 0: tak, jak wysyła kamera",
+                    "uk": "Адаптер масштабує зображення до цієї ширини, у діалозі — щонайменше до 1280. 0: як надсилає камера",
+                    "zh-cn": "适配器将图像缩放到此宽度，对话框中至少为 1280。0：保持摄像机发送的尺寸"
+                },
+                "min": 0,
+                "max": 4096,
+                "step": 1,
+                "default": 640
+            },
+            "rotate": {
+                "type": "select",
+                "label": {
+                    "en": "Rotation",
+                    "de": "Drehung",
+                    "ru": "Поворот",
+                    "pt": "Rotação",
+                    "nl": "Rotatie",
+                    "fr": "Rotation",
+                    "it": "Rotazione",
+                    "es": "Rotación",
+                    "pl": "Obrót",
+                    "uk": "Обертання",
+                    "zh-cn": "旋转"
+                },
+                "default": "0",
+                "options": [
+                    {
+                        "value": "0",
+                        "label": "0°"
+                    },
+                    {
+                        "value": "90",
+                        "label": "90°"
+                    },
+                    {
+                        "value": "180",
+                        "label": "180°"
+                    },
+                    {
+                        "value": "270",
+                        "label": "270°"
+                    }
+                ]
+            },
+            "pollingInterval": {
+                "type": "number",
+                "label": {
+                    "en": "Polling interval (ms)",
+                    "de": "Abrufintervall (ms)",
+                    "ru": "Интервал опроса (мс)",
+                    "pt": "Intervalo de consulta (ms)",
+                    "nl": "Pollinginterval (ms)",
+                    "fr": "Intervalle de scrutation (ms)",
+                    "it": "Intervallo di polling (ms)",
+                    "es": "Intervalo de sondeo (ms)",
+                    "pl": "Interwał odpytywania (ms)",
+                    "uk": "Інтервал опитування (мс)",
+                    "zh-cn": "轮询间隔 (毫秒)"
+                },
+                "help": {
+                    "en": "How often a new picture is requested",
+                    "de": "Wie oft ein neues Bild angefordert wird",
+                    "ru": "Как часто запрашивается новое изображение",
+                    "pt": "Com que frequência uma nova imagem é solicitada",
+                    "nl": "Hoe vaak een nieuwe afbeelding wordt opgevraagd",
+                    "fr": "À quelle fréquence une nouvelle image est demandée",
+                    "it": "Ogni quanto viene richiesta una nuova immagine",
+                    "es": "Con qué frecuencia se solicita una nueva imagen",
+                    "pl": "Jak często pobierany jest nowy obraz",
+                    "uk": "Як часто запитується нове зображення",
+                    "zh-cn": "请求新图像的频率"
+                },
+                "min": 100,
+                "max": 600000,
+                "step": 100,
+                "default": 2000
+            },
+            "noCache": {
+                "type": "checkbox",
+                "label": {
+                    "en": "Bypass cache",
+                    "de": "Cache umgehen",
+                    "ru": "Обходить кэш",
+                    "pt": "Ignorar cache",
+                    "nl": "Cache omzeilen",
+                    "fr": "Contourner le cache",
+                    "it": "Ignora la cache",
+                    "es": "Omitir caché",
+                    "pl": "Pomiń pamięć podręczną",
+                    "uk": "Обходити кеш",
+                    "zh-cn": "绕过缓存"
+                },
+                "default": false
+            },
+            "bigCamera": {
+                "type": "objectId",
+                "types": "state",
+                "root": "cameras",
+                "label": {
+                    "en": "Camera in the dialog",
+                    "de": "Kamera im Dialog",
+                    "ru": "Камера в диалоге",
+                    "pt": "Câmera no diálogo",
+                    "nl": "Camera in het dialoogvenster",
+                    "fr": "Caméra dans la boîte de dialogue",
+                    "it": "Telecamera nella finestra di dialogo",
+                    "es": "Cámara en el diálogo",
+                    "pl": "Kamera w oknie dialogowym",
+                    "uk": "Камера в діалозі",
+                    "zh-cn": "对话框中的摄像机"
+                },
+                "help": {
+                    "en": "Another camera for the big picture, e.g. the same one in a higher resolution; empty: the camera above",
+                    "de": "Eine andere Kamera für das große Bild, z. B. dieselbe in höherer Auflösung; leer: die Kamera oben",
+                    "ru": "Другая камера для большого изображения, например та же в более высоком разрешении; пусто: камера выше",
+                    "pt": "Outra câmera para a imagem grande, p. ex. a mesma em resolução maior; vazio: a câmera acima",
+                    "nl": "Een andere camera voor het grote beeld, bijv. dezelfde in een hogere resolutie; leeg: de camera hierboven",
+                    "fr": "Une autre caméra pour la grande image, p. ex. la même en plus haute résolution ; vide : la caméra ci-dessus",
+                    "it": "Un'altra telecamera per l'immagine grande, ad es. la stessa a risoluzione più alta; vuoto: la telecamera sopra",
+                    "es": "Otra cámara para la imagen grande, p. ej. la misma en mayor resolución; vacío: la cámara de arriba",
+                    "pl": "Inna kamera dla dużego obrazu, np. ta sama w wyższej rozdzielczości; puste: kamera powyżej",
+                    "uk": "Інша камера для великого зображення, напр. та сама у вищій роздільності; порожньо: камера вище",
+                    "zh-cn": "用于大图的另一台摄像机，例如同一台的高分辨率画面；为空时使用上面的摄像机"
+                },
+                "hidden": "!data.camera"
+            },
+            "pollingIntervalFull": {
+                "type": "number",
+                "label": {
+                    "en": "Polling interval in the dialog (ms)",
+                    "de": "Abrufintervall im Dialog (ms)",
+                    "ru": "Интервал опроса в диалоге (мс)",
+                    "pt": "Intervalo de consulta no diálogo (ms)",
+                    "nl": "Pollinginterval in het dialoogvenster (ms)",
+                    "fr": "Intervalle de scrutation dans la boîte de dialogue (ms)",
+                    "it": "Intervallo di polling nella finestra di dialogo (ms)",
+                    "es": "Intervalo de sondeo en el diálogo (ms)",
+                    "pl": "Interwał odpytywania w oknie dialogowym (ms)",
+                    "uk": "Інтервал опитування в діалозі (мс)",
+                    "zh-cn": "对话框中的轮询间隔 (毫秒)"
+                },
+                "min": 100,
+                "max": 600000,
+                "step": 100,
+                "default": 500
+            }
+        }
+    }
+}

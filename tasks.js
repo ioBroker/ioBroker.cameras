@@ -10,9 +10,16 @@ const fs = require('node:fs');
 const adapterName = require('./package.json').name.replace('iobroker.', '');
 const { deleteFoldersRecursive, buildReact, npmInstall, copyFiles, patchHtmlFile } = require('@iobroker/build-tools');
 const { copyFileSync } = require('node:fs');
+const { fork } = require('node:child_process');
+
+/**
+ * Folders in admin/ that other builds than the admin UI write - the devices widgets and the web components.
+ * Rebuilding the admin UI must leave them alone: they are committed as well.
+ */
+const FOREIGN_ADMIN_FOLDERS = ['dm-widgets', 'webcomponents'];
 
 async function copyAllFiles() {
-    deleteFoldersRecursive(`${__dirname}/admin`, ['cameras.png', 'cameras.svg']);
+    deleteFoldersRecursive(`${__dirname}/admin`, ['cameras.png', 'cameras.svg', ...FOREIGN_ADMIN_FOLDERS]);
     copyFiles(['src-admin/build/**/*', '!src-admin/build/index.html', 'admin-config/*'], 'admin/');
 
     await patchHtmlFile(`${__dirname}/src-admin/build/index.html`);
@@ -20,7 +27,7 @@ async function copyAllFiles() {
 }
 
 function clean() {
-    deleteFoldersRecursive(`${__dirname}/admin`);
+    deleteFoldersRecursive(`${__dirname}/admin`, FOREIGN_ADMIN_FOLDERS);
     deleteFoldersRecursive(`${__dirname}/src-admin/build`);
 }
 
@@ -42,6 +49,28 @@ function devicesCopyAllFiles() {
     copyFiles(['src-devices/build/customDevices.js'], 'admin/dm-widgets');
     copyFiles(['src-devices/build/assets/*.*'], 'admin/dm-widgets/assets');
     copyFiles(['src-devices/img/*.*'], 'admin/dm-widgets');
+}
+
+function wcClean() {
+    deleteFoldersRecursive(`${__dirname}/src-webcomponents/build`);
+    deleteFoldersRecursive(`${__dirname}/admin/webcomponents`);
+}
+
+/**
+ * The web components (`common.webComponents`): one ES module and its manifest each, built one after the other
+ * by src-webcomponents/build.mjs - buildReact() would run a single `vite build`.
+ */
+function wcBuild() {
+    return new Promise((resolve, reject) => {
+        const child = fork(`${__dirname}/src-webcomponents/build.mjs`, [], { cwd: `${__dirname}/src-webcomponents` });
+        child.on('error', reject);
+        child.on('exit', code => (code ? reject(new Error(`build.mjs exited with code ${code}`)) : resolve()));
+    });
+}
+
+/** Into admin/webcomponents/, which every host reads as /adapter/cameras/webcomponents/ */
+function wcCopyAllFiles() {
+    copyFiles(['src-webcomponents/build/*.js', 'src-webcomponents/build/*.json'], 'admin/webcomponents');
 }
 
 async function widgetsCopyAllFiles() {
@@ -129,6 +158,15 @@ if (process.argv.includes('--0-clean')) {
             console.error(`Cannot build: ${e}`);
             process.exit(2);
         });
+} else if (process.argv.includes('--wc')) {
+    wcClean();
+    (fs.existsSync(`${__dirname}/src-webcomponents/node_modules`) ? Promise.resolve() : npmInstall('src-webcomponents'))
+        .then(() => wcBuild())
+        .then(() => wcCopyAllFiles())
+        .catch(e => {
+            console.error(`Cannot build web components: ${e}`);
+            process.exit(2);
+        });
 } else if (process.argv.includes('--devices-0-clean')) {
     devicesClean();
 } else if (process.argv.includes('--devices-1-npm')) {
@@ -167,6 +205,10 @@ if (process.argv.includes('--0-clean')) {
         .then(() => npmInstall('src-devices'))
         .then(() => buildReact(`${__dirname}/src-devices`, { rootDir: `${__dirname}/src-devices`, vite: true }))
         .then(() => devicesCopyAllFiles())
+        .then(() => wcClean())
+        .then(() => npmInstall('src-webcomponents'))
+        .then(() => wcBuild())
+        .then(() => wcCopyAllFiles())
         .catch(e => {
             console.error(`Cannot build: ${e}`);
             process.exit(2);

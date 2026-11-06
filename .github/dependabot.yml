@@ -32,12 +32,13 @@ updates:
     cooldown:
       default-days: 7
 
-  # The three frontends (admin, vis-2 widgets, device manager widgets) have their own package.json each
+  # The frontends (admin, vis-2 widgets, device manager widgets, web components) have their own package.json each
   - package-ecosystem: 'npm'
     directories:
       - '/src-admin'
       - '/src-widgets'
       - '/src-devices'
+      - '/src-webcomponents'
     schedule:
       interval: 'cron'
       timezone: 'Europe/Berlin'

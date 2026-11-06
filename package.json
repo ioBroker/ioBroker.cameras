@@ -72,8 +72,8 @@
     "release-patch": "release-script patch --yes",
     "release-minor": "release-script minor --yes",
     "release-major": "release-script major --yes",
-    "update-packages": "npx -y npm-check-updates --upgrade && cd src-admin && npx -y npm-check-updates --upgrade && cd ../src-widgets && npx -y npm-check-updates --upgrade && cd ../src-devices && npx -y npm-check-updates --upgrade",
-    "npm": "npm i && cd src-admin && npm i && cd ../src-widgets && npm i -f && cd ../src-devices && npm i",
+    "update-packages": "npx -y npm-check-updates --upgrade && cd src-admin && npx -y npm-check-updates --upgrade && cd ../src-widgets && npx -y npm-check-updates --upgrade && cd ../src-devices && npx -y npm-check-updates --upgrade && cd ../src-webcomponents && npx -y npm-check-updates --upgrade",
+    "npm": "npm i && cd src-admin && npm i && cd ../src-widgets && npm i -f && cd ../src-devices && npm i && cd ../src-webcomponents && npm i",
     "0-clean": "node tasks --0-clean",
     "1-npm": "node tasks --1-npm",
     "2-build": "node tasks --2-build",
@@ -88,7 +88,8 @@
     "devices-1-npm": "node tasks --devices-1-npm",
     "devices-2-build": "node tasks --devices-2-build",
     "devices-3-copy": "node tasks --devices-3-copy",
-    "devices-build": "node tasks --devices-build"
+    "devices-build": "node tasks --devices-build",
+    "build-wc": "node tasks --wc"
   },
   "bugs": {
     "url": "https://github.com/ioBroker/ioBroker.cameras/issues"

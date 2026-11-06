@@ -1,0 +1,17 @@
+{
+    "name": "iobroker-web-components-cameras",
+    "private": true,
+    "version": "0.0.1",
+    "type": "module",
+    "scripts": {
+        "build": "node build.mjs",
+        "check-ts": "tsc --noEmit",
+        "lint": "eslint -c eslint.config.mjs src build.mjs"
+    },
+    "devDependencies": {
+        "@iobroker/types": "^7.2.5",
+        "@iobroker/web-components": "^0.6.0",
+        "typescript": "~6.0.3",
+        "vite": "^8.3.5"
+    }
+}

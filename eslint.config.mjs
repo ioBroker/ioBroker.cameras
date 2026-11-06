@@ -17,6 +17,8 @@ export default [
             'src-admin/**/*',
             'src-widgets/**/*',
             'src-devices/**/*',
+            // own eslint config: cd src-webcomponents && npm run lint
+            'src-webcomponents/**/*',
             'admin/**/*',
             'widgets/**/*',
             'node_modules/**/*',
