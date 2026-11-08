@@ -258,7 +258,7 @@ If the binary cannot be found or does not start, the adapter transparently falls
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.4.0 (2026-11-08)
 * (@GermanBluefox) Added web components `iob-cameras-rtsp` and `iob-cameras-snapshot` for Aura and other hosts (`common.webComponents`)
 
 ### 3.3.1 (2026-11-05)
@@ -285,15 +285,6 @@ If the binary cannot be found or does not start, the adapter transparently falls
 * (@hdering) Fixed: switching the Eufy dialog between `eusec` and IP address was not saved
 * (@GermanBluefox) Fixed: opening or closing the full screen dialog of an RTSP camera asks for the stream in the size it is shown in right away; until now the big view showed the small picture enlarged for up to 14 seconds
 * (@GermanBluefox) Fixed: the dialog of the RTSP camera widget for ioBroker.devices never asked for a bigger picture at all
-
-### 3.2.0 (2026-10-01)
-* (@hdering) Added: UniFi Protect cameras, with the stream token from the Protect API or entered by hand (#133)
-* (@hdering) Added: RTSPS for UniFi Protect, also through go2rtc
-* (@GermanBluefox) Fixed: the stderr of a failed `ffmpeg` call was passed on unmasked, so a camera password could end up in the log
-* (@hdering) Fixed: the web URL of a camera in the admin was always shown with `http://`, also for a web instance with https; the MJPEG stream URL is shown when go2rtc is enabled
-* (@GermanBluefox) Fixed: a request for the MJPEG stream of a camera was left hanging when go2rtc was switched on but not reachable
-* (@hdering) Fixed: all camera URLs of the web extension answered 404 when the native WebRTC binary was missing (#321)
-* (@GermanBluefox) Removed the unfinished `rtsp2WebRTC` experiment and the `@roamhq/wrtc` dependency with it - WebRTC runs through go2rtc
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
