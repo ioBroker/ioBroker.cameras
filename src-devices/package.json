@@ -16,7 +16,7 @@
         "@iobroker/gui-components": "^10.3.11",
         "@iobroker/json-config": "^10.1.11",
         "@module-federation/runtime": "^2.9.2",
-        "@module-federation/vite": "^1.23.5",
+        "@module-federation/vite": "^1.23.7",
         "@mui/icons-material": "^9.5.0",
         "@mui/material": "^9.5.0",
         "@types/react": "^19.3.0",
