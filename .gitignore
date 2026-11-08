@@ -19,6 +19,7 @@ admin/i18n/*/flat.txt
 /src-widgets/.__mf__temp/
 /src-devices/build/
 /src-devices/.__mf__temp/
+/src-webcomponents/build/
 
 #ignore .commitinfo created by ioBroker release script
 .commitinfo

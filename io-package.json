@@ -231,6 +231,10 @@
         ]
       }
     },
+    "webComponents": [
+      "webcomponents/cameras-rtsp.json",
+      "webcomponents/cameras-snapshot.json"
+    ],
     "restartAdapters": [
       "vis-2"
     ]

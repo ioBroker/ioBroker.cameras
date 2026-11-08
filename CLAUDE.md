@@ -13,6 +13,7 @@ builds in one repo:
 | `src-admin/`  | vite (React 19)      | `admin/`            | ioBroker admin (`admin/index_m.html`)           |
 | `src-widgets/`| vite + module fed.   | `widgets/cameras/`  | vis-2 (`common.visWidgets` in io-package.json)  |
 | `src-devices/`| vite + module fed.   | `admin/dm-widgets/` | ioBroker.devices (`common.deviceWidgets`)      |
+| `src-webcomponents/` | vite, one build per component | `admin/webcomponents/` | Aura, admin, every host (`common.webComponents`) |
 
 `admin/` and `widgets/` are generated but **committed** — they are listed in package.json `files`.
 
@@ -23,6 +24,7 @@ npm run build          # everything: backend tsc + admin + widgets (this is what
 npm run build-backend  # tsc -p tsconfig.build.json  ->  build/
 npm run admin-build    # clean + npm i in src-admin + vite build + copy to admin/
 npm run widget-build   # same for src-widgets -> widgets/cameras/
+npm run build-wc       # src-webcomponents -> admin/webcomponents/ (also part of npm run build)
 npm run lint           # eslint; covers src/ only (see ignores in eslint.config.mjs)
 npm test               # mocha --exit  (runs everything under test/)
 npx mocha --exit test/unit.js          # single test file (unit | integration | package)
@@ -239,6 +241,27 @@ runs inside admin (port 8081) where `/<instance>/<camera>` is not served.
 The camera is picked as a plain `objectId` below the `cameras` namespace (e.g. `cameras.0.cam1.running`);
 `parseCameraId()` derives instance and camera name from it. That avoids needing a dynamic list in the
 JSON-config schema.
+
+## Web components (`src-webcomponents/`)
+
+`<iob-cameras-rtsp>` and `<iob-cameras-snapshot>` (`@iobroker/web-components`): plain DOM, no React, no MUI.
+`build.mjs` runs one Vite build per component (`vite build --mode rtsp|snapshot`), so each is one module file;
+`vite.config.ts` writes the manifest (`<file>.json`) next to it and fails the build if `checkManifest` reports a problem.
+`tasks.js --wc` copies both into `admin/webcomponents/`, listed in `common.webComponents`.
+
+- **The name of a component is the label of its devices widget**, read from `common.deviceWidgets` of
+  io-package.json at build time - vis-2 and devices hide a web component whose name equals a native widget of the
+  same adapter. Rename a devices widget and the web component follows with the next build.
+- **Pictures come from the `image` message only** (`sendTo`, one request after the other, with `noFileWrite`).
+  `WebComponentSocket` has no `subscribeOnInstance`, so the push stream of the native widgets is out of reach;
+  the web extension routes exist only in pages ioBroker.web serves; writing `<name>.running` would restart the
+  stream of every other viewer at another size and never stop. While the adapter streams a camera anyway,
+  `image` answers with its newest frame, which is what makes the RTSP component look live then.
+- `parseCameraId` is imported from `src-devices/src/cameraCommon.ts` and compiled in - keep that file free of
+  imports.
+- Lint and type check: `cd src-webcomponents && npm run lint && npm run check-ts` (the root lint ignores the folder).
+- `clean()`/`copyAllFiles()` of the admin build keep `admin/dm-widgets/` and `admin/webcomponents/`
+  (`FOREIGN_ADMIN_FOLDERS` in tasks.js): they are committed output of the other builds.
 
 ## Conventions
 
