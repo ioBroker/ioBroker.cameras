@@ -232,8 +232,50 @@
       }
     },
     "webComponents": [
-      "webcomponents/cameras-rtsp.json",
-      "webcomponents/cameras-snapshot.json"
+      {
+        "manifest": "webcomponents/cameras-rtsp.json",
+        "tag": "iob-cameras-rtsp",
+        "name": {
+          "en": "RTSP Camera",
+          "de": "RTSP Camera",
+          "ru": "RTSP Camera",
+          "pt": "RTSP Camera",
+          "nl": "RTSP Camera",
+          "fr": "RTSP Camera",
+          "it": "RTSP Camera",
+          "es": "RTSP Camera",
+          "pl": "RTSP Camera",
+          "uk": "RTSP Camera",
+          "zh-cn": "RTSP Camera"
+        },
+        "icon": "../cameras.png",
+        "size": {
+          "width": 320,
+          "height": 240
+        }
+      },
+      {
+        "manifest": "webcomponents/cameras-snapshot.json",
+        "tag": "iob-cameras-snapshot",
+        "name": {
+          "en": "Snapshot Camera",
+          "de": "Snapshot Camera",
+          "ru": "Snapshot Camera",
+          "pt": "Snapshot Camera",
+          "nl": "Snapshot Camera",
+          "fr": "Snapshot Camera",
+          "it": "Snapshot Camera",
+          "es": "Snapshot Camera",
+          "pl": "Snapshot Camera",
+          "uk": "Snapshot Camera",
+          "zh-cn": "Snapshot Camera"
+        },
+        "icon": "../cameras.png",
+        "size": {
+          "width": 320,
+          "height": 240
+        }
+      }
     ],
     "restartAdapters": [
       "vis-2"
