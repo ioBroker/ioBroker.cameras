@@ -147,6 +147,10 @@
     },
     "compact": true,
     "messagebox": true,
+    "supportedMessages": {
+      "custom": true,
+      "help": true
+    },
     "subscribable": true,
     "eraseOnUpload": true,
     "stopBeforeUpdate": true,

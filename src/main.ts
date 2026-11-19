@@ -24,6 +24,7 @@ import createCamera from './cameras/Factory';
 import { findFFmpegPath, getFFmpegVersion } from './cameras/rtspCommon';
 import Go2RtcServer from './lib/Go2RtcServer';
 import UnifiProtectClient from './lib/UnifiProtectClient';
+import { COMMANDS, HELP } from './lib/help';
 
 const WIN_FFMPEG_VERSION = '2025-02-02-git-957eb2323a-full_build-www.gyan.dev';
 
@@ -367,6 +368,11 @@ export class CamerasAdapter extends Adapter {
         }
 
         switch (obj.command) {
+            case 'help': {
+                obj.callback && this.sendTo(obj.from, obj.command, { help: HELP, commands: COMMANDS }, obj.callback);
+                break;
+            }
+
             case 'test': {
                 try {
                     const data = await this.testCamera(obj.message);

@@ -15,6 +15,7 @@ const Factory_1 = __importDefault(require("./cameras/Factory"));
 const rtspCommon_1 = require("./cameras/rtspCommon");
 const Go2RtcServer_1 = __importDefault(require("./lib/Go2RtcServer"));
 const UnifiProtectClient_1 = __importDefault(require("./lib/UnifiProtectClient"));
+const help_1 = require("./lib/help");
 const WIN_FFMPEG_VERSION = '2025-02-02-git-957eb2323a-full_build-www.gyan.dev';
 /**
  * Interval a GUI client has to re-subscribe within, answered to every subscription. After it runs
@@ -305,6 +306,10 @@ class CamerasAdapter extends adapter_core_1.Adapter {
             return;
         }
         switch (obj.command) {
+            case 'help': {
+                obj.callback && this.sendTo(obj.from, obj.command, { help: help_1.HELP, commands: help_1.COMMANDS }, obj.callback);
+                break;
+            }
             case 'test': {
                 try {
                     const data = await this.testCamera(obj.message);

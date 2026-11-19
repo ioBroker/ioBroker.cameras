@@ -42,6 +42,11 @@ sendTo('cameras.0', 'image', {
 
 The result is always in `jpg` format.
 
+### Messages for scripts and AI agents
+`sendTo('cameras.0', 'help', {}, result => ...)` answers `{ help, commands }`: a description of all messages for AI
+agents (e.g. ioBroker.pi-agent) and script authors, and the list of all commands, each with `write: true` if it has
+an effect beyond returning information.
+
 ### vis-2 widgets
 The adapter brings two widgets for vis-2: **Polling Camera** loads a new frame in the given interval
 (snapshot), **RTSP Camera** shows the live stream. Select the camera in the widget by its instance and
@@ -260,6 +265,7 @@ If the binary cannot be found or does not start, the adapter transparently falls
 ## Changelog
 
 ### **WORK IN PROGRESS**
+* (@GermanBluefox) Added the message "help": a description of all messages for AI agents (e.g. pi-agent), and `common.supportedMessages.help`
 * (@GermanBluefox) Added the short form of the web component manifests (tag, name, icon, size) to `common.webComponents`, so that hosts like Aura can list the components before the adapter is installed; the build writes it with `iob-web-components sync-io-package`
 
 ### 3.4.0 (2026-11-08)
