@@ -263,6 +263,10 @@ If the binary cannot be found or does not start, the adapter transparently falls
 -->
 
 ## Changelog
+
+### **WORK IN PROGRESS**
+* (@GermanBluefox) Fixed: the message `image` answers the text of an error (e.g. a timeout of the camera) instead of an empty `error` object
+
 ### 3.5.0 (2026-11-19)
 * (@GermanBluefox) Added the message "help": a description of all messages for AI agents (e.g. pi-agent), and `common.supportedMessages.help`
 * (@GermanBluefox) Added the short form of the web component manifests (tag, name, icon, size) to `common.webComponents`, so that hosts like Aura can list the components before the adapter is installed; the build writes it with `iob-web-components sync-io-package`

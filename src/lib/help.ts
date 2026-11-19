@@ -32,7 +32,7 @@ Commands (sendTo cameras.0):
   (boolean) override the settings of the camera: a text at the bottom, the time at the top.
   While somebody watches the live stream of the camera, the answer is the newest frame of that stream.
   Errors: {error}; "Name not found" = no enabled camera with that name, "Invalid request" = no message; a camera
-  that does not answer gives {error} too (its text may be empty): try once more, then tell the user.
+  that does not answer gives {error} with the reason (e.g. a timeout): try once more, then tell the user.
 - help: this text and the list of commands with their write flag.
 - test, unifiCameras, ffmpeg: for the settings, not for agents.
 

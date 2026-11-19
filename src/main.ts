@@ -403,7 +403,13 @@ export class CamerasAdapter extends Adapter {
                                 obj.callback,
                             );
                         } catch (e) {
-                            this.sendTo(obj.from, obj.command, { error: e }, obj.callback);
+                            // An Error object arrives as {} over sendTo, so answer its text
+                            this.sendTo(
+                                obj.from,
+                                obj.command,
+                                { error: e instanceof Error ? e.message : String(e) },
+                                obj.callback,
+                            );
                         }
                     } else {
                         obj.callback && this.sendTo(obj.from, obj.command, { error: 'Name not found' }, obj.callback);

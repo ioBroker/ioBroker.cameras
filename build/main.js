@@ -332,7 +332,8 @@ class CamerasAdapter extends adapter_core_1.Adapter {
                             this.sendTo(obj.from, obj.command, { data: Buffer.from(data).toString('base64'), contentType: 'image/jpeg' }, obj.callback);
                         }
                         catch (e) {
-                            this.sendTo(obj.from, obj.command, { error: e }, obj.callback);
+                            // An Error object arrives as {} over sendTo, so answer its text
+                            this.sendTo(obj.from, obj.command, { error: e instanceof Error ? e.message : String(e) }, obj.callback);
                         }
                     }
                     else {
