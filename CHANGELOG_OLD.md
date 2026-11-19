@@ -1,4 +1,19 @@
 # Older changes
+## 3.2.1 (2026-10-03)
+* (@hdering) Changed: a camera is added by choosing the manufacturer first, then only the fitting connection is offered; the stored configuration keeps its format
+* (@hdering) Changed: the model list is chosen by stream path, sorted by how many models use it; the model is optional. HTTP paths that deliver a stream instead of an image are hidden, they never worked
+* (@hdering) Changed: an RTSP camera is configured with one URL field, also for `rtsps://`; a pasted login goes to its own fields
+* (@hdering) Deprecated: the type "Reolink E1" - it keeps working and can be converted to the Reolink model list in its dialog
+* (@hdering) Fixed: the RTSP dialog showed UDP while the adapter used TCP, and saved UDP as soon as another field was changed
+* (@hdering) Fixed: the URL preview of an RTSP camera was only updated after saving
+* (@hdering) Fixed: changes in the camera dialog were applied to the stored settings instead of the edited ones, so an earlier change could get lost
+* (@hdering) Added: MJPEG streams over HTTP - the first frame is taken; this makes the MJPEG paths of the model lists usable. A video stream over HTTP fails at once with a hint instead of a timeout
+* (@hdering) Added: a grey snapshot of an H.265 stream is recognized and taken again from a key frame; "Key frames only" in the expert settings of the RTSP type sets it permanently
+* (@hdering) Added: the Eufy dialog lists the cameras of the `eusec` adapter; cameras without RTSP of their own are streamed through the station by `eusec` (#205)
+* (@hdering) Fixed: switching the Eufy dialog between `eusec` and IP address was not saved
+* (@GermanBluefox) Fixed: opening or closing the full screen dialog of an RTSP camera asks for the stream in the size it is shown in right away; until now the big view showed the small picture enlarged for up to 14 seconds
+* (@GermanBluefox) Fixed: the dialog of the RTSP camera widget for ioBroker.devices never asked for a bigger picture at all
+
 ## 3.2.0 (2026-10-01)
 * (@hdering) Added: UniFi Protect cameras, with the stream token from the Protect API or entered by hand (#133)
 * (@hdering) Added: RTSPS for UniFi Protect, also through go2rtc
