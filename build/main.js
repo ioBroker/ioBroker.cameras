@@ -16,6 +16,7 @@ const rtspCommon_1 = require("./cameras/rtspCommon");
 const Go2RtcServer_1 = __importDefault(require("./lib/Go2RtcServer"));
 const UnifiProtectClient_1 = __importDefault(require("./lib/UnifiProtectClient"));
 const help_1 = require("./lib/help");
+const standard_1 = require("./lib/standard");
 const WIN_FFMPEG_VERSION = '2025-02-02-git-957eb2323a-full_build-www.gyan.dev';
 /**
  * Interval a GUI client has to re-subscribe within, answered to every subscription. After it runs
@@ -301,6 +302,54 @@ class CamerasAdapter extends adapter_core_1.Adapter {
                 .catch(e => this.log.error(`Cannot stop camera on unsubscribe "${cameraName}": ${e}`));
         }
     }
+    /** The cameras for `getCameras` of the shared catalog: id = the name in the settings, name = the description */
+    standardCameras() {
+        return this.config.cameras.map(cam => ({ id: cam.name, name: cam.desc || cam.name }));
+    }
+    /**
+     * `snapshot` of the shared catalog: the same picture as `image`, the camera given by its id or name.
+     *
+     * @param message `{camera, width?, height?, fileName?}` plus the options of `image`, or the camera as a text
+     */
+    async standardSnapshot(message) {
+        const request = (typeof message === 'string' ? { camera: message } : message || {});
+        const found = (0, standard_1.findCamera)(this.standardCameras(), request.camera);
+        if ((0, standard_1.isStandardError)(found)) {
+            return found;
+        }
+        const fileName = request.fileName === undefined ? undefined : (0, standard_1.checkFileName)(request.fileName);
+        if (typeof fileName === 'object') {
+            return fileName;
+        }
+        // the stored configuration, with the options of `image` the caller gave
+        const cam = JSON.parse(JSON.stringify(this.config.cameras.find(c => c.name === found.id)));
+        for (const key of ['width', 'height', 'angle', 'noCache', 'noFileWrite', 'title', 'addTime']) {
+            if (request[key] !== undefined) {
+                cam[key] = request[key];
+            }
+        }
+        let body;
+        try {
+            body = Buffer.from(await this.getCameraImage(cam));
+        }
+        catch (e) {
+            return { error: e instanceof Error ? e.message : String(e), reason: 'NOT_CONNECTED' };
+        }
+        const answer = {
+            data: body.toString('base64'),
+            contentType: 'image/jpeg',
+        };
+        if (fileName) {
+            try {
+                await this.writeFileAsync(this.namespace, fileName, body);
+            }
+            catch (e) {
+                return { error: `Cannot store ${this.namespace}/${fileName}: ${e instanceof Error ? e.message : e}` };
+            }
+            answer.file = `${this.namespace}/${fileName}`;
+        }
+        return answer;
+    }
     async onMessage(obj) {
         if (!obj?.command) {
             return;
@@ -354,6 +403,19 @@ class CamerasAdapter extends adapter_core_1.Adapter {
                             id: `${this.namespace}.cameras.${cam.name}`,
                         })),
                     }, obj.callback);
+                break;
+            }
+            // getCameras and snapshot: the commands of the shared catalog (family camera)
+            case 'getCameras': {
+                obj.callback && this.sendTo(obj.from, obj.command, { cameras: this.standardCameras() }, obj.callback);
+                break;
+            }
+            case 'snapshot': {
+                // without a callback only worth it when the picture is stored
+                if (obj.callback || obj.message?.fileName) {
+                    const answer = await this.standardSnapshot(obj.message);
+                    obj.callback && this.sendTo(obj.from, obj.command, answer, obj.callback);
+                }
                 break;
             }
             case 'unifiCameras': {

@@ -26,7 +26,15 @@ describe('help', () => {
         }
         // only these return just information
         const readOnly = COMMANDS.filter(c => !c.write).map(c => c.command);
-        assert.deepStrictEqual(readOnly.sort(), ['help', 'image', 'list', 'unifiCameras']);
+        assert.deepStrictEqual(readOnly.sort(), ['getCameras', 'help', 'image', 'list', 'snapshot', 'unifiCameras']);
+    });
+
+    it('marks the commands of the shared catalog with standard', () => {
+        const marked = Object.fromEntries(COMMANDS.filter(c => c.standard).map(c => [c.command, c.standard]));
+        assert.deepStrictEqual(marked, { getCameras: 'camera.getCameras', snapshot: 'camera.snapshot' });
+        for (const standard of Object.values(marked)) {
+            assert.ok(HELP.includes(standard), standard);
+        }
     });
 
     it('names every command', () => {

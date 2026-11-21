@@ -54,7 +54,9 @@ Frontend dev servers: `cd src-admin && npm start` (port 3000, proxies to admin o
   **`getCameraImageData()`** — put changes to caching or to the pipeline there, not into a caller, or
   the paths drift apart (they used to, with two copies of the cache logic).
 - Messages (`sendTo`): `image` (base64 JPEG for a configured camera), `test` (render a not-yet-saved
-  camera config, used by the admin dialogs), `list`, `ffmpeg` (probe a binary's version).
+  camera config, used by the admin dialogs), `list`, `ffmpeg` (probe a binary's version), `help`, and
+  `getCameras`/`snapshot` = `list`/`image` in the form of the shared catalog of camera commands
+  (`src/lib/standard.ts`, marked with `standard` in `src/lib/help.ts`).
 - Per camera it creates two states: `<name>.running` (writable — writing `true`/`false` starts/stops the
   live stream) and `<name>.stream` (base64 JPEG, legacy push channel).
 - **Windows ffmpeg is shipped in-repo** as `win-ffmpeg.zip` and decompressed at runtime. The expected

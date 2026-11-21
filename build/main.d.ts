@@ -1,5 +1,6 @@
 import { Adapter, type AdapterOptions } from '@iobroker/adapter-core';
 import type { CameraRequestInternal, CamerasAdapterConfig, ProcessData, ProcessDataEx } from './types';
+import { type StandardCamera, type StandardError } from './lib/standard';
 export declare class CamerasAdapter extends Adapter {
     private lang;
     private streamSubscribes;
@@ -47,6 +48,18 @@ export declare class CamerasAdapter extends Adapter {
      */
     private isObsolete;
     private dropSubscriptions;
+    /** The cameras for `getCameras` of the shared catalog: id = the name in the settings, name = the description */
+    standardCameras(): StandardCamera[];
+    /**
+     * `snapshot` of the shared catalog: the same picture as `image`, the camera given by its id or name.
+     *
+     * @param message `{camera, width?, height?, fileName?}` plus the options of `image`, or the camera as a text
+     */
+    standardSnapshot(message: unknown): Promise<{
+        data: string;
+        contentType: string;
+        file?: string;
+    } | StandardError>;
     onMessage(obj: ioBroker.Message): Promise<void>;
     unloadCameras(cb: () => void): void;
     resizeImage(data: ProcessDataEx, width: number | undefined, height: number | undefined): Promise<ProcessData>;

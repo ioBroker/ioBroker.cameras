@@ -47,6 +47,10 @@ The result is always in `jpg` format.
 agents (e.g. ioBroker.pi-agent) and script authors, and the list of all commands, each with `write: true` if it has
 an effect beyond returning information.
 
+`getCameras` and `snapshot {camera, width?, height?, fileName?}` are the same as `list` and `image` in the form that
+other camera adapters share: `{cameras: [{id, name}]}` and `{data, contentType}`, the camera given by its name or
+description; errors come as `{error, reason}`.
+
 ### vis-2 widgets
 The adapter brings two widgets for vis-2: **Polling Camera** loads a new frame in the given interval
 (snapshot), **RTSP Camera** shows the live stream. Select the camera in the widget by its instance and
@@ -266,6 +270,7 @@ If the binary cannot be found or does not start, the adapter transparently falls
 
 ### **WORK IN PROGRESS**
 * (@GermanBluefox) Fixed: the message `image` answers the text of an error (e.g. a timeout of the camera) instead of an empty `error` object
+* (@GermanBluefox) Added the standard commands of the shared catalog: camera.getCameras (`getCameras`), camera.snapshot (`snapshot`)
 
 ### 3.5.0 (2026-11-19)
 * (@GermanBluefox) Added the message "help": a description of all messages for AI agents (e.g. pi-agent), and `common.supportedMessages.help`

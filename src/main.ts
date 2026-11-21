@@ -25,6 +25,7 @@ import { findFFmpegPath, getFFmpegVersion } from './cameras/rtspCommon';
 import Go2RtcServer from './lib/Go2RtcServer';
 import UnifiProtectClient from './lib/UnifiProtectClient';
 import { COMMANDS, HELP } from './lib/help';
+import { checkFileName, findCamera, isStandardError, type StandardCamera, type StandardError } from './lib/standard';
 
 const WIN_FFMPEG_VERSION = '2025-02-02-git-957eb2323a-full_build-www.gyan.dev';
 
@@ -362,6 +363,60 @@ export class CamerasAdapter extends Adapter {
         }
     }
 
+    /** The cameras for `getCameras` of the shared catalog: id = the name in the settings, name = the description */
+    standardCameras(): StandardCamera[] {
+        return this.config.cameras.map(cam => ({ id: cam.name, name: cam.desc || cam.name }));
+    }
+
+    /**
+     * `snapshot` of the shared catalog: the same picture as `image`, the camera given by its id or name.
+     *
+     * @param message `{camera, width?, height?, fileName?}` plus the options of `image`, or the camera as a text
+     */
+    async standardSnapshot(
+        message: unknown,
+    ): Promise<{ data: string; contentType: string; file?: string } | StandardError> {
+        const request = (typeof message === 'string' ? { camera: message } : message || {}) as Record<string, unknown>;
+        const found = findCamera(this.standardCameras(), request.camera);
+        if (isStandardError(found)) {
+            return found;
+        }
+        const fileName = request.fileName === undefined ? undefined : checkFileName(request.fileName);
+        if (typeof fileName === 'object') {
+            return fileName;
+        }
+        // the stored configuration, with the options of `image` the caller gave
+        const cam = JSON.parse(JSON.stringify(this.config.cameras.find(c => c.name === found.id))) as Record<
+            string,
+            unknown
+        >;
+        for (const key of ['width', 'height', 'angle', 'noCache', 'noFileWrite', 'title', 'addTime']) {
+            if (request[key] !== undefined) {
+                cam[key] = request[key];
+            }
+        }
+
+        let body: Buffer;
+        try {
+            body = Buffer.from(await this.getCameraImage(cam as unknown as CameraRequestInternal));
+        } catch (e) {
+            return { error: e instanceof Error ? e.message : String(e), reason: 'NOT_CONNECTED' };
+        }
+        const answer: { data: string; contentType: string; file?: string } = {
+            data: body.toString('base64'),
+            contentType: 'image/jpeg',
+        };
+        if (fileName) {
+            try {
+                await this.writeFileAsync(this.namespace, fileName, body);
+            } catch (e) {
+                return { error: `Cannot store ${this.namespace}/${fileName}: ${e instanceof Error ? e.message : e}` };
+            }
+            answer.file = `${this.namespace}/${fileName}`;
+        }
+        return answer;
+    }
+
     async onMessage(obj: ioBroker.Message): Promise<void> {
         if (!obj?.command) {
             return;
@@ -435,6 +490,21 @@ export class CamerasAdapter extends Adapter {
                         obj.callback,
                     );
 
+                break;
+            }
+
+            // getCameras and snapshot: the commands of the shared catalog (family camera)
+            case 'getCameras': {
+                obj.callback && this.sendTo(obj.from, obj.command, { cameras: this.standardCameras() }, obj.callback);
+                break;
+            }
+
+            case 'snapshot': {
+                // without a callback only worth it when the picture is stored
+                if (obj.callback || obj.message?.fileName) {
+                    const answer = await this.standardSnapshot(obj.message);
+                    obj.callback && this.sendTo(obj.from, obj.command, answer, obj.callback);
+                }
                 break;
             }
 
